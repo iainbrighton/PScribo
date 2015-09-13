@@ -1,0 +1,25 @@
+
+# Plugin support matrix
+
+                            Text    XML     HTML    Word    CSV
+   -------------------------------------------------------------
+        Document             X       X       X       X       X
+    GlobalOption             X       X       X       X       X
+       LineBreak             X       -       X       X       -
+       PageBreak             1       -       1       X       -
+       Paragraph             1       X       1       X       2
+         Section             X       X       X       X       X
+           Style             -       -       X       X       -
+           Table             3       3       X       X       2
+      TableStyle             -       -       X       X       -
+           Image             -       4       X       X       -
+
+1 - Can be implemented as LineBreaks with a plugin-specific option.
+2 - Each table is output in its own CSV file.
+3 - Table columns widths and styling are not supported.
+4 - Image can be embedded as a binary Base64 encoded string.
+
+# Plugin-specific options
+ # In their own about file?
+
+# Writing a plugin
