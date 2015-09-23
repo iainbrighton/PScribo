@@ -25,11 +25,8 @@ place a comment at the project home page</a>.
 
 ##### Installation
 
-* Automatic (via PowerShell v5 or later):
+* Automatic (via PowerShell v5 or later) __NOT YET PUBLISHED__:
  * Run 'Install-Module PScribo'.
- * Run 'Import-Module PScribo'.
-* Automatic (via Chocolatey):
- * Run 'cinst PScribo'.
  * Run 'Import-Module PScribo'.
 * Manual:
  * Download the [latest release .zip](https://github.com/iainbrighton/PScribo/releases/latest)
