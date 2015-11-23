@@ -29,6 +29,10 @@ place a comment at the project home page</a>.
  * Run 'Install-Module PScribo'.
  * Run 'Import-Module PScribo'.
 * Manual:
- * Download the [latest release .zip](https://github.com/iainbrighton/PScribo/releases/latest)
+ * Download the latest .zip file.
  * Extract the .zip into your $PSModulePath, e.g. ~\Documents\WindowsPowerShell\Modules\.
+ * Ensure the extracted folder is named 'PScribo'. 
  * Run 'Import-Module PScribo'.
+
+For an introduction to the PScribo framework, you can view the presentation given at the
+[PowerShell Summit Europe 2015](https://www.youtube.com/watch?v=pNIC70bjBZE).
