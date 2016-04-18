@@ -94,6 +94,7 @@ Task Zip {
     $zipFile = New-ZipArchive -Path $zipSourcePath -DestinationPath $zipPath;
     Write-Host (' Zip file "{0}" created.' -f $zipFile.Fullname) -ForegroundColor Yellow;
 }
+
 Task Bundle {
     $bundlePath = Join-Path -Path $releasePath -ChildPath "PScribo-v$version-Bundle.ps1";
     Write-Host (' Creating bundle file "{0}".' -f $bundlePath) -ForegroundColor Yellow;
