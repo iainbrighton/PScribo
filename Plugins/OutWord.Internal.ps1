@@ -277,7 +277,7 @@
                 for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
                     $gridCol = $tblGrid.AppendChild($XmlDocument.CreateElement('w', 'gridCol', $xmlnsMain));
                 }
-
+                
                 return $tbl;
             } #end process
         } #end function GetWordTable
