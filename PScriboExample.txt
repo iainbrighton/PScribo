@@ -1,0 +1,504 @@
+This is Heading 1
+This is Heading 2
+This is Heading 3
+This is a regular line of text indented 0 tab stops
+    This is a regular line of text indented 1 tab stops. This text should not be displayed as a hanging indent, e.g. not
+ just the first line of the paragraph indented.
+        This is a regular line of text indented 2 tab stops
+            This is a regular line of text indented 3 tab stops
+This is a regular line of text in the default font in italics
+This is a regular line of text in the default font in bold
+This is a regular line of text in the default font in bold italics
+This is a regular line of text in the default font in 14 point
+This is a regular line of text in Courier New font
+This is a regular line of text indented 0 tab stops with the computer name as data: OFFICEPC
+This is a regular line of text indented 0 tab stops with the computer name as data in bold: OFFICEPC
+This is a regular line of text indented 0 tab stops with the computer name as data in bold italics: OFFICEPC
+This is a regular line of text indented 0 tab stops with the computer name as data in 14 point bold italics: OFFICEPC
+This is a regular line of text indented 0 tab stops with the computer name as data in 8 point Courier New bold italics: 
+OFFICEPC
+
+Standard-Style Tables
+------------------------------------------------------------------------------------------------------------------------
+
+Autofit Width Autofit Cell No Highlighting
+------------------------------------------------------------------------------------------------------------------------
+Example of an autofit table width, autofit contents and no cell highlighting.
+Services (230 Services found):
+
+Display Name                                                          Status  Startup Type
+------------                                                          ------  ------------
+ACP User Service                                                      Running Auto        
+ActiveX Installer (AxInstSV)                                          Stopped Manual      
+AdaptiveSleepService                                                  Running Auto        
+AllJoyn Router Service                                                Stopped Manual      
+AMD External Events Utility                                           Running Auto        
+App Readiness                                                         Stopped Manual      
+Apple Mobile Device Service                                           Running Auto        
+Application Identity                                                  Stopped Manual      
+Application Information                                               Running Manual      
+Application Layer Gateway Service                                     Stopped Manual      
+Application Management                                                Stopped Manual      
+AppX Deployment Service (AppXSVC)                                     Stopped Manual      
+ASP.NET State Service                                                 Stopped Manual      
+Auto Time Zone Updater                                                Stopped Disabled    
+Background Intelligent Transfer Service                               Running Auto        
+Background Tasks Infrastructure Service                               Running Auto        
+Base Filtering Engine                                                 Running Auto        
+BitLocker Drive Encryption Service                                    Stopped Manual      
+Block Level Backup Engine Service                                     Stopped Manual      
+Bluetooth Handsfree Service                                           Stopped Manual      
+BranchCache                                                           Stopped Manual      
+bthserv                                                               Stopped Manual      
+Certificate Propagation                                               Running Manual      
+Client License Service (ClipSVC)                                      Stopped Manual      
+CNG Key Isolation                                                     Running Manual      
+COM+ Event System                                                     Running Auto        
+COM+ System Application                                               Stopped Manual      
+Computer Browser                                                      Running Manual      
+Connected Device Platform Service                                     Stopped Disabled    
+Connected User Experiences and Telemetry                              Running Auto        
+CoreMessaging                                                         Running Auto        
+Credential Manager                                                    Running Manual      
+Cryptographic Services                                                Running Auto        
+Data Sharing Service                                                  Running Manual      
+DataCollectionPublishingService                                       Stopped Manual      
+DCOM Server Process Launcher                                          Running Auto        
+Delivery Optimization                                                 Stopped Auto        
+Device Association Service                                            Running Auto        
+Device Install Service                                                Stopped Manual      
+Device Management Enrollment Service                                  Stopped Manual      
+Device Setup Manager                                                  Stopped Manual      
+DevQuery Background Discovery Broker                                  Stopped Manual      
+DHCP Client                                                           Running Auto        
+Diagnostic Policy Service                                             Running Auto        
+Diagnostic Service Host                                               Running Manual      
+Diagnostic System Host                                                Running Manual      
+Distributed Link Tracking Client                                      Running Auto        
+Distributed Transaction Coordinator                                   Stopped Manual      
+dmwappushsvc                                                          Stopped Manual      
+DNS Client                                                            Running Auto        
+Downloaded Maps Manager                                               Stopped Auto        
+Dropbox Update Service (dbupdate)                                     Stopped Auto        
+Dropbox Update Service (dbupdatem)                                    Stopped Manual      
+Embedded Mode                                                         Stopped Manual      
+Encrypting File System (EFS)                                          Stopped Manual      
+Enterprise App Management Service                                     Stopped Manual      
+Extensible Authentication Protocol                                    Stopped Manual      
+Fax                                                                   Stopped Manual      
+File History Service                                                  Stopped Manual      
+Function Discovery Provider Host                                      Running Manual      
+Function Discovery Resource Publication                               Running Manual      
+Geolocation Service                                                   Running Manual      
+Google Update Service (gupdate)                                       Stopped Auto        
+Google Update Service (gupdatem)                                      Stopped Manual      
+Group Policy Client                                                   Running Auto        
+HomeGroup Provider                                                    Running Manual      
+Host Network Service                                                  Stopped Manual      
+Human Interface Device Service                                        Running Manual      
+HV Host Service                                                       Running Manual      
+Hyper-V Data Exchange Service                                         Stopped Manual      
+Hyper-V Guest Service Interface                                       Stopped Manual      
+Hyper-V Guest Shutdown Service                                        Stopped Manual      
+Hyper-V Heartbeat Service                                             Stopped Manual      
+Hyper-V Host Compute Service                                          Stopped Manual      
+Hyper-V Remote Desktop Virtualization Service                         Stopped Manual      
+Hyper-V Time Synchronization Service                                  Stopped Manual      
+Hyper-V Virtual Machine Management                                    Running Auto        
+Hyper-V VM Session Service                                            Stopped Manual      
+Hyper-V Volume Shadow Copy Requestor                                  Stopped Manual      
+IKE and AuthIP IPsec Keying Modules                                   Stopped Manual      
+Infrared monitor service                                              Stopped Manual      
+Intel(R) Capability Licensing Service TCP IP Interface                Stopped Manual      
+Intel(R) Dynamic Application Loader Host Interface Service            Running Auto        
+Intel(R) Management and Security Application Local Management Service Running Auto        
+Interactive Services Detection                                        Stopped Manual      
+Internet Connection Sharing (ICS)                                     Stopped Manual      
+Internet Explorer ETW Collector Service                               Stopped Manual      
+IP Helper                                                             Running Auto        
+IPsec Policy Agent                                                    Stopped Manual      
+KtmRm for Distributed Transaction Coordinator                         Stopped Manual      
+Link-Layer Topology Discovery Mapper                                  Stopped Manual      
+LSM                                                                   Running Unknown     
+Microsoft (R) Diagnostics Hub Standard Collector Service              Stopped Manual      
+Microsoft Account Sign-in Assistant                                   Stopped Manual      
+Microsoft App-V Client                                                Running Auto        
+Microsoft iSCSI Initiator Service                                     Stopped Manual      
+Microsoft Passport                                                    Stopped Manual      
+Microsoft Passport Container                                          Stopped Manual      
+Microsoft Software Shadow Copy Provider                               Stopped Manual      
+Microsoft Storage Spaces SMP                                          Stopped Manual      
+Microsoft Windows SMS Router Service.                                 Stopped Manual      
+Mozilla Maintenance Service                                           Stopped Manual      
+Net Driver HPZ12                                                      Running Auto        
+Net.Tcp Port Sharing Service                                          Stopped Disabled    
+Netlogon                                                              Stopped Manual      
+NetSetupSvc                                                           Running Unknown     
+Network Connected Devices Auto-Setup                                  Running Manual      
+Network Connection Broker                                             Running Manual      
+Network Connections                                                   Stopped Manual      
+Network Connectivity Assistant                                        Stopped Manual      
+Network List Service                                                  Running Manual      
+Network Location Awareness                                            Running Auto        
+Network Store Interface Service                                       Running Auto        
+NitroPDFReaderDriverCreatorReadSpool3                                 Running Auto        
+Office  Source Engine                                                 Stopped Manual      
+Offline Files                                                         Stopped Manual      
+Optimise drives                                                       Stopped Manual      
+Peer Name Resolution Protocol                                         Stopped Manual      
+Peer Networking Grouping                                              Stopped Manual      
+Peer Networking Identity Manager                                      Stopped Manual      
+Performance Counter DLL Host                                          Stopped Manual      
+Performance Logs & Alerts                                             Stopped Manual      
+Phone Service                                                         Stopped Manual      
+Plug and Play                                                         Running Manual      
+Pml Driver HPZ12                                                      Running Auto        
+PNRP Machine Name Publication Service                                 Stopped Manual      
+Portable Device Enumerator Service                                    Stopped Manual      
+Power                                                                 Running Auto        
+Print Spooler                                                         Running Auto        
+Printer Extensions and Notifications                                  Stopped Manual      
+Problem Reports and Solutions Control Panel Support                   Stopped Manual      
+Program Compatibility Assistant Service                               Running Auto        
+Quality Windows Audio Video Experience                                Stopped Manual      
+Remote Access Auto Connection Manager                                 Stopped Manual      
+Remote Access Connection Manager                                      Stopped Manual      
+Remote Desktop Configuration                                          Running Manual      
+Remote Desktop Services                                               Running Manual      
+Remote Desktop Services UserMode Port Redirector                      Running Manual      
+Remote Procedure Call (RPC)                                           Running Auto        
+Remote Procedure Call (RPC) Locator                                   Stopped Manual      
+Remote Registry                                                       Stopped Disabled    
+Retail Demo Service                                                   Stopped Manual      
+Routing and Remote Access                                             Stopped Disabled    
+RPC Endpoint Mapper                                                   Running Auto        
+Secondary Log-on                                                      Stopped Manual      
+Secure Socket Tunneling Protocol Service                              Stopped Manual      
+Security Accounts Manager                                             Running Auto        
+Security Center                                                       Running Auto        
+Sensor Data Service                                                   Stopped Manual      
+Sensor Monitoring Service                                             Stopped Manual      
+Sensor Service                                                        Stopped Manual      
+Server                                                                Running Auto        
+Shell Hardware Detection                                              Running Auto        
+Skype Updater                                                         Stopped Auto        
+Smart Card                                                            Stopped Disabled    
+Smart Card Device Enumeration Service                                 Stopped Manual      
+Smart Card Removal Policy                                             Stopped Manual      
+SNMP Trap                                                             Stopped Manual      
+Software Protection                                                   Stopped Auto        
+Spot Verifier                                                         Stopped Manual      
+SQL Server VSS Writer                                                 Running Auto        
+SSDP Discovery                                                        Running Manual      
+State Repository Service                                              Running Manual      
+Still Image Acquisition Events                                        Stopped Manual      
+Storage Service                                                       Running Manual      
+Storage Tiers Management                                              Stopped Manual      
+Superfetch                                                            Running Auto        
+System Event Notification Service                                     Running Auto        
+System Events Broker                                                  Running Auto        
+Task Scheduler                                                        Running Auto        
+TCP/IP NetBIOS Helper                                                 Running Manual      
+Te.Service                                                            Stopped Manual      
+TeamViewer 11                                                         Running Auto        
+Telephony                                                             Stopped Manual      
+Themes                                                                Running Auto        
+Tile Data model server                                                Running Auto        
+Time Broker                                                           Running Manual      
+Touch Keyboard and Handwriting Panel Service                          Stopped Manual      
+Update Orchestrator Service manages Windows Updates                   Stopped Manual      
+UPnP Device Host                                                      Stopped Manual      
+User Manager                                                          Running Auto        
+User Profile Service                                                  Running Auto        
+Virtual Disk                                                          Stopped Manual      
+Visual Studio ETW Event Collection Service                            Stopped Manual      
+Volume Shadow Copy                                                    Stopped Manual      
+WalletService                                                         Stopped Manual      
+WebClient                                                             Stopped Manual      
+Windows Advanced Threat Protection Service                            Stopped Manual      
+Windows App Certification Kit Fast User Switching Utility Service     Stopped Manual      
+Windows Audio                                                         Running Auto        
+Windows Audio Endpoint Builder                                        Running Auto        
+Windows Backup                                                        Stopped Manual      
+Windows Biometric Service                                             Stopped Auto        
+Windows Camera Frame Server                                           Stopped Manual      
+Windows Connect Now - Config Registrar                                Stopped Manual      
+Windows Connection Manager                                            Running Auto        
+Windows Defender Network Inspection Service                           Running Manual      
+Windows Defender Service                                              Running Auto        
+Windows Driver Foundation - User-mode Driver Framework                Running Manual      
+Windows Encryption Provider Host Service                              Stopped Manual      
+Windows Error Reporting Service                                       Stopped Manual      
+Windows Event Collector                                               Stopped Manual      
+Windows Event Log                                                     Running Auto        
+Windows Firewall                                                      Running Auto        
+Windows Font Cache Service                                            Running Auto        
+Windows Image Acquisition (WIA)                                       Running Auto        
+Windows Insider Service                                               Running Manual      
+Windows Installer                                                     Stopped Manual      
+Windows License Manager Service                                       Running Manual      
+Windows Management Instrumentation                                    Running Auto        
+Windows Media Player Network Sharing Service                          Stopped Manual      
+Windows Mobile Hotspot Service                                        Stopped Manual      
+Windows Modules Installer                                             Stopped Manual      
+Windows Phone IP over USB Transport (IpOverUsbSvc)                    Running Auto        
+Windows Presentation Foundation Font Cache 3.0.0.0                    Stopped Manual      
+Windows Push Notifications Service                                    Stopped Manual      
+Windows Remote Management (WS-Management)                             Running Auto        
+Windows Search                                                        Running Auto        
+Windows Time                                                          Stopped Manual      
+Windows Update                                                        Stopped Manual      
+WinHTTP Web Proxy Auto-Discovery Service                              Running Manual      
+Wired AutoConfig                                                      Stopped Manual      
+WLAN AutoConfig                                                       Stopped Manual      
+WMI Performance Adapter                                               Stopped Manual      
+Work Folders                                                          Stopped Manual      
+Workstation                                                           Running Auto        
+WWAN AutoConfig                                                       Stopped Manual      
+Xbox Live Auth Manager                                                Stopped Manual      
+Xbox Live Game Save                                                   Stopped Manual      
+Xbox Live Networking Service                                          Stopped Manual      
+
+________________________________________________________________________________________________________________________
+
+
+
+Full Width Autofit Cell Highlighting
+------------------------------------------------------------------------------------------------------------------------
+Example of a full width table with autofit columns and individual cell highlighting.
+Services (230 Services found):
+
+Display Name                                                          Status  Startup Type
+------------                                                          ------  ------------
+ACP User Service                                                      Running Auto        
+ActiveX Installer (AxInstSV)                                          Stopped Manual      
+AdaptiveSleepService                                                  Running Auto        
+AllJoyn Router Service                                                Stopped Manual      
+AMD External Events Utility                                           Running Auto        
+App Readiness                                                         Stopped Manual      
+Apple Mobile Device Service                                           Running Auto        
+Application Identity                                                  Stopped Manual      
+Application Information                                               Running Manual      
+Application Layer Gateway Service                                     Stopped Manual      
+Application Management                                                Stopped Manual      
+AppX Deployment Service (AppXSVC)                                     Stopped Manual      
+ASP.NET State Service                                                 Stopped Manual      
+Auto Time Zone Updater                                                Stopped Disabled    
+Background Intelligent Transfer Service                               Running Auto        
+Background Tasks Infrastructure Service                               Running Auto        
+Base Filtering Engine                                                 Running Auto        
+BitLocker Drive Encryption Service                                    Stopped Manual      
+Block Level Backup Engine Service                                     Stopped Manual      
+Bluetooth Handsfree Service                                           Stopped Manual      
+BranchCache                                                           Stopped Manual      
+bthserv                                                               Stopped Manual      
+Certificate Propagation                                               Running Manual      
+Client License Service (ClipSVC)                                      Stopped Manual      
+CNG Key Isolation                                                     Running Manual      
+COM+ Event System                                                     Running Auto        
+COM+ System Application                                               Stopped Manual      
+Computer Browser                                                      Running Manual      
+Connected Device Platform Service                                     Stopped Disabled    
+Connected User Experiences and Telemetry                              Running Auto        
+CoreMessaging                                                         Running Auto        
+Credential Manager                                                    Running Manual      
+Cryptographic Services                                                Running Auto        
+Data Sharing Service                                                  Running Manual      
+DataCollectionPublishingService                                       Stopped Manual      
+DCOM Server Process Launcher                                          Running Auto        
+Delivery Optimization                                                 Stopped Auto        
+Device Association Service                                            Running Auto        
+Device Install Service                                                Stopped Manual      
+Device Management Enrollment Service                                  Stopped Manual      
+Device Setup Manager                                                  Stopped Manual      
+DevQuery Background Discovery Broker                                  Stopped Manual      
+DHCP Client                                                           Running Auto        
+Diagnostic Policy Service                                             Running Auto        
+Diagnostic Service Host                                               Running Manual      
+Diagnostic System Host                                                Running Manual      
+Distributed Link Tracking Client                                      Running Auto        
+Distributed Transaction Coordinator                                   Stopped Manual      
+dmwappushsvc                                                          Stopped Manual      
+DNS Client                                                            Running Auto        
+Downloaded Maps Manager                                               Stopped Auto        
+Dropbox Update Service (dbupdate)                                     Stopped Auto        
+Dropbox Update Service (dbupdatem)                                    Stopped Manual      
+Embedded Mode                                                         Stopped Manual      
+Encrypting File System (EFS)                                          Stopped Manual      
+Enterprise App Management Service                                     Stopped Manual      
+Extensible Authentication Protocol                                    Stopped Manual      
+Fax                                                                   Stopped Manual      
+File History Service                                                  Stopped Manual      
+Function Discovery Provider Host                                      Running Manual      
+Function Discovery Resource Publication                               Running Manual      
+Geolocation Service                                                   Running Manual      
+Google Update Service (gupdate)                                       Stopped Auto        
+Google Update Service (gupdatem)                                      Stopped Manual      
+Group Policy Client                                                   Running Auto        
+HomeGroup Provider                                                    Running Manual      
+Host Network Service                                                  Stopped Manual      
+Human Interface Device Service                                        Running Manual      
+HV Host Service                                                       Running Manual      
+Hyper-V Data Exchange Service                                         Stopped Manual      
+Hyper-V Guest Service Interface                                       Stopped Manual      
+Hyper-V Guest Shutdown Service                                        Stopped Manual      
+Hyper-V Heartbeat Service                                             Stopped Manual      
+Hyper-V Host Compute Service                                          Stopped Manual      
+Hyper-V Remote Desktop Virtualization Service                         Stopped Manual      
+Hyper-V Time Synchronization Service                                  Stopped Manual      
+Hyper-V Virtual Machine Management                                    Running Auto        
+Hyper-V VM Session Service                                            Stopped Manual      
+Hyper-V Volume Shadow Copy Requestor                                  Stopped Manual      
+IKE and AuthIP IPsec Keying Modules                                   Stopped Manual      
+Infrared monitor service                                              Stopped Manual      
+Intel(R) Capability Licensing Service TCP IP Interface                Stopped Manual      
+Intel(R) Dynamic Application Loader Host Interface Service            Running Auto        
+Intel(R) Management and Security Application Local Management Service Running Auto        
+Interactive Services Detection                                        Stopped Manual      
+Internet Connection Sharing (ICS)                                     Stopped Manual      
+Internet Explorer ETW Collector Service                               Stopped Manual      
+IP Helper                                                             Running Auto        
+IPsec Policy Agent                                                    Stopped Manual      
+KtmRm for Distributed Transaction Coordinator                         Stopped Manual      
+Link-Layer Topology Discovery Mapper                                  Stopped Manual      
+LSM                                                                   Running Unknown     
+Microsoft (R) Diagnostics Hub Standard Collector Service              Stopped Manual      
+Microsoft Account Sign-in Assistant                                   Stopped Manual      
+Microsoft App-V Client                                                Running Auto        
+Microsoft iSCSI Initiator Service                                     Stopped Manual      
+Microsoft Passport                                                    Stopped Manual      
+Microsoft Passport Container                                          Stopped Manual      
+Microsoft Software Shadow Copy Provider                               Stopped Manual      
+Microsoft Storage Spaces SMP                                          Stopped Manual      
+Microsoft Windows SMS Router Service.                                 Stopped Manual      
+Mozilla Maintenance Service                                           Stopped Manual      
+Net Driver HPZ12                                                      Running Auto        
+Net.Tcp Port Sharing Service                                          Stopped Disabled    
+Netlogon                                                              Stopped Manual      
+NetSetupSvc                                                           Running Unknown     
+Network Connected Devices Auto-Setup                                  Running Manual      
+Network Connection Broker                                             Running Manual      
+Network Connections                                                   Stopped Manual      
+Network Connectivity Assistant                                        Stopped Manual      
+Network List Service                                                  Running Manual      
+Network Location Awareness                                            Running Auto        
+Network Store Interface Service                                       Running Auto        
+NitroPDFReaderDriverCreatorReadSpool3                                 Running Auto        
+Office  Source Engine                                                 Stopped Manual      
+Offline Files                                                         Stopped Manual      
+Optimise drives                                                       Stopped Manual      
+Peer Name Resolution Protocol                                         Stopped Manual      
+Peer Networking Grouping                                              Stopped Manual      
+Peer Networking Identity Manager                                      Stopped Manual      
+Performance Counter DLL Host                                          Stopped Manual      
+Performance Logs & Alerts                                             Stopped Manual      
+Phone Service                                                         Stopped Manual      
+Plug and Play                                                         Running Manual      
+Pml Driver HPZ12                                                      Running Auto        
+PNRP Machine Name Publication Service                                 Stopped Manual      
+Portable Device Enumerator Service                                    Stopped Manual      
+Power                                                                 Running Auto        
+Print Spooler                                                         Running Auto        
+Printer Extensions and Notifications                                  Stopped Manual      
+Problem Reports and Solutions Control Panel Support                   Stopped Manual      
+Program Compatibility Assistant Service                               Running Auto        
+Quality Windows Audio Video Experience                                Stopped Manual      
+Remote Access Auto Connection Manager                                 Stopped Manual      
+Remote Access Connection Manager                                      Stopped Manual      
+Remote Desktop Configuration                                          Running Manual      
+Remote Desktop Services                                               Running Manual      
+Remote Desktop Services UserMode Port Redirector                      Running Manual      
+Remote Procedure Call (RPC)                                           Running Auto        
+Remote Procedure Call (RPC) Locator                                   Stopped Manual      
+Remote Registry                                                       Stopped Disabled    
+Retail Demo Service                                                   Stopped Manual      
+Routing and Remote Access                                             Stopped Disabled    
+RPC Endpoint Mapper                                                   Running Auto        
+Secondary Log-on                                                      Stopped Manual      
+Secure Socket Tunneling Protocol Service                              Stopped Manual      
+Security Accounts Manager                                             Running Auto        
+Security Center                                                       Running Auto        
+Sensor Data Service                                                   Stopped Manual      
+Sensor Monitoring Service                                             Stopped Manual      
+Sensor Service                                                        Stopped Manual      
+Server                                                                Running Auto        
+Shell Hardware Detection                                              Running Auto        
+Skype Updater                                                         Stopped Auto        
+Smart Card                                                            Stopped Disabled    
+Smart Card Device Enumeration Service                                 Stopped Manual      
+Smart Card Removal Policy                                             Stopped Manual      
+SNMP Trap                                                             Stopped Manual      
+Software Protection                                                   Stopped Auto        
+Spot Verifier                                                         Stopped Manual      
+SQL Server VSS Writer                                                 Running Auto        
+SSDP Discovery                                                        Running Manual      
+State Repository Service                                              Running Manual      
+Still Image Acquisition Events                                        Stopped Manual      
+Storage Service                                                       Running Manual      
+Storage Tiers Management                                              Stopped Manual      
+Superfetch                                                            Running Auto        
+System Event Notification Service                                     Running Auto        
+System Events Broker                                                  Running Auto        
+Task Scheduler                                                        Running Auto        
+TCP/IP NetBIOS Helper                                                 Running Manual      
+Te.Service                                                            Stopped Manual      
+TeamViewer 11                                                         Running Auto        
+Telephony                                                             Stopped Manual      
+Themes                                                                Running Auto        
+Tile Data model server                                                Running Auto        
+Time Broker                                                           Running Manual      
+Touch Keyboard and Handwriting Panel Service                          Stopped Manual      
+Update Orchestrator Service manages Windows Updates                   Stopped Manual      
+UPnP Device Host                                                      Stopped Manual      
+User Manager                                                          Running Auto        
+User Profile Service                                                  Running Auto        
+Virtual Disk                                                          Stopped Manual      
+Visual Studio ETW Event Collection Service                            Stopped Manual      
+Volume Shadow Copy                                                    Stopped Manual      
+WalletService                                                         Stopped Manual      
+WebClient                                                             Stopped Manual      
+Windows Advanced Threat Protection Service                            Stopped Manual      
+Windows App Certification Kit Fast User Switching Utility Service     Stopped Manual      
+Windows Audio                                                         Running Auto        
+Windows Audio Endpoint Builder                                        Running Auto        
+Windows Backup                                                        Stopped Manual      
+Windows Biometric Service                                             Stopped Auto        
+Windows Camera Frame Server                                           Stopped Manual      
+Windows Connect Now - Config Registrar                                Stopped Manual      
+Windows Connection Manager                                            Running Auto        
+Windows Defender Network Inspection Service                           Running Manual      
+Windows Defender Service                                              Running Auto        
+Windows Driver Foundation - User-mode Driver Framework                Running Manual      
+Windows Encryption Provider Host Service                              Stopped Manual      
+Windows Error Reporting Service                                       Stopped Manual      
+Windows Event Collector                                               Stopped Manual      
+Windows Event Log                                                     Running Auto        
+Windows Firewall                                                      Running Auto        
+Windows Font Cache Service                                            Running Auto        
+Windows Image Acquisition (WIA)                                       Running Auto        
+Windows Insider Service                                               Running Manual      
+Windows Installer                                                     Stopped Manual      
+Windows License Manager Service                                       Running Manual      
+Windows Management Instrumentation                                    Running Auto        
+Windows Media Player Network Sharing Service                          Stopped Manual      
+Windows Mobile Hotspot Service                                        Stopped Manual      
+Windows Modules Installer                                             Stopped Manual      
+Windows Phone IP over USB Transport (IpOverUsbSvc)                    Running Auto        
+Windows Presentation Foundation Font Cache 3.0.0.0                    Stopped Manual      
+Windows Push Notifications Service                                    Stopped Manual      
+Windows Remote Management (WS-Management)                             Running Auto        
+Windows Search                                                        Running Auto        
+Windows Time                                                          Stopped Manual      
+Windows Update                                                        Stopped Manual      
+WinHTTP Web Proxy Auto-Discovery Service                              Running Manual      
+Wired AutoConfig                                                      Stopped Manual      
+WLAN AutoConfig                                                       Stopped Manual      
+WMI Performance Adapter                                               Stopped Manual      
+Work Folders                                                          Stopped Manual      
+Workstation                                                           Running Auto        
+WWAN AutoConfig                                                       Stopped Manual      
+Xbox Live Auth Manager                                                Stopped Manual      
+Xbox Live Game Save                                                   Stopped Manual      
+Xbox Live Networking Service                                          Stopped Manual      
+
+

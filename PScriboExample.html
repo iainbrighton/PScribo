@@ -1,0 +1,493 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>PScribo Example</title>
+<style type="text/css">
+html { height: 100%; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; background: #f8f8f8; }
+page { background: white; width: 210mm; display: block; margin-top: 1em; margin-left: auto; margin-right: auto; margin-bottom: 1em; border-style: solid; border-width: 1px; border-color: #c6c6c6; }
+@media print { body, page { margin: 0; box-shadow: 0; } }
+hr { margin-top: 1.0em; }
+ .TOC { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 1.33em; text-align: left; font-weight: normal; color: #0072af; }
+ .Heading2 { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 1.17em; text-align: left; font-weight: normal; color: #0072af; }
+ .TableDefaultAltRow { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: normal; color: #000000; background-color: #d0ddee; }
+ .Heading1 { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 1.33em; text-align: left; font-weight: normal; color: #0072af; }
+ .TableDefaultHeading { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #fff; background-color: #4472c4; }
+ .Footer { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.67em; text-align: left; font-weight: normal; color: #0072af; }
+ .StoppedService { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #ffffff; background-color: #b22222; }
+ .Normal { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: normal; color: #000000; }
+ .TableDefaultRow { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: normal; color: #000000; }
+ .Title { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 2.33em; text-align: left; font-weight: normal; color: #0072af; }
+ .Heading3 { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 1.00em; text-align: left; font-weight: normal; color: #0072af; }
+ table.tabledefault { padding: 0.08em 0.33em 0em 0.33em; border-style: solid; border-width: 0.08em; border-color: #2a70be; border-collapse: collapse; }
+ table.tabledefault th { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #fff; background-color: #4472c4; padding: 0.08em 0.33em 0em 0.33em; border-style: solid; border-width: 0.08em; border-color: #2a70be; border-collapse: collapse; }
+ table.tabledefault tr:nth-child(odd) td { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: normal; color: #000000; padding: 0.08em 0.33em 0em 0.33em; border-style: solid; border-width: 0.08em; border-color: #2a70be; border-collapse: collapse; }
+ table.tabledefault tr:nth-child(even) td { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: normal; color: #000000; background-color: #d0ddee; padding: 0.08em 0.33em 0em 0.33em; border-style: solid; border-width: 0.08em; border-color: #2a70be; border-collapse: collapse; }
+ table.tabledefault-list { padding: 0.08em 0.33em 0em 0.33em; border-style: solid; border-width: 0.08em; border-color: #2a70be; border-collapse: collapse; }
+ table.tabledefault-list td:nth-child(1) { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #fff; background-color: #4472c4; padding: 0.08em 0.33em 0em 0.33em; border-style: solid; border-width: 0.08em; border-color: #2a70be; border-collapse: collapse; }
+ table.tabledefault-list td:nth-child(2) { font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: normal; color: #000000; padding: 0.08em 0.33em 0em 0.33em; border-style: solid; border-width: 0.08em; border-color: #2a70be; border-collapse: collapse; }
+</style></head><body><page>
+<div class="Normal" style="padding-top: 6em; padding-left: 4.5em; padding-bottom: 6em; padding-right: 4.5em;">
+<div class="Heading1">This is Heading 1</div><div class="Heading2">This is Heading 2</div><div class="Heading3">This is Heading 3</div><div>This is a regular line of text indented 0 tab stops</div><div style="margin-left: 3em;">This is a regular line of text indented 1 tab stops. This text should not be displayed as a hanging indent, e.g. not just the first line of the paragraph indented.</div><div style="margin-left: 6em;">This is a regular line of text indented 2 tab stops</div><div style="margin-left: 9em;">This is a regular line of text indented 3 tab stops</div><div style="font-style: italic;">This is a regular line of text in the default font in italics</div><div style="font-weight: bold;">This is a regular line of text in the default font in bold</div><div style="font-weight: bold; font-style: italic;">This is a regular line of text in the default font in bold italics</div><div style="font-size: 1.17em;">This is a regular line of text in the default font in 14 point</div><div style="font-family: 'Courier New';">This is a regular line of text in Courier New font</div><div>This is a regular line of text indented 0 tab stops with the computer name as data: OFFICEPC</div><div style="font-weight: bold;">This is a regular line of text indented 0 tab stops with the computer name as data in bold: OFFICEPC</div><div style="font-weight: bold; font-style: italic;">This is a regular line of text indented 0 tab stops with the computer name as data in bold italics: OFFICEPC</div><div style="font-size: 1.17em; font-weight: bold; font-style: italic;">This is a regular line of text indented 0 tab stops with the computer name as data in 14 point bold italics: OFFICEPC</div><div style="font-family: 'Courier New'; font-size: 0.67em; font-weight: bold; font-style: italic;">This is a regular line of text indented 0 tab stops with the computer name as data in 8 point Courier New bold italics: OFFICEPC</div><a name="STANDARD-STYLETABLES"><h1 class="Heading1">Standard-Style Tables</h1></a><a name="AUTOFITWIDTHAUTOFITCELLNOHIGHLIGHTING"><h2 class="Heading2">Autofit Width Autofit Cell No Highlighting</h2></a><div class="Heading3">Example of an autofit table width, autofit contents and no cell highlighting.</div><div>Services (230 Services found):</div><div><table class="tabledefault"><thead><tr><th>Display Name</th><th>Status</th><th>Startup Type</th></tr></thead><tbody>
+<tr><td>ACP User Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>ActiveX Installer (AxInstSV)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>AdaptiveSleepService</td><td>Running</td><td>Auto</td></tr>
+<tr><td>AllJoyn Router Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>AMD External Events Utility</td><td>Running</td><td>Auto</td></tr>
+<tr><td>App Readiness</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Apple Mobile Device Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Application Identity</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Application Information</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Application Layer Gateway Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Application Management</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>AppX Deployment Service (AppXSVC)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>ASP.NET State Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Auto Time Zone Updater</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>Background Intelligent Transfer Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Background Tasks Infrastructure Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Base Filtering Engine</td><td>Running</td><td>Auto</td></tr>
+<tr><td>BitLocker Drive Encryption Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Block Level Backup Engine Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Bluetooth Handsfree Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>BranchCache</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>bthserv</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Certificate Propagation</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Client License Service (ClipSVC)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>CNG Key Isolation</td><td>Running</td><td>Manual</td></tr>
+<tr><td>COM+ Event System</td><td>Running</td><td>Auto</td></tr>
+<tr><td>COM+ System Application</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Computer Browser</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Connected Device Platform Service</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>Connected User Experiences and Telemetry</td><td>Running</td><td>Auto</td></tr>
+<tr><td>CoreMessaging</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Credential Manager</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Cryptographic Services</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Data Sharing Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>DataCollectionPublishingService</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>DCOM Server Process Launcher</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Delivery Optimization</td><td>Stopped</td><td>Auto</td></tr>
+<tr><td>Device Association Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Device Install Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Device Management Enrollment Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Device Setup Manager</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>DevQuery Background Discovery Broker</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>DHCP Client</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Diagnostic Policy Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Diagnostic Service Host</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Diagnostic System Host</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Distributed Link Tracking Client</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Distributed Transaction Coordinator</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>dmwappushsvc</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>DNS Client</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Downloaded Maps Manager</td><td>Stopped</td><td>Auto</td></tr>
+<tr><td>Dropbox Update Service (dbupdate)</td><td>Stopped</td><td>Auto</td></tr>
+<tr><td>Dropbox Update Service (dbupdatem)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Embedded Mode</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Encrypting File System (EFS)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Enterprise App Management Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Extensible Authentication Protocol</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Fax</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>File History Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Function Discovery Provider Host</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Function Discovery Resource Publication</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Geolocation Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Google Update Service (gupdate)</td><td>Stopped</td><td>Auto</td></tr>
+<tr><td>Google Update Service (gupdatem)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Group Policy Client</td><td>Running</td><td>Auto</td></tr>
+<tr><td>HomeGroup Provider</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Host Network Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Human Interface Device Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>HV Host Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Hyper-V Data Exchange Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Guest Service Interface</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Guest Shutdown Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Heartbeat Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Host Compute Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Remote Desktop Virtualization Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Time Synchronization Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Virtual Machine Management</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Hyper-V VM Session Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Volume Shadow Copy Requestor</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>IKE and AuthIP IPsec Keying Modules</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Infrared monitor service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Intel(R) Capability Licensing Service TCP IP Interface</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Intel(R) Dynamic Application Loader Host Interface Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Intel(R) Management and Security Application Local Management Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Interactive Services Detection</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Internet Connection Sharing (ICS)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Internet Explorer ETW Collector Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>IP Helper</td><td>Running</td><td>Auto</td></tr>
+<tr><td>IPsec Policy Agent</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>KtmRm for Distributed Transaction Coordinator</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Link-Layer Topology Discovery Mapper</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>LSM</td><td>Running</td><td>Unknown</td></tr>
+<tr><td>Microsoft (R) Diagnostics Hub Standard Collector Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Account Sign-in Assistant</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft App-V Client</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Microsoft iSCSI Initiator Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Passport</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Passport Container</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Software Shadow Copy Provider</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Storage Spaces SMP</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Windows SMS Router Service.</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Mozilla Maintenance Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Net Driver HPZ12</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Net.Tcp Port Sharing Service</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>Netlogon</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>NetSetupSvc</td><td>Running</td><td>Unknown</td></tr>
+<tr><td>Network Connected Devices Auto-Setup</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Network Connection Broker</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Network Connections</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Network Connectivity Assistant</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Network List Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Network Location Awareness</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Network Store Interface Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>NitroPDFReaderDriverCreatorReadSpool3</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Office  Source Engine</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Offline Files</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Optimise drives</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Peer Name Resolution Protocol</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Peer Networking Grouping</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Peer Networking Identity Manager</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Performance Counter DLL Host</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Performance Logs & Alerts</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Phone Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Plug and Play</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Pml Driver HPZ12</td><td>Running</td><td>Auto</td></tr>
+<tr><td>PNRP Machine Name Publication Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Portable Device Enumerator Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Power</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Print Spooler</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Printer Extensions and Notifications</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Problem Reports and Solutions Control Panel Support</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Program Compatibility Assistant Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Quality Windows Audio Video Experience</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Remote Access Auto Connection Manager</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Remote Access Connection Manager</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Remote Desktop Configuration</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Remote Desktop Services</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Remote Desktop Services UserMode Port Redirector</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Remote Procedure Call (RPC)</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Remote Procedure Call (RPC) Locator</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Remote Registry</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>Retail Demo Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Routing and Remote Access</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>RPC Endpoint Mapper</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Secondary Log-on</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Secure Socket Tunneling Protocol Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Security Accounts Manager</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Security Center</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Sensor Data Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Sensor Monitoring Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Sensor Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Server</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Shell Hardware Detection</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Skype Updater</td><td>Stopped</td><td>Auto</td></tr>
+<tr><td>Smart Card</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>Smart Card Device Enumeration Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Smart Card Removal Policy</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>SNMP Trap</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Software Protection</td><td>Stopped</td><td>Auto</td></tr>
+<tr><td>Spot Verifier</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>SQL Server VSS Writer</td><td>Running</td><td>Auto</td></tr>
+<tr><td>SSDP Discovery</td><td>Running</td><td>Manual</td></tr>
+<tr><td>State Repository Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Still Image Acquisition Events</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Storage Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Storage Tiers Management</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Superfetch</td><td>Running</td><td>Auto</td></tr>
+<tr><td>System Event Notification Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>System Events Broker</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Task Scheduler</td><td>Running</td><td>Auto</td></tr>
+<tr><td>TCP/IP NetBIOS Helper</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Te.Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>TeamViewer 11</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Telephony</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Themes</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Tile Data model server</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Time Broker</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Touch Keyboard and Handwriting Panel Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Update Orchestrator Service manages Windows Updates</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>UPnP Device Host</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>User Manager</td><td>Running</td><td>Auto</td></tr>
+<tr><td>User Profile Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Virtual Disk</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Visual Studio ETW Event Collection Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Volume Shadow Copy</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>WalletService</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>WebClient</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Advanced Threat Protection Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows App Certification Kit Fast User Switching Utility Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Audio</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Audio Endpoint Builder</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Backup</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Biometric Service</td><td>Stopped</td><td>Auto</td></tr>
+<tr><td>Windows Camera Frame Server</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Connect Now - Config Registrar</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Connection Manager</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Defender Network Inspection Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Windows Defender Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Driver Foundation - User-mode Driver Framework</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Windows Encryption Provider Host Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Error Reporting Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Event Collector</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Event Log</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Firewall</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Font Cache Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Image Acquisition (WIA)</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Insider Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Windows Installer</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows License Manager Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Windows Management Instrumentation</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Media Player Network Sharing Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Mobile Hotspot Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Modules Installer</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Phone IP over USB Transport (IpOverUsbSvc)</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Presentation Foundation Font Cache 3.0.0.0</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Push Notifications Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Remote Management (WS-Management)</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Search</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Time</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Update</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>WinHTTP Web Proxy Auto-Discovery Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Wired AutoConfig</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>WLAN AutoConfig</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>WMI Performance Adapter</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Work Folders</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Workstation</td><td>Running</td><td>Auto</td></tr>
+<tr><td>WWAN AutoConfig</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Xbox Live Auth Manager</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Xbox Live Game Save</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Xbox Live Networking Service</td><td>Stopped</td><td>Manual</td></tr>
+</tbody></table></div>
+</div></page><page><div class="Normal" style="padding-top: 6em; padding-left: 4.5em; padding-bottom: 6em; padding-right: 4.5em;">
+<a name="FULLWIDTHAUTOFITCELLHIGHLIGHTING"><h1 class="Heading2">Full Width Autofit Cell Highlighting</h1></a><div class="Heading3">Example of a full width table with autofit columns and individual cell highlighting.</div><div>Services (230 Services found):</div><div style="margin-left: 3em;"><table class="tabledefault" style="width:100%;"><thead><tr><th>Display Name</th><th>Status</th><th>Startup Type</th></tr></thead><tbody>
+<tr><td>ACP User Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>ActiveX Installer (AxInstSV)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>AdaptiveSleepService</td><td>Running</td><td>Auto</td></tr>
+<tr><td>AllJoyn Router Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>AMD External Events Utility</td><td>Running</td><td>Auto</td></tr>
+<tr><td>App Readiness</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Apple Mobile Device Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Application Identity</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Application Information</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Application Layer Gateway Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Application Management</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>AppX Deployment Service (AppXSVC)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>ASP.NET State Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Auto Time Zone Updater</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>Background Intelligent Transfer Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Background Tasks Infrastructure Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Base Filtering Engine</td><td>Running</td><td>Auto</td></tr>
+<tr><td>BitLocker Drive Encryption Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Block Level Backup Engine Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Bluetooth Handsfree Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>BranchCache</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>bthserv</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Certificate Propagation</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Client License Service (ClipSVC)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>CNG Key Isolation</td><td>Running</td><td>Manual</td></tr>
+<tr><td>COM+ Event System</td><td>Running</td><td>Auto</td></tr>
+<tr><td>COM+ System Application</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Computer Browser</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Connected Device Platform Service</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>Connected User Experiences and Telemetry</td><td>Running</td><td>Auto</td></tr>
+<tr><td>CoreMessaging</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Credential Manager</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Cryptographic Services</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Data Sharing Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>DataCollectionPublishingService</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>DCOM Server Process Launcher</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Delivery Optimization</td><td style="font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #ffffff; background-color: #b22222;">Stopped</td><td>Auto</td></tr>
+<tr><td>Device Association Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Device Install Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Device Management Enrollment Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Device Setup Manager</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>DevQuery Background Discovery Broker</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>DHCP Client</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Diagnostic Policy Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Diagnostic Service Host</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Diagnostic System Host</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Distributed Link Tracking Client</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Distributed Transaction Coordinator</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>dmwappushsvc</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>DNS Client</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Downloaded Maps Manager</td><td style="font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #ffffff; background-color: #b22222;">Stopped</td><td>Auto</td></tr>
+<tr><td>Dropbox Update Service (dbupdate)</td><td style="font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #ffffff; background-color: #b22222;">Stopped</td><td>Auto</td></tr>
+<tr><td>Dropbox Update Service (dbupdatem)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Embedded Mode</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Encrypting File System (EFS)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Enterprise App Management Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Extensible Authentication Protocol</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Fax</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>File History Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Function Discovery Provider Host</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Function Discovery Resource Publication</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Geolocation Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Google Update Service (gupdate)</td><td style="font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #ffffff; background-color: #b22222;">Stopped</td><td>Auto</td></tr>
+<tr><td>Google Update Service (gupdatem)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Group Policy Client</td><td>Running</td><td>Auto</td></tr>
+<tr><td>HomeGroup Provider</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Host Network Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Human Interface Device Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>HV Host Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Hyper-V Data Exchange Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Guest Service Interface</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Guest Shutdown Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Heartbeat Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Host Compute Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Remote Desktop Virtualization Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Time Synchronization Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Virtual Machine Management</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Hyper-V VM Session Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Hyper-V Volume Shadow Copy Requestor</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>IKE and AuthIP IPsec Keying Modules</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Infrared monitor service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Intel(R) Capability Licensing Service TCP IP Interface</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Intel(R) Dynamic Application Loader Host Interface Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Intel(R) Management and Security Application Local Management Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Interactive Services Detection</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Internet Connection Sharing (ICS)</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Internet Explorer ETW Collector Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>IP Helper</td><td>Running</td><td>Auto</td></tr>
+<tr><td>IPsec Policy Agent</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>KtmRm for Distributed Transaction Coordinator</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Link-Layer Topology Discovery Mapper</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>LSM</td><td>Running</td><td>Unknown</td></tr>
+<tr><td>Microsoft (R) Diagnostics Hub Standard Collector Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Account Sign-in Assistant</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft App-V Client</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Microsoft iSCSI Initiator Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Passport</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Passport Container</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Software Shadow Copy Provider</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Storage Spaces SMP</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Microsoft Windows SMS Router Service.</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Mozilla Maintenance Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Net Driver HPZ12</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Net.Tcp Port Sharing Service</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>Netlogon</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>NetSetupSvc</td><td>Running</td><td>Unknown</td></tr>
+<tr><td>Network Connected Devices Auto-Setup</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Network Connection Broker</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Network Connections</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Network Connectivity Assistant</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Network List Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Network Location Awareness</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Network Store Interface Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>NitroPDFReaderDriverCreatorReadSpool3</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Office  Source Engine</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Offline Files</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Optimise drives</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Peer Name Resolution Protocol</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Peer Networking Grouping</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Peer Networking Identity Manager</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Performance Counter DLL Host</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Performance Logs & Alerts</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Phone Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Plug and Play</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Pml Driver HPZ12</td><td>Running</td><td>Auto</td></tr>
+<tr><td>PNRP Machine Name Publication Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Portable Device Enumerator Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Power</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Print Spooler</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Printer Extensions and Notifications</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Problem Reports and Solutions Control Panel Support</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Program Compatibility Assistant Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Quality Windows Audio Video Experience</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Remote Access Auto Connection Manager</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Remote Access Connection Manager</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Remote Desktop Configuration</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Remote Desktop Services</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Remote Desktop Services UserMode Port Redirector</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Remote Procedure Call (RPC)</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Remote Procedure Call (RPC) Locator</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Remote Registry</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>Retail Demo Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Routing and Remote Access</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>RPC Endpoint Mapper</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Secondary Log-on</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Secure Socket Tunneling Protocol Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Security Accounts Manager</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Security Center</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Sensor Data Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Sensor Monitoring Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Sensor Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Server</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Shell Hardware Detection</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Skype Updater</td><td style="font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #ffffff; background-color: #b22222;">Stopped</td><td>Auto</td></tr>
+<tr><td>Smart Card</td><td>Stopped</td><td>Disabled</td></tr>
+<tr><td>Smart Card Device Enumeration Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Smart Card Removal Policy</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>SNMP Trap</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Software Protection</td><td style="font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #ffffff; background-color: #b22222;">Stopped</td><td>Auto</td></tr>
+<tr><td>Spot Verifier</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>SQL Server VSS Writer</td><td>Running</td><td>Auto</td></tr>
+<tr><td>SSDP Discovery</td><td>Running</td><td>Manual</td></tr>
+<tr><td>State Repository Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Still Image Acquisition Events</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Storage Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Storage Tiers Management</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Superfetch</td><td>Running</td><td>Auto</td></tr>
+<tr><td>System Event Notification Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>System Events Broker</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Task Scheduler</td><td>Running</td><td>Auto</td></tr>
+<tr><td>TCP/IP NetBIOS Helper</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Te.Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>TeamViewer 11</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Telephony</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Themes</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Tile Data model server</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Time Broker</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Touch Keyboard and Handwriting Panel Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Update Orchestrator Service manages Windows Updates</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>UPnP Device Host</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>User Manager</td><td>Running</td><td>Auto</td></tr>
+<tr><td>User Profile Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Virtual Disk</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Visual Studio ETW Event Collection Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Volume Shadow Copy</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>WalletService</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>WebClient</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Advanced Threat Protection Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows App Certification Kit Fast User Switching Utility Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Audio</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Audio Endpoint Builder</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Backup</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Biometric Service</td><td style="font-family: 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif'; font-size: 0.92em; text-align: left; font-weight: bold; color: #ffffff; background-color: #b22222;">Stopped</td><td>Auto</td></tr>
+<tr><td>Windows Camera Frame Server</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Connect Now - Config Registrar</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Connection Manager</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Defender Network Inspection Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Windows Defender Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Driver Foundation - User-mode Driver Framework</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Windows Encryption Provider Host Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Error Reporting Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Event Collector</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Event Log</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Firewall</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Font Cache Service</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Image Acquisition (WIA)</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Insider Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Windows Installer</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows License Manager Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Windows Management Instrumentation</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Media Player Network Sharing Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Mobile Hotspot Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Modules Installer</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Phone IP over USB Transport (IpOverUsbSvc)</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Presentation Foundation Font Cache 3.0.0.0</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Push Notifications Service</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Remote Management (WS-Management)</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Search</td><td>Running</td><td>Auto</td></tr>
+<tr><td>Windows Time</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Windows Update</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>WinHTTP Web Proxy Auto-Discovery Service</td><td>Running</td><td>Manual</td></tr>
+<tr><td>Wired AutoConfig</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>WLAN AutoConfig</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>WMI Performance Adapter</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Work Folders</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Workstation</td><td>Running</td><td>Auto</td></tr>
+<tr><td>WWAN AutoConfig</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Xbox Live Auth Manager</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Xbox Live Game Save</td><td>Stopped</td><td>Manual</td></tr>
+<tr><td>Xbox Live Networking Service</td><td>Stopped</td><td>Manual</td></tr>
+</tbody></table></div>

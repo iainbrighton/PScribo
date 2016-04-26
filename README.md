@@ -1,4 +1,4 @@
-## PScribo ##
+## PScribo (Preview)
 _PScribo_ (pronounced 'skree-bo') is an open source project that implements a
 documentation domain-specific language (DSL) for Windows PowerShell, used to
 create a "document" in a standardised format. The resulting "document" can be
@@ -61,22 +61,27 @@ Document 'PScribo Example' {
     
 } | Export-Document -Path ~\Desktop -Format Word,Html,Text -Verbose
 ```
-For more detailed infomation on the documentation DSL, see about_Document.
+For more detailed infomation on the documentation DSL, see
+[about_Document](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/en-US/about_Document.help.txt).
 
 Pscribo can export documentation in a variety of formats and currently
 supports creation of text, xml, html and Microsoft Word formats. 
-Additional "plugins" can be created to support future formats if required. For
-more detailed information on creating a "plugin" see about_Plugins.
 
 #### Example Html Output
 ![](./ExampleHtmlOutput.png)
+[Example Html Document Download](./PscriboExample.html)
 #### Example Word Output
 ![](./ExampleWordOutput.png)
+[Example Word Document Download](./PscriboExample.docx)
 #### Example Text Output
 ![](./ExampleTextOutput.png)
+[Example text Document Download](./PscriboExample.txt)
 
+Additional "plugins" can be created to support future formats if required. For
+more detailed information on creating a "plugin" see
+[about_Plugins](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/en-US/about_Plugins.help.txt).
 
-The _PScribo_ preview is currently available as a Powershell module in the
+The _PScribo_ __preview__ is currently available as a Powershell module in the
 [PowerShell gallery](https://www.powershellgallery.com/items?q=pscribo) and
 in future, will also be provided as a "bundle" to enable easy integration
 into existing scripts. The bundle release permits dot-sourcing the PowerShell
