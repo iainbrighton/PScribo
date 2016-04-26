@@ -1,35 +1,101 @@
 ## PScribo ##
-PScribo is an open source project that implements a documentation domain-specific
-language (DSL) for Windows Powershell. The latest version is available at
-https://github.com/iainbrighton/PScribo.
+_PScribo_ (pronounced 'skree-bo') is an open source project that implements a
+documentation domain-specific language (DSL) for Windows PowerShell, used to
+create a "document" in a standardised format. The resulting "document" can be
+exported into various formats by "plugins", for example, text, HTML, XML
+and/or Microsoft Word format.
     
 PScribo provides a set of functions that make it easy to create a document-like
 structure within Powershell scripts, without having to be concerned with
-handling output formatting or supporting multiple output formats. For more
-detailed infomation on the documentation DSL, see about_Document.
+handling output formatting or supporting multiple output formats.
+
+### Authoring Example
+
+```powershell
+Import-Module PScribo
+
+Document 'PScribo Example' {
+    
+    Paragraph -Style Heading1 'This is Heading 1'
+    Paragraph -Style Heading2 'This is Heading 2'
+    Paragraph -Style Heading3 'This is Heading 3'
+    Paragraph 'This is a regular line of text indented 0 tab stops'
+    Paragraph -Tabs 1 'This is a regular line of text indented 1 tab stops. This text should not be displayed as a hanging indent, e.g. not just the first line of the paragraph indented.'
+    Paragraph -Tabs 2 'This is a regular line of text indented 2 tab stops'
+    Paragraph -Tabs 3 'This is a regular line of text indented 3 tab stops'
+    Paragraph 'This is a regular line of text in the default font in italics' -Italic
+    Paragraph 'This is a regular line of text in the default font in bold' -Bold
+    Paragraph 'This is a regular line of text in the default font in bold italics' -Bold -Italic
+    Paragraph 'This is a regular line of text in the default font in 14 point' -Size 14
+    Paragraph 'This is a regular line of text in Courier New font' -Font 'Courier New'
+    Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data: $env:COMPUTERNAME"
+    Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in bold: $env:COMPUTERNAME" -Bold
+    Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in bold italics: $env:COMPUTERNAME" -Bold -Italic
+    Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in 14 point bold italics: $env:COMPUTERNAME" -Bold -Italic -Size 14
+    Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in 8 point Courier New bold italics: $env:COMPUTERNAME" -Bold -Italic -Size 8 -Font 'Courier New'
+   
+    PageBreak
+    
+    $services = Get-WMIObject Win32_Service | Select DisplayName, State, StartMode | Sort DisplayName
+    
+    Style -Name 'Stopped Service' -Color White -BackgroundColor Firebrick -Bold
+    
+    Section -Style Heading1 'Standard-Style Tables' {
+        Section -Style Heading2 'Autofit Width Autofit Cell No Highlighting' {
+            Paragraph -Style Heading3 'Example of an autofit table width, autofit contents and no cell highlighting.'
+            Paragraph "Services ($($services.Count) Services found):"
+            $services | Table -Columns DisplayName,State,StartMode -Headers 'Display Name','Status','Startup Type' -Width 0
+        }
+    }
+    
+    PageBreak
+    
+    Section -Style Heading2 'Full Width Autofit Cell Highlighting' {
+        Paragraph -Style Heading3 'Example of a full width table with autofit columns and individual cell highlighting.'
+        Paragraph "Services ($($services.Count) Services found):"
+        <# Highlight individual cells with "StoppedService" style where state = stopped and startup = auto #>
+        $stoppedAutoServicesCell = $services.Clone()
+        $stoppedAutoServicesCell | Where { $_.State -eq 'Stopped' -and $_.StartMode -eq 'Auto'} | Set-Style -Property State -Style StoppedService
+        $stoppedAutoServicesCell | Table -Columns DisplayName,State,StartMode -Headers 'Display Name','Status','Startup Type' -Tabs 1
+    }
+    
+} | Export-Document -Path ~\Desktop -Format Word,Html,Text -Verbose
+```
+For more detailed infomation on the documentation DSL, see about_Document.
 
 Pscribo can export documentation in a variety of formats and currently
 supports creation of text, xml, html and Microsoft Word formats. 
 Additional "plugins" can be created to support future formats if required. For
 more detailed information on creating a "plugin" see about_Plugins.
 
-PScribo is available as a Powershell module or a bundle. The bundle release
-permits dot-sourcing the PScribo bundle file into an existing Powershell script
-or can be placed in its entirety at the beginning of a .ps1 file.
+#### Example Html Output
+![](./ExampleHtmlOutput.png)
+#### Example Word Output
+![](./ExampleWordOutput.png)
+#### Example Text Output
+![](./ExampleTextOutput.png)
+
+
+The _PScribo_ preview is currently available as a Powershell module in the
+[PowerShell gallery](https://www.powershellgallery.com/items?q=pscribo) and
+in future, will also be provided as a "bundle" to enable easy integration
+into existing scripts. The bundle release permits dot-sourcing the PowerShell
+functions or being placed in its entirety at the beginning of an existing
+PowerShell .ps1 file.
 
 Requires __Powershell 3.0__ or later.
 
 If you find it useful, unearth any bugs or have any suggestions for improvements,
 feel free to add an [issue](https://github.com/iainbrighton/PScribo/issues) or
-place a comment at the project home page</a>.
+place a comment at the project home page.
 
 ##### Installation
 
-* Automatic (via PowerShell v5 or later) __NOT YET PUBLISHED__:
+* Automatic (via PowerShell Gallery:
  * Run 'Install-Module PScribo'.
  * Run 'Import-Module PScribo'.
 * Manual:
- * Download the latest .zip file.
+ * Download and unblock the latest .zip file.
  * Extract the .zip into your $PSModulePath, e.g. ~\Documents\WindowsPowerShell\Modules\.
  * Ensure the extracted folder is named 'PScribo'. 
  * Run 'Import-Module PScribo'.
