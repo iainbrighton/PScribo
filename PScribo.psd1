@@ -8,11 +8,11 @@
     Description = 'PScribo documentation Powershell module/framework.';
     PowerShellVersion = '3.0';
     FunctionsToExport = @('BlankLine', 'Document' ,'Export-Document', 'GlobalOption', 'LineBreak',
-                            'PageBreak', 'Paragraph', 'Section', 'Style', 'Table', 'TOC');
+                            'PageBreak', 'Paragraph', 'Section', 'Style', 'Set-Style', 'Table', 'TOC');
     PrivateData = @{
         PSData = @{
             Tags = @('Powershell','PScribo','Documentation','Framework','VirtualEngine')
-            LicenseUri = 'http://github.com/iainbrighton/PScribo/master/LICENSE';
+            LicenseUri = 'https://raw.githubusercontent.com/iainbrighton/PScribo/master/LICENSE';
             ProjectUri = 'http://github.com/iainbrighton/PScribo'
             # IconUri = '';
         } # End of PSData hashtable
