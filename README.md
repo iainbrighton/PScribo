@@ -69,13 +69,13 @@ supports creation of text, xml, html and Microsoft Word formats.
 
 #### Example Html Output
 ![](./ExampleHtmlOutput.png)
-[Example Html Document Download](./PscriboExample.html)
+[Example Html Document Download](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/PScriboExample.html)
 #### Example Word Output
 ![](./ExampleWordOutput.png)
-[Example Word Document Download](./PscriboExample.docx)
+[Example Word Document Download](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/PScriboExample.docx)
 #### Example Text Output
 ![](./ExampleTextOutput.png)
-[Example text Document Download](./PscriboExample.txt)
+[Example text Document Download](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/PScriboExample.txt)
 
 Additional "plugins" can be created to support future formats if required. For
 more detailed information on creating a "plugin" see
