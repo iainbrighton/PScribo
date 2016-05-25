@@ -375,13 +375,31 @@ InModuleScope 'PScribo' {
     }
 
     Describe 'OutHtmlStyle' {
-        $Document = Document -Name 'Test' -ScriptBlock { };
-        $text = OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles;
-        ## Predominately calls GetHtmlStyle and GetHtmlTableStyle
 
         It 'creates <style> tag.' {
+            $Document = Document -Name 'Test' -ScriptBlock { };
+            $text = OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles;
+        
             $text -match '<style type="text/css">' | Should Be $true;
             $text -match '</style>' | Should Be $true;
+        }
+        
+        It 'creates page layout style by default' {
+            $Document = Document -Name 'Test' -ScriptBlock { };
+            $text = OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles;
+        
+            $text -match 'html {' | Should Be $true;
+            $text -match 'page {' | Should Be $true;
+            $text -match '@media print {' | Should Be $true;
+        }
+        
+        It "suppresses page layout style when 'Options.NoPageLayoutSyle' specified" {
+            $Document = Document -Name 'Test' -ScriptBlock { };
+            $text = OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles -NoPageLayoutStyle;
+        
+            $text -match 'html {' | Should Be $false;
+            $text -match 'page {' | Should Be $false;
+            $text -match '@media print {' | Should Be $false;
         }
     }
 

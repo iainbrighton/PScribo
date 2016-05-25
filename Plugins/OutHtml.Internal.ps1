@@ -197,19 +197,23 @@
             [OutputType([System.String])]
             param (
                 ## PScribo document styles
-                [Parameter(Mandatory, ValueFromPipeline)] [System.Collections.Hashtable] $Styles,
+                [Parameter(Mandatory, ValueFromPipelineByPropertyName)] [System.Collections.Hashtable] $Styles,
                 ## PScribo document tables styles
-                [Parameter(Mandatory, ValueFromPipeline)] [System.Collections.Hashtable] $TableStyles
+                [Parameter(Mandatory, ValueFromPipelineByPropertyName)] [System.Collections.Hashtable] $TableStyles,
+                ## Suppress page layout styling
+                [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $NoPageLayoutStyle
             )
             process {
                 $stylesBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $stylesBuilder.AppendLine('<style type="text/css">');
-                ## Add HTML page layout styling options
-                [ref] $null = $stylesBuilder.AppendLine('html { height: 100%; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; background: #f8f8f8; }');
-                [ref] $null = $stylesBuilder.Append("page { background: white; width: $($Document.Options['PageWidth'])mm; display: block; margin-top: 1em; margin-left: auto; margin-right: auto; margin-bottom: 1em; ");
-                [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }');
-                [ref] $null = $stylesBuilder.AppendLine('@media print { body, page { margin: 0; box-shadow: 0; } }');
-                [ref] $null = $stylesBuilder.AppendLine('hr { margin-top: 1.0em; }');
+                if (-not $NoPageLayoutStyle) {
+                    ## Add HTML page layout styling options, e.g. when emailing HTML documents
+                    [ref] $null = $stylesBuilder.AppendLine('html { height: 100%; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; background: #f8f8f8; }');
+                    [ref] $null = $stylesBuilder.Append("page { background: white; width: $($Document.Options['PageWidth'])mm; display: block; margin-top: 1em; margin-left: auto; margin-right: auto; margin-bottom: 1em; ");
+                    [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }');
+                    [ref] $null = $stylesBuilder.AppendLine('@media print { body, page { margin: 0; box-shadow: 0; } }');
+                    [ref] $null = $stylesBuilder.AppendLine('hr { margin-top: 1.0em; }');
+                }
                 foreach ($style in $Styles.Keys) {
                     ## Build style
                     $htmlStyle = GetHtmlStyle -Style $Styles[$style];

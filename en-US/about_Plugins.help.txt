@@ -21,5 +21,6 @@
 
 # Plugin-specific options
  # In their own about file?
+ HTML: NoPageLayoutStyle [bool]: Suppresses the page layout/look-and-feel style
 
 # Writing a plugin

@@ -22,11 +22,15 @@ function OutHtml {
     process {
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew();
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
+        $noPageLayoutStyle = $false;
+        if ($Options -and ($Options['NoPageLayoutStyle'])) {
+            $noPageLayoutStyle = $Options['NoPageLayoutStyle'];
+        }
         [System.Text.StringBuilder] $htmlBuilder = New-Object System.Text.StringBuilder;
         [ref] $null = $htmlBuilder.AppendLine('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">');
         [ref] $null = $htmlBuilder.AppendLine('<html xmlns="http://www.w3.org/1999/xhtml">');
         [ref] $null = $htmlBuilder.AppendLine('<head><title>{0}</title>' -f $Document.Name);
-        [ref] $null = $htmlBuilder.AppendLine('{0}</head><body><page>' -f (OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles));
+        [ref] $null = $htmlBuilder.AppendLine('{0}</head><body><page>' -f (OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles -NoPageLayoutStyle:$noPageLayoutStyle));
         $topMargin = ConvertMmToEm $Document.Options['MarginTop'];
         $leftMargin = (ConvertMmToEm $Document.Options['MarginLeft']);
         $bottomMargin = (ConvertMmToEm $Document.Options['MarginBottom']);

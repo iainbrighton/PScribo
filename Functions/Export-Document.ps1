@@ -31,7 +31,12 @@
             #try {
                 ## Dynamically generate the output format function name
                 $outputFormat = 'Out{0}' -f $f;
-                & $outputFormat -Document $Document -Path $Path; # -ErrorAction Stop;
+                if ($PSBoundParameters.ContainsKey('Options')) {
+                    & $outputFormat -Document $Document -Path $Path -Options $Options; # -ErrorAction Stop;                    
+                }
+                else {
+                    & $outputFormat -Document $Document -Path $Path; # -ErrorAction Stop;
+                }
             #}
             #catch [System.Management.Automation.CommandNotFoundException] {
             #    Write-Warning ('Output format "{0}" is unsupported.' -f $f);
