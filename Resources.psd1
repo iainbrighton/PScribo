@@ -31,6 +31,7 @@ DocumentOptionPageRightMargin    = Setting page right margin to '{0}'mm.
 DocumentOptionPageBottomMargin   = Setting page bottom margin to '{0}'mm.
 DocumentOptionPageLeftMargin     = Setting page left margin to '{0}'mm.
 DocumentOptionPageSize           = Setting page size to '{0}'.
+DocumentOptionPageOrientation    = Setting page orientation to '{1}'.
 DocumentOptionPageHeight         = Setting page height to '{0}'mm.
 DocumentOptionPageWidth          = Setting page width to '{0}'mm.
 DocumentOptionDefaultFont        = Setting default font(s) to '{0}'.

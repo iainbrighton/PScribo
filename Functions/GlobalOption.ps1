@@ -24,6 +24,8 @@ function GlobalOption {
         [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'CustomMargin')] [System.UInt16] $MarginLeftAndRight,
         ## Default page size
         [Parameter(ValueFromPipelineByPropertyName)] [ValidateSet('A4','Legal','Letter')] [System.String] $PageSize = 'A4',
+        ## Page orientation
+        [Parameter(ValueFromPipelineByPropertyName)] [ValidateSet('Potrait','Landscape')] [System.String] $Orientation = 'Potrait',
         ## Default document font(s)
         [Parameter(ValueFromPipelineByPropertyName)] [System.String[]] $DefaultFont = @('Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif')
     )
@@ -86,6 +88,14 @@ function GlobalOption {
                 $pscriboDocument.Options['PageHeight'] = 279.4;
             }
         } #end switch
+        ## Convert page size
+        ($localized.DocumentOptionPageSize -f $Orientation) | WriteLog;
+        if ($Orientation -eq 'Landscape') {
+            ## Swap the height/width measurements 
+            $pageHeight = $pscriboDocument.Options['PageHeight'];
+            $pscriboDocument.Options['PageHeight'] = $pscriboDocument.Options['PageWidth'];
+            $pscriboDocument.Options['PageWidth'] = $pageHeight;
+        }
         ($localized.DocumentOptionPageHeight -f $pscriboDocument.Options['PageHeight']) | WriteLog;
         ($localized.DocumentOptionPageWidth -f $pscriboDocument.Options['PageWidth']) | WriteLog;
     } #end process
