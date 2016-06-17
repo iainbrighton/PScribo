@@ -66,6 +66,12 @@ InModuleScope 'PScribo' {
             $pscriboDocument.Options['PageHeight'] | Should Be 355.6;
         }
         
+        It 'sets page orientation to US Legal Portrait' {
+            GlobalOption -PageSize Legal -Orientation Portrait;
+            $pscriboDocument.Options['PageWidth'] | Should Be 215.9;
+            $pscriboDocument.Options['PageHeight'] | Should Be 355.6;
+        }
+        
         It 'sets page orientation to US Legal Landscape' {
             GlobalOption -PageSize Legal -Orientation Landscape;
             $pscriboDocument.Options['PageHeight'] | Should Be 215.9;

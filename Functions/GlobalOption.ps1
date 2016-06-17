@@ -25,7 +25,7 @@ function GlobalOption {
         ## Default page size
         [Parameter(ValueFromPipelineByPropertyName)] [ValidateSet('A4','Legal','Letter')] [System.String] $PageSize = 'A4',
         ## Page orientation
-        [Parameter(ValueFromPipelineByPropertyName)] [ValidateSet('Potrait','Landscape')] [System.String] $Orientation = 'Potrait',
+        [Parameter(ValueFromPipelineByPropertyName)] [ValidateSet('Portrait','Landscape')] [System.String] $Orientation = 'Portrait',
         ## Default document font(s)
         [Parameter(ValueFromPipelineByPropertyName)] [System.String[]] $DefaultFont = @('Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif')
     )
@@ -89,7 +89,7 @@ function GlobalOption {
             }
         } #end switch
         ## Convert page size
-        ($localized.DocumentOptionPageSize -f $Orientation) | WriteLog;
+        ($localized.DocumentOptionPageOrientation -f $Orientation) | WriteLog;
         if ($Orientation -eq 'Landscape') {
             ## Swap the height/width measurements 
             $pageHeight = $pscriboDocument.Options['PageHeight'];
