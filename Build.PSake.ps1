@@ -48,23 +48,39 @@ Task Setup {
     ## Create the build directory
     Write-Host (' Creating build directory "{0}".' -f $buildPath) -ForegroundColor Yellow;
     [Ref] $null = New-Item $buildPath -ItemType Directory -Force -ErrorAction Stop;
-    
+
     ## Create the release directory
     if (!(Test-Path -Path $releasePath)) {
         Write-Host (' Creating release directory "{0}".' -f $releasePath) -ForegroundColor Yellow;
         [Ref] $null = New-Item $releasePath -ItemType Directory -Force -ErrorAction Stop;
-    }  
+    }
 }
 
 Task Deploy {
     ## Copy release files
     Write-Host (' Copying release files to build directory "{0}".' -f $buildPath) -ForegroundColor Yellow;
-    $excludedFiles = @( '*.Tests.ps1','Build.PSake.ps1','.git*','*.png','Build','Release','readme.md','bin','obj','PScribo Test Doc.*','*.sln','*.suo','*.pssproj','TestResult.xml' );
+    $excludedFiles = @(
+        '*.Tests.ps1',
+        'Build.PSake.ps1',
+        '.git*',
+        '*.png',
+        'Build',
+        'Release',
+        'readme.md',
+        'bin',
+        'obj',
+        '*.sln',
+        '*.suo',
+        '*.pssproj',
+        'PScribo Test Doc.*',
+        'PScriboExample.*',
+        'TestResult.xml'
+    );
     Get-ModuleFile -Exclude $excludedFiles | % {
         $destinationPath = '{0}{1}' -f $buildPath, $PSItem.FullName.Replace($basePath, '');
         [Ref] $null = New-Item -ItemType File -Path $destinationPath -Force;
         Copy-Item -Path $PSItem.FullName -Destination $destinationPath -Force;
-    }   
+    }
 }
 
 Task Version {
@@ -136,7 +152,7 @@ function Combine-File {
             $content = Get-Content -Path $file.FullName -Raw;
             if ($content -match '(?<=<#!\s?)\S+.Internal.ps1(?=\s?!#>)') {
                 $internalFunctionPath = Join-Path -Path $file.DirectoryName -ChildPath $Matches[0];
-                
+
                 if (Test-Path -Path $internalFunctionPath) {
                     Write-Host ('  Bundling internal file "{0}".' -f $internalFunctionPath) -ForegroundColor DarkCyan;
                     $internalFunctionContent = Get-Content -Path $internalFunctionPath -Raw;
