@@ -47,6 +47,10 @@
             process {
                 $tableStyleBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $tableStyleBuilder.AppendFormat(' padding: {0}em {1}em {2}em {3}em;',
+                                                                (ConvertMmToEm $TableStyle.PaddingTop),
+                                                                    (ConvertMmToEm $TableStyle.PaddingRight),
+                                                                        (ConvertMmToEm $TableStyle.PaddingBottom),
+                                                                            (ConvertMmToEm $TableStyle.PaddingLeft));
                 [ref] $null = $tableStyleBuilder.AppendFormat(' border-style: {0};', $TableStyle.BorderStyle.ToLower());
                 if ($TableStyle.BorderWidth -gt 0) {
                     [ref] $null = $tableStyleBuilder.AppendFormat(' border-width: {0}em;', (ConvertMmToEm $TableStyle.BorderWidth));
