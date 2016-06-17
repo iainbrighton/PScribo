@@ -13,6 +13,9 @@
             process {
                 $styleBuilder = New-Object -TypeName System.Text.StringBuilder;
                 [ref] $null = $styleBuilder.AppendFormat(" font-family: '{0}';", $Style.Font -Join "','");
+                ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
+                $invariantFontSize =  ($Style.Size / 12).ToString('f2', [System.Globalization.CultureInfo]::InvariantCulture);
+                [ref] $null = $styleBuilder.AppendFormat(' font-size: {0}em;', $invariantFontSize);
                 [ref] $null = $styleBuilder.AppendFormat(' font-size: {0:0.00}em;', $Style.Size / 12);
                 [ref] $null = $styleBuilder.AppendFormat(' text-align: {0};', $Style.Align.ToLower());
                 if ($Style.Bold) { [ref] $null = $styleBuilder.Append(' font-weight: bold;'); }
@@ -44,11 +47,6 @@
             process {
                 $tableStyleBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $tableStyleBuilder.AppendFormat(' padding: {0}em {1}em {2}em {3}em;',
-                                                                                                    (ConvertMmToEm $TableStyle.PaddingTop),
-                                                                                                        (ConvertMmToEm $TableStyle.PaddingRight),
-                                                                                                            (ConvertMmToEm $TableStyle.PaddingBottom),
-                                                                                                                (ConvertMmToEm $TableStyle.PaddingLeft));
-                
                 [ref] $null = $tableStyleBuilder.AppendFormat(' border-style: {0};', $TableStyle.BorderStyle.ToLower());
                 if ($TableStyle.BorderWidth -gt 0) {
                     [ref] $null = $tableStyleBuilder.AppendFormat(' border-width: {0}em;', (ConvertMmToEm $TableStyle.BorderWidth));
@@ -217,7 +215,7 @@
                 foreach ($style in $Styles.Keys) {
                     ## Build style
                     $htmlStyle = GetHtmlStyle -Style $Styles[$style];
-                    [ref] $null = $stylesBuilder.AppendFormat(' .{0} {{{1} }}', $Styles[$style].Id, $htmlStyle).AppendLine(); 
+                    [ref] $null = $stylesBuilder.AppendFormat(' .{0} {{{1} }}', $Styles[$style].Id, $htmlStyle).AppendLine();
                 }
                 foreach ($tableStyle in $TableStyles.Keys) {
                     $tStyle = $TableStyles[$tableStyle];
@@ -303,7 +301,11 @@
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(' margin-left: {0}em;', $tabEm);
                 }
                 if ($Paragraph.Font) { [ref] $null = $paragraphStyleBuilder.AppendFormat(" font-family: '{0}';", $Paragraph.Font -Join "','"); }
-                if ($Paragraph.Size -gt 0) { [ref] $null = $paragraphStyleBuilder.AppendFormat(' font-size: {0:0.00}em;', $Paragraph.Size / 12); } 
+                if ($Paragraph.Size -gt 0) {
+                    ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
+                    $invariantParagraphSize = ($Paragraph.Size / 12).ToString('f2', [System.Globalization.CultureInfo]::InvariantCulture);
+                    [ref] $null = $paragraphStyleBuilder.AppendFormat(' font-size: {0}em;', $invariantParagraphSize);
+                }
                 if ($Paragraph.Bold -eq $true) { [ref] $null = $paragraphStyleBuilder.Append(' font-weight: bold;'); }
                 if ($Paragraph.Italic -eq $true) { [ref] $null = $paragraphStyleBuilder.Append(' font-style: italic;'); }
                 if ($Paragraph.Underline -eq $true) { [ref] $null = $paragraphStyleBuilder.Append(' text-decoration: underline;'); }
@@ -363,7 +365,7 @@
                 [ref] $null = $listTableBuilder.Append((GetHtmlTableDiv -Table $Table));
                 [ref] $null = $listTableBuilder.Append((GetHtmlTableColGroup -Table $Table));
                 [ref] $null = $listTableBuilder.Append('<tbody>');
-                        
+
                 for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
                     $propertyName = $Table.Columns[$i];
                     [ref] $null = $listTableBuilder.AppendFormat('<tr><td>{0}</td>', $propertyName);
@@ -470,7 +472,7 @@
                             [ref] $null = $tableBuilder.AppendLine('<p />');
                         }
                         [ref] $null = $tableBuilder.Append((GetHtmlTableList -Table $Table -Row $row));
-                        
+
                     } #end foreach row
                 }
                 else {
