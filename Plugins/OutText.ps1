@@ -23,6 +23,13 @@ function OutText {
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
         ## Create default options if not specified
         if ($null -eq $Options) { $Options = New-PScriboTextOptions; }
+
+        try{
+            $options.Encoding | Out-Null
+        }catch{
+            $options | Add-Member -MemberType NoteProperty -Name Encoding -Value 'Default'
+        }
+
         [System.Text.StringBuilder] $textBuilder = New-Object System.Text.StringBuilder;
         foreach ($s in $Document.Sections.GetEnumerator()) {
             if ($s.Id.Length -gt 40) { $sectionId = '{0}[..]' -f $s.Id.Substring(0,36); }

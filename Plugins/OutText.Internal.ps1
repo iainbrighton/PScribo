@@ -98,6 +98,12 @@
                 ## Fix Set-StrictMode
                 if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
                 else { $options = New-PScriboTextOptions; }
+
+                try{
+                    $options.SectionSeparator | Out-Null
+                }catch{
+                    $options | Add-Member -MemberType NoteProperty -Name SectionSeparator -Value '-'
+                }  
             }
             process {
                 $sectionBuilder = New-Object -TypeName System.Text.StringBuilder;
@@ -139,12 +145,26 @@
                 ## Fix Set-StrictMode
                 if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
                 else { $options = New-PScriboTextOptions; }
+
+                try{
+                    $options.TextWidth | Out-Null
+                }catch{
+                    $options | Add-Member -MemberType NoteProperty -Name TextWidth -Value 120
+                }  
             }
             process {
                 $padding = ''.PadRight(($Paragraph.Tabs * 4), ' ');
                 if ([string]::IsNullOrEmpty($Paragraph.Text)) { $text = "$padding$($Paragraph.Id)"; }
                 else { $text = "$padding$($Paragraph.Text)"; }
+                
+                try{
+                    $options.TextWidth | Out-Null
+                }catch{
+                    $options | Add-Member -MemberType NoteProperty -Name TextWidth -Value 120
+                }                   
+
                 $formattedText = OutStringWrap -InputObject $text -Width $Options.TextWidth;
+
                 if ($Paragraph.NewLine) { return "$formattedText`r`n"; }
                 else { return $formattedText; }
             } #end process
@@ -161,6 +181,18 @@
                 ## Fix Set-StrictMode
                 if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
                 else { $options = New-PScriboTextOptions; }
+
+                try{
+                    $options.SeparatorWidth | Out-Null
+                }catch{
+                    $options | Add-Member -MemberType NoteProperty -Name SeparatorWidth -Value 120
+                }   
+
+                try{
+                    $options.LineBreakSeparator | Out-Null
+                }catch{
+                    $options | Add-Member -MemberType NoteProperty -Name LineBreakSeparator -Value '_'
+                } 
             }
             process {
                 ## Use the specified output width
