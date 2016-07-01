@@ -47,7 +47,21 @@
             )
             begin {
                 ## Fix Set-StrictMode
-                if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
+                if (Test-Path -Path Variable:\Options) { 
+                	$options = Get-Variable -Name Options -ValueOnly; 
+                    if (-not ($options.ContainsKey('SeparatorWidth'))) {
+                        $options['SeparatorWidth'] = 120;
+                    }
+                    if (-not ($options.ContainsKey('LineBreakSeparator'))) {
+                        $options['LineBreakSeparator'] = '_';
+                    }
+                    if (-not ($options.ContainsKey('TextWidth'))) {
+                        $options['TextWidth'] = 120;
+                    }
+                    if(-not ($Options.ContainsKey('SectionSeparator'))) {
+                        $options['SectionSeparator'] = "-";
+                    }
+                }
                 else { $options = New-PScriboTextOptions; }
             }
             process {
@@ -106,6 +120,9 @@
                     }
                     if (-not ($options.ContainsKey('TextWidth'))) {
                         $options['TextWidth'] = 120;
+                    }
+                    if(-not ($Options.ContainsKey('SectionSeparator'))) {
+                        $options['SectionSeparator'] = "-";
                     }
                 }
                 else { $options = New-PScriboTextOptions; }
