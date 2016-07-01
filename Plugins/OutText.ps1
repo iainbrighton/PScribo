@@ -24,10 +24,8 @@ function OutText {
         ## Create default options if not specified
         if ($null -eq $Options) { $Options = New-PScriboTextOptions; }
 
-        try{
-            $options.Encoding | Out-Null
-        }catch{
-            $options | Add-Member -MemberType NoteProperty -Name Encoding -Value 'Default'
+        if (-not ($Options.ContainsKey('Encoding'))) {
+            $Options['Encoding'] = 'ASCII';
         }
 
         [System.Text.StringBuilder] $textBuilder = New-Object System.Text.StringBuilder;

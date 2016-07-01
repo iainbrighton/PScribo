@@ -96,14 +96,19 @@
             )
             begin {
                 ## Fix Set-StrictMode
-                if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
+                if (Test-Path -Path Variable:\Options) {
+                    $options = Get-Variable -Name Options -ValueOnly;
+                    if (-not ($options.ContainsKey('SeparatorWidth'))) {
+                        $options['SeparatorWidth'] = 120;
+                    }
+                    if (-not ($options.ContainsKey('LineBreakSeparator'))) {
+                        $options['LineBreakSeparator'] = '_';
+                    }
+                    if (-not ($options.ContainsKey('TextWidth'))) {
+                        $options['TextWidth'] = 120;
+                    }
+                }
                 else { $options = New-PScriboTextOptions; }
-
-                try{
-                    $options.SectionSeparator | Out-Null
-                }catch{
-                    $options | Add-Member -MemberType NoteProperty -Name SectionSeparator -Value '-'
-                }  
             }
             process {
                 $sectionBuilder = New-Object -TypeName System.Text.StringBuilder;
@@ -143,25 +148,18 @@
             )
             begin {
                 ## Fix Set-StrictMode
-                if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
+                if (Test-Path -Path Variable:\Options) {
+                    $options = Get-Variable -Name Options -ValueOnly;
+                    if (-not ($options.ContainsKey('TextWidth'))) {
+                        $options['TextWidth'] = 120;
+                    }
+                }
                 else { $options = New-PScriboTextOptions; }
-
-                try{
-                    $options.TextWidth | Out-Null
-                }catch{
-                    $options | Add-Member -MemberType NoteProperty -Name TextWidth -Value 120
-                }  
             }
             process {
                 $padding = ''.PadRight(($Paragraph.Tabs * 4), ' ');
                 if ([string]::IsNullOrEmpty($Paragraph.Text)) { $text = "$padding$($Paragraph.Id)"; }
                 else { $text = "$padding$($Paragraph.Text)"; }
-                
-                try{
-                    $options.TextWidth | Out-Null
-                }catch{
-                    $options | Add-Member -MemberType NoteProperty -Name TextWidth -Value 120
-                }                   
 
                 $formattedText = OutStringWrap -InputObject $text -Width $Options.TextWidth;
 
