@@ -197,17 +197,15 @@
                 if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
                 else { $options = New-PScriboTextOptions; }
 
-                try{
-                    $options.SeparatorWidth | Out-Null
-                }catch{
-                    $options | Add-Member -MemberType NoteProperty -Name SeparatorWidth -Value 120
-                }   
-
-                try{
-                    $options.LineBreakSeparator | Out-Null
-                }catch{
-                    $options | Add-Member -MemberType NoteProperty -Name LineBreakSeparator -Value '_'
-                } 
+                    if (-not ($options.ContainsKey('SeparatorWidth'))) {
+                        $options['SeparatorWidth'] = 120;
+                    }
+                    if (-not ($options.ContainsKey('LineBreakSeparator'))) {
+                        $options['LineBreakSeparator'] = '_';
+                    }
+                    if (-not ($options.ContainsKey('TextWidth'))) {
+                        $options['TextWidth'] = 120;
+                    }
             }
             process {
                 ## Use the specified output width
