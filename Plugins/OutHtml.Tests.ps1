@@ -324,6 +324,12 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph.' -Style Named | OutHtmlParagraph | Should BeExactly "<div class=`"Named`">Test paragraph.</div>";
             }
 
+            It 'encodes HTML paragraph content' {
+                $expected = '<div>Embedded &lt;br /&gt;</div>';
+                $result = Paragraph 'Embedded <br />' | OutHtmlParagraph;
+                $result | Should BeExactly $expected;
+            }
+
         } #end context By Named Parameter
 
     } #end describe OutHtmlParagraph
@@ -372,6 +378,15 @@ InModuleScope 'PScribo' {
             Mock -CommandName OutHtmlTOC -Verifiable -MockWith { };
             Section -Name TestSection -ScriptBlock { TOC 'TestTOC' } | OutHtmlSection -WarningAction SilentlyContinue;
             Assert-MockCalled OutHtmlTOC -Exactly 0;
+        }
+
+        It 'encodes HTML section name' {
+            $sectionName = 'Test & Section';
+            $expected = '<h1 class="Normal">{0}</h1>' -f $sectionName.Replace('&','&amp;');
+
+            $result = Section -Name $sectionName -ScriptBlock { BlankLine } | OutHtmlSection;
+
+            $result -match $expected | Should Be $true;
         }
 
         It 'calls nested OutXmlSection' {
@@ -433,11 +448,14 @@ InModuleScope 'PScribo' {
     Describe 'OutHtmlTable' {
 
         Context 'Table.' {
-            ## Scaffold new document to initialise options/styles
-            $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
-            $services = Get-Service | Select -First 3;
-            $table = $services | Table -Name 'Test Table' | OutHtmlTable;
-            [Xml] $html = $table.Replace('&','&amp;');
+
+            BeforeEach {
+                ## Scaffold new document to initialise options/styles
+                $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
+                $services = Get-Service | Select -First 3;
+                $table = $services | Table -Name 'Test Table' | OutHtmlTable;
+                [Xml] $html = $table.Replace('&','&amp;');
+            }
 
             It 'creates default table class of tabledefault.' {
                 $html.Div.Table.Class | Should BeExactly 'tabledefault';
@@ -457,11 +475,16 @@ InModuleScope 'PScribo' {
         }
 
         Context 'List.' {
-            ## Scaffold new document to initialise options/styles
-            $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
-            $services = Get-Service | Select -First 1;
-            $table = $services | Table -Name 'Test Table' -List | OutHtmlTable;
-            [Xml] $html = $table.Replace('&','&amp;');
+
+            BeforeEach {
+                ## Scaffold new document to initialise options/styles
+                $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
+                $services = Get-Service | Select -First 1;
+                $table = $services | Table -Name 'Test Table' -List | OutHtmlTable;
+                [Xml] $html = $table.Replace('&','&amp;');
+            }
+
+            #Write-Host $html.OuterXml -ForegroundColor Yellow
 
             It 'creates no table heading row.' {
                 ## Fix Set-StrictMode

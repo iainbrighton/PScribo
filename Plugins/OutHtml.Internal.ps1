@@ -156,7 +156,8 @@
             process {
                 $tocBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $tocBuilder.AppendFormat('<h1 class="TOC">{0}</h1>', $TOC.Name);
-                [ref] $null = $tocBuilder.AppendLine('<table style="width: 100%;">');
+                #[ref] $null = $tocBuilder.AppendLine('<table style="width: 100%;">');
+                [ref] $null = $tocBuilder.AppendLine('<table>');
                 foreach ($tocEntry in $Document.TOC) {
                     $sectionNumberIndent = '&nbsp;&nbsp;&nbsp;' * $tocEntry.Level;
                     if ($Document.Options['EnableSectionNumbering']) {
@@ -256,8 +257,9 @@
             )
             process {
                 [System.Text.StringBuilder] $sectionBuilder = New-Object System.Text.StringBuilder;
-                if ($Document.Options['EnableSectionNumbering']) { [string] $sectionName = '{0} {1}' -f $Section.Number, $Section.Name; }
-                else { [string] $sectionName = '{0}' -f $Section.Name; }
+                $encodedSectionName = [System.Net.WebUtility]::HtmlEncode($Section.Name);
+                if ($Document.Options['EnableSectionNumbering']) { [string] $sectionName = '{0} {1}' -f $Section.Number, $encodedSectionName; }
+                else { [string] $sectionName = '{0}' -f $encodedSectionName; }
                 [int] $headerLevel = $Section.Number.Split('.').Count;
                 ## Html <h5> is the maximum supported level
                 if ($headerLevel -ge 5) {
@@ -335,9 +337,9 @@
             )
             process {
                 [System.Text.StringBuilder] $paragraphBuilder = New-Object -TypeName 'System.Text.StringBuilder';
-                $text = $Paragraph.Text;
+                $text = [System.Net.WebUtility]::HtmlEncode($Paragraph.Text);
                 if ([System.String]::IsNullOrEmpty($text)) {
-                    $text = $Paragraph.Id;
+                    $text = [System.Net.WebUtility]::HtmlEncode($Paragraph.Id);
                 }
                 $customStyle = GetHtmlParagraphStyle -Paragraph $Paragraph;
                 if ([System.String]::IsNullOrEmpty($Paragraph.Style) -and [System.String]::IsNullOrEmpty($customStyle)) {
@@ -426,20 +428,21 @@
                     [ref] $null = $standardTableBuilder.Append('<tr>');
                     foreach ($propertyName in $Table.Columns) {
                         $propertyStyle = '{0}__Style' -f $propertyName;
+                        $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName);
                         if ($row.PSObject.Properties[$propertyStyle]) {
                             ## Cell styles override row styles
                             $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.$propertyStyle]).Trim();
-                            [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $propertyStyleHtml, $row.$propertyName);
+                            [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $propertyStyleHtml, $encodedHtmlContent);
                         }
                         elseif (($row.PSObject.Properties['__Style']) -and (-not [System.String]::IsNullOrEmpty($row.__Style))) {
                             ## We have a row style
                             $rowStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.__Style]).Trim();
-                            [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $rowStyleHtml, $row.$propertyName);
+                            [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $rowStyleHtml, $encodedHtmlContent);
                         }
                         else {
                             if ($null -ne $row.$propertyName) {
                                 ## Check that the property has a value
-                                [ref] $null = $standardTableBuilder.AppendFormat('<td>{0}</td>', $row.$propertyName);
+                                [ref] $null = $standardTableBuilder.AppendFormat('<td>{0}</td>', $encodedHtmlContent);
                             }
                             else {
                                 [ref] $null = $standardTableBuilder.Append('<td>&nbsp</td>');
