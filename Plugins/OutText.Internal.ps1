@@ -47,7 +47,21 @@
             )
             begin {
                 ## Fix Set-StrictMode
-                if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
+                if (Test-Path -Path Variable:\Options) { 
+                	$options = Get-Variable -Name Options -ValueOnly; 
+                    if (-not ($options.ContainsKey('SeparatorWidth'))) {
+                        $options['SeparatorWidth'] = 120;
+                    }
+                    if (-not ($options.ContainsKey('LineBreakSeparator'))) {
+                        $options['LineBreakSeparator'] = '_';
+                    }
+                    if (-not ($options.ContainsKey('TextWidth'))) {
+                        $options['TextWidth'] = 120;
+                    }
+                    if(-not ($Options.ContainsKey('SectionSeparator'))) {
+                        $options['SectionSeparator'] = "-";
+                    }
+                }
                 else { $options = New-PScriboTextOptions; }
             }
             process {
@@ -96,7 +110,21 @@
             )
             begin {
                 ## Fix Set-StrictMode
-                if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
+                if (Test-Path -Path Variable:\Options) {
+                    $options = Get-Variable -Name Options -ValueOnly;
+                    if (-not ($options.ContainsKey('SeparatorWidth'))) {
+                        $options['SeparatorWidth'] = 120;
+                    }
+                    if (-not ($options.ContainsKey('LineBreakSeparator'))) {
+                        $options['LineBreakSeparator'] = '_';
+                    }
+                    if (-not ($options.ContainsKey('TextWidth'))) {
+                        $options['TextWidth'] = 120;
+                    }
+                    if(-not ($Options.ContainsKey('SectionSeparator'))) {
+                        $options['SectionSeparator'] = "-";
+                    }
+                }
                 else { $options = New-PScriboTextOptions; }
             }
             process {
@@ -137,14 +165,21 @@
             )
             begin {
                 ## Fix Set-StrictMode
-                if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
+                if (Test-Path -Path Variable:\Options) {
+                    $options = Get-Variable -Name Options -ValueOnly;
+                    if (-not ($options.ContainsKey('TextWidth'))) {
+                        $options['TextWidth'] = 120;
+                    }
+                }
                 else { $options = New-PScriboTextOptions; }
             }
             process {
                 $padding = ''.PadRight(($Paragraph.Tabs * 4), ' ');
                 if ([string]::IsNullOrEmpty($Paragraph.Text)) { $text = "$padding$($Paragraph.Id)"; }
                 else { $text = "$padding$($Paragraph.Text)"; }
+
                 $formattedText = OutStringWrap -InputObject $text -Width $Options.TextWidth;
+
                 if ($Paragraph.NewLine) { return "$formattedText`r`n"; }
                 else { return $formattedText; }
             } #end process
@@ -161,6 +196,16 @@
                 ## Fix Set-StrictMode
                 if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
                 else { $options = New-PScriboTextOptions; }
+
+                    if (-not ($options.ContainsKey('SeparatorWidth'))) {
+                        $options['SeparatorWidth'] = 120;
+                    }
+                    if (-not ($options.ContainsKey('LineBreakSeparator'))) {
+                        $options['LineBreakSeparator'] = '_';
+                    }
+                    if (-not ($options.ContainsKey('TextWidth'))) {
+                        $options['TextWidth'] = 120;
+                    }
             }
             process {
                 ## Use the specified output width

@@ -26,10 +26,11 @@ Task Test {
 }
 
 Task Clean {
+    Write-Host (' Base directory "{0}".' -f $basePath) -ForegroundColor Yellow;
     ## Remove build directory
     $baseBuildPath = Join-Path -Path $psake.build_script_dir -ChildPath $buildDir;
     if (Test-Path -Path $baseBuildPath) {
-        Write-Host (' Removing build base directory "{0}".' -f $baseBuildPath) -ForegroundColor Yellow;
+        Write-Host (' Removing build base directory "{0}".' -f (TrimPath -Path $baseBuildPath)) -ForegroundColor Yellow;
         Remove-Item $baseBuildPath -Recurse -Force -ErrorAction Stop;
     }
 }
@@ -46,25 +47,42 @@ Task Setup {
     Write-Host (' Using version number "{0}".' -f $version) -ForegroundColor Yellow;
 
     ## Create the build directory
-    Write-Host (' Creating build directory "{0}".' -f $buildPath) -ForegroundColor Yellow;
+    Write-Host (' Creating build directory "{0}".' -f (TrimPath -Path $buildPath)) -ForegroundColor Yellow;
     [Ref] $null = New-Item $buildPath -ItemType Directory -Force -ErrorAction Stop;
-    
+
     ## Create the release directory
     if (!(Test-Path -Path $releasePath)) {
-        Write-Host (' Creating release directory "{0}".' -f $releasePath) -ForegroundColor Yellow;
+        Write-Host (' Creating release directory "{0}".' -f (TrimPath -Path $releasePath)) -ForegroundColor Yellow;
         [Ref] $null = New-Item $releasePath -ItemType Directory -Force -ErrorAction Stop;
-    }  
+    }
 }
 
 Task Deploy {
     ## Copy release files
-    Write-Host (' Copying release files to build directory "{0}".' -f $buildPath) -ForegroundColor Yellow;
-    $excludedFiles = @( '*.Tests.ps1','Build.PSake.ps1','.git*','*.png','Build','Release','readme.md','bin','obj','PScribo Test Doc.*','*.sln','*.suo','*.pssproj','TestResult.xml' );
-    Get-ModuleFile -Exclude $excludedFiles | % {
+    Write-Host (' Copying release files to build directory "{0}".' -f (TrimPath -Path $buildPath)) -ForegroundColor Yellow;
+    $excludedFiles = @(
+        '*.Tests.ps1',
+        'Build.PSake.ps1',
+        '.git*',
+        '*.png',
+        'Build',
+        'Release',
+        'readme.md',
+        'bin',
+        'obj',
+        '*.sln',
+        '*.suo',
+        '*.pssproj',
+        'PScribo Test Doc.*',
+        'PScriboExample.*',
+        'TestResult.xml'
+    );
+    Get-ModuleFile -Exclude $excludedFiles | ForEach-Object {
         $destinationPath = '{0}{1}' -f $buildPath, $PSItem.FullName.Replace($basePath, '');
+        Write-Host ('  Copying release file "{0}".' -f (TrimPath -Path $destinationPath)) -ForegroundColor DarkCyan;
         [Ref] $null = New-Item -ItemType File -Path $destinationPath -Force;
         Copy-Item -Path $PSItem.FullName -Destination $destinationPath -Force;
-    }   
+    }
 }
 
 Task Version {
@@ -78,7 +96,7 @@ Task Version {
 
 Task Sign {
     Get-ChildItem -Path $buildPath -Include *.ps* -Recurse -File | % {
-        Write-Host (' Signing file "{0}":' -f $PSItem.FullName) -ForegroundColor Yellow -NoNewline;
+        Write-Host (' Signing file "{0}":' -f (TrimPath -Path $PSItem.FullName)) -ForegroundColor Yellow -NoNewline;
         $signResult = Set-ScriptSignature -Path $PSItem.FullName -Thumbprint $thumbprint -TimeStampServer $timeStampServer -ErrorAction Stop;
         Write-Host (' {0}.' -f $signResult.Status) -ForegroundColor Green;
     }
@@ -88,16 +106,16 @@ Task Zip {
     ## Creates the release files in the $releaseDir
     $zipReleaseName = '{0}-v{1}.zip' -f $manifest.Name, $version;
     $zipPath = Join-Path -Path $releasePath -ChildPath $zipReleaseName;
-    Write-Host (' Creating zip file "{0}".' -f $zipPath) -ForegroundColor Yellow;
+    Write-Host (' Creating zip file "{0}".' -f (TrimPath -Path $zipPath)) -ForegroundColor Yellow;
     ## Zip the parent directory
     $zipSourcePath = Split-Path -Path $buildPath -Parent;
     $zipFile = New-ZipArchive -Path $zipSourcePath -DestinationPath $zipPath;
-    Write-Host (' Zip file "{0}" created.' -f $zipFile.Fullname) -ForegroundColor Yellow;
+    Write-Host (' Zip file "{0}" created.' -f (TrimPath -Path $zipFile.Fullname)) -ForegroundColor Yellow;
 }
 
 Task Bundle {
     $bundlePath = Join-Path -Path $releasePath -ChildPath "PScribo-v$version-Bundle.ps1";
-    Write-Host (' Creating bundle file "{0}".' -f $bundlePath) -ForegroundColor Yellow;
+    Write-Host (' Creating bundle file "{0}".' -f (TrimPath -Path $bundlePath)) -ForegroundColor Yellow;
     $bundleFiles = "$buildPath\Functions","$buildPath\Plugins";
     Bundle-File -Path $bundleFiles -DestinationPath $bundlePath -Verbose;
 }
@@ -118,6 +136,21 @@ Task OutputBundle {
 
 Task Minify { }
 
+function TrimPath {
+<#
+    .SYNOPSIS
+        Trims a directory path to a relative path to avoid wrapping issues
+#>
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param (
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [System.String] $Path
+    )
+    return ($Path.Replace($basePath, ''));
+}
+
+
 function Combine-File {
     [CmdletBinding()]
     param (
@@ -131,14 +164,14 @@ function Combine-File {
 
     process {
         foreach ($file in (Get-ChildItem -Path $Path -Exclude $Exclude)) {
-            Write-Host ('  Bundling file "{0}".' -f $file) -ForegroundColor Cyan;
+            Write-Host ('   Bundling file "{0}".' -f (TrimPath -Path $file)) -ForegroundColor DarkCyan;
             $internalFunctionContent = "";
             $content = Get-Content -Path $file.FullName -Raw;
             if ($content -match '(?<=<#!\s?)\S+.Internal.ps1(?=\s?!#>)') {
                 $internalFunctionPath = Join-Path -Path $file.DirectoryName -ChildPath $Matches[0];
-                
+
                 if (Test-Path -Path $internalFunctionPath) {
-                    Write-Host ('  Bundling internal file "{0}".' -f $internalFunctionPath) -ForegroundColor DarkCyan;
+                    Write-Host ('    Bundling internal file "{0}".' -f (TrimPath -Path $internalFunctionPath)) -ForegroundColor DarkCyan;
                     $internalFunctionContent = Get-Content -Path $internalFunctionPath -Raw;
                     if ($content -match '<#!\s?\S+.Internal.ps1\s?!#>') {
                         $replacementString = $Matches[0];
