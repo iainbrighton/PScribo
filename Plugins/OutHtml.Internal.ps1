@@ -1,9 +1,10 @@
         #region OutHtml Private Functions
+
         function GetHtmlStyle {
-            <#
+        <#
             .SYNOPSIS
                 Generates html stylesheet style attributes from a PScribo document style.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
@@ -11,6 +12,7 @@
                 [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $Style
             )
             process {
+
                 $styleBuilder = New-Object -TypeName System.Text.StringBuilder;
                 [ref] $null = $styleBuilder.AppendFormat(" font-family: '{0}';", $Style.Font -Join "','");
                 ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
@@ -29,14 +31,16 @@
                     else { [ref] $null = $styleBuilder.AppendFormat(' background-color: #{0};', $Style.BackgroundColor.ToLower()); }
                 }
                 return $styleBuilder.ToString();
+
             }
         } #end function GetHtmlStyle
 
+
         function GetHtmlTableStyle {
-            <#
+        <#
             .SYNOPSIS
                 Generates html stylesheet style attributes from a PScribo document table style.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
@@ -45,6 +49,7 @@
                 [System.Object] $TableStyle
             )
             process {
+
                 $tableStyleBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $tableStyleBuilder.AppendFormat(' padding: {0}em {1}em {2}em {3}em;',
                                                                 (ConvertMmToEm $TableStyle.PaddingTop),
@@ -70,20 +75,25 @@
                     [ref] $null = $tableStyleBuilder.Append(' margin-left: auto; margin-right: 0;');
                 }
                 return $tableStyleBuilder.ToString();
+
             }
         } #end function outhtmltablestyle
 
+
         function GetHtmlTableDiv {
-            <#
+        <#
             .SYNOPSIS
                 Generates Html <div style=..><table style=..> tags based upon table width, columns and indentation
             .NOTES
                 A <div> is required to ensure that the table stays within the "page" boundaries/margins.
-            #>
+        #>
             param (
-                [Parameter(Mandatory, ValueFromPipeline)] [ValidateNotNull()] [System.Object] $Table
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()]
+                [System.Object] $Table
             )
             process {
+
                 $divBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 if ($Table.Tabs -gt 0) {
                     [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}em;">' -f (ConvertMmToEm -Millimeter (12.7 * $Table.Tabs)));
@@ -112,20 +122,25 @@
                     [ref] $null = $divBuilder.Append('>');
                 }
                 return $divBuilder.ToString();
+
             }
         } #end function GetHtmlTableDiv
 
+
         function GetHtmlTableColGroup {
-            <#
+        <#
             .SYNOPSIS
                 Generates Html <colgroup> tags based on table column widths
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
-                [Parameter(Mandatory, ValueFromPipeline)] [ValidateNotNull()] [System.Object] $Table
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()]
+                [System.Object] $Table
             )
             process {
+
                 $colGroupBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 if ($Table.ColumnWidths) {
                     [ref] $null = $colGroupBuilder.Append('<colgroup>');
@@ -140,20 +155,24 @@
                     [ref] $null = $colGroupBuilder.AppendLine('</colgroup>');
                 }
                 return $colGroupBuilder.ToString();
+
             }
         } #end function GetHtmlTableDiv
 
+
         function OutHtmlTOC {
-            <#
+        <#
             .SYNOPSIS
                 Generates Html table of contents.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
-                [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $TOC
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [System.Object] $TOC
             )
             process {
+
                 $tocBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $tocBuilder.AppendFormat('<h1 class="TOC">{0}</h1>', $TOC.Name);
                 #[ref] $null = $tocBuilder.AppendLine('<table style="width: 100%;">');
@@ -169,44 +188,56 @@
                 }
                 [ref] $null = $tocBuilder.AppendLine('</table>');
                 return $tocBuilder.ToString();
+
             } #end process
         } #end function OutHtmlTOC
 
+
         function OutHtmlBlankLine {
-            <#
+        <#
             .SYNOPSIS
                 Outputs html PScribo.Blankline.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
-                [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $BlankLine
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [System.Object] $BlankLine
             )
             process {
+
                 $blankLineBuilder = New-Object -TypeName System.Text.StringBuilder;
                 for ($i = 0; $i -lt $BlankLine.LineCount; $i++) {
                     [ref] $null = $blankLineBuilder.Append('<br />');
                 }
                 return $blankLineBuilder.ToString();
+
             } #end process
         } #end function OutHtmlBlankLine
 
+
         function OutHtmlStyle {
-            <#
+        <#
             .SYNOPSIS
                 Generates an in-line HTML CSS stylesheet from a PScribo document styles and table styles.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
                 ## PScribo document styles
-                [Parameter(Mandatory, ValueFromPipelineByPropertyName)] [System.Collections.Hashtable] $Styles,
+                [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+                [System.Collections.Hashtable] $Styles,
+
                 ## PScribo document tables styles
-                [Parameter(Mandatory, ValueFromPipelineByPropertyName)] [System.Collections.Hashtable] $TableStyles,
+                [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+                [System.Collections.Hashtable] $TableStyles,
+
                 ## Suppress page layout styling
-                [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $NoPageLayoutStyle
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [System.Management.Automation.SwitchParameter] $NoPageLayoutStyle
             )
             process {
+
                 $stylesBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $stylesBuilder.AppendLine('<style type="text/css">');
                 if (-not $NoPageLayoutStyle) {
@@ -241,21 +272,25 @@
                 } #end foreach style
                 [ref] $null = $stylesBuilder.AppendLine('</style>');
                 return $stylesBuilder.ToString().TrimEnd();
+
             } #end process
         } #end function OutHtmlStyle
 
+
         function OutHtmlSection {
-            <#
+        <#
             .SYNOPSIS
                 Output formatted Html section.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
                 ## Section to output
-                [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $Section
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [System.Object] $Section
             )
             process {
+
                 [System.Text.StringBuilder] $sectionBuilder = New-Object System.Text.StringBuilder;
                 $encodedSectionName = [System.Net.WebUtility]::HtmlEncode($Section.Name);
                 if ($Document.Options['EnableSectionNumbering']) { [string] $sectionName = '{0} {1}' -f $Section.Number, $encodedSectionName; }
@@ -286,20 +321,24 @@
                     } #end switch
                 } #end foreach
                 return $sectionBuilder.ToString();
+
             } #end process
         } # end function OutHtmlSection
 
+
         function GetHtmlParagraphStyle {
-            <#
+        <#
             .SYNOPSIS
                 Generates html style attribute from PScribo paragraph style overrides.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
-                [Parameter(Mandatory, ValueFromPipeline)] [ValidateNotNull()] [System.Object] $Paragraph
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()] [System.Object] $Paragraph
             )
             process {
+
                 $paragraphStyleBuilder = New-Object -TypeName System.Text.StringBuilder;
                 if ($Paragraph.Tabs -gt 0) {
                     ## Default to 1/2in tab spacing
@@ -322,20 +361,25 @@
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(' color: #{0};', $Paragraph.Color.ToLower());
                 }
                 return $paragraphStyleBuilder.ToString().TrimStart();
+
             } #end process
         } #end function GetHtmlParagraphStyle
 
+
         function OutHtmlParagraph {
-            <#
+        <#
             .SYNOPSIS
                 Output formatted Html paragraph.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
-                [Parameter(Mandatory, ValueFromPipeline)] [ValidateNotNull()] [System.Object] $Paragraph
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()]
+                [System.Object] $Paragraph
             )
             process {
+
                 [System.Text.StringBuilder] $paragraphBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 $text = [System.Net.WebUtility]::HtmlEncode($Paragraph.Text);
                 if ([System.String]::IsNullOrEmpty($text)) {
@@ -352,21 +396,28 @@
                     [ref] $null = $paragraphBuilder.AppendFormat('<div style="{1}">{2}</div>', $Paragraph.Style, $customStyle, $text);
                 }
                 return $paragraphBuilder.ToString();
+
             } #end process
         } #end OutHtmlParagraph
 
+
         function GetHtmlTableList {
-            <#
+        <#
             .SYNOPSIS
                 Generates list html <table> from a PScribo.Table row object.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
-                [Parameter(Mandatory, ValueFromPipeline)] [ValidateNotNull()] [System.Object] $Table,
-                [Parameter(Mandatory)] [System.Object] $Row
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()]
+                [System.Object] $Table,
+
+                [Parameter(Mandatory)]
+                [System.Object] $Row
             )
             process {
+
                 $listTableBuilder = New-Object -TypeName System.Text.StringBuilder;
                 [ref] $null = $listTableBuilder.Append((GetHtmlTableDiv -Table $Table));
                 [ref] $null = $listTableBuilder.Append((GetHtmlTableColGroup -Table $Table));
@@ -397,20 +448,25 @@
                 } #end for each property
                 [ref] $null = $listTableBuilder.AppendLine('</tbody></table></div>');
                 return $listTableBuilder.ToString();
+
             } #end process
         } #end function GetHtmlTableList
 
+
         function GetHtmlTable {
-            <#
+        <#
             .SYNOPSIS
                 Generates html <table> from a PScribo.Table object.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
-                [Parameter(Mandatory, ValueFromPipeline)] [ValidateNotNull()] [System.Object] $Table
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()]
+                [System.Object] $Table
             )
             process {
+
                 $standardTableBuilder = New-Object -TypeName System.Text.StringBuilder;
                 [ref] $null = $standardTableBuilder.Append((GetHtmlTableDiv -Table $Table));
                 [ref] $null = $standardTableBuilder.Append((GetHtmlTableColGroup -Table $Table));
@@ -453,22 +509,26 @@
                 } #end foreach row
                 [ref] $null = $standardTableBuilder.AppendLine('</tbody></table></div>');
                 return $standardTableBuilder.ToString();
+
             } #end process
         } #end function GetHtmlTableList
 
+
         function OutHtmlTable {
-            <#
+        <#
             .SYNOPSIS
                 Output formatted Html <table> from PScribo.Table object.
             .NOTES
                 One table is output per table row with the -List parameter.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
-                [Parameter(Mandatory, ValueFromPipeline)] [ValidateNotNull()] [System.Object] $Table
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()] [System.Object] $Table
             )
             process {
+
                 [System.Text.StringBuilder] $tableBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 if ($Table.List) {
                     ## Create a table for each row
@@ -487,31 +547,37 @@
                 } #end if
                 return $tableBuilder.ToString();
                 #Write-Output ($tableBuilder.ToString()) -NoEnumerate;
+
             } #end process
         } #end function outhtmltable
 
+
         function OutHtmlLineBreak {
-            <#
+        <#
             .SYNOPSIS
                 Output formatted Html line break.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param ( )
             process {
+
                 return '<hr />';
+
             }
         } #end function OutHtmlLineBreak
 
+
         function OutHtmlPageBreak {
-            <#
+        <#
             .SYNOPSIS
                 Output formatted Html page break.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param ( )
             process {
+
                 [System.Text.StringBuilder] $pageBreakBuilder = New-Object 'System.Text.StringBuilder';
                 [ref] $null = $pageBreakBuilder.Append('</div></page>');
                 $topMargin = ConvertMmToEm $Document.Options['MarginTop'];
@@ -520,6 +586,8 @@
                 $rightMargin = ConvertMmToEm $Document.Options['MarginRight'];
                 [ref] $null = $pageBreakBuilder.AppendFormat('<page><div class="{0}" style="padding-top: {1}em; padding-left: {2}em; padding-bottom: {3}em; padding-right: {4}em;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine();
                 return $pageBreakBuilder.ToString();
+
             }
         } #end function OutHtmlPageBreak
+
         #endregion OutHtml Private Functions

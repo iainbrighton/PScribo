@@ -1,24 +1,34 @@
 function OutText {
-    <#
+<#
     .SYNOPSIS
         Text output plugin for PScribo.
     .DESCRIPTION
         Outputs a text file representation of a PScribo document object.
-    #>
+#>
     [CmdletBinding()]
     param (
         ## ThePScribo document object to convert to a text document
-        [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $Document,
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [System.Object] $Document,
+
         ## Output directory path for the .txt file
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)] [ValidateNotNull()] [System.String] $Path,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNull()]
+        [System.String] $Path,
+
         ### Hashtable of all plugin supported options
-        [Parameter()] [AllowNull()] [System.Collections.Hashtable] $Options
+        [Parameter()]
+        [AllowNull()]
+        [System.Collections.Hashtable] $Options
     )
     begin {
         $pluginName = 'Text';
+
         <#! OutText.Internal.ps1 !#>
+
     }
     process {
+
         $stopwatch = [Diagnostics.Stopwatch]::StartNew();
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
         ## Create default options if not specified
@@ -46,7 +56,7 @@ function OutText {
                 Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
             } #end switch
         } #end foreach
-        $stopwatch.Stop();       
+        $stopwatch.Stop();
         WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name);
         $destinationPath = Join-Path -Path $Path ('{0}.txt' -f $Document.Name);
         WriteLog -Message ($localized.SavingFile -f $destinationPath);
@@ -55,5 +65,6 @@ function OutText {
         WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds);
         ## Return the file reference to the pipeline
         Write-Output (Get-Item -Path $destinationPath);
+
     } #end process
 } #end function OutText

@@ -1,44 +1,72 @@
 function Table {
-    <#
+<#
     .SYNOPSIS
         Defines a new PScribo document table.
-    #>
+#>
 	[CmdletBinding(DefaultParameterSetName = 'InputObject')]
     [OutputType([System.Management.Automation.PSCustomObject])]
 	param (
         ## Table name/Id
         [Parameter(ValueFromPipelineByPropertyName, Position = 0)]
-        [ValidateNotNullOrEmpty()] [string] $Name = ([System.Guid]::NewGuid().ToString()),
-		# Array of Hashtables
+        [ValidateNotNullOrEmpty()]
+        [string] $Name = ([System.Guid]::NewGuid().ToString()),
+
+        # Array of Hashtables
 		[Parameter(Mandatory, ParameterSetName = 'Hashtable')]
-        [ValidateNotNullOrEmpty()] [System.Collections.Specialized.OrderedDictionary[]] $Hashtable,
+        [ValidateNotNullOrEmpty()]
+        [System.Collections.Specialized.OrderedDictionary[]] $Hashtable,
+
         # Array of objects
 		[Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'InputObject')]
-        [Alias('CustomObject','Object')] [ValidateNotNullOrEmpty()] [System.Object[]] $InputObject,
-		# Array of Hashtable key names or Object/PSCustomObject property names to include, in display order.
+        [Alias('CustomObject','Object')]
+        [ValidateNotNullOrEmpty()]
+        [System.Object[]] $InputObject,
+
+        # Array of Hashtable key names or Object/PSCustomObject property names to include, in display order.
 		# If not supplied then all Hashtable keys or all PSCustomObject properties will be used.
 		[Parameter(ValueFromPipelineByPropertyName, Position = 1, ParameterSetName = 'InputObject')]
         [Parameter(ValueFromPipelineByPropertyName, Position = 1, ParameterSetName = 'Hashtable')]
-        [Alias('Properties')] [AllowNull()] [System.String[]] $Columns = $null,
+        [Alias('Properties')]
+        [AllowNull()]
+        [System.String[]] $Columns = $null,
+
         ## Column widths as percentages. Total should not exceed 100.
-        [Parameter(ValueFromPipelineByPropertyName)] [AllowNull()] [System.UInt16[]] $ColumnWidths,
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [AllowNull()]
+        [System.UInt16[]] $ColumnWidths,
+
         # Array of custom table header strings in display order.
-		[Parameter(ValueFromPipelineByPropertyName, Position = 2)] [AllowNull()] [System.String[]] $Headers = $null,
+		[Parameter(ValueFromPipelineByPropertyName, Position = 2)]
+        [AllowNull()]
+        [System.String[]] $Headers = $null,
+
         ## Table style
-        [Parameter(ValueFromPipelineByPropertyName, Position = 3)] [ValidateNotNullOrEmpty()] [System.String] $Style = 'TableDefault',
+        [Parameter(ValueFromPipelineByPropertyName, Position = 3)]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $Style = 'TableDefault',
+
         # List view (no headers)
-		[System.Management.Automation.SwitchParameter] $List,
+		[Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $List,
+
         ## Table width (%), 0 = Autofit
-        [Parameter(ValueFromPipelineByPropertyName)] [ValidateRange(0,100)] [System.UInt16] $Width = 100,
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateRange(0,100)]
+        [System.UInt16] $Width = 100,
+
         ## Indent table
-        [Parameter(ValueFromPipelineByPropertyName)] [ValidateRange(0,10)] [System.UInt16] $Tabs
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateRange(0,10)]
+        [System.UInt16] $Tabs
 	) #end param
     begin {
+
         <#! Table.Internal.ps1 !#>
-        
+
         Write-Debug ('Using parameter set "{0}".' -f $PSCmdlet.ParameterSetName);
         [System.Collections.ArrayList] $rows = New-Object -TypeName System.Collections.ArrayList;
         WriteLog -Message ($localized.ProcessingTable -f $Name);
+
         if ($Headers -and (-not $Columns)) {
             WriteLog -Message $localized.TableHeadersWithNoColumnsWarning -IsWarning;
             $Headers = $Columns;
@@ -50,6 +78,7 @@ function Table {
                 $Headers = $Columns;
             }
         } #end if
+
         if ($ColumnWidths) {
             $columnWidthsSum = $ColumnWidths | Measure-Object -Sum | Select-Object -ExpandProperty Sum;
             if ($columnWidthsSum -ne 100) {
@@ -69,8 +98,10 @@ function Table {
                 $ColumnWidths = $null;
             }
         } #end if columnwidths
+
     } #end begin
     process {
+
         if ($null -eq $Columns) {
             ## Use all available properties
             switch ($PSCmdlet.ParameterSetName) {
@@ -103,8 +134,10 @@ function Table {
                 } #end foreach inputobject
             } #end default
         } #end switch
+
     } #end process
     end {
+
         ## Reset the column names as the object have been rewritten with their headers
         if ($Headers) { $Columns = $Headers; }
         $table = @{
@@ -118,5 +151,6 @@ function Table {
             Tabs = $Tabs;
         }
         return (New-PScriboTable @table);
+
     } #end end
 } #end function Table

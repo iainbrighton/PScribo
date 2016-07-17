@@ -1,37 +1,69 @@
         #region Style Private Functions
+
         function Add-PScriboStyle {
-            <#
+        <#
             .SYNOPSIS
                 Initializes a new PScribo style object.
-            #>
+        #>
             [CmdletBinding()]
             param (
                 ## Style name
-                [Parameter(Mandatory, ValueFromPipelineByPropertyName)] [ValidateNotNullOrEmpty()] [System.String] $Name,
+                [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+                [ValidateNotNullOrEmpty()]
+                [System.String] $Name,
+
                 ## Style id
-                [Parameter(ValueFromPipelineByPropertyName)] [ValidateNotNullOrEmpty()] [System.String] $Id = $Name -Replace(' ',''),
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [ValidateNotNullOrEmpty()]
+                [System.String] $Id = $Name -Replace(' ',''),
+
                 ## Font size (pt)
-                [Parameter(ValueFromPipelineByPropertyName)] [System.UInt16] $Size = 11,
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [System.UInt16] $Size = 11,
+
                 ## Font name (array of names for HTML output)
-                [Parameter(ValueFromPipelineByPropertyName)] [System.String[]] $Font,
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [System.String[]] $Font,
+
                 ## Font color/colour
-                [Parameter(ValueFromPipelineByPropertyName)] [Alias('Colour')] [ValidateNotNullOrEmpty()] [System.String] $Color = 'Black',
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [Alias('Colour')]
+                [ValidateNotNullOrEmpty()]
+                [System.String] $Color = 'Black',
+
                 ## Background color/colour
-                [Parameter(ValueFromPipelineByPropertyName)] [Alias('BackgroundColour')] [ValidateNotNullOrEmpty()] [System.String] $BackgroundColor,
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [Alias('BackgroundColour')]
+                [ValidateNotNullOrEmpty()]
+                [System.String] $BackgroundColor,
+
                 ## Bold typeface
-                [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $Bold,
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [System.Management.Automation.SwitchParameter] $Bold,
+
                 ## Italic typeface
-                [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $Italic,
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [System.Management.Automation.SwitchParameter] $Italic,
+
                 ## Underline typeface
-                [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $Underline,
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [System.Management.Automation.SwitchParameter] $Underline,
+
                 ## Text alignment
-                [Parameter(ValueFromPipelineByPropertyName)] [ValidateSet('Left','Center','Right','Justify')] [string] $Align = 'Left',
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [ValidateSet('Left','Center','Right','Justify')]
+                [string] $Align = 'Left',
+
                 ## Html CSS class id. Overrides Style.Id in HTML output.
-                [Parameter(ValueFromPipelineByPropertyName)] [System.String] $CssClassId = '',
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [System.String] $CssClassId = '',
+
                 ## Set as default style
-                [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $Default
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [System.Management.Automation.SwitchParameter] $Default
             ) #end param
-            begin {       
+            begin {
+
                 if (-not (Test-PScriboStyleColor -Color $Color)) {
                     throw ($localized.InvalidHtmlColorError -f $Color);
                 }
@@ -46,8 +78,10 @@
                 if (-not ($Font)) {
                     $Font = $pscriboDocument.Options['DefaultFont'];
                 }
+
             } #end begin
             process {
+
                 $pscriboDocument.Properties['Styles']++;
                 $style = [PSCustomObject] @{
                     Id = $Id;
@@ -63,6 +97,8 @@
                 }
                 $pscriboDocument.Styles[$Id] = $style;
                 if ($Default) { $pscriboDocument.DefaultStyle = $style.Id; }
+
             } #end process
         } #end function Add-PScriboStyle
+
         #endregion Style Private Functions

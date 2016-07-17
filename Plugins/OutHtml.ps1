@@ -1,25 +1,36 @@
 function OutHtml {
-    <#
+<#
     .SYNOPSIS
         Html output plugin for PScribo.
     .DESCRIPTION
         Outputs a Html file representation of a PScribo document object.
-    #>
+#>
     [CmdletBinding()]
     [OutputType([System.IO.FileInfo])]
     param (
         ## PScribo document object to convert to a text document
-        [Parameter(Mandatory, ValueFromPipeline)] [PSCustomObject] $Document,
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [PSCustomObject] $Document,
+
         ## Output directory path for the .html file
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)] [ValidateNotNullOrEmpty()] [System.String] $Path,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $Path,
+
         ### Hashtable of all plugin supported options
-        [Parameter(ValueFromPipelineByPropertyName)] [AllowNull()] [System.Collections.Hashtable] $Options
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [AllowNull()]
+        [System.Collections.Hashtable] $Options
     )
     begin {
+
         $pluginName = 'Html';
+
         <#! OutHtml.Internal.ps1 !#>
+
     } #end begin
     process {
+
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew();
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
         $noPageLayoutStyle = $false;
@@ -61,5 +72,6 @@ function OutHtml {
         [ref] $null = $htmlBuilder;
         WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds);
         Write-Output (Get-Item -Path $destinationPath);
+
     } #end process
 } #end function OutHtml

@@ -1,25 +1,36 @@
 function OutWord {
-    <#
+<#
     .SYNOPSIS
         Microsoft Word output plugin for PScribo.
     .DESCRIPTION
         Outputs a Word document representation of a PScribo document object.
-    #>
+#>
     [CmdletBinding()]
     [OutputType([System.IO.FileInfo])]
     param (
         ## ThePScribo document object to convert to a text document
-        [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $Document,
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [System.Object] $Document,
+
         ## Output directory path for the .txt file
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)] [ValidateNotNull()] [System.String] $Path,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNull()]
+        [System.String] $Path,
+
         ### Hashtable of all plugin supported options
-        [Parameter()] [AllowNull()] [System.Collections.Hashtable] $Options
+        [Parameter()]
+        [AllowNull()]
+        [System.Collections.Hashtable] $Options
     )
     begin {
+
         $pluginName = 'Word';
+
         <#! OutWord.Internal.ps1 !#>
+
     }
     process {
+
         $stopwatch = [Diagnostics.Stopwatch]::StartNew();
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
         $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
@@ -115,10 +126,11 @@ function OutWord {
         $package.Flush();
         $package.Close();
 
-        $stopwatch.Stop();       
+        $stopwatch.Stop();
         WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name);
         WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds);
         ## Return the file reference to the pipeline
         Write-Output (Get-Item -Path $destinationPath);
+
     } #end process
 } #end function OutWord

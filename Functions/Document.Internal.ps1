@@ -1,18 +1,22 @@
         #region Document Private Functions
+
         function New-PScriboDocument {
-            <#
+        <#
             .SYNOPSIS
                 Initializes a new PScript document object.
             .NOTES
                 This is an internal function and should not be called directly.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.Management.Automation.PSCustomObject])]
             param (
                 ## PScribo document name
-                [Parameter(Mandatory)] [ValidateNotNullOrEmpty()] [System.String] $Name
+                [Parameter(Mandatory)]
+                [ValidateNotNullOrEmpty()]
+                [System.String] $Name
             )
             process {
+
                 WriteLog -Message ($localized.DocumentProcessingStarted -f $Name);
                 $typeName = 'PScribo.Document';
                 $pscriboDocument = [PSCustomObject] @{
@@ -42,29 +46,36 @@
                 Style -Name Footer -Size 8 -Color 0072af;
                 TableStyle TableDefault -BorderWidth 1 -BorderColor 2a70be -HeaderStyle TableDefaultHeading -RowStyle TableDefaultRow -AlternateRowStyle TableDefaultAltRow -Default;
                 return $pscriboDocument;
+
             } #end process
         } #end function NewPScriboDocument
 
         function Process-PScriboSection {
-            <#
+        <#
             .SYNOPSIS
                 Processes the document/TOC section versioning each level, i.e. 1.2.2.3
             .NOTES
                 This is an internal function and should not be called directly.
-            #>
+        #>
             [CmdletBinding()]
             param ( )
+
             function Process-PScriboSectionLevel {
-                <#
+            <#
                 .SYNOPSIS
                     Nested function that processes each document/TOC nested section
-                #>
+            #>
                 [CmdletBinding()]
                 param (
-                    [Parameter(Mandatory)] [ValidateNotNull()] [PSCustomObject] $Section,
-                    [Parameter(Mandatory)] [ValidateNotNullOrEmpty()] [System.String] $Number
+                    [Parameter(Mandatory)]
+                    [ValidateNotNull()]
+                    [PSCustomObject] $Section,
+
+                    [Parameter(Mandatory)]
+                    [ValidateNotNullOrEmpty()]
+                    [System.String] $Number
                 )
-                
+
                 if ($pscriboDocument.Options['ForceUppercaseSection']) {
                     $Section.Name = $Section.Name.ToUpper();
                 }
@@ -98,4 +109,5 @@
                 } #end if
             } #end foreach
         } #end function process-psscribosection
+
         #endregion Document Private Functions

@@ -1,14 +1,17 @@
 function Resolve-PScriboStyleColor {
-    <#
+<#
     .SYNOPSIS
         Resolves a HTML color format or Word color constant to a RGB value
-    #>
+#>
     [CmdletBinding()]
     [OutputType([System.String])]
     param (
-        [Parameter(Mandatory, ValueFromPipeline, Position = 0)] [ValidateNotNull()] [System.String] $Color
+        [Parameter(Mandatory, ValueFromPipeline, Position = 0)]
+        [ValidateNotNull()]
+        [System.String] $Color
     )
     begin {
+
         # http://www.jadecat.com/tuts/colorsplus.html
         $wordColorConstants = @{
             AliceBlue = 'F0F8FF'; AntiqueWhite = 'FAEBD7'; Aqua = '00FFFF'; Aquamarine = '7FFFD4'; Azure = 'F0FFFF'; Beige = 'F5F5DC';
@@ -38,8 +41,10 @@ function Resolve-PScriboStyleColor {
             Tan = 'D2B48C'; Teal = '008080'; Thistle = 'D8BFD8'; Tomato = 'FF6347'; Turquoise = '40E0D0'; Violet = 'EE82EE'; Wheat = 'F5DEB3';
             White = 'FFFFFF'; WhiteSmoke = 'F5F5F5'; Yellow = 'FFFF00'; YellowGreen = '9ACD32';
         };
+
     } #end begin
     process {
+
         $pscriboColor = $Color;
         if ($wordColorConstants.ContainsKey($pscriboColor)) {
             return $wordColorConstants[$pscriboColor].ToLower();
@@ -49,45 +54,57 @@ function Resolve-PScriboStyleColor {
         }
         elseif ($pscriboColor.Length -eq 7 -or $pscriboColor.Length -eq 4) {
             if (-not ($pscriboColor.StartsWith('#'))) { return $null; }
-        } 
+        }
         if ($pscriboColor -notmatch '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$') { return $null; }
         return $pscriboColor.TrimStart('#').ToLower();
+
     } #end process
 } #end function ResolvePScriboColor
 
+
 function Test-PScriboStyleColor {
-    <#
+<#
     .SYNOPSIS
         Tests whether a color string is a valid HTML color.
-    #>
+#>
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param (
-        [Parameter(Mandatory, ValueFromPipeline, Position = 0)] [ValidateNotNullOrEmpty()] [System.String] $Color
+        [Parameter(Mandatory, ValueFromPipeline, Position = 0)]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $Color
     )
     process {
+
         if (Resolve-PScriboStyleColor -Color $Color) { return $true; }
         else { return $false; }
+
     } #end process
 } #end function test-pscribostylecolor
 
+
 function Test-PScriboStyle {
-    <#
+<#
     .SYNOPSIS
         Tests whether a style has been defined.
-    #>
+#>
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param (
-        [Parameter(Mandatory, ValueFromPipeline, Position = 0)] [ValidateNotNullOrEmpty()] [System.String] $Name
+        [Parameter(Mandatory, ValueFromPipeline, Position = 0)]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $Name
     )
     process {
+
         return $PScriboDocument.Styles.ContainsKey($Name);
+
     }
 } #end function Test-PScriboStyle
 
+
 function Style {
-    <#
+<#
     .SYNOPSIS
         Defines a new PScribo formatting style.
     .DESCRIPTION
@@ -96,65 +113,109 @@ function Style {
         weight and font size.
     .NOTES
         Not all plugins support all options.
-    #>
+#>
     [CmdletBinding()]
     param (
         ## Style name
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName, Position = 0)] [ValidateNotNullOrEmpty()] [System.String] $Name,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName, Position = 0)]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $Name,
+
         ## Font size (pt)
-        [Parameter(ValueFromPipelineByPropertyName, Position = 1)] [System.UInt16] $Size = 11,
+        [Parameter(ValueFromPipelineByPropertyName, Position = 1)]
+        [System.UInt16] $Size = 11,
+
         ## Font color/colour
-        [Parameter(ValueFromPipelineByPropertyName)] [Alias('Colour')] [ValidateNotNullOrEmpty()] [System.String] $Color = '000',
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [Alias('Colour')]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $Color = '000',
+
         ## Background color/colour
-        [Parameter(ValueFromPipelineByPropertyName)] [Alias('BackgroundColour')] [ValidateNotNullOrEmpty()] [System.String] $BackgroundColor,
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [Alias('BackgroundColour')]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $BackgroundColor,
+
         ## Bold typeface
-        [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $Bold,
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $Bold,
+
         ## Italic typeface
-        [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $Italic,
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $Italic,
+
         ## Underline typeface
-        [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $Underline,
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $Underline,
+
         ## Text alignment
-        [Parameter(ValueFromPipelineByPropertyName)] [ValidateSet('Left','Center','Right','Justify')] [System.String] $Align = 'Left',
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateSet('Left','Center','Right','Justify')]
+        [System.String] $Align = 'Left',
+
         ## Set as default style
-        [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $Default,
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $Default,
+
         ## Style id
-        [Parameter(ValueFromPipelineByPropertyName)] [ValidateNotNullOrEmpty()] [System.String] $Id = $Name -Replace(' ',''),
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $Id = $Name -Replace(' ',''),
+
         ## Font name (array of names for HTML output)
-        [Parameter(ValueFromPipelineByPropertyName)] [System.String[]] $Font
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.String[]] $Font
     )
     begin {
+
         <#! Style.Internal.ps1 !#>
+
     }
     process {
+
         WriteLog -Message ($localized.ProcessingStyle -f $Id);
         Add-PScriboStyle @PSBoundParameters;
+
     } #end process
 } #end function Style
 
+
 function Set-Style {
-    <#
+<#
     .SYNOPSIS
         Sets the style for an individual table row or cell.
-    #>
+#>
     [CmdletBinding()]
     [OutputType([System.Object])]
     param (
         ## PSCustomObject to apply the style to
-        [Parameter(Mandatory, ValueFromPipeline)] [System.Object[]] [Ref] $InputObject,
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [System.Object[]] [Ref] $InputObject,
+
         ## PScribo style Id to apply
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)] [System.String] $Style,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [System.String] $Style,
+
         ## Property name(s) to apply the selected style to. Leave blank to apply the style to the entire row.
-        [Parameter(ValueFromPipelineByPropertyName)] [ValidateNotNullOrEmpty()] [System.String[]] $Property = '',
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [System.String[]] $Property = '',
+
         ## Passes the modified object back to the pipeline
-        [Parameter(ValueFromPipelineByPropertyName)] [System.Management.Automation.SwitchParameter] $PassThru
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $PassThru
     ) #end param
     begin {
+
         if (-not (Test-PScriboStyle -Name $Style)) {
             Write-Error ($localized.UndefinedStyleError -f $Style);
             return;
         }
+
     }
     process {
+
         foreach ($object in $InputObject) {
             foreach ($p in $Property) {
                 ## If $Property not set, __Style will apply to the whole row.
@@ -165,5 +226,6 @@ function Set-Style {
         if ($PassThru) {
             return $object;
         }
+
     } #end process
 } #end function Set-Style

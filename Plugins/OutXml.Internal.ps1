@@ -1,15 +1,18 @@
         #region OutXml Private Functions
+
         function OutXmlSection {
-            <#
+        <#
             .SYNOPSIS
                 Output formatted Xml section.
-            #>
+        #>
             [CmdletBinding()]
             param (
                 ## PScribo document section
-                [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $Section
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [System.Object] $Section
             )
             process {
+
                 $sectionId = ($Section.Id -replace '[^a-z0-9-_\.]','').ToLower();
                 $element = $xmlDocument.CreateElement($sectionId);
                 [ref] $null = $element.SetAttribute("name", $Section.Name);
@@ -33,20 +36,25 @@
                     } #end switch
                 } #end foreach
                 return $element;
+
             } #end process
         } #end function outxmlsection
 
+
         function OutXmlParagraph {
-            <#
+        <#
             .SYNOPSIS
                 Output formatted Xml paragraph.
-            #>
+        #>
             [CmdletBinding()]
             param (
                 ## PScribo paragraph object
-                [Parameter(Mandatory, ValueFromPipeline)] [ValidateNotNull()] [System.Object] $Paragraph
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()]
+                [System.Object] $Paragraph
             )
             process {
+
                 if (-not ([string]::IsNullOrEmpty($Paragraph.Value))) {
                     ## Value override specified
                     $paragraphId = ($Paragraph.Id -replace '[^a-z0-9-_\.]','').ToLower();
@@ -64,20 +72,25 @@
                     [ref] $null = $paragraphElement.AppendChild($xmlDocument.CreateTextNode($Paragraph.Text));
                 } #end else
                 return $paragraphElement;
+
             } #end process
         } #end function outxmlparagraph
 
+
         function OutXmlTable {
-            <#
+        <#
             .SYNOPSIS
                 Output formatted Xml table.
-            #>
+        #>
             [CmdletBinding()]
             param (
                 ## PScribo table object
-                [Parameter(Mandatory, ValueFromPipeline)] [ValidateNotNull()] [System.Object] $Table
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()]
+                [System.Object] $Table
             )
             process {
+
                 $tableId = ($Table.Id -replace '[^a-z0-9-_\.]','').ToLower();
                 $tableElement = $element.AppendChild($xmlDocument.CreateElement($tableId));
                 [ref] $null = $tableElement.SetAttribute('name', $Table.Name);
@@ -96,6 +109,8 @@
                     } #end foreach property
                 } #end foreach row
                 return $tableElement;
+
             } #end process
         } #end outxmltable
+
         #endregion OutXml Private Functions

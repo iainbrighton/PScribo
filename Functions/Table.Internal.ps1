@@ -1,31 +1,54 @@
         #region Table Private Functions
+
         function New-PScriboTable {
-            <#
+        <#
             .SYNOPSIS
                 Initializes a new PScribo table object.
-            #>
+        #>
             [CmdletBinding()]
             [OutputType([System.Management.Automation.PSCustomObject])]
             param (
                 ## Table name/Id
                 [Parameter(ValueFromPipelineByPropertyName, Position = 0)]
-                [ValidateNotNullOrEmpty()] [string] $Name = ([System.Guid]::NewGuid().ToString()),
+                [ValidateNotNullOrEmpty()]
+                [System.String] $Name = ([System.Guid]::NewGuid().ToString()),
+
                 ## Table columns/display order
-                [Parameter(Mandatory)] [AllowNull()] [System.String[]] $Columns,
+                [Parameter(Mandatory)]
+                [AllowNull()]
+                [System.String[]] $Columns,
+
                 ## Table columns widths
-                [Parameter(Mandatory)] [AllowNull()] [System.UInt16[]] $ColumnWidths,
+                [Parameter(Mandatory)]
+                [AllowNull()]
+                [System.UInt16[]] $ColumnWidths,
+
                 ## Collection of PScriboTableObjects for table rows
-                [Parameter(Mandatory)] [ValidateNotNull()] [System.Collections.ArrayList] $Rows,
+                [Parameter(Mandatory)]
+                [ValidateNotNull()]
+                [System.Collections.ArrayList] $Rows,
+
                 ## Table style
-                [Parameter(Mandatory)] [ValidateNotNullOrEmpty()] [System.String] $Style,
+                [Parameter(Mandatory)]
+                [ValidateNotNullOrEmpty()]
+                [System.String] $Style,
+
                 ## List view
+                [Parameter(ValueFromPipelineByPropertyName)]
                 [System.Management.Automation.SwitchParameter] $List,
+
                 ## Table width (%), 0 = Autofit
-                [Parameter(ValueFromPipelineByPropertyName)] [ValidateRange(0,100)] [System.UInt16] $Width = 100,
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [ValidateRange(0,100)]
+                [System.UInt16] $Width = 100,
+
                 ## Indent table
-                [Parameter(ValueFromPipelineByPropertyName)] [ValidateRange(0,10)] [System.UInt16] $Tabs
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [ValidateRange(0,10)]
+                [System.UInt16] $Tabs
             ) #end param
             process {
+
                 $typeName = 'PScribo.Table';
                 $pscriboDocument.Properties['Tables']++;
                 $pscriboTable = [PSCustomObject] @{
@@ -42,34 +65,46 @@
                     Tabs = $Tabs;
                 }
                 return $pscriboTable;
+
             } #end process
         } #end function new-pscribotable
 
+
         function New-PScriboTableRow {
-            <#
+        <#
             .SYNOPSIS
                 Defines a new PScribo document table row from an object or hashtable.
-            #>
+        #>
             [CmdletBinding(DefaultParameterSetName='InputObject')]
             [OutputType([System.Management.Automation.PSCustomObject])]
             param (
                 ## PSCustomObject to create PScribo table row
                 [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'InputObject')]
-                [ValidateNotNull()] [System.Object] $InputObject,
+                [ValidateNotNull()]
+                [System.Object] $InputObject,
+
                 ## PSCutomObject properties to include in the table row
                 [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObject')]
-                [AllowNull()] [System.String[]] $Properties,
+                [AllowNull()]
+                [System.String[]] $Properties,
+
                 # Custom table header strings (in Display Order). Used for property names.
 		        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObject')]
-                [AllowNull()] [System.String[]] $Headers = $null,
+                [AllowNull()]
+                [System.String[]] $Headers = $null,
+
                 ## Array of ordered dictionaries (hashtables) to create PScribo table row
                 [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'Hashtable')]
-                [AllowNull()] [System.Collections.Specialized.OrderedDictionary] $Hashtable
+                [AllowNull()]
+                [System.Collections.Specialized.OrderedDictionary] $Hashtable
             )
             begin {
+
                 Write-Debug ('Using parameter set "{0}.' -f $PSCmdlet.ParameterSetName);
+
             } #end begin
             process {
+
                 switch ($PSCmdlet.ParameterSetName) {
                     'Hashtable'{
                         if (-not $Hashtable.Contains('__Style')) {
@@ -109,10 +144,12 @@
                                 }
                             }
                         } #end for
-                        ## Create and return custom object                         
+                        ## Create and return custom object
                         return ([PSCustomObject] $objectProperties);
                     } #end Default
                 } #end switch
+
             } #end process
         } #end function New-PScriboTableRow
+
         #endregion Table Private Functions

@@ -1,23 +1,33 @@
 function OutXml {
-    <#
+<#
     .SYNOPSIS
         Xml output plugin for PScribo.
     .DESCRIPTION
         Outputs a xml representation of a PScribo document object.
-    #>
+#>
     [CmdletBinding()]
     param (
         ## ThePScribo document object to convert to a xml document
-        [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $Document,
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [System.Object] $Document,
+
         ## Output directory path for the .xml file
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)] [ValidateNotNull()] [System.String] $Path,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNull()]
+        [System.String] $Path,
+
         ### Hashtable of all plugin supported options
-        [Parameter(ValueFromPipelineByPropertyName)] [AllowNull()] [System.Collections.Hashtable] $Options
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [AllowNull()]
+        [System.Collections.Hashtable] $Options
     )
     begin {
+
         <#! OutXml.Internal.ps1 !#>
+
     }
     process {
+
         $pluginName = 'Xml';
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew();
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
@@ -55,5 +65,6 @@ function OutXml {
         WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds);
         ## Return the file reference to the pipeline
         Write-Output (Get-Item -Path $destinationPath);
+
     } #end process
 } #end function outxml
