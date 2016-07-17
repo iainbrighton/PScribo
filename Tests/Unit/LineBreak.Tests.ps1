@@ -1,10 +1,11 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'LineBreak' {
+    Describe 'LineBreak\LineBreak' {
         $pscriboDocument = Document 'ScaffoldDocument' {};
 
         It 'returns a PSCustomObject object.' {
@@ -27,7 +28,7 @@ InModuleScope 'PScribo' {
             $l = LineBreak -Id $id;
             $l.Id | Should Be $id;
         }
-    
+
         It 'creates line break by positional -Id parameter.' {
             $id = 'Test';
             $l = LineBreak $id;

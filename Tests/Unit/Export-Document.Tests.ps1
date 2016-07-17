@@ -1,20 +1,21 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe "Export-Document" {
+    Describe "Export-Document\Export-Document" {
 
         $document = Document 'ScaffoldDocument' {};
-    
-        It "calls single output formatter." {   
+
+        It "calls single output formatter." {
             Mock OutText -Verifiable { }
             $document | Export-Document -Format Text;
             Assert-VerifiableMocks;
         }
 
-        It "calls multiple output formatters." {   
+        It "calls multiple output formatters." {
             Mock OutText -Verifiable { }
             Mock OutXml -Verifiable { }
             $document | Export-Document -Format Text,XML;
@@ -41,13 +42,13 @@ InModuleScope 'PScribo' {
                 Should Not Throw;
         }
 
-        It "calls single output formatter." {   
+        It "calls single output formatter." {
             Mock OutText -Verifiable { }
             Export-Document -Document $document -Format Text;
             Assert-VerifiableMocks;
         }
 
-        It "calls multiple output formatters." {   
+        It "calls multiple output formatters." {
             Mock OutText -Verifiable { }
             Mock OutXml -Verifiable { }
             Export-Document -Document $document -Format Text,XML;

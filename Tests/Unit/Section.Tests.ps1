@@ -1,20 +1,21 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'Section' {
+    Describe 'Section\Section' {
         $pscriboDocument = Document 'ScaffoldDocument' {};
 
         Context 'By named parameters' {
-        
+
             It 'calls a nested element.' {
                 # function PageBreak { }
                 Mock PageBreak -Verifiable { }
                 Section -Name 'Test Section' -ScriptBlock { PageBreak };
                 Assert-VerifiableMocks;
-            } 
+            }
 
             It 'returns a PSCustomObject object.' {
                 $section = Section -Name 'Test Section' -ScriptBlock { };
@@ -82,7 +83,7 @@ InModuleScope 'PScribo' {
             }
 
         } #end context By positional parameters
-    
+
     }
 
 } #end inmodulescope

@@ -1,10 +1,11 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe "GlobalOption" {
+    Describe "GlobalOption\GlobalOption" {
         $pscriboDocument = Document 'Test' {}
 
         It 'sets default space separator to "".' {
@@ -65,13 +66,13 @@ InModuleScope 'PScribo' {
             $pscriboDocument.Options['PageWidth'] | Should Be 215.9;
             $pscriboDocument.Options['PageHeight'] | Should Be 355.6;
         }
-        
+
         It 'sets page orientation to US Legal Portrait' {
             GlobalOption -PageSize Legal -Orientation Portrait;
             $pscriboDocument.Options['PageWidth'] | Should Be 215.9;
             $pscriboDocument.Options['PageHeight'] | Should Be 355.6;
         }
-        
+
         It 'sets page orientation to US Legal Landscape' {
             GlobalOption -PageSize Legal -Orientation Landscape;
             $pscriboDocument.Options['PageHeight'] | Should Be 215.9;

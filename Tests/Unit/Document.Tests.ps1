@@ -1,10 +1,11 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'Document' {
+    Describe 'Document\Document' {
 
         It 'returns a PSCustomObject object.' {
             $document = Document -Name 'Test Document' -ScriptBlock { };

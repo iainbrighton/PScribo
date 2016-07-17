@@ -1,10 +1,11 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'New-PScriboTableRow' {
+    Describe 'Table\New-PScriboTableRow' {
 
         Context 'By System.Object.' {
 
@@ -109,14 +110,14 @@ InModuleScope 'PScribo' {
                 $row.'Service Name' | Should Be $serviceServiceName;
                 $row.'Display Name' | Should Be $serviceDisplayName;
             }
-    
+
         } #end context by hashtable
-      
+
     } #end describe
 
-    Describe 'Table' {
+    Describe 'Table\Table' {
         $pscriboDocument = Document 'ScaffoldDocument' {};
-    
+
         Context 'InputObject, By Named Parameter.' {
             $services = Get-Service | Select -First 3;
 
@@ -129,7 +130,7 @@ InModuleScope 'PScribo' {
                 $table = $services | Table;
                 $table.Type | Should Be 'PScribo.Table';
             }
-    
+
             It 'creates a table without a name parameter.' {
                 $table = $services | Table;
                 $table.Id | Should Not Be $null;
@@ -231,7 +232,7 @@ InModuleScope 'PScribo' {
             }
 
         } #end context InputObject, By Named Parameter
-   
+
         Context 'Hashtable, By Named Parameter.' {
             [System.Collections.Specialized.OrderedDictionary[]] $services = @(
                 [ordered] @{ Name = 'TestService1'; 'Service Name' = 'Test 1'; 'Display Name' = 'Test Service 1'; }
@@ -248,7 +249,7 @@ InModuleScope 'PScribo' {
                 $table = Table -Hashtable $services;
                 $table.Type | Should Be 'PScribo.Table';
             }
-    
+
             It 'creates a table without a name parameter.' {
                 $table = Table -Hashtable $services;
                 $table.Id | Should Not Be $null;
@@ -352,7 +353,7 @@ InModuleScope 'PScribo' {
                 $table.Rows[1].Name__Style | Should Be 'MyCellStyle';
                 $table.Columns -notlike '*__Style' | Should Be $true;
             }
-    
+
         } #end context Hashtable, By Named Parameter
 
         Context 'InputObject, By Positional Parameters.' {
@@ -399,7 +400,7 @@ InModuleScope 'PScribo' {
                 $table.Rows.Count | Should Be 3;
                 $table.Style | Should Be $styleName;
             }
-        
+
         } #end context InputObject, By Positional Parameter
 
         Context 'Hashtable, By Positional Parameter.' {
@@ -450,9 +451,9 @@ InModuleScope 'PScribo' {
                 $table.Rows.Count | Should Be 3;
                 $table.Style | Should Be $styleName;
             }
-        
+
         } #end context Hashtable, By Positional Parameter
-    
+
     } #end describe table
 
 } #end inmodulescope

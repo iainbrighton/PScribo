@@ -1,10 +1,11 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'OutHtml' {
+    Describe 'OutHtml\OutHtml' {
         $path = (Get-PSDrive -Name TestDrive).Root;
 
         It 'calls OutHtmlSection' {
@@ -57,7 +58,7 @@ InModuleScope 'PScribo' {
 
     }
 
-    Describe 'GetHtmlStyle' {
+    Describe 'OutHtml.Internal\GetHtmlStyle' {
         ## Scaffold new document to initialise options/styles
         $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
 
@@ -169,7 +170,7 @@ InModuleScope 'PScribo' {
 
     } #end describe GetHtmlStyle
 
-    Describe 'GetHtmlTableStyle' {
+    Describe 'OutHtml.Internal\GetHtmlTableStyle' {
         ## Scaffold new document to initialise options/styles
         $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
 
@@ -259,7 +260,7 @@ InModuleScope 'PScribo' {
 
     } #end describe GetHtmlTableStyle
 
-    Describe 'OutHtmlBlankLine' {
+    Describe 'OutHtml.Internal\OutHtmlBlankLine' {
         ## Scaffold new document to initialise options/styles
         $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
 
@@ -272,14 +273,14 @@ InModuleScope 'PScribo' {
         }
     }
 
-    Describe 'OutHtmlLineBreak' {
+    Describe 'OutHtml.Internal\OutHtmlLineBreak' {
 
         It 'creates a <hr /> html tag.' {
             OutHtmlLineBreak | Should BeExactly '<hr />';
         }
     }
 
-    Describe 'OutHtmlPageBreak' {
+    Describe 'OutHtml.Internal\OutHtmlPageBreak' {
         ## Scaffold new document to initialise options/styles
         $Document = Document -Name 'Test' -ScriptBlock { };
         $text = OutHtmlPageBreak;
@@ -306,7 +307,7 @@ InModuleScope 'PScribo' {
 
     }
 
-    Describe 'OutHtmlParagraph' {
+    Describe 'OutHtml.Internal\OutHtmlParagraph' {
         ## Scaffold new document to initialise options/styles
         $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
 
@@ -334,7 +335,7 @@ InModuleScope 'PScribo' {
 
     } #end describe OutHtmlParagraph
 
-    Describe 'OutHtmlSection' {
+    Describe 'OutHtml.Internal\OutHtmlSection' {
         $Document = Document -Name 'TestDocument' -ScriptBlock { }
         $pscriboDocument = $Document;
 
@@ -398,7 +399,7 @@ InModuleScope 'PScribo' {
 
     }
 
-    Describe 'OutHtmlStyle' {
+    Describe 'OutHtml.Internal\OutHtmlStyle' {
 
         It 'creates <style> tag.' {
             $Document = Document -Name 'Test' -ScriptBlock { };
@@ -427,7 +428,7 @@ InModuleScope 'PScribo' {
         }
     }
 
-    Describe 'OutHtmlParagraphStyle' {
+    Describe 'OutHtml.Internal\OutHtmlParagraphStyle' {
 
         ## Scaffold new document to initialise options/styles
         $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
@@ -445,7 +446,7 @@ InModuleScope 'PScribo' {
 
     } #end describe OutHtmlParagraphStyle
 
-    Describe 'OutHtmlTable' {
+    Describe 'OutHtml.Internal\OutHtmlTable' {
 
         Context 'Table.' {
 
@@ -511,59 +512,66 @@ InModuleScope 'PScribo' {
 
 <#
 Code coverage report:
-Covered 81.08% of 259 analyzed commands in 1 file.
+Covered 78.87% of 265 analyzed commands in 1 file.
 
 Missed commands:
 
 File                 Function              Line Command
 ----                 --------              ---- -------
-OutHtml.Internal.ps1 GetHtmlStyle            24 [ref] $null = $styleBuilder.AppendFormat(' color: {0};', $Style.Color.ToLower())
-OutHtml.Internal.ps1 GetHtmlStyle            27 [ref] $null = $styleBuilder.AppendFormat(' background-color: {0};', $Style.BackgroundColor.ToLower())
-OutHtml.Internal.ps1 GetHtmlTableDiv         74 [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}em;">' -f (ConvertMmToEm -Millimeter (12.7 * $Table.Tabs)))
-OutHtml.Internal.ps1 GetHtmlTableDiv         74 ConvertMmToEm -Millimeter (12.7 * $Table.Tabs)
-OutHtml.Internal.ps1 GetHtmlTableDiv         74 12.7 * $Table.Tabs
-OutHtml.Internal.ps1 GetHtmlTableDiv         90 $styleElements += 'table-layout: fixed;'
-OutHtml.Internal.ps1 GetHtmlTableDiv         91 $styleElements += 'word-wrap: break-word;'
-OutHtml.Internal.ps1 GetHtmlTableDiv         97 [ref] $null = $divBuilder.Append('>')
-OutHtml.Internal.ps1 GetHtmlTableColGroup   116 [ref] $null = $colGroupBuilder.Append('<colgroup>')
-OutHtml.Internal.ps1 GetHtmlTableColGroup   117 $Table.ColumnWidths
-OutHtml.Internal.ps1 GetHtmlTableColGroup   118 if ($null -eq $columnWidth) {...
-OutHtml.Internal.ps1 GetHtmlTableColGroup   119 [ref] $null = $colGroupBuilder.Append('<col />')
-OutHtml.Internal.ps1 GetHtmlTableColGroup   122 [ref] $null = $colGroupBuilder.AppendFormat('<col style="max-width:{0}%; min-width:{0}%; width:{0}%" />', $columnWidth)
-OutHtml.Internal.ps1 GetHtmlTableColGroup   125 [ref] $null = $colGroupBuilder.AppendLine('</colgroup>')
-OutHtml.Internal.ps1 OutHtmlTOC             148 [ref] $null = $tocBuilder.AppendFormat('<tr><td>{0}</td><td>{1}<a href="#{2}" style="text-decoration: none;">{3}</a></td></tr>', $tocEntry.Number, $sec...
-OutHtml.Internal.ps1 OutHtmlStyle           196 $Document.Options['PageWidth']
-OutHtml.Internal.ps1 OutHtmlSection         240 [string] $sectionName = '{0} {1}' -f $Section.Number, $Section.Name
-OutHtml.Internal.ps1 OutHtmlSection         245 WriteLog -Message $localized.MaxHeadingLevelWarning -IsWarning
-OutHtml.Internal.ps1 OutHtmlSection         246 $headerLevel = 5
-OutHtml.Internal.ps1 OutHtmlSection         249 $className = $Section.Style
-OutHtml.Internal.ps1 OutHtmlSection         252 $sectionId = '{0}[..]' -f $s.Id.Substring(0,36)
-OutHtml.Internal.ps1 OutHtmlSection         256 [ref] $null = $sectionBuilder.Append((OutHtmlSection -Section $s))
-OutHtml.Internal.ps1 OutHtmlSection         256 OutHtmlSection -Section $s
-OutHtml.Internal.ps1 GetHtmlParagraphStyle  283 $tabEm = ConvertMmToEm -Millimeter (12.7 * $Paragraph.Tabs)
-OutHtml.Internal.ps1 GetHtmlParagraphStyle  283 12.7 * $Paragraph.Tabs
-OutHtml.Internal.ps1 GetHtmlParagraphStyle  284 [ref] $null = $paragraphStyleBuilder.AppendFormat(' margin-left: {0}em;', $tabEm)
-OutHtml.Internal.ps1 GetHtmlParagraphStyle  286 [ref] $null = $paragraphStyleBuilder.AppendFormat(" font-family: '{0}';", $Paragraph.Font -Join "','")
-OutHtml.Internal.ps1 GetHtmlParagraphStyle  287 [ref] $null = $paragraphStyleBuilder.AppendFormat(' font-size: {0:0.00}em;', $Paragraph.Size / 12)
-OutHtml.Internal.ps1 GetHtmlParagraphStyle  288 [ref] $null = $paragraphStyleBuilder.Append(' font-weight: bold;')
-OutHtml.Internal.ps1 GetHtmlParagraphStyle  289 [ref] $null = $paragraphStyleBuilder.Append(' font-style: italic;')
-OutHtml.Internal.ps1 GetHtmlParagraphStyle  290 [ref] $null = $paragraphStyleBuilder.Append(' text-decoration: underline;')
-OutHtml.Internal.ps1 GetHtmlParagraphStyle  292 [ref] $null = $paragraphStyleBuilder.AppendFormat(' color: {0};', $Paragraph.Color.ToLower())
-OutHtml.Internal.ps1 GetHtmlParagraphStyle  295 [ref] $null = $paragraphStyleBuilder.AppendFormat(' color: #{0};', $Paragraph.Color.ToLower())
-OutHtml.Internal.ps1 OutHtmlParagraph       325 [ref] $null = $paragraphBuilder.AppendFormat('<div style="{1}">{2}</div>', $Paragraph.Style, $customStyle, $text)
-OutHtml.Internal.ps1 GetHtmlTableList       352 $propertyDisplayName = $Table.Headers[$i]
-OutHtml.Internal.ps1 GetHtmlTableList       358 $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$Row.$propertyStyle])
-OutHtml.Internal.ps1 GetHtmlTableList       358 GetHtmlStyle -Style $Document.Styles[$Row.$propertyStyle]
-OutHtml.Internal.ps1 GetHtmlTableList       359 if ([string]::IsNullOrEmpty($Row.$propertyName)) {...
-OutHtml.Internal.ps1 GetHtmlTableList       360 [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">&nbsp;</td></tr>', $propertyStyleHtml)
-OutHtml.Internal.ps1 GetHtmlTableList       363 [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">{1}</td></tr>', $propertyStyleHtml, $Row.($propertyName))
-OutHtml.Internal.ps1 GetHtmlTableList       363 $propertyName
-OutHtml.Internal.ps1 GetHtmlTable           402 [ref] $null = $standardTableBuilder.AppendFormat('<th>{0}</th>', $Table.Headers[$i])
-OutHtml.Internal.ps1 GetHtmlTable           415 $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.$propertyStyle]).Trim()
-OutHtml.Internal.ps1 GetHtmlTable           415 GetHtmlStyle -Style $Document.Styles[$row.$propertyStyle]
-OutHtml.Internal.ps1 GetHtmlTable           416 [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $propertyStyleHtml, $row.$propertyName)
-OutHtml.Internal.ps1 GetHtmlTable           420 $rowStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.__Style]).Trim()
-OutHtml.Internal.ps1 GetHtmlTable           420 GetHtmlStyle -Style $Document.Styles[$row.__Style]
-OutHtml.Internal.ps1 GetHtmlTable           421 [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $rowStyleHtml, $row.$propertyName)
-OutHtml.Internal.ps1 OutHtmlTable           460 [ref] $null = $tableBuilder.AppendLine('<p />')
+OutHtml.Internal.ps1 GetHtmlStyle            25 [ref] $null = $styleBuilder.AppendFormat(' color: {0};', $Style.Colo...
+OutHtml.Internal.ps1 GetHtmlStyle            28 [ref] $null = $styleBuilder.AppendFormat(' background-color: {0};', ...
+OutHtml.Internal.ps1 GetHtmlTableStyle       58 [ref] $null = $tableStyleBuilder.AppendFormat(' border-color: {0};',...
+OutHtml.Internal.ps1 GetHtmlTableDiv         89 [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}...
+OutHtml.Internal.ps1 GetHtmlTableDiv         89 ConvertMmToEm -Millimeter (12.7 * $Table.Tabs)
+OutHtml.Internal.ps1 GetHtmlTableDiv         89 12.7 * $Table.Tabs
+OutHtml.Internal.ps1 GetHtmlTableDiv        105 $styleElements += 'table-layout: fixed;'
+OutHtml.Internal.ps1 GetHtmlTableDiv        106 $styleElements += 'word-break: break-word;'
+OutHtml.Internal.ps1 GetHtmlTableDiv        112 [ref] $null = $divBuilder.Append('>')
+OutHtml.Internal.ps1 GetHtmlTableColGroup   131 [ref] $null = $colGroupBuilder.Append('<colgroup>')
+OutHtml.Internal.ps1 GetHtmlTableColGroup   132 $Table.ColumnWidths
+OutHtml.Internal.ps1 GetHtmlTableColGroup   133 if ($null -eq $columnWidth) {...
+OutHtml.Internal.ps1 GetHtmlTableColGroup   134 [ref] $null = $colGroupBuilder.Append('<col />')
+OutHtml.Internal.ps1 GetHtmlTableColGroup   137 [ref] $null = $colGroupBuilder.AppendFormat('<col style="max-width:{...
+OutHtml.Internal.ps1 GetHtmlTableColGroup   140 [ref] $null = $colGroupBuilder.AppendLine('</colgroup>')
+OutHtml.Internal.ps1 OutHtmlTOC             157 $tocBuilder = New-Object -TypeName 'System.Text.StringBuilder'
+OutHtml.Internal.ps1 OutHtmlTOC             158 [ref] $null = $tocBuilder.AppendFormat('<h1 class="TOC">{0}</h1>', $...
+OutHtml.Internal.ps1 OutHtmlTOC             160 [ref] $null = $tocBuilder.AppendLine('<table>')
+OutHtml.Internal.ps1 OutHtmlTOC             161 $Document.TOC
+OutHtml.Internal.ps1 OutHtmlTOC             162 $sectionNumberIndent = '&nbsp;&nbsp;&nbsp;' * $tocEntry.Level
+OutHtml.Internal.ps1 OutHtmlTOC             163 if ($Document.Options['EnableSectionNumbering']) {...
+OutHtml.Internal.ps1 OutHtmlTOC             164 [ref] $null = $tocBuilder.AppendFormat('<tr><td>{0}</td><td>{1}<a hr...
+OutHtml.Internal.ps1 OutHtmlTOC             167 [ref] $null = $tocBuilder.AppendFormat('<tr><td>{0}<a href="#{1}" st...
+OutHtml.Internal.ps1 OutHtmlTOC             170 [ref] $null = $tocBuilder.AppendLine('</table>')
+OutHtml.Internal.ps1 OutHtmlTOC             171 return $tocBuilder.ToString()
+OutHtml.Internal.ps1 OutHtmlStyle           215 $Document.Options['PageWidth']
+OutHtml.Internal.ps1 OutHtmlSection         261 [string] $sectionName = '{0} {1}' -f $Section.Number, $encodedSectio...
+OutHtml.Internal.ps1 OutHtmlSection         266 WriteLog -Message $localized.MaxHeadingLevelWarning -IsWarning
+OutHtml.Internal.ps1 OutHtmlSection         267 $headerLevel = 5
+OutHtml.Internal.ps1 OutHtmlSection         270 $className = $Section.Style
+OutHtml.Internal.ps1 OutHtmlSection         273 $sectionId = '{0}[..]' -f $s.Id.Substring(0,36)
+OutHtml.Internal.ps1 OutHtmlSection         276 $currentIndentationLevel = $s.Level +1
+OutHtml.Internal.ps1 OutHtmlSection         279 [ref] $null = $sectionBuilder.Append((OutHtmlSection -Section $s))
+OutHtml.Internal.ps1 OutHtmlSection         279 OutHtmlSection -Section $s
+OutHtml.Internal.ps1 GetHtmlParagraphStyle  306 $tabEm = ConvertMmToEm -Millimeter (12.7 * $Paragraph.Tabs)
+OutHtml.Internal.ps1 GetHtmlParagraphStyle  306 12.7 * $Paragraph.Tabs
+OutHtml.Internal.ps1 GetHtmlParagraphStyle  307 [ref] $null = $paragraphStyleBuilder.AppendFormat(' margin-left: {0}...
+OutHtml.Internal.ps1 GetHtmlParagraphStyle  309 [ref] $null = $paragraphStyleBuilder.AppendFormat(" font-family: '{0...
+OutHtml.Internal.ps1 GetHtmlParagraphStyle  315 [ref] $null = $paragraphStyleBuilder.Append(' font-weight: bold;')
+OutHtml.Internal.ps1 GetHtmlParagraphStyle  316 [ref] $null = $paragraphStyleBuilder.Append(' font-style: italic;')
+OutHtml.Internal.ps1 GetHtmlParagraphStyle  317 [ref] $null = $paragraphStyleBuilder.Append(' text-decoration: under...
+OutHtml.Internal.ps1 GetHtmlParagraphStyle  319 [ref] $null = $paragraphStyleBuilder.AppendFormat(' color: {0};', $P...
+OutHtml.Internal.ps1 GetHtmlParagraphStyle  322 [ref] $null = $paragraphStyleBuilder.AppendFormat(' color: #{0};', $...
+OutHtml.Internal.ps1 GetHtmlTableList       381 $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$Row.$pro...
+OutHtml.Internal.ps1 GetHtmlTableList       381 GetHtmlStyle -Style $Document.Styles[$Row.$propertyStyle]
+OutHtml.Internal.ps1 GetHtmlTableList       382 if ([string]::IsNullOrEmpty($Row.$propertyName)) {...
+OutHtml.Internal.ps1 GetHtmlTableList       383 [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">&nbsp;...
+OutHtml.Internal.ps1 GetHtmlTableList       386 [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">{1}</t...
+OutHtml.Internal.ps1 GetHtmlTableList       386 $propertyName
+OutHtml.Internal.ps1 GetHtmlTable           434 $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.$pro...
+OutHtml.Internal.ps1 GetHtmlTable           434 GetHtmlStyle -Style $Document.Styles[$row.$propertyStyle]
+OutHtml.Internal.ps1 GetHtmlTable           435 [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1...
+OutHtml.Internal.ps1 GetHtmlTable           439 $rowStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.__Style])...
+OutHtml.Internal.ps1 GetHtmlTable           439 GetHtmlStyle -Style $Document.Styles[$row.__Style]
+OutHtml.Internal.ps1 GetHtmlTable           440 [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1...
+OutHtml.Internal.ps1 OutHtmlTable           479 [ref] $null = $tableBuilder.AppendLine('<p />')
 #>

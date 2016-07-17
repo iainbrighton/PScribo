@@ -1,10 +1,11 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'Paragraph' {
+    Describe 'Paragraph\Paragraph' {
 
         Context 'By Named Parameter' {
             $pscriboDocument = Document 'ScaffoldDocument' {};
@@ -117,7 +118,7 @@ InModuleScope 'PScribo' {
                 $p.Font -contains 'Courier New' | Should Be $true;
                 $p.Font -contains 'Consolas' | Should Be $true;
             }
-    
+
         } #end context By Named Parameters
 
         Context 'By Positional Parameters' {
@@ -156,7 +157,7 @@ InModuleScope 'PScribo' {
                 $p.Style | Should Be $style;
             }
         } #end context By Positional Parameters
-     
+
     } #end describe Paragraph
 
 } #end inmodulescope

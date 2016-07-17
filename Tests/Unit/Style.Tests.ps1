@@ -1,10 +1,11 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'Style' {
+    Describe 'Style\Style' {
         $pscriboDocument = Document 'ScaffoldDocument' {};
         $pscriboDocumentStyleCount = $pscriboDocument.Styles.Count;
 
@@ -20,7 +21,7 @@ InModuleScope 'PScribo' {
                 Style -Name 'Test Style' -Font Arial -Size 14;
                 $pscriboDocument.Styles['TestStyle'].Size | Should Be 14;
             }
-        
+
             It 'sets style color to white (ffffff) by named -Color parameter.' {
                 Style -Name 'Test Style' -Font Arial -Color FFFFFF;
                 $pscriboDocument.Styles['TestStyle'].Color | Should BeExactly 'ffffff';
@@ -29,7 +30,7 @@ InModuleScope 'PScribo' {
             It 'sets style color to red (ff0000) by named -Colour parameter.' {
                 Style -Name 'Test Style' -Font Arial -Colour FF0000;
                 $pscriboDocument.Styles['TestStyle'].Color | Should BeExactly 'ff0000';
-            } 
+            }
 
             It 'sets style background color to blue (0000ff) by named -Color parameter.' {
                 Style -Name 'Test Style' -Font Arial -BackgroundColor 0000FF;
@@ -94,7 +95,7 @@ InModuleScope 'PScribo' {
                 Style 'Test Style';
                 $pscriboDocument.Styles['TestStyle'].Name | Should BeExactly 'Test Style';
                 $pscriboDocument.Styles['TestStyle'].Id | Should BeExactly 'TestStyle';
-            }   
+            }
 
             It 'set style font size by positional -Size parameter.' {
                 Style 'Test Style' 16;
@@ -109,7 +110,7 @@ InModuleScope 'PScribo' {
             It 'defaults background colour to null.' {
                 Style 'Test Style';
                 $pscriboDocument.Styles['TestStyle'].BackgroundColor | Should BeNullOrEmpty;
-            } 
+            }
 
             It 'defaults text alignment to left.' {
                 Style -Name 'Test Style' -Font Arial;
@@ -149,8 +150,8 @@ InModuleScope 'PScribo' {
 
     } #end describe style
 
-    Describe 'Test-PScriboStyleColor' {
-    
+    Describe 'Style\Test-PScriboStyleColor' {
+
             It 'tests valid html color code.' {
                 Test-PscriboStyleColor -Color '012345' | Should Be $true;
                 Test-PscriboStyleColor -Color '#012345' | Should Be $true;
@@ -168,7 +169,7 @@ InModuleScope 'PScribo' {
             }
     }
 
-    Describe 'Set-PScriboStyle' {
+    Describe 'Style\Set-PScriboStyle' {
         $pscriboDocument = Document 'ScaffoldDocument' {};
         Style -Name 'MyCustomStyle' -Size 16;
 

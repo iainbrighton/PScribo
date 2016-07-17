@@ -1,10 +1,11 @@
 $here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'TOC' {
+    Describe 'TOC\TOC' {
         $pscriboDocument = Document 'ScaffoldDocument' {};
 
         Context 'By Named Parameter' {
@@ -27,11 +28,11 @@ InModuleScope 'PScribo' {
                 $t = TOC -Name $text;
                 $t.Name | Should Be $text.ToUpper();
             }
-    
+
         } #end context By Named Parameter
-    
+
         Context 'By Positional Parameter' {
-        
+
             It 'creates a TOC by named -Name parameter.' {
                 $text = 'Simple paragraph.';
                 $t = TOC $text;

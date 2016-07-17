@@ -1,10 +1,11 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'TableStyle' {
+    Describe 'TableStyle\TableStyle' {
         $pscriboDocument = Document 'ScaffoldDocument' {};
 
         Context 'By named parameter' {
@@ -41,7 +42,7 @@ InModuleScope 'PScribo' {
                 TableStyle -Id 'Test Table Style' -HeaderStyle Normal -RowStyle Normal -Align Right;
                 $pscriboDocument.TableStyles['Test Table Style'].Align | Should BeExactly 'Right';
             }
-        
+
             It 'defaults table style padding to 1.0pt, 4.0pt, 1.0pt and 4.0pt' {
                 TableStyle -Id 'Test Table Style' -HeaderStyle Normal -RowStyle Normal;
                 $pscriboDocument.TableStyles['Test Table Style'].PaddingTop | Should Be 0.35;
@@ -93,7 +94,7 @@ InModuleScope 'PScribo' {
                 { TableStyle 'Test Table Style' -AlternateRowStyle InvalidStyle } | Should Throw;
             }
 
-        
+
             It 'throws with invalid named -BorderColor parameter.' {
                 { TableStyle 'Test Table Style' -BorderColor xyz } | Should Throw;
             }
@@ -101,7 +102,7 @@ InModuleScope 'PScribo' {
         } #end context by named parameter
 
         Context 'By positional parameter' {
-   
+
             It 'sets table style using positional -Id, -HeaderStyle and -RowStyle parameters.' {
                 TableStyle 'Test Table Style' Normal Normal;
                 $pscriboDocument.TableStyles['Test Table Style'].Name | Should BeExactly 'Test Table Style';

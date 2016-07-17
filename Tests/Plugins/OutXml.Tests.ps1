@@ -1,8 +1,10 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
+
 
     ## Scaffold root XmlDocument
     $xmlDocument = New-Object -TypeName System.Xml.XmlDocument;
@@ -19,7 +21,7 @@ InModuleScope 'PScribo' {
         }
     }
 
-    Describe 'OutXml' {
+    Describe 'OutXml\OutXml' {
         $path = (Get-PSDrive -Name TestDrive).Root;
 
         It 'calls OutXmlTable' {
@@ -27,13 +29,13 @@ InModuleScope 'PScribo' {
             Document -Name 'TestDocument' -ScriptBlock { Get-Service | Select-Object -First 1 | Table 'TestTable' } | OutXml -Path $path;
             Assert-MockCalled -CommandName OutXmlTable -Exactly 1;
         }
-    
+
         It 'calls OutXmlParagraph' {
             Mock -CommandName OutXmlParagraph -MockWith { return $xmlDocument.CreateElement('TestParagraph') };
             Document -Name 'TestDocument' -ScriptBlock { Paragraph 'TestParagraph' } | OutXml -Path $path;
             Assert-MockCalled -CommandName OutXmlParagraph -Exactly 1;
         }
-    
+
         It 'calls OutXmlSection' {
             Mock -CommandName OutXmlSection -MockWith { return $xmlDocument.CreateElement('TestSection'); };
             Document -Name 'TestDocument' -ScriptBlock { Section -Name 'TestSection' -ScriptBlock { } } | OutXml -Path $path;
@@ -42,8 +44,8 @@ InModuleScope 'PScribo' {
 
     } #end describe OutXml
 
-    Describe 'OutXmlParagraph' {
-    
+    Describe 'OutXml.Internal\OutXmlParagraph' {
+
         Context 'By Name Parameter.' {
 
             It 'outputs a XmlComment with no Text' {
@@ -69,7 +71,7 @@ InModuleScope 'PScribo' {
                 $p.Name | Should BeExactly $name;
                 $p.'#text' | Should BeExactly $value;
             }
-    
+
         } #end context By Name Parameter
 
         Context 'By Positional Parameter.' {
@@ -100,7 +102,7 @@ InModuleScope 'PScribo' {
 
     } #end describe OutXmlParagraph
 
-    Describe 'OutXmlSection' {
+    Describe 'OutXml.InternalOutXmlSection' {
 
         It 'calls OutXmlTable' {
             Mock -CommandName OutXmlTable -MockWith { return $xmlDocument.CreateElement('TestTable'); };
@@ -123,14 +125,14 @@ InModuleScope 'PScribo' {
 
     } #end describe OutXmlSection
 
-    Describe 'OutXmlTable' {
+    Describe 'OutXml.InternalOutXmlTable' {
         $services = Get-Service | Select -First 3;
         $tableName = 'Test Table';
         $tableColumns = @('Name','DisplayName','Status');
         $tableHeaders = @('Name','Display Name','Status');
 
         Context 'By Name Parameter.' {
-        
+
             It 'outputs a root XmlElement' {
                 $table = $services | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
                     OutXmlTable;
@@ -138,7 +140,7 @@ InModuleScope 'PScribo' {
                 $table.Name | Should BeExactly $tableName;
 
             }
-    
+
             It 'outputs a XmlElement for each table row' {
                 $table = $services | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
                     OutXmlTable;
@@ -154,7 +156,7 @@ InModuleScope 'PScribo' {
             It 'creates a name attribute when headers contain spaces' {
                 $table = $services | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
                     OutXmlTable;
-                for ($i = 0; $i -lt $table.FirstChild.ChildNodes.Count; $i++) { 
+                for ($i = 0; $i -lt $table.FirstChild.ChildNodes.Count; $i++) {
                     $table.FirstChild.ChildNodes[$i].LocalName | Should BeExactly $tableColumns[$i].ToLower();
                     if ($tableHeaders[$i].Contains(' ')) {
                         $table.FirstChild.ChildNodes[$i].Name | Should BeExactly $tableHeaders[$i];
@@ -164,7 +166,7 @@ InModuleScope 'PScribo' {
         } #end context By Name Parameter
 
          Context 'By Postional Parameter.' {
-        
+
             It 'outputs a root XmlElement' {
                 $table = $services | Table $tableName $tableColumns $tableHeaders |
                     OutXmlTable;
@@ -172,7 +174,7 @@ InModuleScope 'PScribo' {
                 $table.Name | Should BeExactly $tableName;
                 $table.ChildNodes.Count | Should Be 3;
             }
-    
+
             It 'outputs a XmlElement for each table row' {
                 $table = $services | Table $tableName $tableColumns $tableHeaders |
                     OutXmlTable;
@@ -188,7 +190,7 @@ InModuleScope 'PScribo' {
             It 'creates a name attribute when headers contain spaces' {
                 $table = $services | Table $tableName $tableColumns $tableHeaders |
                     OutXmlTable;
-                for ($i = 0; $i -lt $table.FirstChild.ChildNodes.Count; $i++) { 
+                for ($i = 0; $i -lt $table.FirstChild.ChildNodes.Count; $i++) {
                     $table.FirstChild.ChildNodes[$i].LocalName | Should BeExactly $tableColumns[$i].ToLower();
                     if ($tableHeaders[$i].Contains(' ')) {
                         $table.FirstChild.ChildNodes[$i].Name | Should BeExactly $tableHeaders[$i];
@@ -199,35 +201,37 @@ InModuleScope 'PScribo' {
 
     } #end describe OutXmlTable
 
-} #end inmodulescope 
- 
+} #end inmodulescope
+
 <#
 Code coverage report:
-Covered 59.62% of 52 analyzed commands in 1 file.
+Covered 57.41% of 54 analyzed commands in 1 file.
 
 Missed commands:
 
-File                Function      Line Command                                                                                                                      
-----                --------      ---- -------                                                                                                                      
-OutXml.Internal.ps1 OutXmlSection   13 $sectionId = ($Section.Id -replace '[^a-z0-9-_\.]','').ToLower()                                                             
-OutXml.Internal.ps1 OutXmlSection   13 $Section.Id -replace '[^a-z0-9-_\.]',''                                                                                      
-OutXml.Internal.ps1 OutXmlSection   14 $element = $xmlDocument.CreateElement($sectionId)                                                                            
-OutXml.Internal.ps1 OutXmlSection   15 [ref] $null = $element.SetAttribute("name", $Section.Name)                                                                   
-OutXml.Internal.ps1 OutXmlSection   16 $Section.Sections.GetEnumerator()                                                                                            
-OutXml.Internal.ps1 OutXmlSection   17 if ($s.Id.Length -gt 40) { $sectionId = '{0}..' -f $s.Id.Substring(0,38); }...                                               
-OutXml.Internal.ps1 OutXmlSection   17 $sectionId = '{0}..' -f $s.Id.Substring(0,38)                                                                                
-OutXml.Internal.ps1 OutXmlSection   18 $sectionId = $s.Id                                                                                                           
-OutXml.Internal.ps1 OutXmlSection   19 WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent ($s.Level +1)                          
-OutXml.Internal.ps1 OutXmlSection   19 $localized.PluginProcessingSection -f $s.Type, $sectionId                                                                    
-OutXml.Internal.ps1 OutXmlSection   19 $s.Level +1                                                                                                                  
-OutXml.Internal.ps1 OutXmlSection   20 $s.Type                                                                                                                      
-OutXml.Internal.ps1 OutXmlSection   21 [ref] $null = $element.AppendChild((OutXmlSection -Section $s))                                                              
-OutXml.Internal.ps1 OutXmlSection   21 OutXmlSection -Section $s                                                                                                    
-OutXml.Internal.ps1 OutXmlSection   22 [ref] $null = $element.AppendChild((OutXmlParagraph -Paragraph $s))                                                          
-OutXml.Internal.ps1 OutXmlSection   22 OutXmlParagraph -Paragraph $s                                                                                                
-OutXml.Internal.ps1 OutXmlSection   23 [ref] $null = $element.AppendChild((OutXmlTable -Table $s))                                                                  
-OutXml.Internal.ps1 OutXmlSection   23 OutXmlTable -Table $s                                                                                                        
-OutXml.Internal.ps1 OutXmlSection   29 WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning                                                
-OutXml.Internal.ps1 OutXmlSection   29 $localized.PluginUnsupportedSection -f $s.Type                                                                               
-OutXml.Internal.ps1 OutXmlSection   33 return $element   
+File                Function      Line Command
+----                --------      ---- -------
+OutXml.Internal.ps1 OutXmlSection   13 $sectionId = ($Section.Id -replace '[^a-z0-9-_\.]','').ToLower()
+OutXml.Internal.ps1 OutXmlSection   13 $Section.Id -replace '[^a-z0-9-_\.]',''
+OutXml.Internal.ps1 OutXmlSection   14 $element = $xmlDocument.CreateElement($sectionId)
+OutXml.Internal.ps1 OutXmlSection   15 [ref] $null = $element.SetAttribute("name", $Section.Name)
+OutXml.Internal.ps1 OutXmlSection   16 $Section.Sections.GetEnumerator()
+OutXml.Internal.ps1 OutXmlSection   17 if ($s.Id.Length -gt 40) { $sectionId = '{0}..' -f $s.Id.Substring(0,38); }...
+OutXml.Internal.ps1 OutXmlSection   17 $sectionId = '{0}..' -f $s.Id.Substring(0,38)
+OutXml.Internal.ps1 OutXmlSection   18 $sectionId = $s.Id
+OutXml.Internal.ps1 OutXmlSection   19 $currentIndentationLevel = 1
+OutXml.Internal.ps1 OutXmlSection   20 if ($null -ne $s.PSObject.Properties['Level']) { $currentIndentationLevel = $...
+OutXml.Internal.ps1 OutXmlSection   20 $currentIndentationLevel = $s.Level +1
+OutXml.Internal.ps1 OutXmlSection   21 WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId)...
+OutXml.Internal.ps1 OutXmlSection   21 $localized.PluginProcessingSection -f $s.Type, $sectionId
+OutXml.Internal.ps1 OutXmlSection   22 $s.Type
+OutXml.Internal.ps1 OutXmlSection   23 [ref] $null = $element.AppendChild((OutXmlSection -Section $s))
+OutXml.Internal.ps1 OutXmlSection   23 OutXmlSection -Section $s
+OutXml.Internal.ps1 OutXmlSection   24 [ref] $null = $element.AppendChild((OutXmlParagraph -Paragraph $s))
+OutXml.Internal.ps1 OutXmlSection   24 OutXmlParagraph -Paragraph $s
+OutXml.Internal.ps1 OutXmlSection   25 [ref] $null = $element.AppendChild((OutXmlTable -Table $s))
+OutXml.Internal.ps1 OutXmlSection   25 OutXmlTable -Table $s
+OutXml.Internal.ps1 OutXmlSection   31 WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning
+OutXml.Internal.ps1 OutXmlSection   31 $localized.PluginUnsupportedSection -f $s.Type
+OutXml.Internal.ps1 OutXmlSection   35 return $element
 #>

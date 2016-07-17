@@ -1,10 +1,11 @@
 ﻿$here = Split-Path -Path $MyInvocation.MyCommand.Path -Parent;
-$moduleRoot = Split-Path -Path $here -Parent;
+$testRoot  = Split-Path -Path $here -Parent;
+$moduleRoot = Split-Path -Path $testRoot -Parent;
 Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'OutText' {
+    Describe 'OutText\OutText' {
         $path = (Get-PSDrive -Name TestDrive).Root;
 
         It 'calls OutTextSection' {
@@ -56,7 +57,7 @@ InModuleScope 'PScribo' {
 
     }
 
-    Describe 'OutTextBlankLine' {
+    Describe 'OutText.Internal\OutTextBlankLine' {
         ## Scaffold document options
         $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
 
@@ -72,10 +73,10 @@ InModuleScope 'PScribo' {
 
     }
 
-    Describe 'OutTextLineBreak' {
+    Describe 'OutText.Internal\OutTextLineBreak' {
         ## Scaffold document options
         $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
-    
+
         It 'Defaults to 120 and includes new line.' {
             $l = OutTextLineBreak;
             $l.Length | Should Be 122;
@@ -95,10 +96,10 @@ InModuleScope 'PScribo' {
 
     } #end describe OutTextLineBreak
 
-    Describe 'OutTextPageBreak' {
+    Describe 'OutText.Internal\OutTextPageBreak' {
         ## Scaffold document options
         $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
-    
+
         It 'Defaults to 120 and includes new line.' {
             #$Options = New-PScriboTextOptions;
             $l = OutTextPageBreak;
@@ -119,12 +120,12 @@ InModuleScope 'PScribo' {
 
     } #end describe OutTextLineBreak
 
-    Describe 'OutTextParagraph' {
+    Describe 'OutText.Internal\OutTextParagraph' {
         ## Scaffold document options
         $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
 
         Context 'By pipeline.' {
-     
+
             It 'Paragraph with new line.' {
                 $testParagraph = 'Test paragraph.';
                 $p = Paragraph $testParagraph | OutTextParagraph;
@@ -136,7 +137,7 @@ InModuleScope 'PScribo' {
                 $p = Paragraph $testParagraph -NoNewLine | OutTextParagraph;
                 $p | Should BeExactly $testParagraph;
             }
-        
+
             It 'Paragraph wraps at 10 characters with new line.' {
                 $testParagraph = 'Test paragraph.';
                 $Options = New-PScriboTextOptions -TextWidth 10;
@@ -154,7 +155,7 @@ InModuleScope 'PScribo' {
         } #end context by pipeline
 
         Context 'By named -Paragraph parameter.' {
-        
+
             It 'By named -Paragraph parameter with new line.' {
                 $testParagraph = 'Test paragraph.';
                 $p = OutTextParagraph -Paragraph (Paragraph $testParagraph);
@@ -170,7 +171,7 @@ InModuleScope 'PScribo' {
 
     } #end describe outtextparagraph
 
-    Describe 'OutTextSection' {
+    Describe 'OutText.Internal\OutTextSection' {
         $Document = Document -Name 'TestDocument' -ScriptBlock { };
         $pscriboDocument = $Document;
 
@@ -225,7 +226,7 @@ InModuleScope 'PScribo' {
 
     }
 
-    Describe 'OutTextTable' {
+    Describe 'OutText.Internal\OutTextTable' {
         ## Scaffold document options
         $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
 
@@ -251,7 +252,7 @@ InModuleScope 'PScribo' {
         } #end context table
 
         Context 'As List.' {
-        
+
             $services = @(
                 [ordered] @{ Name = 'TestService1'; 'Service Name' = 'Test 1'; 'Display Name' = 'Test Service 1'; }
                 [ordered] @{ Name = 'TestService3'; 'Service Name' = 'Test 3'; 'Display Name' = 'Test Service 3'; }
@@ -275,33 +276,69 @@ InModuleScope 'PScribo' {
 
 } #end inmodulescope
 
-<#Code coverage report:
-Covered 80.00% of 110 analyzed commands in 1 file.
+<#
+Code coverage report:
+Covered 65.24% of 164 analyzed commands in 1 file.
 
 Missed commands:
 
-File                 Function         Line Command                                                                                                                                       
-----                 --------         ---- -------                                                                                                                                       
-OutText.Internal.ps1 OutTextTOC         49 $tocBuilder = New-Object -TypeName System.Text.StringBuilder                                                                                  
-OutText.Internal.ps1 OutTextTOC         50 [ref] $null = $tocBuilder.AppendLine($TOC.Name)                                                                                               
-OutText.Internal.ps1 OutTextTOC         51 [ref] $null = $tocBuilder.AppendLine(''.PadRight($Options.SeparatorWidth, $Options.SectionSeparator))                                         
-OutText.Internal.ps1 OutTextTOC         52 $maxSectionNumberLength = ($Document.TOC.Number | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum).Length                     
-OutText.Internal.ps1 OutTextTOC         52 $Document.TOC.Number                                                                                                                          
-OutText.Internal.ps1 OutTextTOC         52 Measure-Object -Maximum                                                                                                                       
-OutText.Internal.ps1 OutTextTOC         52 Select-Object -ExpandProperty Maximum                                                                                                         
-OutText.Internal.ps1 OutTextTOC         53 $Document.TOC                                                                                                                                 
-OutText.Internal.ps1 OutTextTOC         54 $sectionNumberPaddingLength = $maxSectionNumberLength - $tocEntry.Number.Length                                                               
-OutText.Internal.ps1 OutTextTOC         55 $sectionNumberIndent = ''.PadRight($tocEntry.Level, ' ')                                                                                      
-OutText.Internal.ps1 OutTextTOC         56 $sectionPadding = ''.PadRight($sectionNumberPaddingLength, ' ')                                                                               
-OutText.Internal.ps1 OutTextTOC         57 [ref] $null = $tocBuilder.AppendFormat('{0}{1}  {2}{3}', $tocEntry.Number, $sectionPadding, $sectionNumberIndent, $tocEntry.Name).AppendLine()
-OutText.Internal.ps1 OutTextTOC         59 return $tocBuilder.ToString()                                                                                                                 
-OutText.Internal.ps1 OutTextSection     94 [string] $sectionName = '{0} {1}' -f $Section.Number, $Section.Name                                                                           
-OutText.Internal.ps1 OutTextSection    100 $sectionId = '{0}..' -f $s.Id.Substring(0,38)                                                                                                 
-OutText.Internal.ps1 OutTextSection    104 [ref] $null = $sectionBuilder.Append((OutTextSection -Section $s))                                                                            
-OutText.Internal.ps1 OutTextSection    104 OutTextSection -Section $s                                                                                                                    
-OutText.Internal.ps1 OutTextParagraph  129 $text = "$padding$($Paragraph.Text)"                                                                                                          
-OutText.Internal.ps1 OutTextParagraph  129 $Paragraph.Text                                                                                                                               
-OutText.Internal.ps1 OutTextLineBreak  145 $Options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1                                                                                       
-OutText.Internal.ps1 OutTextTable      174 $Options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1                                                                                       
-OutText.Internal.ps1 OutStringWrap     212 $textBuilder = $null                                        
+File                 Function         Line Command
+----                 --------         ---- -------
+OutText.Internal.ps1 OutTextTOC         50 if (Test-Path -Path Variable:\Options) { ...
+OutText.Internal.ps1 OutTextTOC         51 $options = Get-Variable -Name Options -ValueOnly
+OutText.Internal.ps1 OutTextTOC         52 if (-not ($options.ContainsKey('SeparatorWidth'))) {...
+OutText.Internal.ps1 OutTextTOC         52 $options.ContainsKey('SeparatorWidth')
+OutText.Internal.ps1 OutTextTOC         53 $options['SeparatorWidth'] = 120
+OutText.Internal.ps1 OutTextTOC         55 if (-not ($options.ContainsKey('LineBreakSeparator'))) {...
+OutText.Internal.ps1 OutTextTOC         55 $options.ContainsKey('LineBreakSeparator')
+OutText.Internal.ps1 OutTextTOC         56 $options['LineBreakSeparator'] = '_'
+OutText.Internal.ps1 OutTextTOC         58 if (-not ($options.ContainsKey('TextWidth'))) {...
+OutText.Internal.ps1 OutTextTOC         58 $options.ContainsKey('TextWidth')
+OutText.Internal.ps1 OutTextTOC         59 $options['TextWidth'] = 120
+OutText.Internal.ps1 OutTextTOC         61 if(-not ($Options.ContainsKey('SectionSeparator'))) {...
+OutText.Internal.ps1 OutTextTOC         61 $Options.ContainsKey('SectionSeparator')
+OutText.Internal.ps1 OutTextTOC         62 $options['SectionSeparator'] = "-"
+OutText.Internal.ps1 OutTextTOC         65 $options = New-PScriboTextOptions
+OutText.Internal.ps1 OutTextTOC         68 $tocBuilder = New-Object -TypeName System.Text.StringBuilder
+OutText.Internal.ps1 OutTextTOC         69 [ref] $null = $tocBuilder.AppendLine($TOC.Name)
+OutText.Internal.ps1 OutTextTOC         70 [ref] $null = $tocBuilder.AppendLine(''.PadRight($options.SeparatorWidth,...
+OutText.Internal.ps1 OutTextTOC         71 $maxSectionNumberLength = ([System.String] ($Document.TOC.Number | Measur...
+OutText.Internal.ps1 OutTextTOC         71 [System.String] ($Document.TOC.Number | Measure-Object -Maximum | Select-...
+OutText.Internal.ps1 OutTextTOC         71 $Document.TOC.Number
+OutText.Internal.ps1 OutTextTOC         71 Measure-Object -Maximum
+OutText.Internal.ps1 OutTextTOC         71 Select-Object -ExpandProperty Maximum
+OutText.Internal.ps1 OutTextTOC         72 $Document.TOC
+OutText.Internal.ps1 OutTextTOC         73 $sectionNumberPaddingLength = $maxSectionNumberLength - $tocEntry.Number....
+OutText.Internal.ps1 OutTextTOC         74 $sectionNumberIndent = ''.PadRight($tocEntry.Level, ' ')
+OutText.Internal.ps1 OutTextTOC         75 $sectionPadding = ''.PadRight($sectionNumberPaddingLength, ' ')
+OutText.Internal.ps1 OutTextTOC         76 [ref] $null = $tocBuilder.AppendFormat('{0}{1}  {2}{3}', $tocEntry.Number...
+OutText.Internal.ps1 OutTextTOC         78 return $tocBuilder.ToString()
+OutText.Internal.ps1 OutTextSection    114 $options = Get-Variable -Name Options -ValueOnly
+OutText.Internal.ps1 OutTextSection    115 if (-not ($options.ContainsKey('SeparatorWidth'))) {...
+OutText.Internal.ps1 OutTextSection    115 $options.ContainsKey('SeparatorWidth')
+OutText.Internal.ps1 OutTextSection    116 $options['SeparatorWidth'] = 120
+OutText.Internal.ps1 OutTextSection    118 if (-not ($options.ContainsKey('LineBreakSeparator'))) {...
+OutText.Internal.ps1 OutTextSection    118 $options.ContainsKey('LineBreakSeparator')
+OutText.Internal.ps1 OutTextSection    119 $options['LineBreakSeparator'] = '_'
+OutText.Internal.ps1 OutTextSection    121 if (-not ($options.ContainsKey('TextWidth'))) {...
+OutText.Internal.ps1 OutTextSection    121 $options.ContainsKey('TextWidth')
+OutText.Internal.ps1 OutTextSection    122 $options['TextWidth'] = 120
+OutText.Internal.ps1 OutTextSection    124 if(-not ($Options.ContainsKey('SectionSeparator'))) {...
+OutText.Internal.ps1 OutTextSection    124 $Options.ContainsKey('SectionSeparator')
+OutText.Internal.ps1 OutTextSection    125 $options['SectionSeparator'] = "-"
+OutText.Internal.ps1 OutTextSection    132 [string] $sectionName = '{0} {1}' -f $Section.Number, $Section.Name
+OutText.Internal.ps1 OutTextSection    138 $sectionId = '{0}..' -f $s.Id.Substring(0,38)
+OutText.Internal.ps1 OutTextSection    141 $currentIndentationLevel = $s.Level +1
+OutText.Internal.ps1 OutTextSection    144 [ref] $null = $sectionBuilder.Append((OutTextSection -Section $s))
+OutText.Internal.ps1 OutTextSection    144 OutTextSection -Section $s
+OutText.Internal.ps1 OutTextParagraph  171 $options['TextWidth'] = 120
+OutText.Internal.ps1 OutTextParagraph  179 $text = "$padding$($Paragraph.Text)"
+OutText.Internal.ps1 OutTextParagraph  179 $Paragraph.Text
+OutText.Internal.ps1 OutTextLineBreak  201 $options['SeparatorWidth'] = 120
+OutText.Internal.ps1 OutTextLineBreak  204 $options['LineBreakSeparator'] = '_'
+OutText.Internal.ps1 OutTextLineBreak  207 $options['TextWidth'] = 120
+OutText.Internal.ps1 OutTextLineBreak  212 $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1
+OutText.Internal.ps1 OutTextTable      246 $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1
+OutText.Internal.ps1 OutStringWrap     272 $Width = 4096
+OutText.Internal.ps1 OutStringWrap     284 $textBuilder = $null
 #>
