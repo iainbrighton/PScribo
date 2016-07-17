@@ -62,7 +62,9 @@ function OutWord {
         else {
             $settingsXml = OutWordSettingsDocument;
         }
-        $destinationPath = Join-Path -Path $Path ('{0}.docx' -f $Document.Name);
+        #Convert relative or PSDrive based path to the absolute filesystem path
+        $AbsolutePath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+        $destinationPath = Join-Path -Path $AbsolutePath ('{0}.docx' -f $Document.Name);
         Add-Type -AssemblyName WindowsBase;
         try {
             $package = [System.IO.Packaging.Package]::Open($destinationPath, [System.IO.FileMode]::Create, [System.IO.FileAccess]::ReadWrite);
