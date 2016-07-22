@@ -3,28 +3,28 @@ function Table {
     .SYNOPSIS
         Defines a new PScribo document table.
 #>
-	[CmdletBinding(DefaultParameterSetName = 'InputObject')]
+    [CmdletBinding(DefaultParameterSetName = 'InputObject')]
     [OutputType([System.Management.Automation.PSCustomObject])]
-	param (
+    param (
         ## Table name/Id
         [Parameter(ValueFromPipelineByPropertyName, Position = 0)]
         [ValidateNotNullOrEmpty()]
         [string] $Name = ([System.Guid]::NewGuid().ToString()),
 
         # Array of Hashtables
-		[Parameter(Mandatory, ParameterSetName = 'Hashtable')]
+        [Parameter(Mandatory, ParameterSetName = 'Hashtable')]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.OrderedDictionary[]] $Hashtable,
 
         # Array of objects
-		[Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'InputObject')]
+        [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'InputObject')]
         [Alias('CustomObject','Object')]
         [ValidateNotNullOrEmpty()]
         [System.Object[]] $InputObject,
 
         # Array of Hashtable key names or Object/PSCustomObject property names to include, in display order.
-		# If not supplied then all Hashtable keys or all PSCustomObject properties will be used.
-		[Parameter(ValueFromPipelineByPropertyName, Position = 1, ParameterSetName = 'InputObject')]
+        # If not supplied then all Hashtable keys or all PSCustomObject properties will be used.
+        [Parameter(ValueFromPipelineByPropertyName, Position = 1, ParameterSetName = 'InputObject')]
         [Parameter(ValueFromPipelineByPropertyName, Position = 1, ParameterSetName = 'Hashtable')]
         [Alias('Properties')]
         [AllowNull()]
@@ -36,7 +36,7 @@ function Table {
         [System.UInt16[]] $ColumnWidths,
 
         # Array of custom table header strings in display order.
-		[Parameter(ValueFromPipelineByPropertyName, Position = 2)]
+        [Parameter(ValueFromPipelineByPropertyName, Position = 2)]
         [AllowNull()]
         [System.String[]] $Headers = $null,
 
@@ -46,7 +46,7 @@ function Table {
         [System.String] $Style = 'TableDefault',
 
         # List view (no headers)
-		[Parameter(ValueFromPipelineByPropertyName)]
+        [Parameter(ValueFromPipelineByPropertyName)]
         [System.Management.Automation.SwitchParameter] $List,
 
         ## Table width (%), 0 = Autofit
@@ -58,7 +58,7 @@ function Table {
         [Parameter(ValueFromPipelineByPropertyName)]
         [ValidateRange(0,10)]
         [System.UInt16] $Tabs
-	) #end param
+    ) #end param
     begin {
 
         <#! Table.Internal.ps1 !#>

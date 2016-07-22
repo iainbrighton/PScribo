@@ -89,7 +89,7 @@
                 [System.String[]] $Properties,
 
                 # Custom table header strings (in Display Order). Used for property names.
-		        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObject')]
+                [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObject')]
                 [AllowNull()]
                 [System.String[]] $Headers = $null,
 
