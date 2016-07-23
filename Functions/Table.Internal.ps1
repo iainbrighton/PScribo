@@ -4,6 +4,25 @@
         <#
             .SYNOPSIS
                 Initializes a new PScribo table object.
+
+            .PARAMETER Name
+
+            .PARAMETER Columns
+
+            .PARAMETER ColumnWidths
+
+            .PARAMETER Rows
+
+            .PARAMETER Style
+
+            .PARAMETER Width
+
+            .PARAMETER List
+
+            .PARAMETER Width
+
+            .PARAMETER Tabs
+
         #>
             [CmdletBinding()]
             [OutputType([System.Management.Automation.PSCustomObject])]
@@ -74,6 +93,15 @@
         <#
             .SYNOPSIS
                 Defines a new PScribo document table row from an object or hashtable.
+
+            .PARAMETER InputObject
+
+            .PARAMETER Properties
+
+            .PARAMETER Headers
+
+            .PARAMETER Hashtable
+
         #>
             [CmdletBinding(DefaultParameterSetName='InputObject')]
             [OutputType([System.Management.Automation.PSCustomObject])]

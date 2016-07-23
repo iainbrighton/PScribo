@@ -2,6 +2,33 @@ function Table {
 <#
     .SYNOPSIS
         Defines a new PScribo document table.
+
+    .PARAMETER Name
+
+    .PARAMETER InputObject
+
+    .PARAMETER Hashtable
+
+    .PARAMETER Columns
+
+    .PARAMETER ColumnWidths
+
+    .PARAMETER Headers
+
+    .PARAMETER Style
+
+    .PARAMETER List
+
+    .PARAMETER Width
+
+    .PARAMETER Tabs
+
+
+    .EXAMPLE
+        Table -Name 'Table 1' -InputObject $(Get-Service) -Columns 'Name','DisplayName','Status' -ColumnWidths 40,20,40
+
+        
+
 #>
     [CmdletBinding(DefaultParameterSetName = 'InputObject')]
     [OutputType([System.Management.Automation.PSCustomObject])]
@@ -11,16 +38,16 @@ function Table {
         [ValidateNotNullOrEmpty()]
         [string] $Name = ([System.Guid]::NewGuid().ToString()),
 
-        # Array of Hashtables
-        [Parameter(Mandatory, ParameterSetName = 'Hashtable')]
-        [ValidateNotNullOrEmpty()]
-        [System.Collections.Specialized.OrderedDictionary[]] $Hashtable,
-
         # Array of objects
         [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'InputObject')]
         [Alias('CustomObject','Object')]
         [ValidateNotNullOrEmpty()]
         [System.Object[]] $InputObject,
+
+        # Array of Hashtables
+        [Parameter(Mandatory, ParameterSetName = 'Hashtable')]
+        [ValidateNotNullOrEmpty()]
+        [System.Collections.Specialized.OrderedDictionary[]] $Hashtable,
 
         # Array of Hashtable key names or Object/PSCustomObject property names to include, in display order.
         # If not supplied then all Hashtable keys or all PSCustomObject properties will be used.
