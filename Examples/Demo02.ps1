@@ -12,7 +12,7 @@ $document = Document 'PScribo Demo 2' -Verbose {
     PageBreak;
     TOC -Name 'Table of Contents';
     PageBreak;
-    
+
     <# WARNING:
         Microsoft Word will include paragraphs styled with 'Heading*' style names to the TOC.
         To avoid this, define an identical style with a name not beginning with 'Heading'!
@@ -34,7 +34,7 @@ $document = Document 'PScribo Demo 2' -Verbose {
     Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in bold italics: $env:COMPUTERNAME" -Bold -Italic
     Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in 14 point bold italics: $env:COMPUTERNAME" -Bold -Italic -Size 14
     Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in 8 point Courier New bold italics: $env:COMPUTERNAME" -Bold -Italic -Size 8 -Font 'Courier New'
-   
+
     $services = Get-WMIObject Win32_Service | Select DisplayName, State, StartMode | Sort DisplayName
     <# Add a custom style for highlighting table cells/rows #>
     Style -Name 'Stopped Service' -Color White -BackgroundColor Firebrick -Bold
@@ -57,7 +57,7 @@ $document = Document 'PScribo Demo 2' -Verbose {
             $stoppedAutoServicesCell | Where { $_.State -eq 'Stopped' -and $_.StartMode -eq 'Auto'} | Set-Style -Property State -Style StoppedService
             $stoppedAutoServicesCell | Table -Columns DisplayName,State,StartMode -Headers 'Display Name','Status','Startup Type' -Tabs 1
         }
-    
+
         PageBreak
         Section -Style Heading2 'Full Width Fixed Row Highlighting' {
             Paragraph -Style Heading3 'Example of a full width table with fixed columns widths and full row highlighting.'
@@ -68,7 +68,7 @@ $document = Document 'PScribo Demo 2' -Verbose {
             $stoppedAutoServicesRow | Table -Columns DisplayName,State,StartMode -ColumnWidths 70,15,15 -Headers 'Display Name','Status','Startup Type'
         }
     }
-        
+
     PageBreak
     $listServices = Get-Service | Select -Property Name,CanPauseAndContinue,CanShutdown,CanStop,DisplayName,ServiceName,ServiceType,Status -First 2
     $listServices | Set-Style -Style StoppedService -Property ServiceType -Verbose

@@ -11,7 +11,7 @@ $example12 = Document -Name 'PScribo Example 12' {
 
         The following example displays the Name, DisplayName and Status properties of
         all services sent down the pipeline, ignoring all other properties.
-        
+
         NOTE: The columns are displayed in the exact order that they are listed in
         the -Columns parameter.
     #>

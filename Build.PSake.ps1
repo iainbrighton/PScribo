@@ -18,12 +18,14 @@ Task Build -Depends Clean, Setup, Test, Deploy;
 Task Stage -Depends Build, Version, Bundle, Sign, Zip;
 #Task Publish -Depends Stage, Release;
 
+
 Task Test {
     $testResult = Invoke-Pester -Path $basePath -OutputFile "$buildPath\TestResult.xml" -OutputFormat NUnitXml -Strict -PassThru;
     if ($testResult.FailedCount -gt 0) {
         Write-Error ('Failed "{0}" unit tests.' -f $testResult.FailedCount);
     }
 }
+
 
 Task Clean {
     Write-Host (' Base directory "{0}".' -f $basePath) -ForegroundColor Yellow;
@@ -34,6 +36,7 @@ Task Clean {
         Remove-Item $baseBuildPath -Recurse -Force -ErrorAction Stop;
     }
 }
+
 
 Task Setup {
     # Properties are not available in the script scope.
@@ -56,6 +59,7 @@ Task Setup {
         [Ref] $null = New-Item $releasePath -ItemType Directory -Force -ErrorAction Stop;
     }
 }
+
 
 Task Deploy {
     ## Copy release files
@@ -85,6 +89,7 @@ Task Deploy {
     }
 }
 
+
 Task Version {
     ## Version module manifest prior to build
     $manifestPath = Join-Path $buildPath -ChildPath "$($manifest.Name).psd1";
@@ -94,6 +99,7 @@ Task Version {
     Set-Variable manifest -Value (Get-ModuleManifest -Path $manifestPath) -Scope Script -Force;
 }
 
+
 Task Sign {
     Get-ChildItem -Path $buildPath -Include *.ps* -Recurse -File | % {
         Write-Host (' Signing file "{0}":' -f (TrimPath -Path $PSItem.FullName)) -ForegroundColor Yellow -NoNewline;
@@ -101,6 +107,7 @@ Task Sign {
         Write-Host (' {0}.' -f $signResult.Status) -ForegroundColor Green;
     }
 }
+
 
 Task Zip {
     ## Creates the release files in the $releaseDir
@@ -135,6 +142,7 @@ Task OutputBundle {
 #>
 
 Task Minify { }
+
 
 function TrimPath {
 <#
@@ -177,7 +185,7 @@ function Combine-File {
                         $replacementString = $Matches[0];
                         Write-Debug ('Replacing text "{0}"...' -f $replacementString);
                         ## Cannot use the -replace method as it replaces occurences of $_ too ?!
-                        $content = $content.Replace($replacementString, $internalFunctionContent.TrimStart());
+                        $content = $content.Replace($replacementString, $internalFunctionContent.Trim());
                     }
                 }
             }
@@ -185,6 +193,7 @@ function Combine-File {
         }
     }
 }
+
 
 function Bundle-File {
     [CmdletBinding()]
@@ -212,5 +221,5 @@ function Bundle-File {
 
     Combine-File -Path $Path -DestinationPath $DestinationPath -Exclude $Exclude;
     Write-Host ('  Creating bundle footer.') -ForegroundColor Cyan;
-    Add-Content -Path $DestinationPath -Value "`r`n#endregion PScribo Bundle v$version";
+    Add-Content -Path $DestinationPath -Value "#endregion PScribo Bundle v$version";
 }

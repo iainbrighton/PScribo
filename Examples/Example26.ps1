@@ -8,8 +8,8 @@ $example26 = Document -Name 'PScribo Example 26' {
 
         The following defines a custom style that we will apply to particular table rows
         later.
-        
-        NOTE: You can combine custom row styling with custom table styles! 
+
+        NOTE: You can combine custom row styling with custom table styles!
     #>
     Style -Name StoppedService -Color White -BackgroundColor Firebrick
 
@@ -30,7 +30,7 @@ $example26 = Document -Name 'PScribo Example 26' {
     #>
     $services = Get-Service
     $services | Where-Object { $_.Status -ne 'Running' } | Set-Style -Style 'StoppedService'
-    
+
     <#
         Once the '__Style' property has been added to the relevant objects (Services) in
         the collection, we can then create the table.

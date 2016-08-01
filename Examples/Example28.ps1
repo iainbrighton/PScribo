@@ -6,7 +6,7 @@ $example28 = Document -Name 'PScribo Example 28' {
         flag an individual object property to apply a different style, an additional
         property must be added to the object(s). Instead of adding a '__Style' property
         add a '<PropertyName>__Style' string property.
-        
+
         For example, to style a service 'Name' property with a custom style, add an
         additional property called 'Name__Style' with the style to apply.
 
@@ -21,11 +21,10 @@ $example28 = Document -Name 'PScribo Example 28' {
         status is not 'Running'.
     #>
     Style -Name StoppedService -Color White -BackgroundColor Firebrick
-    
+
     $services = Get-Service
     $services | Where-Object { $_.Status -ne 'Running' } | Set-Style -Style 'StoppedService' -Property 'Status'
-    
+
     Table -InputObject $services -Columns Name,DisplayName,Status -Headers 'Name','Display Name','State'
 }
 $example28 | Export-Document -Format Html -Path ~\Desktop
-

@@ -10,7 +10,7 @@ $example29 = Document -Name 'PScribo Example 29' {
         to the particular table cell.
 
         For example, to apply a "MyCustomStyle" to a 'Name' key, ensure that a
-        'Name__Style' key exists in the hashtable with a value of "MyCustomStyle". 
+        'Name__Style' key exists in the hashtable with a value of "MyCustomStyle".
 
         In the following example, the the middle two rows where key 'Custom Property' is
         set to $false will be highlighted with the in the array of hashtables

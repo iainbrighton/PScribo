@@ -11,7 +11,7 @@ $example23 = Document -Name 'PScribo Example 23' {
         The default padding attempts to ensure that table padding renders evenly in both
         Html and Word without adding too much space. The default values are as follows:
 
-            Padding-Top   : 1.0pt 
+            Padding-Top   : 1.0pt
             Padding-Right : 4.0pt
             Padding-Bottom: 4.0pt
             Padding-Left  : 0.0pt

@@ -6,7 +6,7 @@ $example6 = Document -Name 'PScribo Example 6' {
        cmdlet that supports nesting of script blocks.
 
        Sections are used to create a hierarchy within the document that are used when generating
-       a table of contents. If you have no requirement for a table of contents, then you may 
+       a table of contents. If you have no requirement for a table of contents, then you may
        not need to use the 'Section' keyword.
 
        You can define sections with the 'Section' keyword, a name and script block. You can nest

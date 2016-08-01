@@ -19,7 +19,7 @@ $example16 = Document -Name 'PScribo Example 16' {
         declaration, e.g. [Ordered] @{ Key1 = Value1; Key2 = Value2; }
 
         The following example creates a table with a single row with the hashtable keys
-        used as the header values and the corresponding values as the first table row. 
+        used as the header values and the corresponding values as the first table row.
     #>
     $hashtable = [Ordered] @{
         'Column 1' = 'Some random text';
