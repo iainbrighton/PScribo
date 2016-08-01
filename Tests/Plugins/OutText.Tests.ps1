@@ -274,71 +274,115 @@ InModuleScope 'PScribo' {
 
     }
 
+    Describe 'OutText.Internal\OutTextTOC' {
+
+        It 'outputs TOC name and section break' {
+
+            $tocName = 'Table of contents'
+            $heading1 = 'Heading 1';
+            $heading2 = 'Heading 2';
+            $Document  = Document -Name 'TestDocument' -ScriptBlock {
+                GlobalOption -EnableSectionNumbering
+                TOC -Name $tocName
+                Section $heading1 -Style Heading1 {
+                    Section $heading2 -Style Heading2 { }
+                }
+            }
+            $expected = '^{0}\r\n-+' -f $tocName;
+
+            $result = OutTextTOC -TOC $Document.Sections[0];
+
+            $result | Should MatchExactly $expected;
+        }
+
+        It 'adds section numbers when "EnableSectionNumbering" is enabled (#20)' {
+
+            $tocName = 'Table of contents'
+            $heading1 = 'Heading 1';
+            $heading2 = 'Heading 2';
+            $Document  = Document -Name 'TestDocument' -ScriptBlock {
+                GlobalOption -EnableSectionNumbering
+                TOC -Name $tocName
+                Section $heading1 -Style Heading1 {
+                    Section $heading2 -Style Heading2 { }
+                }
+            }
+            $expected = '^{0}\r\n-+\r\n1\s+{1}\r\n1.1\s+{2}\r\n$' -f $tocName, $heading1, $heading2;
+
+            $options = $Document.Options;
+            $result = OutTextTOC -TOC $Document.Sections[0] -Verbose;
+
+            $result | Should Match $expected;
+        }
+
+        It 'does not add section numbers when "EnableSectionNumbering" is disabled (#20)' {
+
+            $tocName = 'Table of contents'
+            $heading1 = 'Heading 1';
+            $heading2 = 'Heading 2';
+            $Document  = Document -Name 'TestDocument' -ScriptBlock {
+                TOC -Name $tocName
+                Section $heading1 -Style Heading1 {
+                    Section $heading2 -Style Heading2 { }
+                }
+            }
+            $expected = '^{0}\r\n-+\r\n{1}\r\n {2}\r\n$' -f $tocName, $heading1, $heading2;
+
+            $result = OutTextTOC -TOC $Document.Sections[0] -Verbose;
+
+            $result | Should Match $expected;
+        }
+    }
+
 } #end inmodulescope
 
 <#
 Code coverage report:
-Covered 65.24% of 164 analyzed commands in 1 file.
+Covered 75.00% of 164 analyzed commands in 1 file.
 
 Missed commands:
 
 File                 Function         Line Command
 ----                 --------         ---- -------
-OutText.Internal.ps1 OutTextTOC         50 if (Test-Path -Path Variable:\Options) { ...
-OutText.Internal.ps1 OutTextTOC         51 $options = Get-Variable -Name Options -ValueOnly
-OutText.Internal.ps1 OutTextTOC         52 if (-not ($options.ContainsKey('SeparatorWidth'))) {...
-OutText.Internal.ps1 OutTextTOC         52 $options.ContainsKey('SeparatorWidth')
-OutText.Internal.ps1 OutTextTOC         53 $options['SeparatorWidth'] = 120
-OutText.Internal.ps1 OutTextTOC         55 if (-not ($options.ContainsKey('LineBreakSeparator'))) {...
-OutText.Internal.ps1 OutTextTOC         55 $options.ContainsKey('LineBreakSeparator')
-OutText.Internal.ps1 OutTextTOC         56 $options['LineBreakSeparator'] = '_'
-OutText.Internal.ps1 OutTextTOC         58 if (-not ($options.ContainsKey('TextWidth'))) {...
-OutText.Internal.ps1 OutTextTOC         58 $options.ContainsKey('TextWidth')
-OutText.Internal.ps1 OutTextTOC         59 $options['TextWidth'] = 120
-OutText.Internal.ps1 OutTextTOC         61 if(-not ($Options.ContainsKey('SectionSeparator'))) {...
-OutText.Internal.ps1 OutTextTOC         61 $Options.ContainsKey('SectionSeparator')
-OutText.Internal.ps1 OutTextTOC         62 $options['SectionSeparator'] = "-"
-OutText.Internal.ps1 OutTextTOC         65 $options = New-PScriboTextOptions
-OutText.Internal.ps1 OutTextTOC         68 $tocBuilder = New-Object -TypeName System.Text.StringBuilder
-OutText.Internal.ps1 OutTextTOC         69 [ref] $null = $tocBuilder.AppendLine($TOC.Name)
-OutText.Internal.ps1 OutTextTOC         70 [ref] $null = $tocBuilder.AppendLine(''.PadRight($options.SeparatorWidth,...
-OutText.Internal.ps1 OutTextTOC         71 $maxSectionNumberLength = ([System.String] ($Document.TOC.Number | Measur...
-OutText.Internal.ps1 OutTextTOC         71 [System.String] ($Document.TOC.Number | Measure-Object -Maximum | Select-...
-OutText.Internal.ps1 OutTextTOC         71 $Document.TOC.Number
-OutText.Internal.ps1 OutTextTOC         71 Measure-Object -Maximum
-OutText.Internal.ps1 OutTextTOC         71 Select-Object -ExpandProperty Maximum
-OutText.Internal.ps1 OutTextTOC         72 $Document.TOC
-OutText.Internal.ps1 OutTextTOC         73 $sectionNumberPaddingLength = $maxSectionNumberLength - $tocEntry.Number....
-OutText.Internal.ps1 OutTextTOC         74 $sectionNumberIndent = ''.PadRight($tocEntry.Level, ' ')
-OutText.Internal.ps1 OutTextTOC         75 $sectionPadding = ''.PadRight($sectionNumberPaddingLength, ' ')
-OutText.Internal.ps1 OutTextTOC         76 [ref] $null = $tocBuilder.AppendFormat('{0}{1}  {2}{3}', $tocEntry.Number...
-OutText.Internal.ps1 OutTextTOC         78 return $tocBuilder.ToString()
-OutText.Internal.ps1 OutTextSection    114 $options = Get-Variable -Name Options -ValueOnly
-OutText.Internal.ps1 OutTextSection    115 if (-not ($options.ContainsKey('SeparatorWidth'))) {...
-OutText.Internal.ps1 OutTextSection    115 $options.ContainsKey('SeparatorWidth')
-OutText.Internal.ps1 OutTextSection    116 $options['SeparatorWidth'] = 120
-OutText.Internal.ps1 OutTextSection    118 if (-not ($options.ContainsKey('LineBreakSeparator'))) {...
-OutText.Internal.ps1 OutTextSection    118 $options.ContainsKey('LineBreakSeparator')
-OutText.Internal.ps1 OutTextSection    119 $options['LineBreakSeparator'] = '_'
-OutText.Internal.ps1 OutTextSection    121 if (-not ($options.ContainsKey('TextWidth'))) {...
-OutText.Internal.ps1 OutTextSection    121 $options.ContainsKey('TextWidth')
-OutText.Internal.ps1 OutTextSection    122 $options['TextWidth'] = 120
-OutText.Internal.ps1 OutTextSection    124 if(-not ($Options.ContainsKey('SectionSeparator'))) {...
-OutText.Internal.ps1 OutTextSection    124 $Options.ContainsKey('SectionSeparator')
-OutText.Internal.ps1 OutTextSection    125 $options['SectionSeparator'] = "-"
-OutText.Internal.ps1 OutTextSection    132 [string] $sectionName = '{0} {1}' -f $Section.Number, $Section.Name
-OutText.Internal.ps1 OutTextSection    138 $sectionId = '{0}..' -f $s.Id.Substring(0,38)
-OutText.Internal.ps1 OutTextSection    141 $currentIndentationLevel = $s.Level +1
-OutText.Internal.ps1 OutTextSection    144 [ref] $null = $sectionBuilder.Append((OutTextSection -Section $s))
-OutText.Internal.ps1 OutTextSection    144 OutTextSection -Section $s
-OutText.Internal.ps1 OutTextParagraph  171 $options['TextWidth'] = 120
-OutText.Internal.ps1 OutTextParagraph  179 $text = "$padding$($Paragraph.Text)"
-OutText.Internal.ps1 OutTextParagraph  179 $Paragraph.Text
-OutText.Internal.ps1 OutTextLineBreak  201 $options['SeparatorWidth'] = 120
-OutText.Internal.ps1 OutTextLineBreak  204 $options['LineBreakSeparator'] = '_'
-OutText.Internal.ps1 OutTextLineBreak  207 $options['TextWidth'] = 120
-OutText.Internal.ps1 OutTextLineBreak  212 $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1
-OutText.Internal.ps1 OutTextTable      246 $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1
-OutText.Internal.ps1 OutStringWrap     272 $Width = 4096
-OutText.Internal.ps1 OutStringWrap     284 $textBuilder = $null
+OutText.Internal.ps1 OutTextTOC         74 $options = Get-Variable -Name Options -ValueOnly
+OutText.Internal.ps1 OutTextTOC         75 if (-not ($options.ContainsKey('SeparatorWidth'))) {...
+OutText.Internal.ps1 OutTextTOC         75 $options.ContainsKey('SeparatorWidth')
+OutText.Internal.ps1 OutTextTOC         76 $options['SeparatorWidth'] = 120
+OutText.Internal.ps1 OutTextTOC         78 if (-not ($options.ContainsKey('LineBreakSeparator'))) {...
+OutText.Internal.ps1 OutTextTOC         78 $options.ContainsKey('LineBreakSeparator')
+OutText.Internal.ps1 OutTextTOC         79 $options['LineBreakSeparator'] = '_'
+OutText.Internal.ps1 OutTextTOC         81 if (-not ($options.ContainsKey('TextWidth'))) {...
+OutText.Internal.ps1 OutTextTOC         81 $options.ContainsKey('TextWidth')
+OutText.Internal.ps1 OutTextTOC         82 $options['TextWidth'] = 120
+OutText.Internal.ps1 OutTextTOC         84 if(-not ($Options.ContainsKey('SectionSeparator'))) {...
+OutText.Internal.ps1 OutTextTOC         84 $Options.ContainsKey('SectionSeparator')
+OutText.Internal.ps1 OutTextTOC         85 $options['SectionSeparator'] = "-"
+OutText.Internal.ps1 OutTextSection    147 $options = Get-Variable -Name Options -ValueOnly
+OutText.Internal.ps1 OutTextSection    148 if (-not ($options.ContainsKey('SeparatorWidth'))) {...
+OutText.Internal.ps1 OutTextSection    148 $options.ContainsKey('SeparatorWidth')
+OutText.Internal.ps1 OutTextSection    149 $options['SeparatorWidth'] = 120
+OutText.Internal.ps1 OutTextSection    151 if (-not ($options.ContainsKey('LineBreakSeparator'))) {...
+OutText.Internal.ps1 OutTextSection    151 $options.ContainsKey('LineBreakSeparator')
+OutText.Internal.ps1 OutTextSection    152 $options['LineBreakSeparator'] = '_'
+OutText.Internal.ps1 OutTextSection    154 if (-not ($options.ContainsKey('TextWidth'))) {...
+OutText.Internal.ps1 OutTextSection    154 $options.ContainsKey('TextWidth')
+OutText.Internal.ps1 OutTextSection    155 $options['TextWidth'] = 120
+OutText.Internal.ps1 OutTextSection    157 if(-not ($Options.ContainsKey('SectionSeparator'))) {...
+OutText.Internal.ps1 OutTextSection    157 $Options.ContainsKey('SectionSeparator')
+OutText.Internal.ps1 OutTextSection    158 $options['SectionSeparator'] = "-"
+OutText.Internal.ps1 OutTextSection    167 [string] $sectionName = '{0} {1}' -f $Section.Number, $Section.Name
+OutText.Internal.ps1 OutTextSection    173 $sectionId = '{0}..' -f $s.Id.Substring(0,38)
+OutText.Internal.ps1 OutTextSection    176 $currentIndentationLevel = $s.Level +1
+OutText.Internal.ps1 OutTextSection    179 [ref] $null = $sectionBuilder.Append((OutTextSection -Section $s))
+OutText.Internal.ps1 OutTextSection    179 OutTextSection -Section $s
+OutText.Internal.ps1 OutTextParagraph  211 $options['TextWidth'] = 120
+OutText.Internal.ps1 OutTextParagraph  221 $text = "$padding$($Paragraph.Text)"
+OutText.Internal.ps1 OutTextParagraph  221 $Paragraph.Text
+OutText.Internal.ps1 OutTextLineBreak  246 $options['SeparatorWidth'] = 120
+OutText.Internal.ps1 OutTextLineBreak  249 $options['LineBreakSeparator'] = '_'
+OutText.Internal.ps1 OutTextLineBreak  252 $options['TextWidth'] = 120
+OutText.Internal.ps1 OutTextLineBreak  259 $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1
+OutText.Internal.ps1 OutTextTable      300 $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1
+OutText.Internal.ps1 OutStringWrap     334 $Width = 4096
+OutText.Internal.ps1 OutStringWrap     348 $textBuilder = $null
 #>

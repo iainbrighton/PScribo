@@ -4,7 +4,7 @@ $example13 = Document -Name 'PScribo Example 13' {
     <#
         To override the column headers, the -Columns and -Headers parameters can be used
         together.
-        
+
         The -Headers parameter specifies the heading names to apply to the corresponding
         (positional) -Columns parameter. This permits you to include spaces in the headers
         and/or change the properties' display values.

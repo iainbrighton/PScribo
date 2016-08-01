@@ -17,7 +17,7 @@ $example7 = Document -Name 'PScribo Example 7' {
 
     Section -Name 'Third "Styled" Section' -Style Heading1 -ScriptBlock {
         Paragraph 'This section should be labeled as "3 Third Section".'
-        
+
         Section 'Sub Section' -Style Heading2 {
             Paragraph 'This section should be labeled as "3.1 Sub Section".'
         }

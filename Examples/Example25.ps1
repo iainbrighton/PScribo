@@ -13,7 +13,7 @@ $example25 = Document -Name 'PScribo Example 25' {
     Style -Name 'BlueZebraHeading' -Bold -Color 039 -Font 'Segoe UI' -BackgroundColor E8EDFF
     Style -Name 'BlueZebraRow' -Color 669 -Font 'Lucida Sans Unicode'
     TableStyle -Name 'BlueZebra' -HeaderStyle BlueZebraHeading -RowStyle BlueZebraRow -PaddingTop 4 -PaddingRight 4 -PaddingBottom 4 -PaddingLeft 4 -BorderWidth 1 -BorderColor E8EDFF
-    
+
     <#
         Create a standard table using the new "BlueZebra" table style.
     #>

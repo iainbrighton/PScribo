@@ -20,7 +20,7 @@ $example8 = Document -Name 'PScribo Example 8' {
     <#
         You can exclude sections from the TOC by specifying the -ExcludeFromTOC parameter
         on the 'Section' cmdlet.
-        
+
         NOTE: Microsoft Word creates the table of contents based on the style name. Therefore,
         to include a section in a Word TOC it must be styled with a "Heading*" style name. In
         addition, if the -ExcludeFromTOC is specified with a style name of "Heading*" then
@@ -32,7 +32,7 @@ $example8 = Document -Name 'PScribo Example 8' {
 
     Section -Name 'Third "Styled" Section' -Style Heading1 -ScriptBlock {
         Paragraph 'This section should be labeled as "3 Third Section".'
-        
+
         Section 'Sub Section' -Style Heading2 {
             Paragraph 'This section should be labeled as "3.1 Sub Section".'
         }

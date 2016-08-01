@@ -4,12 +4,12 @@ $example15 = Document -Name 'PScribo Example 15' {
     <#
         You can optionally set the width of all columns by using the -ColumnWidths
         parameter on the 'Table' cmdlet.
-        
+
         NOTE: You can only specify column widths if you also specify the -Columns.
 
         Just like the Table -Width parameter, the column widths are specified in
         percentages (of overall table width).
-        
+
         NOTE: The total of all columns widths must total exactly 100 (%).
 
         The following example retrieves all local services, displaying the Name,

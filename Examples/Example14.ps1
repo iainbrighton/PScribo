@@ -6,7 +6,7 @@ $example14 = Document -Name 'PScribo Example 14' {
         the table's cell contents. You can override the table width, by specifying the
         -Width parameter on the 'Table' cmdlet. The width is always set as a percentage
         of available space.
-        
+
         The following example creates a table with its with set at 66% of the available
         space.
     #>

@@ -6,7 +6,7 @@ $example22 = Document -Name 'PScribo Example 22' {
         border width is specified in points (pt).
 
         NOTE: Table borders apply to both standard tables and -List view tables.
-       
+
         Optionally, you may set a border/grid color with the -BorderColor. If the
         border color is not specified, it will default to black (#000).
 

@@ -71,6 +71,7 @@
 
                 ## Fix Set-StrictMode
                 if (Test-Path -Path Variable:\Options) {
+
                 	$options = Get-Variable -Name Options -ValueOnly;
                     if (-not ($options.ContainsKey('SeparatorWidth'))) {
                         $options['SeparatorWidth'] = 120;
@@ -93,13 +94,26 @@
                 $tocBuilder = New-Object -TypeName System.Text.StringBuilder;
                 [ref] $null = $tocBuilder.AppendLine($TOC.Name);
                 [ref] $null = $tocBuilder.AppendLine(''.PadRight($options.SeparatorWidth, $options.SectionSeparator));
-                $maxSectionNumberLength = ([System.String] ($Document.TOC.Number | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum)).Length;
-                foreach ($tocEntry in $Document.TOC) {
-                    $sectionNumberPaddingLength = $maxSectionNumberLength - $tocEntry.Number.Length;
-                    $sectionNumberIndent = ''.PadRight($tocEntry.Level, ' ');
-                    $sectionPadding = ''.PadRight($sectionNumberPaddingLength, ' ');
-                    [ref] $null = $tocBuilder.AppendFormat('{0}{1}  {2}{3}', $tocEntry.Number, $sectionPadding, $sectionNumberIndent, $tocEntry.Name).AppendLine();
-                } #end foreach TOC entry
+
+                if ($Options.ContainsKey('EnableSectionNumbering')) {
+
+                    $maxSectionNumberLength = ([System.String] ($Document.TOC.Number | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum)).Length;
+                    foreach ($tocEntry in $Document.TOC) {
+                        $sectionNumberPaddingLength = $maxSectionNumberLength - $tocEntry.Number.Length;
+                        $sectionNumberIndent = ''.PadRight($tocEntry.Level, ' ');
+                        $sectionPadding = ''.PadRight($sectionNumberPaddingLength, ' ');
+                        [ref] $null = $tocBuilder.AppendFormat('{0}{1}  {2}{3}', $tocEntry.Number, $sectionPadding, $sectionNumberIndent, $tocEntry.Name).AppendLine();
+                    } #end foreach TOC entry
+                }
+                else {
+
+                    $maxSectionNumberLength = $Document.TOC.Level | Sort-Object | Select-Object -Last 1;
+                    foreach ($tocEntry in $Document.TOC) {
+                        $sectionNumberIndent = ''.PadRight($tocEntry.Level, ' ');
+                        [ref] $null = $tocBuilder.AppendFormat('{0}{1}', $sectionNumberIndent, $tocEntry.Name).AppendLine();
+                    } #end foreach TOC entry
+                }
+
                 return $tocBuilder.ToString();
 
             } #end process

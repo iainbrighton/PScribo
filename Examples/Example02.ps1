@@ -21,7 +21,7 @@ Export-Document -Document $example2 -Format Html -Path ~\Desktop
 <#
     This command exports the $example2 document to both Word formatted 'PScribo Example 2.docx' and html formatted
     'PScribo Example 2.html' files on the desktop, via the pipeline.
-    
+
     NOTE: This will overwrite the 'PScribo Example 2.html' created above without warning.
 #>
 $example2 | Export-Document -Format Word,Html -Path ~\Desktop

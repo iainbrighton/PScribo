@@ -15,7 +15,7 @@ $example9 = Document -Name 'PScribo Example 9' {
        The 'PageBreak' cmdlet is used to insert a page break. The following page break
        inserts a break between the table of content and the first section.
     #>
-    PageBreak   
+    PageBreak
 
     Section -Name 'First Section' -ScriptBlock {
         Paragraph 'This section should be labeled as "1 First Section".'
@@ -39,7 +39,7 @@ $example9 = Document -Name 'PScribo Example 9' {
             empty paragraph.
         #>
         BlankLine
-                
+
         Section 'Sub Section' -Style Heading2 {
             <#
                 Mulitple blank lines can be inserted by utilising the -Count parameter. This
