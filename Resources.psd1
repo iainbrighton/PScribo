@@ -18,6 +18,8 @@ ListTableColumnCountWarning      = Table columns widths in list format must be 2
 TableColumnWidthMismatchWarning  = The specified number of table columns and column widths do not match. Column widths will be ignored.
 TableColumnWidthSumWarning       = The table column widths total '{0}'%. Total column width must equal 100%. Column widths will be ignored.
 TableWidthOverflowWarning        = The table width overflows the page margin and has been adjusted to '{0}'%.
+UnexpectedObjectWarning          = Unexpected object in section '{0}'.
+UnexpectedObjectTypeWarning      = Unexpected object '{0}' in section '{1}'.
 
 DocumentProcessingStarted        = Document '{0}' processing started.
 DocumentInvokePlugin             = Invoking '{0}' plugin.
