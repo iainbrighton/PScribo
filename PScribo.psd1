@@ -1,6 +1,6 @@
 @{
     RootModule = 'PScribo.psm1';
-    ModuleVersion = '0.7.12';
+    ModuleVersion = '0.7.13';
     GUID = '058eab05-b7bc-4f8b-a2d1-737cc664b12b';
     Author = 'Iain Brighton';
     CompanyName = 'Virtual Engine';

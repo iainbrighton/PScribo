@@ -34,7 +34,24 @@ function Section {
         WriteLog -Message ($localized.ProcessingSectionStarted -f $Name);
         $pscriboSection = New-PScriboSection -Name $Name -Style $Style -IsExcluded:$ExcludeFromTOC;
         foreach ($result in & $ScriptBlock) {
-            [ref] $null = $pscriboSection.Sections.Add($result);
+
+            ## Ensure we don't have something errant passed down the pipeline (#29)
+            if ($result -is [System.Management.Automation.PSCustomObject]) {
+                if (('Id' -in $result.PSObject.Properties.Name) -and
+                    ('Type' -in $result.PSObject.Properties.Name) -and
+                    ($result.Type -match '^PScribo.')) {
+
+                    [ref] $null = $pscriboSection.Sections.Add($result);
+                }
+                else {
+
+                    WriteLog -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning;
+                }
+            }
+            else {
+
+                WriteLog -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning;
+            }
         }
         WriteLog -Message ($localized.ProcessingSectionCompleted -f $Name);
         return $pscriboSection;
