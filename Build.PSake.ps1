@@ -79,7 +79,8 @@ Task Deploy {
         '*.pssproj',
         'PScribo Test Doc.*',
         'PScriboExample.*',
-        'TestResult.xml'
+        'TestResult.xml',
+        '.vscode'
     );
     Get-ModuleFile -Exclude $excludedFiles | ForEach-Object {
         $destinationPath = '{0}{1}' -f $buildPath, $PSItem.FullName.Replace($basePath, '');
