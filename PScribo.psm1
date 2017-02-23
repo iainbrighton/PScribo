@@ -6,7 +6,10 @@ $pscriboRoot = Split-Path -Parent $PSCommandPath;
 Get-ChildItem -Path "$pscriboRoot\Src\" -Include '*.ps1' -Recurse |
     ForEach-Object {
         Write-Verbose ($localized.ImportingFile -f $_.FullName);
-        . $_.FullName;
+        ## https://becomelotr.wordpress.com/2017/02/13/expensive-dot-sourcing/
+        . ([System.Management.Automation.ScriptBlock]::Create(
+                [System.IO.File]::ReadAllText($_.FullName)
+            ));
     }
 
 $exportedFunctions = @(
