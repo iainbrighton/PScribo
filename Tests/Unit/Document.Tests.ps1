@@ -64,28 +64,28 @@ Missed commands:
 
 File                  Function                    Line Command
 ----                  --------                    ---- -------
-Document.Internal.ps1 Process-PScriboSectionLevel   74 if ($pscriboDocument.Options['ForceUppercaseSection']) {...
-Document.Internal.ps1 Process-PScriboSectionLevel   75 $Section.Name = $Section.Name.ToUpper()
-Document.Internal.ps1 Process-PScriboSectionLevel   78 $Section.Number = $Number
-Document.Internal.ps1 Process-PScriboSectionLevel   79 $Section.Level = $Number.Split('.').Count -1
-Document.Internal.ps1 Process-PScriboSectionLevel   81 $tocEntry = [PScustomObject] @{ Id = $Section.Id; Number = $N...
-Document.Internal.ps1 Process-PScriboSectionLevel   81 Id = $Section.Id
-Document.Internal.ps1 Process-PScriboSectionLevel   81 Number = $Number
-Document.Internal.ps1 Process-PScriboSectionLevel   81 Level = $Section.Level
-Document.Internal.ps1 Process-PScriboSectionLevel   81 Name = $Section.Name
-Document.Internal.ps1 Process-PScriboSectionLevel   82 [ref] $null = $pscriboDocument.TOC.Add($tocEntry)
-Document.Internal.ps1 Process-PScriboSectionLevel   84 $minorNumber = 1
-Document.Internal.ps1 Process-PScriboSectionLevel   85 $Section.Sections
-Document.Internal.ps1 Process-PScriboSectionLevel   86 if ($s.Type -like '*.Section' -and -not $s.IsExcluded) {...
-Document.Internal.ps1 Process-PScriboSectionLevel   87 $sectionNumber = ('{0}.{1}' -f $Number, $minorNumber).TrimSta...
-Document.Internal.ps1 Process-PScriboSectionLevel   87 '{0}.{1}' -f $Number, $minorNumber
-Document.Internal.ps1 Process-PScriboSectionLevel   88 Process-PScriboSectionLevel -Section $s -Number $sectionNumber
-Document.Internal.ps1 Process-PScriboSectionLevel   89 $minorNumber++
-Document.Internal.ps1 Process-PScriboSection        96 if ($s.Type -like '*.Section') {...
-Document.Internal.ps1 Process-PScriboSection        97 if ($pscriboDocument.Options['ForceUppercaseSection']) {...
-Document.Internal.ps1 Process-PScriboSection        98 $s.Name = $s.Name.ToUpper()
-Document.Internal.ps1 Process-PScriboSection       100 if (-not $s.IsExcluded) {...
-Document.Internal.ps1 Process-PScriboSection       101 Process-PScriboSectionLevel -Section $s -Number $majorNumber
-Document.Internal.ps1 Process-PScriboSection       102 $majorNumber++
+Document.Internal.ps1 Invoke-PScriboSectionLevel   74 if ($pscriboDocument.Options['ForceUppercaseSection']) {...
+Document.Internal.ps1 Invoke-PScriboSectionLevel   75 $Section.Name = $Section.Name.ToUpper()
+Document.Internal.ps1 Invoke-PScriboSectionLevel   78 $Section.Number = $Number
+Document.Internal.ps1 Invoke-PScriboSectionLevel   79 $Section.Level = $Number.Split('.').Count -1
+Document.Internal.ps1 Invoke-PScriboSectionLevel   81 $tocEntry = [PScustomObject] @{ Id = $Section.Id; Number = $N...
+Document.Internal.ps1 Invoke-PScriboSectionLevel   81 Id = $Section.Id
+Document.Internal.ps1 Invoke-PScriboSectionLevel   81 Number = $Number
+Document.Internal.ps1 Invoke-PScriboSectionLevel   81 Level = $Section.Level
+Document.Internal.ps1 Invoke-PScriboSectionLevel   81 Name = $Section.Name
+Document.Internal.ps1 Invoke-PScriboSectionLevel   82 [ref] $null = $pscriboDocument.TOC.Add($tocEntry)
+Document.Internal.ps1 Invoke-PScriboSectionLevel   84 $minorNumber = 1
+Document.Internal.ps1 Invoke-PScriboSectionLevel   85 $Section.Sections
+Document.Internal.ps1 Invoke-PScriboSectionLevel   86 if ($s.Type -like '*.Section' -and -not $s.IsExcluded) {...
+Document.Internal.ps1 Invoke-PScriboSectionLevel   87 $sectionNumber = ('{0}.{1}' -f $Number, $minorNumber).TrimSta...
+Document.Internal.ps1 Invoke-PScriboSectionLevel   87 '{0}.{1}' -f $Number, $minorNumber
+Document.Internal.ps1 Invoke-PScriboSectionLevel   88 Invoke-PScriboSectionLevel -Section $s -Number $sectionNumber
+Document.Internal.ps1 Invoke-PScriboSectionLevel   89 $minorNumber++
+Document.Internal.ps1 Invoke-PScriboSection        96 if ($s.Type -like '*.Section') {...
+Document.Internal.ps1 Invoke-PScriboSection        97 if ($pscriboDocument.Options['ForceUppercaseSection']) {...
+Document.Internal.ps1 Invoke-PScriboSection        98 $s.Name = $s.Name.ToUpper()
+Document.Internal.ps1 Invoke-PScriboSection       100 if (-not $s.IsExcluded) {...
+Document.Internal.ps1 Invoke-PScriboSection       101 Invoke-PScriboSectionLevel -Section $s -Number $majorNumber
+Document.Internal.ps1 Invoke-PScriboSection       102 $majorNumber++
 Document.ps1          Document                      27 [ref] $null = $pscriboDocument.Sections.Add($result)
 #>

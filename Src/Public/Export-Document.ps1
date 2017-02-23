@@ -4,6 +4,7 @@
         Exports a PScribo document object to one or more output formats.
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingEmptyCatchBlock','')]
     [OutputType([System.IO.FileInfo])]
     param (
         ## PScribo document object

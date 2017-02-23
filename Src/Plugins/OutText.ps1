@@ -6,6 +6,7 @@ function OutText {
         Outputs a text file representation of a PScribo document object.
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments','pluginName')]
     param (
         ## ThePScribo document object to convert to a text document
         [Parameter(Mandatory, ValueFromPipeline)]
@@ -22,6 +23,7 @@ function OutText {
         [System.Collections.Hashtable] $Options
     )
     begin {
+        
         $pluginName = 'Text';
 
         <#! OutText.Internal.ps1 !#>
@@ -32,7 +34,7 @@ function OutText {
         $stopwatch = [Diagnostics.Stopwatch]::StartNew();
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
         ## Create default options if not specified
-        if ($null -eq $Options) { $Options = New-PScriboTextOptions; }
+        if ($null -eq $Options) { $Options = New-PScriboTextOption; }
 
         if (-not ($Options.ContainsKey('Encoding'))) {
             $Options['Encoding'] = 'ASCII';

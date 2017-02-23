@@ -8,6 +8,8 @@
                 This is an internal function and should not be called directly.
         #>
             [CmdletBinding()]
+            [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
+            [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseLiteralInitializerForHashtable','')]
             [OutputType([System.Management.Automation.PSCustomObject])]
             param (
                 ## PScribo document name
@@ -50,7 +52,7 @@
             } #end process
         } #end function NewPScriboDocument
 
-        function Process-PScriboSection {
+        function Invoke-PScriboSection {
         <#
             .SYNOPSIS
                 Processes the document/TOC section versioning each level, i.e. 1.2.2.3
@@ -60,7 +62,7 @@
             [CmdletBinding()]
             param ( )
 
-            function Process-PScriboSectionLevel {
+            function Invoke-PScriboSectionLevel {
             <#
                 .SYNOPSIS
                     Nested function that processes each document/TOC nested section
@@ -90,11 +92,11 @@
                 foreach ($s in $Section.Sections) {
                     if ($s.Type -like '*.Section' -and -not $s.IsExcluded) {
                         $sectionNumber = ('{0}.{1}' -f $Number, $minorNumber).TrimStart('.');  ## Calculate section version
-                        Process-PScriboSectionLevel -Section $s -Number $sectionNumber;
+                        Invoke-PScriboSectionLevel -Section $s -Number $sectionNumber;
                         $minorNumber++;
                     }
                 } #end foreach section
-            } #end function Process-PScriboSectionLevel
+            } #end function Invoke-PScriboSectionLevel
 
             $majorNumber = 1;
             foreach ($s in $pscriboDocument.Sections) {
@@ -103,11 +105,11 @@
                         $s.Name = $s.Name.ToUpper();
                     }
                     if (-not $s.IsExcluded) {
-                        Process-PScriboSectionLevel -Section $s -Number $majorNumber;
+                        Invoke-PScriboSectionLevel -Section $s -Number $majorNumber;
                         $majorNumber++;
                     }
                 } #end if
             } #end foreach
-        } #end function process-psscribosection
+        } #end function Invoke-PSScriboSection
 
         #endregion Document Private Functions

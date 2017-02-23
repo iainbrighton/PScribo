@@ -187,6 +187,7 @@ function Set-Style {
         Sets the style for an individual table row or cell.
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
     [OutputType([System.Object])]
     param (
         ## PSCustomObject to apply the style to

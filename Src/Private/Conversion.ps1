@@ -170,7 +170,7 @@ function ConvertMmToPx {
         Convert millimeters into pixels (default 96dpi)
 #>
     [CmdletBinding()]
-    [OutputType([System.Single])]
+    [OutputType([System.Int16])]
     param (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('mm','Millimetre')]
@@ -182,7 +182,7 @@ function ConvertMmToPx {
     process {
 
         $pixels = [System.Int16] ((ConvertMmToIn -Millimeter $Millimeter) * $Dpi);
-        if ($pixels -lt 1) { return 1; }
+        if ($pixels -lt 1) { return (1 -as [System.Int16]); }
         else { return $pixels; }
 
     }

@@ -1,6 +1,6 @@
         #region OutText Private Functions
 
-        function New-PScriboTextOptions {
+        function New-PScriboTextOption {
         <#
             .SYNOPSIS
                 Sets the text plugin specific formatting/output options.
@@ -8,6 +8,8 @@
                 All plugin options should be prefixed with the plugin name.
         #>
             [CmdletBinding()]
+            [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
+            [OutputType([System.Collections.Hashtable])]
             param (
                 ## Text/output width. 0 = none/no wrap.
                 [Parameter(ValueFromPipelineByPropertyName)]
@@ -54,7 +56,7 @@
                 return $options;
 
             } #end process
-        } #end function New-PScriboTextOptions
+        } #end function New-PScriboTextOption
 
 
         function OutTextTOC {
@@ -86,7 +88,7 @@
                         $options['SectionSeparator'] = "-";
                     }
                 }
-                else { $options = New-PScriboTextOptions; }
+                else { $options = New-PScriboTextOption; }
 
             }
             process {
@@ -172,7 +174,7 @@
                         $options['SectionSeparator'] = "-";
                     }
                 }
-                else { $options = New-PScriboTextOptions; }
+                else { $options = New-PScriboTextOption; }
 
             }
             process {
@@ -211,6 +213,7 @@
                 Output formatted paragraph text.
         #>
             [CmdletBinding()]
+            [OutputType([System.String])]
             param (
                 [Parameter(Mandatory, ValueFromPipeline)]
                 [ValidateNotNull()]
@@ -225,7 +228,7 @@
                         $options['TextWidth'] = 120;
                     }
                 }
-                else { $options = New-PScriboTextOptions; }
+                else { $options = New-PScriboTextOption; }
 
             }
             process {
@@ -249,12 +252,13 @@
                 Output formatted line break text.
         #>
             [CmdletBinding()]
+            [OutputType([System.String])]
             param ( )
             begin {
 
                 ## Fix Set-StrictMode
                 if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
-                else { $options = New-PScriboTextOptions; }
+                else { $options = New-PScriboTextOption; }
 
                 if (-not ($options.ContainsKey('SeparatorWidth'))) {
                     $options['SeparatorWidth'] = 120;
@@ -284,6 +288,7 @@
                 Output formatted line break text.
         #>
             [CmdletBinding()]
+            [OutputType([System.String])]
             param ( )
             process {
                 return "$(OutTextLineBreak)`r`n";
@@ -297,6 +302,7 @@
                 Output formatted text table.
         #>
             [CmdletBinding()]
+            [OutputType([System.String])]
             param (
                 [Parameter(Mandatory, ValueFromPipeline)]
                 [System.Object] $Table
@@ -305,7 +311,7 @@
 
                 ## Fix Set-StrictMode
                 if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
-                else { $options = New-PScriboTextOptions; }
+                else { $options = New-PScriboTextOption; }
 
             }
             process {

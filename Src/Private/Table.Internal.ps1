@@ -25,6 +25,7 @@
 
         #>
             [CmdletBinding()]
+            [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
             [OutputType([System.Management.Automation.PSCustomObject])]
             param (
                 ## Table name/Id
@@ -103,7 +104,8 @@
             .PARAMETER Hashtable
 
         #>
-            [CmdletBinding(DefaultParameterSetName='InputObject')]
+            [CmdletBinding(DefaultParameterSetName = 'InputObject')]
+            [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
             [OutputType([System.Management.Automation.PSCustomObject])]
             param (
                 ## PSCustomObject to create PScribo table row

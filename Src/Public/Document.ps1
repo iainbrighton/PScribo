@@ -4,6 +4,7 @@ function Document {
         Initializes a new PScribo document object.
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments','pluginName')]
     [OutputType([System.Management.Automation.PSCustomObject])]
     param (
         ## PScribo document name
@@ -28,7 +29,7 @@ function Document {
         foreach ($result in & $ScriptBlock) {
             [ref] $null = $pscriboDocument.Sections.Add($result);
         }
-        Process-PScriboSection;
+        Invoke-PScriboSection;
         WriteLog -Message ($localized.DocumentProcessingCompleted -f $pscriboDocument.Name);
         $stopwatch.Stop();
         WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds);

@@ -83,13 +83,13 @@ InModuleScope 'PScribo' {
         }
 
         It 'Truncates to 40 and includes new line.' {
-            $Options = New-PScriboTextOptions -TextWidth 40 -SeparatorWidth 40;
+            $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 40;
             $l = OutTextLineBreak;
             $l.Length | Should Be 42;
         }
 
         It 'Wraps lines and includes new line' {
-            $Options = New-PScriboTextOptions -TextWidth 40 -SeparatorWidth 80;
+            $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 80;
             $l = OutTextLineBreak
             $l.Length | Should Be 84;
         }
@@ -101,19 +101,19 @@ InModuleScope 'PScribo' {
         $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
 
         It 'Defaults to 120 and includes new line.' {
-            #$Options = New-PScriboTextOptions;
+            #$Options = New-PScriboTextOption;
             $l = OutTextPageBreak;
             $l.Length | Should Be 124;
         }
 
         It 'Truncates to 40 and includes new line.' {
-            $Options = New-PScriboTextOptions -TextWidth 40 -SeparatorWidth 40;
+            $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 40;
             $l = OutTextPageBreak;
             $l.Length | Should Be 44;
         }
 
         It 'Wraps lines and includes new line.' {
-            $Options = New-PScriboTextOptions -TextWidth 40 -SeparatorWidth 80;
+            $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 80;
             $l = OutTextPageBreak
             $l.Length | Should Be 86;
         }
@@ -140,14 +140,14 @@ InModuleScope 'PScribo' {
 
             It 'Paragraph wraps at 10 characters with new line.' {
                 $testParagraph = 'Test paragraph.';
-                $Options = New-PScriboTextOptions -TextWidth 10;
+                $Options = New-PScriboTextOption -TextWidth 10;
                 $p = Paragraph $testParagraph | OutTextParagraph;
                 $p | Should BeExactly "Test parag`r`nraph.`r`n";
             }
 
              It 'Paragraph wraps at 10 characters with no new line.' {
                 $testParagraph = 'Test paragraph.';
-                $Options = New-PScriboTextOptions -TextWidth 10;
+                $Options = New-PScriboTextOption -TextWidth 10;
                 $p = Paragraph $testParagraph -NoNewLine | OutTextParagraph;
                 $p | Should BeExactly "Test parag`r`nraph.";
             }
@@ -244,7 +244,7 @@ InModuleScope 'PScribo' {
             }
 
             It 'Set width with of 35.' {
-                $Options = New-PScriboTextOptions -TextWidth 35;
+                $Options = New-PScriboTextOption -TextWidth 35;
                 $table = Table -Hashtable $services -Name 'Test Table' | OutTextTable;
                 $table.Length | Should Be 335; ## Text tables are now set to wrap..
             }
@@ -265,7 +265,7 @@ InModuleScope 'PScribo' {
             }
 
             It 'Default width of 25.' {
-                $Options = New-PScriboTextOptions -TextWidth 25;
+                $Options = New-PScriboTextOption -TextWidth 25;
                 $table = Table -Hashtable $services 'Test Table' -List | OutTextTable;
                 $table.Length | Should Be 357;
             }

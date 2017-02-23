@@ -6,6 +6,7 @@ function OutHtml {
         Outputs a Html file representation of a PScribo document object.
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments','pluginName')]
     [OutputType([System.IO.FileInfo])]
     param (
         ## PScribo document object to convert to a text document

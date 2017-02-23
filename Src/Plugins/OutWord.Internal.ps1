@@ -309,7 +309,7 @@
                     $columnCount = 2;
                 }
                 for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
-                    $gridCol = $tblGrid.AppendChild($XmlDocument.CreateElement('w', 'gridCol', $xmlnsMain));
+                    [ref] $null = $tblGrid.AppendChild($XmlDocument.CreateElement('w', 'gridCol', $xmlnsMain));
                 }
 
                 return $tbl;
@@ -369,7 +369,7 @@
 
                                 if ($null -ne $Table.ColumnWidths) {
                                     ## TODO: Refactor out
-                                    $columnWidthTwips = ConvertMmToTwips -Millimeter $Table.ColumnWidths[0];
+                                    [ref] $null = ConvertMmToTwips -Millimeter $Table.ColumnWidths[0];
                                     $tcW1 = $tcPr1.AppendChild($XmlDocument.CreateElement('w', 'tcW', $xmlnsMain));
                                     [ref] $null = $tcW1.SetAttribute('w', $xmlnsMain, $Table.ColumnWidths[0] * 50);
                                     [ref] $null = $tcW1.SetAttribute('type', $xmlnsMain, 'pct');
@@ -439,7 +439,7 @@
                         }
                         $tcW = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'tcW', $xmlnsMain));
 
-                        if (($Table.ColumnWidths -ne $null) -and ($Table.ColumnWidths[$i] -ne $null)) {
+                        if (($null -ne $Table.ColumnWidths) -and ($null -ne $Table.ColumnWidths[$i])) {
                             [ref] $null = $tcW.SetAttribute('w', $xmlnsMain, $Table.ColumnWidths[$i] * 50);
                             [ref] $null = $tcW.SetAttribute('type', $xmlnsMain, 'pct');
                         }
@@ -529,7 +529,7 @@
                 $docObjectGallery = $docPartObj.AppendChild($XmlDocument.CreateElement('w', 'docPartGallery', $xmlnsMain));
                 [ref] $null = $docObjectGallery.SetAttribute('val', $xmlnsMain, 'Table of Contents');
                 [ref] $null = $docPartObj.AppendChild($XmlDocument.CreateElement('w', 'docPartUnique', $xmlnsMain));
-                $sdtEndPr = $sdt.AppendChild($XmlDocument.CreateElement('w', 'stdEndPr', $xmlnsMain));
+                [ref] $null = $sdt.AppendChild($XmlDocument.CreateElement('w', 'stdEndPr', $xmlnsMain));
 
                 $sdtContent = $sdt.AppendChild($XmlDocument.CreateElement('w', 'stdContent', $xmlnsMain));
                 $p1 = $sdtContent.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain));
@@ -660,10 +660,10 @@
                 [ref] $null = $link.SetAttribute('val', $XmlnsMain, $linkId);
                 $next = $documentStyle.AppendChild($XmlDocument.CreateElement('w', 'next', $xmlnsMain));
                 [ref] $null = $next.SetAttribute('val', $xmlnsMain, 'Normal');
-                $qFormat = $documentStyle.AppendChild($XmlDocument.CreateElement('w', 'qFormat', $xmlnsMain));
+                [ref] $null = $documentStyle.AppendChild($XmlDocument.CreateElement('w', 'qFormat', $xmlnsMain));
                 $pPr = $documentStyle.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
-                $keepNext = $pPr.AppendChild($XmlDocument.CreateElement('w', 'keepNext', $xmlnsMain));
-                $keepLines = $pPr.AppendChild($XmlDocument.CreateElement('w', 'keepLines', $xmlnsMain));
+                [ref] $null = $pPr.AppendChild($XmlDocument.CreateElement('w', 'keepNext', $xmlnsMain));
+                [ref] $null = $pPr.AppendChild($XmlDocument.CreateElement('w', 'keepLines', $xmlnsMain));
                 $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain));
                 [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, 0);
                 [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, 0);
@@ -695,6 +695,7 @@
                 Generates Word Xml table style element from a PScribo document table style.
         #>
             [CmdletBinding()]
+            [OutputType([System.Xml.XmlElement])]
             param (
                 ## PScribo document style
                 [Parameter(Mandatory, ValueFromPipeline)]
@@ -753,8 +754,8 @@
                 $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain));
                 [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, 0);
                 [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, 0);
-                $keepNext = $pPr.AppendChild($XmlDocument.CreateElement('w', 'keepNext', $xmlnsMain));
-                $keepLines = $pPr.AppendChild($XmlDocument.CreateElement('w', 'keepLines', $xmlnsMain));
+                [ref] $null = $pPr.AppendChild($XmlDocument.CreateElement('w', 'keepNext', $xmlnsMain));
+                [ref] $null = $pPr.AppendChild($XmlDocument.CreateElement('w', 'keepLines', $xmlnsMain));
                 $jc = $pPr.AppendChild($XmlDocument.CreateElement('w', 'jc', $xmlnsMain));
                 if ($Style.Align.ToLower() -eq 'justify') { [ref] $null = $jc.SetAttribute('val', $xmlnsMain, 'distribute'); }
                 else { [ref] $null = $jc.SetAttribute('val', $xmlnsMain, $Style.Align.ToLower()); }
@@ -883,7 +884,7 @@
 
                 $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
                 $tblStylePr = $XmlDocument.CreateElement('w', 'tblStylePr', $xmlnsMain);
-                $tblPr = $tblStylePr.AppendChild($XmlDocument.CreateElement('w', 'tblPr', $xmlnsMain));
+                [ref] $null = $tblStylePr.AppendChild($XmlDocument.CreateElement('w', 'tblPr', $xmlnsMain));
                 switch ($Type) {
                     'Header' { $tblStylePrType = 'firstRow'; }
                     'Row' { $tblStylePrType = 'band2Horz'; }

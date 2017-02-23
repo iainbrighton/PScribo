@@ -6,6 +6,7 @@ function OutXml {
         Outputs a xml representation of a PScribo document object.
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments','pluginName')]
     param (
         ## ThePScribo document object to convert to a xml document
         [Parameter(Mandatory, ValueFromPipeline)]

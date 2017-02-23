@@ -6,6 +6,7 @@ function OutWord {
         Outputs a Word document representation of a PScribo document object.
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments','pluginName')]
     [OutputType([System.IO.FileInfo])]
     param (
         ## ThePScribo document object to convert to a text document

@@ -120,9 +120,12 @@ function Table {
                 WriteLog -Message $localized.TableColumnWidthMismatchWarning -IsWarning;
                 $ColumnWidths = $null;
             }
-            elseif (($PSCmdlet.ParameterSetName -eq 'InputObject') -and (-not $List) -and ($Columns.Count -ne $ColumnWidths.Count)) {
-                WriteLog -Message $localized.TableColumnWidthMismatchWarning -IsWarning;
-                $ColumnWidths = $null;
+            elseif (($PSCmdlet.ParameterSetName -eq 'InputObject') -and (-not $List)) {
+                ## Columns might not have been passed and there is no object in the pipeline here, so check $Columns is an array.
+                if (($Columns -is [System.Object[]]) -and ($Columns.Count -ne $ColumnWidths.Count)) {
+                    WriteLog -Message $localized.TableColumnWidthMismatchWarning -IsWarning;
+                    $ColumnWidths = $null;
+                }
             }
         } #end if columnwidths
 
