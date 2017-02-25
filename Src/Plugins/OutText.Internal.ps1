@@ -84,7 +84,7 @@
                     if (-not ($options.ContainsKey('TextWidth'))) {
                         $options['TextWidth'] = 120;
                     }
-                    if(-not ($Options.ContainsKey('SectionSeparator'))) {
+                    if (-not ($Options.ContainsKey('SectionSeparator'))) {
                         $options['SectionSeparator'] = "-";
                     }
                 }
@@ -257,7 +257,13 @@
             begin {
 
                 ## Fix Set-StrictMode
-                if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
+                if (Test-Path -Path Variable:\Options) {
+                    $options = Get-Variable -Name Options -ValueOnly;
+                    ## TODO: We shouldn't need to do this (#24) 
+                    if (-not ($options.ContainsKey('TextWidth'))) {
+                        $options['TextWidth'] = 120;
+                    }
+                }
                 else { $options = New-PScriboTextOption; }
 
                 if (-not ($options.ContainsKey('SeparatorWidth'))) {
@@ -310,7 +316,13 @@
             begin {
 
                 ## Fix Set-StrictMode
-                if (Test-Path -Path Variable:\Options) { $options = Get-Variable -Name Options -ValueOnly; }
+                if (Test-Path -Path Variable:\Options) {
+                    $options = Get-Variable -Name Options -ValueOnly;
+                    ## TODO: We shouldn't need to do this (#24) 
+                    if (-not ($options.ContainsKey('TextWidth'))) {
+                        $options['TextWidth'] = 120;
+                    }
+                }
                 else { $options = New-PScriboTextOption; }
 
             }
