@@ -77,7 +77,10 @@ function OutWord {
         #Convert relative or PSDrive based path to the absolute filesystem path
         $AbsolutePath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
         $destinationPath = Join-Path -Path $AbsolutePath ('{0}.docx' -f $Document.Name);
-        Add-Type -AssemblyName WindowsBase;
+        if ($PSVersionTable.PSEdition -ne 'Core') {
+            ## WindowsBase.dll is not included in Core PowerShell
+            Add-Type -AssemblyName WindowsBase;
+        }
         try {
             $package = [System.IO.Packaging.Package]::Open($destinationPath, [System.IO.FileMode]::Create, [System.IO.FileAccess]::ReadWrite);
         }
@@ -93,7 +96,7 @@ function OutWord {
         $xmlWriter = [System.Xml.XmlWriter]::Create($streamWriter);
         WriteLog -Message ($localized.WritingDocumentPart -f $documentUri);
         $xmlDocument.Save($xmlWriter);
-        $xmlWriter.Close();
+        $xmlWriter.Dispose();
         $streamWriter.Close();
 
         ## Create styles.xml part
@@ -104,7 +107,7 @@ function OutWord {
         $xmlWriter = [System.Xml.XmlWriter]::Create($streamWriter);
         WriteLog -Message ($localized.WritingDocumentPart -f $stylesUri);
         $stylesXml.Save($xmlWriter);
-        $xmlWriter.Close();
+        $xmlWriter.Dispose();
         $streamWriter.Close();
 
         ## Create settings.xml part
@@ -115,7 +118,7 @@ function OutWord {
         $xmlWriter = [System.Xml.XmlWriter]::Create($streamWriter);
         WriteLog -Message ($localized.WritingDocumentPart -f $settingsUri);
         $settingsXml.Save($xmlWriter);
-        $xmlWriter.Close();
+        $xmlWriter.Dispose();
         $streamWriter.Close();
 
         ## Create the Package relationships

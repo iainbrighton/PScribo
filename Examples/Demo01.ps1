@@ -27,7 +27,7 @@ $document = Document 'PScribo Demo 1' -Verbose {
     Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in 14 point bold italics: $env:COMPUTERNAME" -Bold -Italic -Size 14
     Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in 8 point Courier New bold italics: $env:COMPUTERNAME" -Bold -Italic -Size 8 -Font 'Courier New'
 
-    $services = Get-WMIObject Win32_Service | Select DisplayName, State, StartMode | Sort DisplayName
+    $services = Get-CimInstance -ClassName Win32_Service | Select-Object -Property DisplayName, State, StartMode | Sort-Object -Property DisplayName
     <# Add a custom style for highlighting table cells/rows #>
     Style -Name 'Stopped Service' -Color White -BackgroundColor Firebrick -Bold
 

@@ -1,4 +1,4 @@
-## PScribo (Preview)
+# PScribo (Preview)
 _PScribo_ (pronounced 'skree-bo') is an open source project that implements a
 documentation domain-specific language (DSL) for Windows PowerShell, used to
 create a "document" in a standardised format. The resulting "document" can be
@@ -9,7 +9,7 @@ PScribo provides a set of functions that make it easy to create a document-like
 structure within Powershell scripts, without having to be concerned with
 handling output formatting or supporting multiple output formats.
 
-### Authoring Example
+## Authoring Example
 
 ```powershell
 Import-Module PScribo
@@ -36,7 +36,7 @@ Document 'PScribo Example' {
    
     PageBreak
     
-    $services = Get-WMIObject Win32_Service | Select DisplayName, State, StartMode | Sort DisplayName
+    $services = Get-CimInstance -ClassName Win32_Service | Select-Object -Property DisplayName, State, StartMode | Sort-Object -Property DisplayName
     
     Style -Name 'Stopped Service' -Color White -BackgroundColor Firebrick -Bold
     
@@ -67,13 +67,13 @@ For more detailed infomation on the documentation DSL, see
 Pscribo can export documentation in a variety of formats and currently
 supports creation of text, xml, html and Microsoft Word formats. 
 
-#### Example Html Output
+### Example Html Output
 ![](./ExampleHtmlOutput.png)
 [Example Html Document Download](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/PScriboExample.html)
-#### Example Word Output
+### Example Word Output
 ![](./ExampleWordOutput.png)
 [Example Word Document Download](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/PScriboExample.docx)
-#### Example Text Output
+### Example Text Output
 ![](./ExampleTextOutput.png)
 [Example text Document Download](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/PScriboExample.txt)
 
@@ -94,16 +94,22 @@ If you find it useful, unearth any bugs or have any suggestions for improvements
 feel free to add an [issue](https://github.com/iainbrighton/PScribo/issues) or
 place a comment at the project home page.
 
-##### Installation
+## Installation
 
 * Automatic (via PowerShell Gallery:
- * Run 'Install-Module PScribo'.
- * Run 'Import-Module PScribo'.
+  * Run 'Install-Module PScribo'.
+  * Run 'Import-Module PScribo'.
 * Manual:
- * Download and unblock the latest .zip file.
- * Extract the .zip into your $PSModulePath, e.g. ~\Documents\WindowsPowerShell\Modules\.
- * Ensure the extracted folder is named 'PScribo'. 
- * Run 'Import-Module PScribo'.
+  * Download and unblock the latest .zip file.
+  * Extract the .zip into your $PSModulePath, e.g. ~\Documents\WindowsPowerShell\Modules\.
+  * Ensure the extracted folder is named 'PScribo'. 
+  * Run 'Import-Module PScribo'.
 
 For an introduction to the PScribo framework, you can view the presentation given at the
 [PowerShell Summit Europe 2015](https://www.youtube.com/watch?v=pNIC70bjBZE).
+
+## Versions
+
+## Unreleased
+
+* Adds Core PowerShell support
