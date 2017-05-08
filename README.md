@@ -113,3 +113,4 @@ For an introduction to the PScribo framework, you can view the presentation give
 ## Unreleased
 
 * Adds Core PowerShell support
+* Fixes tests in Pester v4

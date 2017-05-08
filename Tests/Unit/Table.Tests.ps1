@@ -220,7 +220,7 @@ InModuleScope 'PScribo' {
                 Add-Member -InputObject $service -MemberType NoteProperty -Name __Style -Value 'MyRowStyle';
                 $table = $services | Table -Name 'TestTable';
                 $table.Rows[1].__Style | Should Be 'MyRowStyle';
-                $table.Columns -notlike '*__Style' | Should Be $true;
+                ($table.Columns -notlike '*__Style') -as [System.Boolean] | Should Be $true;
             }
 
             It 'creates a table with embedded cell style' {
@@ -228,7 +228,7 @@ InModuleScope 'PScribo' {
                 Add-Member -InputObject $service -MemberType NoteProperty -Name Name__Style -Value 'MyCellStyle';
                 $table = $services | Table -Name 'TestTable';
                 $table.Rows[1].Name__Style | Should Be 'MyCellStyle';
-                $table.Columns -notlike '*__Style' | Should Be $true;
+                ($table.Columns -notlike '*__Style') -as [System.Boolean] | Should Be $true;
             }
 
         } #end context InputObject, By Named Parameter
@@ -340,7 +340,7 @@ InModuleScope 'PScribo' {
                 )
                 $table = Table -Hashtable $services -Name 'TestTable';
                 $table.Rows[1].__Style | Should Be 'MyRowStyle';
-                $table.Columns -notlike '*__Style' | Should Be $true;
+                ($table.Columns -notlike '*__Style') -as [System.Boolean]  | Should Be $true;
             }
 
             It 'creates a table with embedded cell style' {
@@ -351,7 +351,7 @@ InModuleScope 'PScribo' {
                 )
                 $table = Table -Hashtable $services -Name 'TestTable';
                 $table.Rows[1].Name__Style | Should Be 'MyCellStyle';
-                $table.Columns -notlike '*__Style' | Should Be $true;
+                ($table.Columns -notlike '*__Style') -as [System.Boolean]  | Should Be $true;
             }
 
         } #end context Hashtable, By Named Parameter

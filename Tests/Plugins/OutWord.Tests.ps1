@@ -761,7 +761,6 @@ InModuleScope 'PScribo' {
 
         } #end context Tabular Table
 
-
     } #end describe OutWord.Internal\OutWordTable
 
     Describe 'OutWord.Internal\OutWordBlankLine' {

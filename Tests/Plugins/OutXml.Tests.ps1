@@ -5,7 +5,6 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-
     ## Scaffold root XmlDocument
     $xmlDocument = New-Object -TypeName System.Xml.XmlDocument;
     [ref] $null = $xmlDocument.AppendChild($xmlDocument.CreateXmlDeclaration('1.0', 'utf-8', 'yes'));
@@ -22,23 +21,22 @@ InModuleScope 'PScribo' {
     }
 
     Describe 'OutXml\OutXml' {
-        $path = (Get-PSDrive -Name TestDrive).Root;
 
         It 'calls OutXmlTable' {
             Mock -CommandName OutXmlTable -MockWith { return $xmlDocument.CreateElement('TestTable') };
-            Document -Name 'TestDocument' -ScriptBlock { Get-Service | Select-Object -First 1 | Table 'TestTable' } | OutXml -Path $path;
+            Document -Name 'TestDocument' -ScriptBlock { Get-Service | Select-Object -First 1 | Table 'TestTable' } | OutXml -Path $testDrive;
             Assert-MockCalled -CommandName OutXmlTable -Exactly 1;
         }
 
         It 'calls OutXmlParagraph' {
             Mock -CommandName OutXmlParagraph -MockWith { return $xmlDocument.CreateElement('TestParagraph') };
-            Document -Name 'TestDocument' -ScriptBlock { Paragraph 'TestParagraph' } | OutXml -Path $path;
+            Document -Name 'TestDocument' -ScriptBlock { Paragraph 'TestParagraph' } | OutXml -Path $testDrive;
             Assert-MockCalled -CommandName OutXmlParagraph -Exactly 1;
         }
 
         It 'calls OutXmlSection' {
             Mock -CommandName OutXmlSection -MockWith { return $xmlDocument.CreateElement('TestSection'); };
-            Document -Name 'TestDocument' -ScriptBlock { Section -Name 'TestSection' -ScriptBlock { } } | OutXml -Path $path;
+            Document -Name 'TestDocument' -ScriptBlock { Section -Name 'TestSection' -ScriptBlock { } } | OutXml -Path $testDrive;
             Assert-MockCalled -CommandName OutXmlSection -Exactly 1;
         }
 
