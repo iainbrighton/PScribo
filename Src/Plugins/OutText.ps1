@@ -33,12 +33,14 @@ function OutText {
 
         $stopwatch = [Diagnostics.Stopwatch]::StartNew();
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
-        ## Create default options if not specified
-        if ($null -eq $Options) { $Options = New-PScriboTextOption; }
-
-        if (-not ($Options.ContainsKey('Encoding'))) {
-            $Options['Encoding'] = 'ASCII';
+        
+        ## Merge the document, text default and specified text options
+        $mergePScriboPluginOptionsParams = @{
+            DefaultPluginOptions = New-PScriboTextOption;
+            DocumentOptions = $Document.Options;
+            PluginOptions = $Options;
         }
+        $Options = Merge-PScriboPluginOptions @mergePScriboPluginOptionsParams;
 
         [System.Text.StringBuilder] $textBuilder = New-Object System.Text.StringBuilder;
         foreach ($s in $Document.Sections.GetEnumerator()) {
