@@ -1,3 +1,5 @@
+param ([System.Management.Automation.SwitchParameter] $PassThru)
+
 Import-Module PScribo -Force;
 
 $example5 = Document -Name 'PScribo Example 5' {
@@ -22,4 +24,4 @@ $example5 = Document -Name 'PScribo Example 5' {
     Style -Name 'Normal' -Font Tahoma -Size 12 -Color 000;
     Paragraph 'This paragraph will be styled with the custom "Normal" style defined earlier.'
 }
-$example5 | Export-Document -Format Html -Path ~\Desktop
+$example5 | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru

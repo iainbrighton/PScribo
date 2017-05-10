@@ -1,3 +1,5 @@
+param ([System.Management.Automation.SwitchParameter] $PassThru)
+
 Import-Module PScribo -Force;
 
 $example23 = Document -Name 'PScribo Example 23' {
@@ -23,4 +25,4 @@ $example23 = Document -Name 'PScribo Example 23' {
     TableStyle -Name 'LargeGrid' -HeaderStyle Normal -RowStyle Normal -BorderWidth 1 -PaddingTop 4 -PaddingRight 4 -PaddingBottom 4 -PaddingLeft 4
     Get-Service | Select-Object -Property Name,DisplayName,Status -First 3 | Table -Style LargeGrid
 }
-$example23 | Export-Document -Format Html -Path ~\Desktop
+$example23 | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru

@@ -1,3 +1,5 @@
+param ([System.Management.Automation.SwitchParameter] $PassThru)
+
 Import-Module PScribo -Force;
 
 $example6 = Document -Name 'PScribo Example 6' {
@@ -33,4 +35,4 @@ $example6 = Document -Name 'PScribo Example 6' {
         }
     }
 }
-$example6 | Export-Document -Format Html -Path ~\Desktop
+$example6 | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru

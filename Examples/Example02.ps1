@@ -1,3 +1,5 @@
+param ([System.Management.Automation.SwitchParameter] $PassThru)
+
 Import-Module PScribo -Force;
 
 $example2 = Document -Name 'PScribo Example 2' {
@@ -24,4 +26,4 @@ Export-Document -Document $example2 -Format Html -Path ~\Desktop
 
     NOTE: This will overwrite the 'PScribo Example 2.html' created above without warning.
 #>
-$example2 | Export-Document -Format Word,Html -Path ~\Desktop
+$example2 | Export-Document -Format Word,Html -Path ~\Desktop -PassThru:$PassThru

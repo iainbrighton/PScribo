@@ -1,3 +1,5 @@
+param ([System.Management.Automation.SwitchParameter] $PassThru)
+
 Import-Module PScribo -Force;
 
 <# The document name is used in the file output #>
@@ -92,4 +94,4 @@ $document = Document 'PScribo Demo 1' -Verbose {
     }
 }
 <#  Generate 'PScribo Demo 1.docx' and 'PScribo Demo 1.html' files. Other supported formats include 'Text' and 'Xml' #>
-$document | Export-Document -Path ~\Desktop -Format Word,Html,Text -Verbose;
+$document | Export-Document -Path ~\Desktop -Format Text -PassThru:$PassThru -Verbose -Options @{ TextWidth = 80 };

@@ -1,3 +1,5 @@
+param ([System.Management.Automation.SwitchParameter] $PassThru)
+
 Import-Module PScribo -Force;
 
 Document -Name 'PScribo Example 3' {
@@ -30,4 +32,4 @@ Document -Name 'PScribo Example 3' {
     #>
     GlobalOption -PageSize Letter -MarginTopAndBottom 54 -MarginLeftAndRight 36
 
-} | Export-Document -Format Html -Path ~\Desktop
+} | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru

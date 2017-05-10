@@ -1,3 +1,5 @@
+param ([System.Management.Automation.SwitchParameter] $PassThru)
+
 Import-Module PScribo -Force;
 
 $example19 = Document -Name 'PScribo Example 19' {
@@ -13,4 +15,4 @@ $example19 = Document -Name 'PScribo Example 19' {
     #>
     Get-Service | Select-Object -First 5 | Table -List -ColumnWidths 40,60
 }
-$example19 | Export-Document -Format Html -Path ~\Desktop
+$example19 | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru

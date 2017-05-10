@@ -24,7 +24,10 @@
         ## PScribo document export option
         [Parameter(ValueFromPipelineByPropertyName)]
         [AllowNull()]
-        [System.Collections.Hashtable] $Options
+        [System.Collections.Hashtable] $Options,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $PassThru
     )
     begin {
 
@@ -40,21 +43,26 @@
     process {
 
         foreach ($f in $Format) {
+
             WriteLog -Message ($localized.DocumentInvokePlugin -f $f) -Plugin 'Export';
-            ## Call specified output plugin
-            #try {
-                ## Dynamically generate the output format function name
-                $outputFormat = 'Out{0}' -f $f;
-                if ($PSBoundParameters.ContainsKey('Options')) {
-                    & $outputFormat -Document $Document -Path $Path -Options $Options; # -ErrorAction Stop;
-                }
-                else {
-                    & $outputFormat -Document $Document -Path $Path; # -ErrorAction Stop;
-                }
-            #}
-            #catch [System.Management.Automation.CommandNotFoundException] {
-            #    Write-Warning ('Output format "{0}" is unsupported.' -f $f);
-            #}
+            
+            ## Dynamically generate the output format function name
+            $outputFormat = 'Out{0}' -f $f;
+            $outputParams = @{
+                Document = $Document;
+                Path = $Path;
+            }
+            if ($PSBoundParameters.ContainsKey('Options')) {
+
+                $outputParams['Options'] = $Options;
+            }
+            
+            $fileInfo = & $outputFormat @outputParams;
+            if ($PassThru) {
+
+                Write-Output -InputObject $fileInfo;
+            }
+            
         } # end foreach
 
     } #end process

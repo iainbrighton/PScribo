@@ -1,3 +1,5 @@
+param ([System.Management.Automation.SwitchParameter] $PassThru)
+
 Import-Module PScribo -Force;
 
 $example17 = Document -Name 'PScribo Example 17' {
@@ -18,4 +20,4 @@ $example17 = Document -Name 'PScribo Example 17' {
     )
     Table -Hashtable $hashtableArray
 }
-$example17 | Export-Document -Format Html -Path ~\Desktop
+$example17 | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru

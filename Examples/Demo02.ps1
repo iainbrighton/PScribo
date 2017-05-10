@@ -1,3 +1,5 @@
+param ([System.Management.Automation.SwitchParameter] $PassThru)
+
 Import-Module PScribo -Force;
 
 <# The document name is used in the file output #>
@@ -98,4 +100,4 @@ $document = Document 'PScribo Demo 2' -Verbose {
     }
 }
 <#  Generate 'PScribo Demo 2.docx' and 'PScribo Demo 2.html' files. Other supported formats include 'Text' and 'Xml' #>
-$document | Export-Document -Path ~\Desktop -Format Word,Html -Verbose;
+$document | Export-Document -Path ~\Desktop -Format Word,Html -PassThru:$PassThru -Verbose;

@@ -1,3 +1,5 @@
+param ([System.Management.Automation.SwitchParameter] $PassThru)
+
 Import-Module PScribo -Force;
 
 $example21 = Document -Name 'PScribo Example 21' {
@@ -24,4 +26,4 @@ $example21 = Document -Name 'PScribo Example 21' {
     TableStyle -Name 'Basic' -HeaderStyle Normal -RowStyle Normal
     Get-Service | Select-Object -Property Name,DisplayName,Status -First 3 | Table -Style Basic
 }
-$example21 | Export-Document -Format Html -Path ~\Desktop
+$example21 | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru
