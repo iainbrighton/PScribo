@@ -340,7 +340,7 @@ InModuleScope 'PScribo' {
             $heading1 = 'Heading 1';
             $heading2 = 'Heading 2';
             $Document  = Document -Name 'TestDocument' -ScriptBlock {
-                GlobalOption -EnableSectionNumbering
+                DocumentOption -EnableSectionNumbering
                 TOC -Name $tocName
                 Section $heading1 -Style Heading1 {
                     Section $heading2 -Style Heading2 { }
@@ -359,7 +359,7 @@ InModuleScope 'PScribo' {
             $heading1 = 'Heading 1';
             $heading2 = 'Heading 2';
             $Document  = Document -Name 'TestDocument' -ScriptBlock {
-                GlobalOption -EnableSectionNumbering
+                DocumentOption -EnableSectionNumbering
                 TOC -Name $tocName
                 Section $heading1 -Style Heading1 {
                     Section $heading2 -Style Heading2 { }

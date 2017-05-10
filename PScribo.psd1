@@ -7,9 +7,24 @@
     Copyright = '(c) 2016 Iain Brighton. All rights reserved.';
     Description = 'PScribo documentation Powershell module/framework.';
     PowerShellVersion = '3.0';
-        FunctionsToExport = @('BlankLine', 'Document' ,'Export-Document', 'GlobalOption', 'LineBreak', 'PageBreak',
-                                'Paragraph', 'Section', 'Style', 'Set-Style', 'Table', 'TableStyle', 'TOC');
-
+    FunctionsToExport = @(
+                            'BlankLine',
+                            'Document',
+                            'DocumentOption',
+                            'Export-Document',
+                            'LineBreak',
+                            'PageBreak',
+                            'Paragraph',
+                            'Section',
+                            'Style',
+                            'Set-Style',
+                            'Table',
+                            'TableStyle',
+                            'TOC'
+                        );
+    AliasesToExport   = @(
+                            'GlobalOption'
+                        );
     PrivateData = @{
         PSData = @{
             Tags = @('Powershell','PScribo','Documentation','Framework','VirtualEngine')

@@ -9,7 +9,7 @@ $example30 = Document -Name 'PScribo Example 30' {
         passing an -Options hashtable with the 'NoPageLayoutStyle' key to the
         Export-Document function.
     #>
-    GlobalOption -Margin 18
+    DocumentOption -Margin 18
     Style -Name StoppedService -Color White -BackgroundColor Firebrick
 
     $services = Get-Service

@@ -13,20 +13,24 @@ Get-ChildItem -Path "$pscriboRoot\Src\" -Include '*.ps1' -Recurse |
     }
 
 $exportedFunctions = @(
-  'Document',
-  'Export-Document',
-  'Section',
-  'GlobalOption',
-  'LineBreak',
-  'PageBreak',
-  'Paragraph',
-  'Section',
-  'Style',
-  'Table',
-  'TableStyle',
-  'Set-Style',
-  'TOC',
-  'BlankLine'
+    'Document',
+    'Export-Document',
+    'Section',
+    'DocumentOption',
+    'LineBreak',
+    'PageBreak',
+    'Paragraph',
+    'Section',
+    'Style',
+    'Table',
+    'TableStyle',
+    'Set-Style',
+    'TOC',
+    'BlankLine'
 );
 
-Export-ModuleMember -Function $exportedFunctions;
+$exportedAliases = @(
+    'GlobalOption'
+);
+
+Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases;

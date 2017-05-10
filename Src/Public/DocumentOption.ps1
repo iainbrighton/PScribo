@@ -1,11 +1,12 @@
-function GlobalOption {
+function DocumentOption {
 <#
     .SYNOPSIS
-        Initializes a new PScribo global options/settings.
+        Initializes a new PScribo global/document options/settings.
     .NOTES
         Options are reset upon each invocation.
 #>
     [CmdletBinding(DefaultParameterSetName = 'Margin')]
+    [Alias('GlobalOption')]
     param (
         ## Forces document header to be displayed in upper case.
         [Parameter(ValueFromPipelineByPropertyName)]
@@ -129,4 +130,4 @@ function GlobalOption {
         ($localized.DocumentOptionPageWidth -f $pscriboDocument.Options['PageWidth']) | WriteLog;
 
     } #end process
-} #end function GlobalOption
+} #end function DocumentOption

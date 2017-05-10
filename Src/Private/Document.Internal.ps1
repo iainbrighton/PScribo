@@ -34,7 +34,7 @@
                     DefaultTableStyle = $null;
                     TOC = New-Object -TypeName System.Collections.ArrayList;
                 }
-                GlobalOption -MarginTopAndBottom 72 -MarginLeftAndRight 54 -PageSize A4 -DefaultFont 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif' -Verbose:$false;
+                DocumentOption -MarginTopAndBottom 72 -MarginLeftAndRight 54 -PageSize A4 -DefaultFont 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif' -Verbose:$false;
                 ## Set "default" styles
                 Style -Name Normal -Default;
                 Style -Name Title -Size 28 -Color 0072af;

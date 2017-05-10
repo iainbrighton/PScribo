@@ -34,7 +34,7 @@ $document = Document 'PScribo Demo 1' -Verbose {
     Style -Name 'Stopped Service' -Color White -BackgroundColor Firebrick -Bold
 
     <#  Sections provide an easy way of creating a document structure and can support automatic
-        section numbering (if enabled with the GlobalOption -EnableSectionNumbering parameter. You
+        section numbering (if enabled with the DocumentOption -EnableSectionNumbering parameter. You
         don't need to worry about the numbers - PScribo will automatically figure this out. #>
     Section -Style Heading1 'Standard-Style Tables' {
         Section -Style Heading2 'Autofit Width Autofit Cell No Highlighting' {

@@ -3,7 +3,7 @@ param ([System.Management.Automation.SwitchParameter] $PassThru)
 Import-Module PScribo -Force;
 
 $example8 = Document -Name 'PScribo Example 8' {
-    GlobalOption -EnableSectionNumbering -MarginTopAndBottom 72 -MarginLeftAndRight 54
+    DocumentOption -EnableSectionNumbering -MarginTopAndBottom 72 -MarginLeftAndRight 54
 
     <#
        A table of contents can be inserted into the document with the 'TOC' cmdlet. The text

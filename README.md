@@ -114,5 +114,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 * Adds Core PowerShell support
 * Fixes tests in Pester v4
-* Adds Merge-PScriboPluginOptions method to merge document, plugin and runtime options (#24)
-* Adds -PassThru option to Export-Document (#25)
+* Adds `Merge-PScriboPluginOptions` method to merge document, plugin and runtime options (#24)
+* Adds `-PassThru` option to `Export-Document` (#25)
+* Renames `GlobalOption` to `DocumentOption` (#18)
+  * Adds `GlobalOption` alias for backwards compatibility

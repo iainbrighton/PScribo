@@ -7,7 +7,7 @@ $document = Document 'PScribo Demo 2' -Verbose {
     <#  Enforce uppercase section headers/names
         Enable automatic section numbering
         Set the page size to US Letter with 0.5inch margins #>
-    GlobalOption -ForceUppercaseSection -EnableSectionNumbering -PageSize Letter -Margin 36;
+    DocumentOption -ForceUppercaseSection -EnableSectionNumbering -PageSize Letter -Margin 36;
     BlankLine -Count 20;
     Paragraph 'PScribo Demo 2' -Style Title;
     BlankLine -Count 20;
@@ -42,7 +42,7 @@ $document = Document 'PScribo Demo 2' -Verbose {
     Style -Name 'Stopped Service' -Color White -BackgroundColor Firebrick -Bold
 
     <#  Sections provide an easy way of creating a document structure and can support section
-        numbering (if enabled with the GlobalOption -EnableSectionNumbering parameter. You don't
+        numbering (if enabled with the DocumentOption -EnableSectionNumbering parameter. You don't
         need to worry about the numbers as PScribo will figure this out. #>
     Section -Style Heading1 'Standard-Style Tables' {
         Section -Style Heading2 'Autofit Width Autofit Cell No Highlighting' {
