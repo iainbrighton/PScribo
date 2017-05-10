@@ -5,20 +5,28 @@ SYNOPSIS
 	PScribo is a documentation framework for PowerShell.
 
 DESCRIPTION
-    PScribo is an open source project that implements a documentation domain-specific-language (DSL) for Windows Powershell. The latest version is available at https://github.com/iainbrighton/PScribo.
+    PScribo is an open source project that implements a documentation domain-specific-language (DSL) for Windows
+    Powershell. The latest version is available at https://github.com/iainbrighton/PScribo.
     
-    PScribo provides a set of functions that make it easy to create a document-like structure within Powershell without having to handle individual output formatting. A document's layout and contents only need to defined once.
-    After report creation, the document can be exported to one or more formats simultaneously. For more detailed infomation on the documentation DSL, see about_Document.
+    PScribo provides a set of functions that make it easy to create a document-like structure within Powershell without
+    having to handle individual output formatting. A document's layout and contents only need to defined once. After
+    report creation, the document can be exported to one or more formats simultaneously. For more detailed infomation
+    on the documentation DSL, see about_Document.
 
-    Pscribo can export documentation in a variety of formats and currently supports creation of text, xml and html formats. Additional "plugins" can be created to support future formats if required. For more detailed information on creating a "plugin" see about_Plugins.
+    Pscribo can export documentation in a variety of formats and currently supports creation of text, xml and html
+    formats. Additional "plugins" can be created to support future formats if required. For more detailed information
+    on creating a "plugin" see about_Plugins.
 
-    PScribo is available as a Powershell module or a bundle. The bundle permits dot-sourcing the PScribo bundle file or can be placed in its entirety at the beginning of an existing .ps1 file.
+    PScribo is available as a Powershell module or a bundle. The bundle permits dot-sourcing the PScribo bundle file or
+    can be placed in its entirety at the beginning of an existing .ps1 file.
 
 CREATING A PSCRIBO DOCUMENT
-    To start using PScribo, you need to either install the PScribo module in your Powershell module path or download the PScribo bundle.
+    To start using PScribo, you need to either install the PScribo module in your Powershell module path or download
+    the PScribo bundle.
 
 OTHER EXAMPLES
-    Included in the PScribo module (not the bundle) are some heavily documented example scripts in the .\Examples directory.
+    Included in the PScribo module (not the bundle) are some heavily documented example scripts in the .\Examples
+    directory.
 
 SEE ALSO
    	about_Document
@@ -26,7 +34,7 @@ SEE ALSO
     about_Tables
     about_Plugins
     Document
-    GlobalOption
+    DocumentOption
     *Header
     *Footer
     Style

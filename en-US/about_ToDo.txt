@@ -4,10 +4,11 @@ This document details the outstanding features or acknowledgment of future devel
 
 Minified bundle.
 
-GlobalOption
+DocumentlOption
     EnableSectionNumbering - Support multiple formats, i.e. a), b), c) or i), ii) or iii)
     Add a Title "shortcut" for document name and -Style Title?
-    Implement as booleans? Bit of a 'hack' but we need to make the settings idempotent. Could use a hashtable but that's prone to typos.
+    Implement as booleans? Bit of a 'hack' but we need to make the settings idempotent. Could use a hashtable but
+    that's prone to typos.
     Rename to DocumentOption?
     Add section numbering separator, i.e. 1.2.3 - <Section Name>. Default to blank though :)
 

@@ -2,9 +2,9 @@
 # Plugin support matrix
 
                             Text    XML     HTML    Word    CSV
-   -------------------------------------------------------------
+ ---------------------------------------------------------------
         Document             X       X       X       X       X
-    GlobalOption             X       X       X       X       X
+  DocumentOption             X       X       X       X       X
        LineBreak             X       -       X       X       -
        PageBreak             1       -       1       X       -
        Paragraph             1       X       1       X       2
@@ -23,4 +23,8 @@
  # In their own about file?
  HTML: NoPageLayoutStyle [bool]: Suppresses the page layout/look-and-feel style
 
-# Writing a plugin
+WRITING A PLUGIN
+    A PScribo plugin provides a method of exporting a PScribo document [PSCustomObject] to another format. Default
+    plugins include outputting to text, HTML, XML and Word formats. This functionality can be extended by writing your
+    own plugin.
+    

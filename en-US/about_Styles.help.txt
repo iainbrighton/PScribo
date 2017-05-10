@@ -2,66 +2,77 @@ TOPIC
 Styles
 
 SYNOPSIS
-PScribo uses styles to apply specific formatting to document objects, e.g. sections, paragraphs and tables.
+    PScribo uses styles to apply specific formatting to document objects, e.g. sections, paragraphs and tables.
 
 DESCRIPTION
-Styles need to be defined before any formatting can be applied within a document (with exception of Paragraphs). Each style permits the setting of the font to use, the font size and color etc. 
-Paragraphs permit styling without defining an explicit style. For example, you can specify specify the -Bold switch on a paragraph without having to define a separate style.
+    Styles need to be defined before any formatting can be applied within a document (with exception of Paragraphs).
+    Each style permits the setting of the font to use, the font size and color etc. Paragraphs permit styling without
+    defining an explicit style. For example, you can specify specify the -Bold switch on a paragraph without having to
+    define a separate style.
 
 DEFAULT STYLES
-PScribo uses a standard set of styles for a document and creates these styles automatically for you. The following styles are automatically defined:
+    PScribo uses a standard set of styles for a document and creates these styles automatically for you. The following
+    styles are automatically defined:
 
-    Normal              - 11pt text style (DEFAULT).
-    Title               - Large 28pt title text style.
-    TOC                 - Style used for the Table of Contents heading.
-    Heading1            - 16pt heading level 1 text style.
-    Heading2            - 14pt heading level 2 text style.
-    Heading3            - 12pt heading level 3 text style.
-    TableDefaultHeading - Table heading row style.
-    TableDefaultRow     - Table row style.
-    TableDefaultAltRow  - Table alternating row style.
+        Normal              - 11pt text style (DEFAULT).
+        Title               - Large 28pt title text style.
+        TOC                 - Style used for the Table of Contents heading.
+        Heading1            - 16pt heading level 1 text style.
+        Heading2            - 14pt heading level 2 text style.
+        Heading3            - 12pt heading level 3 text style.
+        TableDefaultHeading - Table heading row style.
+        TableDefaultRow     - Table row style.
+        TableDefaultAltRow  - Table alternating row style.
 
-You are able to alter these styles to suit your requirements with the 'Style' cmdlet. You can override the default "Normal" style with a 12pt Arial font like so:
+    You are able to alter these styles to suit your requirements with the 'Style' cmdlet. You can override the default
+    "Normal" style with a 12pt Arial font like so:
 
-    Import-Module -Name PScribo
+        Import-Module -Name PScribo
 
-    Document 'Example Report' {
-        <# Override the default "Normal" style #>
-        Style -Name 'Normal' -Size 12 -Font 'Arial'
-        Paragraph 'PScribo demonstration document'
-    }
+        Document 'Example Report' {
+            <# Override the default "Normal" style #>
+            Style -Name 'Normal' -Size 12 -Font 'Arial'
+            Paragraph 'PScribo demonstration document'
+        }
 
-You are also able to define your own custom styles. Here is an example of defining a new "Custom1" style and applying the styling to a paragraph:
+    You are also able to define your own custom styles. Here is an example of defining a new "Custom1" style and
+    applying the styling to a paragraph:
 
-    Import-Module -Name PScribo
+        Import-Module -Name PScribo
 
-    Document 'Example Report' {
-        <# Create the new "Custom1" style #>
-        Style -Name 'Custom1' -Size 14 -Font 'Segoe UI' -Color Black -Bold
-        <# Apply the "Custom1" style to a paragraph #>
-        Paragraph 'PScribo demonstration document' -Style 'Custom1'
-    }
+        Document 'Example Report' {
+            <# Create the new "Custom1" style #>
+            Style -Name 'Custom1' -Size 14 -Font 'Segoe UI' -Color Black -Bold
+            <# Apply the "Custom1" style to a paragraph #>
+            Paragraph 'PScribo demonstration document' -Style 'Custom1'
+        }
 
-When defining a custom style, the -Default switch can be used to set the style as the default paragraph/section style. The default style is applied unless the style is explicitly indicated on an object.
+    When defining a custom style, the -Default switch can be used to set the style as the default paragraph/section
+    style. The default style is applied unless the style is explicitly indicated on an object.
 
-    Import-Module -Name PScribo
+        Import-Module -Name PScribo
 
-    Document 'Example Report' {
-        <# Set the "Custom1" style as the default style #>
-        Style -Name 'Custom1' -Size 14 -Font 'Segoe UI' -Color Black -Bold -Default
-        Paragraph 'PScribo demonstration document'
-    }
+        Document 'Example Report' {
+            <# Set the "Custom1" style as the default style #>
+            Style -Name 'Custom1' -Size 14 -Font 'Segoe UI' -Color Black -Bold -Default
+            Paragraph 'PScribo demonstration document'
+        }
 
 NOTES
-There can only be a single default style defined within a PScribo document.
+    There can only be a single default style defined within a PScribo document.
 
 TABLE STYLES
-Table styles are a combination of individual styles with some additional formatting options specific to tables, i.e. borders and padding. A table style can specify a style for the heading row, a default row style and an optional alternating row style.
-The individual styles used by within a table style must first be defined with the 'Style' cmdlet before they can be used within 'TableStyle'.
+    Table styles are a combination of individual styles with some additional formatting options specific to tables,
+    i.e. borders and padding. A table style can specify a style for the heading row, a default row style and an optional
+    alternating row style. The individual styles used by within a table style must first be defined with the 'Style'
+    cmdlet before they can be used within 'TableStyle'.
 
-Just like individual document styles, you are able to create your own table styles, override the built-in style and set a different table style as the "default". PScribo creates a default table style that is applied to all tables by default:
+    Just like individual document styles, you are able to create your own table styles, override the built-in style and
+    set a different table style as the "default". PScribo creates a default table style that is applied to all tables
+    by default:
 
-    TableDefault - Default table style that uses the TableDefaultHeading, TableDefaultRow and TableDefaultAltRow styles.
+        TableDefault - Default table style that uses the TableDefaultHeading, TableDefaultRow and TableDefaultAltRow
+                       styles.
 
 NOTES
-If you define multiple styles with the same name, the last style definition is applied to references to that style.
+    If you define multiple styles with the same name, the last style definition is applied to references to that style.
