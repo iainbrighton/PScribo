@@ -110,9 +110,9 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions
 
-## Unreleased
+### 0.7.15
 
-* Adds Core PowerShell support
+* Adds Core PowerShell (v6.0.0) support
 * Fixes tests in Pester v4
 * Adds `Merge-PScriboPluginOptions` method to merge document, plugin and runtime options (#24)
 * Adds `-PassThru` option to `Export-Document` (#25)
