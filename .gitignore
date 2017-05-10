@@ -1,3 +1,4 @@
 Build/
 Release/
 TestResult.xml
+/Src/Plugins/System.IO.Packaging.dll
