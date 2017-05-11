@@ -3,5 +3,18 @@
     "files.exclude": {
         "**/Build": true,
         "**/Release": true
-    }
+    },
+    "editor.formatOnSave": true,
+    "editor.lineNumbers": "relative",
+    "editor.tabSize": 4,
+    "editor.minimap.maxColumn": 120,
+    "editor.formatOnPaste": true,
+    "powershell.scriptAnalysis.enable": true,
+    "powershell.codeFormatting.openBraceOnSameLine": true,
+    "powershell.codeFormatting.newLineAfterCloseBrace": true,
+    "powershell.codeFormatting.whitespaceBeforeOpenBrace": true,
+    "powershell.codeFormatting.whitespaceBeforeOpenParen": true,
+    "powershell.codeFormatting.whitespaceAfterSeparator": true,
+    "powershell.codeFormatting.alignPropertyValuePairs": true,
+    "powershell.integratedConsole.showOnStartup": false
 }
