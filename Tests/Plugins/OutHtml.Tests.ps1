@@ -176,12 +176,16 @@ InModuleScope 'PScribo' {
 
         Context 'By Named Parameter.' {
 
+            [String]$decimalSeparator = (Get-Culture | Select-Object -ExpandProperty NumberFormat | Select-Object -Property  NumberDecimalSeparator).NumberDecimalSeparator;
+
             It 'creates default table style.' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle;
 
+                [String]$correctPadding = "0{0}08em 0{0}33em 0em 0{0}33em" -f $decimalSeparator;
+
                 $padding = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'padding:*' ;
-                ($padding.Split(':').Trim())[1] | Should BeExactly '0.08em 0.33em 0em 0.33em';
+                ($padding.Split(':').Trim())[1] | Should BeExactly $correctPadding;
                 #$borderColor = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'border-color:*' ;
                 #($borderColor.Split(':').Trim())[1] | Should BeExactly '#000';
                 #$borderWidth = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'border-width:*' ;
@@ -196,8 +200,10 @@ InModuleScope 'PScribo' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle -PaddingTop 5 -PaddingRight 10 -PaddingBottom 5 -PaddingLeft 10;
 
+                [String]$correctPadding = "0{0}42em 0{0}83em 0{0}42em 0{0}83em" -f $decimalSeparator
+
                 $padding = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'padding:*' ;
-                ($padding.Split(':').Trim())[1] | Should BeExactly '0.42em 0.83em 0.42em 0.83em';
+                ($padding.Split(':').Trim())[1] | Should BeExactly $correctPadding;
             }
 
             It 'creates custom table border color style when -BorderWidth is specified.' {
@@ -214,8 +220,10 @@ InModuleScope 'PScribo' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle -BorderWidth 3;
 
+                [String]$correctBorderWith = "0{0}25em" -f $decimalSeparator;
+
                 $borderWidth = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'border-width:*' ;
-                ($borderWidth.Split(':').Trim())[1] | Should BeExactly '0.25em';
+                ($borderWidth.Split(':').Trim())[1] | Should BeExactly $correctBorderWith;
                 $borderStyle = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'border-style:*' ;
                 ($borderStyle.Split(':').Trim())[1] | Should BeExactly 'solid';
             }
