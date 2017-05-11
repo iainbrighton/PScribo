@@ -1,10 +1,10 @@
 ﻿function Export-Document {
-<#
+    <#
     .SYNOPSIS
         Exports a PScribo document object to one or more output formats.
 #>
     [CmdletBinding()]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingEmptyCatchBlock','')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingEmptyCatchBlock', '')]
     [OutputType([System.IO.FileInfo])]
     param (
         ## PScribo document object
@@ -13,7 +13,7 @@
 
         ## Output formats
         [Parameter(Mandatory)]
-        [ValidateNotNull()]
+        [ValidateSet('Word', 'Html', 'Text', 'Xml', 'MD')]
         [System.String[]] $Format,
 
         ## Output file path
@@ -43,14 +43,14 @@
             WriteLog -Message ($localized.DocumentInvokePlugin -f $f) -Plugin 'Export';
             ## Call specified output plugin
             #try {
-                ## Dynamically generate the output format function name
-                $outputFormat = 'Out{0}' -f $f;
-                if ($PSBoundParameters.ContainsKey('Options')) {
-                    & $outputFormat -Document $Document -Path $Path -Options $Options; # -ErrorAction Stop;
-                }
-                else {
-                    & $outputFormat -Document $Document -Path $Path; # -ErrorAction Stop;
-                }
+            ## Dynamically generate the output format function name
+            $outputFormat = 'Out{0}' -f $f;
+            if ($PSBoundParameters.ContainsKey('Options')) {
+                & $outputFormat -Document $Document -Path $Path -Options $Options; # -ErrorAction Stop;
+            }
+            else {
+                & $outputFormat -Document $Document -Path $Path; # -ErrorAction Stop;
+            }
             #}
             #catch [System.Management.Automation.CommandNotFoundException] {
             #    Write-Warning ('Output format "{0}" is unsupported.' -f $f);
