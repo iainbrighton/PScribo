@@ -38,8 +38,8 @@
 
                 ## Text encoding
                 [Parameter(ValueFromPipelineByPropertyName)]
-                [ValidateSet('ASCII','Unicode','UTF7','UTF8')]
-                [System.String] $Encoding = 'ASCII'
+                [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
+                $Encoding = 'ASCII'
             )
             process {
 
@@ -259,7 +259,7 @@
                 ## Fix Set-StrictMode
                 if (Test-Path -Path Variable:\Options) {
                     $options = Get-Variable -Name Options -ValueOnly;
-                    ## TODO: We shouldn't need to do this (#24) 
+                    ## TODO: We shouldn't need to do this (#24)
                     if (-not ($options.ContainsKey('TextWidth'))) {
                         $options['TextWidth'] = 120;
                     }
@@ -318,7 +318,7 @@
                 ## Fix Set-StrictMode
                 if (Test-Path -Path Variable:\Options) {
                     $options = Get-Variable -Name Options -ValueOnly;
-                    ## TODO: We shouldn't need to do this (#24) 
+                    ## TODO: We shouldn't need to do this (#24)
                     if (-not ($options.ContainsKey('TextWidth'))) {
                         $options['TextWidth'] = 120;
                     }
