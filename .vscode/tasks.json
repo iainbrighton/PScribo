@@ -4,7 +4,7 @@
     "version": "2.0.0",
     // Start PowerShell
     "windows": {
-        "command": "${env.windir}\\sysnative\\windowspowershell\\v1.0\\PowerShell.exe"
+        "command": "${env.windir}\\system32\\windowspowershell\\v1.0\\PowerShell.exe"
     },
     "linux": {
         "command": "/usr/bin/powershell"
