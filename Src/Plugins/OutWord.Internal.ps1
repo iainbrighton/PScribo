@@ -642,8 +642,8 @@
                     $uiPriority = $documentStyle.AppendChild($XmlDocument.CreateElement('w', 'uiPriority', $xmlnsMain));
                     [ref] $null = $uiPriority.SetAttribute('val', $xmlnsMain, 1);
                 }
-                elseif (($Style.Id -eq 'Footer') -or ($Style.Id -eq 'Header')) {
-                    ## Semi hide the styles named Footer and Header
+                elseif ($Style.Hidden -eq $true) {
+                    ## Semi hide style (headers and footers etc)
                     [ref] $null = $documentStyle.AppendChild($XmlDocument.CreateElement('w', 'semiHidden', $xmlnsMain));
                 }
                 elseif (($document.TableStyles.Values | ForEach-Object { $_.HeaderStyle; $_.RowStyle; $_.AlternateRowStyle; }) -contains $Style.Id) {

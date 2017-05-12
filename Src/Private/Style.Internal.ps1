@@ -54,9 +54,13 @@
                 [ValidateSet('Left','Center','Right','Justify')]
                 [string] $Align = 'Left',
 
-                ## Html CSS class id. Overrides Style.Id in HTML output.
+                ## Html CSS class id - to override Style.Id in HTML output.
                 [Parameter(ValueFromPipelineByPropertyName)]
-                [System.String] $CssClassId = '',
+                [System.String] $ClassId = $Id,
+
+                ## Hide style from UI (Word)
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [System.Management.Automation.SwitchParameter] $Hide,
 
                 ## Set as default style
                 [Parameter(ValueFromPipelineByPropertyName)]
@@ -65,17 +69,22 @@
             begin {
 
                 if (-not (Test-PScriboStyleColor -Color $Color)) {
+
                     throw ($localized.InvalidHtmlColorError -f $Color);
                 }
                 if ($BackgroundColor) {
+
                     if (-not (Test-PScriboStyleColor -Color $BackgroundColor)) {
+
                         throw ($localized.InvalidHtmlBackgroundColorError -f $BackgroundColor);
                     }
                     else {
+
                         $BackgroundColor = Resolve-PScriboStyleColor -Color $BackgroundColor;
                     }
                 }
                 if (-not ($Font)) {
+
                     $Font = $pscriboDocument.Options['DefaultFont'];
                 }
 
@@ -84,16 +93,18 @@
 
                 $pscriboDocument.Properties['Styles']++;
                 $style = [PSCustomObject] @{
-                    Id = $Id;
+                    Id   = $Id;
                     Name = $Name;
                     Font = $Font;
                     Size = $Size;
                     Color = (Resolve-PScriboStyleColor -Color $Color).ToLower();
                     BackgroundColor = $BackgroundColor.ToLower();
-                    Bold = $Bold;
-                    Italic = $Italic;
-                    Underline = $Underline;
+                    Bold = $Bold.ToBool();
+                    Italic = $Italic.ToBool();
+                    Underline = $Underline.ToBool();
                     Align = $Align;
+                    ClassId = $ClassId;
+                    Hidden = $Hide.ToBool();
                 }
                 $pscriboDocument.Styles[$Id] = $style;
                 if ($Default) { $pscriboDocument.DefaultStyle = $style.Id; }

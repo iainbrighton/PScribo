@@ -110,6 +110,10 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions
 
+### Unreleased
+
+* Supports hiding styles, e.g. in MS Word (#32)
+
 ### 0.7.15
 
 * Adds Core PowerShell (v6.0.0) support

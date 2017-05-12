@@ -47,15 +47,24 @@ function Resolve-PScriboStyleColor {
 
         $pscriboColor = $Color;
         if ($wordColorConstants.ContainsKey($pscriboColor)) {
+
             return $wordColorConstants[$pscriboColor].ToLower();
         }
         elseif ($pscriboColor.Length -eq 6 -or $pscriboColor.Length -eq 3) {
+
             $pscriboColor = '#{0}' -f $pscriboColor;
         }
         elseif ($pscriboColor.Length -eq 7 -or $pscriboColor.Length -eq 4) {
-            if (-not ($pscriboColor.StartsWith('#'))) { return $null; }
+
+            if (-not ($pscriboColor.StartsWith('#'))) {
+                
+                return $null;
+            }
         }
-        if ($pscriboColor -notmatch '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$') { return $null; }
+        if ($pscriboColor -notmatch '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$') {
+            
+            return $null;
+        }
         return $pscriboColor.TrimStart('#').ToLower();
 
     } #end process
@@ -165,7 +174,15 @@ function Style {
 
         ## Font name (array of names for HTML output)
         [Parameter(ValueFromPipelineByPropertyName)]
-        [System.String[]] $Font
+        [System.String[]] $Font,
+        
+        ## Html CSS class id - to override Style.Id in HTML output.
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.String] $ClassId = $Id,
+
+        ## Hide style from UI (Word)
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $Hide
     )
     begin {
 
@@ -218,13 +235,16 @@ function Set-Style {
     process {
 
         foreach ($object in $InputObject) {
+
             foreach ($p in $Property) {
+
                 ## If $Property not set, __Style will apply to the whole row.
                 $propertyName = '{0}__Style' -f $p;
                 $object | Add-Member -MemberType NoteProperty -Name $propertyName -Value $Style -Force;
             }
         }
         if ($PassThru) {
+
             return $object;
         }
 
