@@ -113,6 +113,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 ### Unreleased
 
 * Supports hiding styles, e.g. in MS Word (#32)
+* Fixes Html and Word decimal localisation issues (#6, #42)
 
 ### 0.7.15
 

@@ -505,10 +505,10 @@ InModuleScope 'PScribo' {
                 }
                 It "outputs $tableType table cell spacing `"<w:tblCellMar>[..]</w:tblCellMar>`"" {
                     $testTable = Get-Service | Select -Property 'Name','DisplayName','Status' -First 3 | Table -Name 'Test Table' -List:$tableStyle;
-                    $paddingTop = ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingTop;
-                    $paddingLeft = ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingLeft;
-                    $paddingBottom = ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingBottom;
-                    $paddingRight = ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingRight;
+                    $paddingTop = ConvertToInvariantCultureString -Object (ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingTop);
+                    $paddingLeft = ConvertToInvariantCultureString -Object (ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingLeft);
+                    $paddingBottom = ConvertToInvariantCultureString -Object (ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingBottom);
+                    $paddingRight = ConvertToInvariantCultureString -Object (ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingRight);
 
                     OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 

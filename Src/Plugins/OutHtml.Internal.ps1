@@ -38,21 +38,45 @@
             process {
 
                 $styleBuilder = New-Object -TypeName System.Text.StringBuilder;
-                [ref] $null = $styleBuilder.AppendFormat(" font-family: '{0}';", $Style.Font -Join "','");
+                [ref] $null = $styleBuilder.AppendFormat(" font-family: '{0}';", $Style.Font -join "','");
                 ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
-                $invariantFontSize =  ($Style.Size / 12).ToString('f2', [System.Globalization.CultureInfo]::InvariantCulture);
+                $invariantFontSize = ConvertToInvariantCultureString -Object ($Style.Size / 12) -Format 'f2';
                 [ref] $null = $styleBuilder.AppendFormat(' font-size: {0}em;', $invariantFontSize);
-                [ref] $null = $styleBuilder.AppendFormat(' font-size: {0:0.00}em;', $Style.Size / 12);
                 [ref] $null = $styleBuilder.AppendFormat(' text-align: {0};', $Style.Align.ToLower());
-                if ($Style.Bold) { [ref] $null = $styleBuilder.Append(' font-weight: bold;'); }
-                else { [ref] $null = $styleBuilder.Append(' font-weight: normal;'); }
-                if ($Style.Italic) { [ref] $null = $styleBuilder.Append(' font-style: italic;'); }
-                if ($Style.Underline) { [ref] $null = $styleBuilder.Append(' text-decoration: underline;'); }
-                if ($Style.Color.StartsWith('#')) { [ref] $null = $styleBuilder.AppendFormat(' color: {0};', $Style.Color.ToLower()); }
-                else { [ref] $null = $styleBuilder.AppendFormat(' color: #{0};', $Style.Color); }
+                if ($Style.Bold) {
+                
+                    [ref] $null = $styleBuilder.Append(' font-weight: bold;');
+                }
+                else {
+                    
+                    [ref] $null = $styleBuilder.Append(' font-weight: normal;');
+                }
+                if ($Style.Italic) {
+                    
+                    [ref] $null = $styleBuilder.Append(' font-style: italic;');
+                }
+                if ($Style.Underline) {
+                    
+                    [ref] $null = $styleBuilder.Append(' text-decoration: underline;');
+                }
+                if ($Style.Color.StartsWith('#')) {
+                    
+                    [ref] $null = $styleBuilder.AppendFormat(' color: {0};', $Style.Color.ToLower());
+                }
+                else {
+                    
+                    [ref] $null = $styleBuilder.AppendFormat(' color: #{0};', $Style.Color);
+                }
                 if ($Style.BackgroundColor) {
-                    if ($Style.BackgroundColor.StartsWith('#')) { [ref] $null = $styleBuilder.AppendFormat(' background-color: {0};', $Style.BackgroundColor.ToLower()); }
-                    else { [ref] $null = $styleBuilder.AppendFormat(' background-color: #{0};', $Style.BackgroundColor.ToLower()); }
+                
+                    if ($Style.BackgroundColor.StartsWith('#')) {
+                        
+                        [ref] $null = $styleBuilder.AppendFormat(' background-color: {0};', $Style.BackgroundColor.ToLower());
+                    }
+                    else {
+                        
+                        [ref] $null = $styleBuilder.AppendFormat(' background-color: #{0};', $Style.BackgroundColor.ToLower());
+                    }
                 }
                 return $styleBuilder.ToString();
 
@@ -76,32 +100,40 @@
 
                 $tableStyleBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $tableStyleBuilder.AppendFormat(' padding: {0}em {1}em {2}em {3}em;',
-                                                                (ConvertMmToEm $TableStyle.PaddingTop),
-                                                                    (ConvertMmToEm $TableStyle.PaddingRight),
-                                                                        (ConvertMmToEm $TableStyle.PaddingBottom),
-                                                                            (ConvertMmToEm $TableStyle.PaddingLeft));
+                    (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingTop)),
+                        (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingRight)),
+                            (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingBottom)),
+                                (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingLeft))),
                 [ref] $null = $tableStyleBuilder.AppendFormat(' border-style: {0};', $TableStyle.BorderStyle.ToLower());
+                
                 if ($TableStyle.BorderWidth -gt 0) {
-                    [ref] $null = $tableStyleBuilder.AppendFormat(' border-width: {0}em;', (ConvertMmToEm $TableStyle.BorderWidth));
+
+                    $invariantBorderWidth = ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.BorderWidth);
+                    [ref] $null = $tableStyleBuilder.AppendFormat(' border-width: {0}em;', $invariantBorderWidth);
                     if ($TableStyle.BorderColor.Contains('#')) {
+
                         [ref] $null = $tableStyleBuilder.AppendFormat(' border-color: {0};', $TableStyle.BorderColor);
                     }
                     else {
+
                         [ref] $null = $tableStyleBuilder.AppendFormat(' border-color: #{0};', $TableStyle.BorderColor);
                     }
                 }
+                
                 [ref] $null = $tableStyleBuilder.Append(' border-collapse: collapse;');
                 ## <table align="center"> is deprecated in Html5
                 if ($TableStyle.Align -eq 'Center') {
+
                     [ref] $null = $tableStyleBuilder.Append(' margin-left: auto; margin-right: auto;');
                 }
                 elseif ($TableStyle.Align -eq 'Right') {
+
                     [ref] $null = $tableStyleBuilder.Append(' margin-left: auto; margin-right: 0;');
                 }
                 return $tableStyleBuilder.ToString();
 
             }
-        } #end function outhtmltablestyle
+        } #end function Outhtmltablestyle
 
 
         function GetHtmlTableDiv {
@@ -120,29 +152,38 @@
 
                 $divBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 if ($Table.Tabs -gt 0) {
-                    [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}em;">' -f (ConvertMmToEm -Millimeter (12.7 * $Table.Tabs)));
+
+                    $invariantMarginLeft = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Table.Tabs));
+                    [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}em;">' -f $invariantMarginLeft);
                 }
                 else {
+
                     [ref] $null = $divBuilder.Append('<div>' -f (ConvertMmToEm -Millimeter (12.7 * $Table.Tabs)));
                 }
                 if ($Table.List) {
+
                     [ref] $null = $divBuilder.AppendFormat('<table class="{0}-list"', $Table.Style.ToLower());
                 }
                 else {
+
                     [ref] $null = $divBuilder.AppendFormat('<table class="{0}"', $Table.Style.ToLower());
                 }
                 $styleElements = @();
                 if ($Table.Width -gt 0) {
+
                     $styleElements += 'width:{0}%;' -f $Table.Width;
                 }
                 if ($Table.ColumnWidths) {
+                    
                     $styleElements += 'table-layout: fixed;';
                     $styleElements += 'word-break: break-word;'
                 }
                 if ($styleElements.Count -gt 0) {
+                    
                     [ref] $null = $divBuilder.AppendFormat(' style="{0}">', [String]::Join(' ', $styleElements));
                 }
                 else {
+                    
                     [ref] $null = $divBuilder.Append('>');
                 }
                 return $divBuilder.ToString();
@@ -167,15 +208,20 @@
 
                 $colGroupBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 if ($Table.ColumnWidths) {
+
                     [ref] $null = $colGroupBuilder.Append('<colgroup>');
                     foreach ($columnWidth in $Table.ColumnWidths) {
+                    
                         if ($null -eq $columnWidth) {
+                    
                             [ref] $null = $colGroupBuilder.Append('<col />');
                         }
                         else {
+                    
                             [ref] $null = $colGroupBuilder.AppendFormat('<col style="max-width:{0}%; min-width:{0}%; width:{0}%" />', $columnWidth);
                         }
                     }
+                    
                     [ref] $null = $colGroupBuilder.AppendLine('</colgroup>');
                 }
                 return $colGroupBuilder.ToString();
@@ -198,15 +244,18 @@
             process {
 
                 $tocBuilder = New-Object -TypeName 'System.Text.StringBuilder';
-                [ref] $null = $tocBuilder.AppendFormat('<h1 class="TOC">{0}</h1>', $TOC.Name);
+                [ref] $null = $tocBuilder.AppendFormat('<h1 class="{0}">{1}</h1>', $TOC.ClassId, $TOC.Name);
                 #[ref] $null = $tocBuilder.AppendLine('<table style="width: 100%;">');
                 [ref] $null = $tocBuilder.AppendLine('<table>');
                 foreach ($tocEntry in $Document.TOC) {
+                    
                     $sectionNumberIndent = '&nbsp;&nbsp;&nbsp;' * $tocEntry.Level;
                     if ($Document.Options['EnableSectionNumbering']) {
+
                         [ref] $null = $tocBuilder.AppendFormat('<tr><td>{0}</td><td>{1}<a href="#{2}" style="text-decoration: none;">{3}</a></td></tr>', $tocEntry.Number, $sectionNumberIndent, $tocEntry.Id, $tocEntry.Name).AppendLine();
                     }
                     else {
+
                         [ref] $null = $tocBuilder.AppendFormat('<tr><td>{0}<a href="#{1}" style="text-decoration: none;">{2}</a></td></tr>', $sectionNumberIndent, $tocEntry.Id, $tocEntry.Name).AppendLine();
                     }
                 }
@@ -232,6 +281,7 @@
 
                 $blankLineBuilder = New-Object -TypeName System.Text.StringBuilder;
                 for ($i = 0; $i -lt $BlankLine.LineCount; $i++) {
+
                     [ref] $null = $blankLineBuilder.Append('<br />');
                 }
                 return $blankLineBuilder.ToString();
@@ -265,6 +315,7 @@
                 $stylesBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $stylesBuilder.AppendLine('<style type="text/css">');
                 if (-not $NoPageLayoutStyle) {
+
                     ## Add HTML page layout styling options, e.g. when emailing HTML documents
                     [ref] $null = $stylesBuilder.AppendLine('html { height: 100%; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; background: #f8f8f8; }');
                     [ref] $null = $stylesBuilder.Append("page { background: white; width: $($Document.Options['PageWidth'])mm; display: block; margin-top: 1em; margin-left: auto; margin-right: auto; margin-bottom: 1em; ");
@@ -273,11 +324,13 @@
                     [ref] $null = $stylesBuilder.AppendLine('hr { margin-top: 1.0em; }');
                 }
                 foreach ($style in $Styles.Keys) {
+
                     ## Build style
                     $htmlStyle = GetHtmlStyle -Style $Styles[$style];
                     [ref] $null = $stylesBuilder.AppendFormat(' .{0} {{{1} }}', $Styles[$style].Id, $htmlStyle).AppendLine();
                 }
                 foreach ($tableStyle in $TableStyles.Keys) {
+
                     $tStyle = $TableStyles[$tableStyle];
                     $tableStyleId = $tStyle.Id.ToLower();
                     $htmlTableStyle = GetHtmlTableStyle -TableStyle $tStyle;
@@ -294,6 +347,7 @@
                     [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list td:nth-child(1) {{{1}{2} }}', $tableStyleId, $htmlHeaderStyle, $htmlTableStyle).AppendLine();
                     [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list td:nth-child(2) {{{1}{2} }}', $tableStyleId, $htmlRowStyle, $htmlTableStyle).AppendLine();
                 } #end foreach style
+
                 [ref] $null = $stylesBuilder.AppendLine('</style>');
                 return $stylesBuilder.ToString().TrimEnd();
 
@@ -320,19 +374,40 @@
                 if ($Document.Options['EnableSectionNumbering']) { [string] $sectionName = '{0} {1}' -f $Section.Number, $encodedSectionName; }
                 else { [string] $sectionName = '{0}' -f $encodedSectionName; }
                 [int] $headerLevel = $Section.Number.Split('.').Count;
+
                 ## Html <h5> is the maximum supported level
                 if ($headerLevel -ge 5) {
+
                     WriteLog -Message $localized.MaxHeadingLevelWarning -IsWarning;
                     $headerLevel = 5;
                 }
-                if ([string]::IsNullOrEmpty($Section.Style)) { $className = $Document.DefaultStyle; }
-                else { $className = $Section.Style; }
+
+                if ([string]::IsNullOrEmpty($Section.Style)) {
+                    
+                    $className = $Document.DefaultStyle;
+                }
+                else {
+                    
+                    $className = $Section.Style;
+                }
+                
                 [ref] $null = $sectionBuilder.AppendFormat('<a name="{0}"><h{1} class="{2}">{3}</h{1}></a>', $Section.Id, $headerLevel, $className, $sectionName.TrimStart());
                 foreach ($s in $Section.Sections.GetEnumerator()) {
-                    if ($s.Id.Length -gt 40) { $sectionId = '{0}[..]' -f $s.Id.Substring(0,36); }
-                    else { $sectionId = $s.Id; }
+                
+                    if ($s.Id.Length -gt 40) {
+                    
+                        $sectionId = '{0}[..]' -f $s.Id.Substring(0,36);
+                    }
+                    else {
+                        
+                        $sectionId = $s.Id;
+                    }
+                    
                     $currentIndentationLevel = 1;
-                    if ($null -ne $s.PSObject.Properties['Level']) { $currentIndentationLevel = $s.Level +1; }
+                    if ($null -ne $s.PSObject.Properties['Level']) {
+                        
+                        $currentIndentationLevel = $s.Level +1;
+                    }
                     WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent $currentIndentationLevel;
                     switch ($s.Type) {
                         'PScribo.Section' { [ref] $null = $sectionBuilder.Append((OutHtmlSection -Section $s)); }
@@ -365,23 +440,39 @@
 
                 $paragraphStyleBuilder = New-Object -TypeName System.Text.StringBuilder;
                 if ($Paragraph.Tabs -gt 0) {
+                
                     ## Default to 1/2in tab spacing
-                    $tabEm = ConvertMmToEm -Millimeter (12.7 * $Paragraph.Tabs);
+                    $tabEm = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Paragraph.Tabs) -Format 'f2');
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(' margin-left: {0}em;', $tabEm);
                 }
-                if ($Paragraph.Font) { [ref] $null = $paragraphStyleBuilder.AppendFormat(" font-family: '{0}';", $Paragraph.Font -Join "','"); }
+                if ($Paragraph.Font) {
+                    
+                    [ref] $null = $paragraphStyleBuilder.AppendFormat(" font-family: '{0}';", $Paragraph.Font -Join "','");
+                }
                 if ($Paragraph.Size -gt 0) {
+                    
                     ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
-                    $invariantParagraphSize = ($Paragraph.Size / 12).ToString('f2', [System.Globalization.CultureInfo]::InvariantCulture);
+                    $invariantParagraphSize = ConvertToInvariantCultureString -Object ($Paragraph.Size / 12) -Format 'f2';
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(' font-size: {0}em;', $invariantParagraphSize);
                 }
-                if ($Paragraph.Bold -eq $true) { [ref] $null = $paragraphStyleBuilder.Append(' font-weight: bold;'); }
-                if ($Paragraph.Italic -eq $true) { [ref] $null = $paragraphStyleBuilder.Append(' font-style: italic;'); }
-                if ($Paragraph.Underline -eq $true) { [ref] $null = $paragraphStyleBuilder.Append(' text-decoration: underline;'); }
+                if ($Paragraph.Bold -eq $true) {
+                    
+                    [ref] $null = $paragraphStyleBuilder.Append(' font-weight: bold;');
+                }
+                if ($Paragraph.Italic -eq $true) { 
+                    
+                    [ref] $null = $paragraphStyleBuilder.Append(' font-style: italic;');
+                }
+                if ($Paragraph.Underline -eq $true) {
+                    
+                    [ref] $null = $paragraphStyleBuilder.Append(' text-decoration: underline;');
+                }
                 if (-not [System.String]::IsNullOrEmpty($Paragraph.Color) -and $Paragraph.Color.StartsWith('#')) {
+                    
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(' color: {0};', $Paragraph.Color.ToLower());
                 }
                 elseif (-not [System.String]::IsNullOrEmpty($Paragraph.Color)) {
+
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(' color: #{0};', $Paragraph.Color.ToLower());
                 }
                 return $paragraphStyleBuilder.ToString().TrimStart();
@@ -407,16 +498,20 @@
                 [System.Text.StringBuilder] $paragraphBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 $text = [System.Net.WebUtility]::HtmlEncode($Paragraph.Text);
                 if ([System.String]::IsNullOrEmpty($text)) {
+
                     $text = [System.Net.WebUtility]::HtmlEncode($Paragraph.Id);
                 }
                 $customStyle = GetHtmlParagraphStyle -Paragraph $Paragraph;
                 if ([System.String]::IsNullOrEmpty($Paragraph.Style) -and [System.String]::IsNullOrEmpty($customStyle)) {
+                    
                     [ref] $null = $paragraphBuilder.AppendFormat('<div>{0}</div>', $text);
                 }
                 elseif ([System.String]::IsNullOrEmpty($customStyle)) {
+                    
                     [ref] $null = $paragraphBuilder.AppendFormat('<div class="{0}">{1}</div>', $Paragraph.Style, $text);
                 }
                 else {
+                    
                     [ref] $null = $paragraphBuilder.AppendFormat('<div style="{1}">{2}</div>', $Paragraph.Style, $customStyle, $text);
                 }
                 return $paragraphBuilder.ToString();
@@ -448,24 +543,31 @@
                 [ref] $null = $listTableBuilder.Append('<tbody>');
 
                 for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
+
                     $propertyName = $Table.Columns[$i];
                     [ref] $null = $listTableBuilder.AppendFormat('<tr><td>{0}</td>', $propertyName);
                     $propertyStyle = '{0}__Style' -f $propertyName;
 
                     if ($row.PSObject.Properties[$propertyStyle]) {
+                    
                         $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$Row.$propertyStyle]);
                         if ([string]::IsNullOrEmpty($Row.$propertyName)) {
+                    
                             [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">&nbsp;</td></tr>', $propertyStyleHtml);
                         }
                         else {
+                    
                             [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">{1}</td></tr>', $propertyStyleHtml, $Row.($propertyName));
                         }
                     }
                     else {
+                    
                         if ([string]::IsNullOrEmpty($Row.$propertyName)) {
+                    
                             [ref] $null = $listTableBuilder.Append('<td>&nbsp;</td></tr>');
                         }
                         else {
+                    
                             [ref] $null = $listTableBuilder.AppendFormat('<td>{0}</td></tr>', $Row.$propertyName);
                         }
                     }
@@ -498,6 +600,7 @@
                 ## Table headers
                 [ref] $null = $standardTableBuilder.Append('<thead><tr>');
                 for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
+                    
                     [ref] $null = $standardTableBuilder.AppendFormat('<th>{0}</th>', $Table.Columns[$i]);
                 }
                 [ref] $null = $standardTableBuilder.Append('</tr></thead>');
@@ -505,26 +608,33 @@
                 ## Table body
                 [ref] $null = $standardTableBuilder.AppendLine('<tbody>');
                 foreach ($row in $Table.Rows) {
+                    
                     [ref] $null = $standardTableBuilder.Append('<tr>');
                     foreach ($propertyName in $Table.Columns) {
+                    
                         $propertyStyle = '{0}__Style' -f $propertyName;
                         $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName);
                         if ($row.PSObject.Properties[$propertyStyle]) {
+                    
                             ## Cell styles override row styles
                             $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.$propertyStyle]).Trim();
                             [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $propertyStyleHtml, $encodedHtmlContent);
                         }
                         elseif (($row.PSObject.Properties['__Style']) -and (-not [System.String]::IsNullOrEmpty($row.__Style))) {
+                    
                             ## We have a row style
                             $rowStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.__Style]).Trim();
                             [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $rowStyleHtml, $encodedHtmlContent);
                         }
                         else {
+                    
                             if ($null -ne $row.$propertyName) {
+                    
                                 ## Check that the property has a value
                                 [ref] $null = $standardTableBuilder.AppendFormat('<td>{0}</td>', $encodedHtmlContent);
                             }
                             else {
+                    
                                 [ref] $null = $standardTableBuilder.Append('<td>&nbsp</td>');
                             }
                         } #end if $row.PropertyStyle
@@ -555,10 +665,13 @@
 
                 [System.Text.StringBuilder] $tableBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 if ($Table.List) {
+                    
                     ## Create a table for each row
                     for ($r = 0; $r -lt $Table.Rows.Count; $r++) {
+                    
                         $row = $Table.Rows[$r];
                         if ($r -gt 0) {
+                    
                             ## Add a space between each table to mirror Word output rendering
                             [ref] $null = $tableBuilder.AppendLine('<p />');
                         }
@@ -567,6 +680,7 @@
                     } #end foreach row
                 }
                 else {
+                    
                     [ref] $null = $tableBuilder.Append((GetHtmlTable -Table $Table));
                 } #end if
                 return $tableBuilder.ToString();

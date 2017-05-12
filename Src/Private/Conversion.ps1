@@ -187,3 +187,30 @@ function ConvertMmToPx {
 
     }
 } #end function ConvertMmToPx
+
+function ConvertToInvariantCultureString {
+    <#
+        .SYNOPSIS
+            Convert to a number to a string with a culture-neutral representation #6, #42.
+    #>
+    [CmdletBinding()]
+    param (
+        ## The sinle/double
+        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [System.Object] $Object,
+
+        ## Format string
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.String] $Format
+    )
+    
+    if ($PSBoundParameters.ContainsKey('Format')) {
+
+        return $Object.ToString($Format, [System.Globalization.CultureInfo]::InvariantCulture);
+    }
+    else {
+
+        return $Object.ToString([System.Globalization.CultureInfo]::InvariantCulture);
+    }
+
+} #end function ConvertToInvariantCultureString
