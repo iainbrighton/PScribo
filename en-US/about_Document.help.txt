@@ -9,7 +9,7 @@ DESCRIPTION
     PScribo provides a set of functions that make it easy to create a document-like structure within Powershell,
     without having to handle multiple output formats. A document's layout and contents only need to defined once
     regardless of target output format(s).
-    
+
     After report creation, the document can be exported to one or more formats using the Export-Document cmdlet.
 
 CREATING A DOCUMENT
@@ -17,7 +17,7 @@ CREATING A DOCUMENT
     together with a document name and a script-block. This can reside within a standard .ps1 file.
 
         Import-Module -Name PScribo
-    
+
         Document 'Example Report' {
             Paragraph 'PScribo demonstration document'
             Section 'Heading' {
@@ -37,7 +37,7 @@ CREATING A DOCUMENT
         TableStyle     - defines a custom formatting style for tables that is comprised of a heading, row and alternate
                          row styles.
         Section        - creates a new section or heading. Sections create a hierarchy within the document. Numbering
-                         can be applied to sections. 
+                         can be applied to sections.
         Paragraph      - creates a block of text.
         Table          - creates a table from a collection of objects or an array of hashtables.
         PageBreak      - inserts a page break.
@@ -47,7 +47,7 @@ CREATING A DOCUMENT
 SETTING DOCUMENT OPTIONS
     The DocumentOption cmdlet is used to set global document options, including page size and page margins. Supported
     parameters include:
-    
+
         SpaceSeparator - the character used when spaces are encountered and need to be replaced.
         ForceUppercaseHeader - forces headings to uppercase.
         ForceUppercaseSection - forces section names to uppercase.
@@ -72,9 +72,9 @@ EXPORTING A DOCUMENT
             Paragraph 'Stored in a variable'
         }
         Export-Document -Document $MyDocument -Format Text
-    
+
         ----
-    
+
         Document 'Document1' {
             Paragraph 'Exported straight into a text document'
         } | Export-Document -Format Text
@@ -83,7 +83,7 @@ EXPORTING A DOCUMENT
     provided by a separate plugin. For more details see about_Plugins.
 
 SEE ALSO
-	about_Plugins
+    about_Plugins
     about_Styles
     about_Tables
 

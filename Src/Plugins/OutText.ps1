@@ -23,7 +23,7 @@ function OutText {
         [System.Collections.Hashtable] $Options
     )
     begin {
-        
+
         $pluginName = 'Text';
 
         <#! OutText.Internal.ps1 !#>
@@ -33,7 +33,7 @@ function OutText {
 
         $stopwatch = [Diagnostics.Stopwatch]::StartNew();
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
-        
+
         ## Merge the document, text default and specified text options
         $mergePScriboPluginOptionsParams = @{
             DefaultPluginOptions = New-PScriboTextOption;

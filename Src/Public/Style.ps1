@@ -57,12 +57,12 @@ function Resolve-PScriboStyleColor {
         elseif ($pscriboColor.Length -eq 7 -or $pscriboColor.Length -eq 4) {
 
             if (-not ($pscriboColor.StartsWith('#'))) {
-                
+
                 return $null;
             }
         }
         if ($pscriboColor -notmatch '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$') {
-            
+
             return $null;
         }
         return $pscriboColor.TrimStart('#').ToLower();
@@ -175,7 +175,7 @@ function Style {
         ## Font name (array of names for HTML output)
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.String[]] $Font,
-        
+
         ## Html CSS class id - to override Style.Id in HTML output.
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.String] $ClassId = $Id,

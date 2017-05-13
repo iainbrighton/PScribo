@@ -45,7 +45,7 @@
         foreach ($f in $Format) {
 
             WriteLog -Message ($localized.DocumentInvokePlugin -f $f) -Plugin 'Export';
-            
+
             ## Dynamically generate the output format function name
             $outputFormat = 'Out{0}' -f $f;
             $outputParams = @{
@@ -56,13 +56,13 @@
 
                 $outputParams['Options'] = $Options;
             }
-            
+
             $fileInfo = & $outputFormat @outputParams;
             if ($PassThru) {
 
                 Write-Output -InputObject $fileInfo;
             }
-            
+
         } # end foreach
 
     } #end process

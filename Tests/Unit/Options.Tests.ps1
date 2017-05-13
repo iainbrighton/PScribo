@@ -6,7 +6,7 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 InModuleScope 'PScribo' {
 
     Describe 'Options\Merge-PScriboPluginOptions' {
-        
+
         It 'does not throw with empty hashtable(s)' {
             $mergePScriboPluginOptionsParams = @{
                 DocumentOptions = @{ PageOrientation = 'Portrait' }
@@ -16,7 +16,7 @@ InModuleScope 'PScribo' {
 
             { Merge-PScriboPluginOptions @mergePScriboPluginOptionsParams } | Should Not Throw;
         }
-        
+
         It 'does not throw with $null hashtable(s)' {
             $mergePScriboPluginOptionsParams = @{
                 DocumentOptions = @{ PageOrientation = 'Portrait' }

@@ -533,7 +533,7 @@
 
                 $sdtContent = $sdt.AppendChild($XmlDocument.CreateElement('w', 'stdContent', $xmlnsMain));
                 $p1 = $sdtContent.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain));
-	            $pPr1 = $p1.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
+                $pPr1 = $p1.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
                 $pStyle1 = $pPr1.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain));
                 [ref] $null = $pStyle1.SetAttribute('val', $xmlnsMain, 'TOC');
                 $r1 = $p1.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain));
@@ -541,7 +541,7 @@
                 [ref] $null = $t1.AppendChild($XmlDocument.CreateTextNode($TOC.Name));
 
                 $p2 = $sdtContent.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain));
-	            $pPr2 = $p2.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
+                $pPr2 = $p2.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
                 $tabs2 = $pPr2.AppendChild($XmlDocument.CreateElement('w', 'tabs', $xmlnsMain));
                 $tab2 = $tabs2.AppendChild($XmlDocument.CreateElement('w', 'tab', $xmlnsMain));
                 [ref] $null = $tab2.SetAttribute('val', $xmlnsMain, 'right');
@@ -563,7 +563,7 @@
 
                 $p3 = $sdtContent.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain));
                 $r5 = $p3.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain));
-	            #$rPr3 = $r3.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain));
+                #$rPr3 = $r3.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain));
                 $fldChar3 = $r5.AppendChild($XmlDocument.CreateElement('w', 'fldChar', $xmlnsMain));
                 [ref] $null = $fldChar3.SetAttribute('fldCharType', $xmlnsMain, 'end');
 
