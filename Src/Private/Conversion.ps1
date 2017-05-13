@@ -203,7 +203,7 @@ function ConvertToInvariantCultureString {
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.String] $Format
     )
-    
+
     if ($PSBoundParameters.ContainsKey('Format')) {
 
         return $Object.ToString($Format, [System.Globalization.CultureInfo]::InvariantCulture);
