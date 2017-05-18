@@ -34,6 +34,10 @@
         try { $Path = Resolve-Path $Path -ErrorAction SilentlyContinue; }
         catch { }
 
+        If (  $(Test-CharsInPath -Path $Path -SkipCheckCharsInFileNamePart) -eq 2 ) {
+            throw $localized.IncorrectCharsInPath;
+        }
+
         if (-not (Test-Path $Path -PathType Container)) {
             ## Check $Path is a directory
             throw ($localized.InvalidDirectoryPathError -f $Path);
