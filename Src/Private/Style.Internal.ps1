@@ -60,7 +60,8 @@
 
                 ## Hide style from UI (Word)
                 [Parameter(ValueFromPipelineByPropertyName)]
-                [System.Management.Automation.SwitchParameter] $Hide,
+                [Alias('Hide')]
+                [System.Management.Automation.SwitchParameter] $Hidden,
 
                 ## Set as default style
                 [Parameter(ValueFromPipelineByPropertyName)]
@@ -104,7 +105,7 @@
                     Underline = $Underline.ToBool();
                     Align = $Align;
                     ClassId = $ClassId;
-                    Hidden = $Hide.ToBool();
+                    Hidden = $Hidden.ToBool();
                 }
                 $pscriboDocument.Styles[$Id] = $style;
                 if ($Default) { $pscriboDocument.DefaultStyle = $style.Id; }

@@ -182,7 +182,8 @@ function Style {
 
         ## Hide style from UI (Word)
         [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $Hide
+        [Alias('Hide')]
+        [System.Management.Automation.SwitchParameter] $Hidden
     )
     begin {
 
