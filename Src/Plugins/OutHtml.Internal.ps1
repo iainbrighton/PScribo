@@ -496,23 +496,25 @@
             process {
 
                 [System.Text.StringBuilder] $paragraphBuilder = New-Object -TypeName 'System.Text.StringBuilder';
-                $text = [System.Net.WebUtility]::HtmlEncode($Paragraph.Text);
-                if ([System.String]::IsNullOrEmpty($text)) {
+                $encodedText = [System.Net.WebUtility]::HtmlEncode($Paragraph.Text);
+                if ([System.String]::IsNullOrEmpty($encodedText)) {
 
-                    $text = [System.Net.WebUtility]::HtmlEncode($Paragraph.Id);
+                    $encodedText = [System.Net.WebUtility]::HtmlEncode($Paragraph.Id);
                 }
+                # $encodedText = $encodedText -replace [System.Environment]::NewLine, '<br />';
+                $encodedText = $encodedText.Replace([System.Environment]::NewLine, '<br />');
                 $customStyle = GetHtmlParagraphStyle -Paragraph $Paragraph;
                 if ([System.String]::IsNullOrEmpty($Paragraph.Style) -and [System.String]::IsNullOrEmpty($customStyle)) {
                     
-                    [ref] $null = $paragraphBuilder.AppendFormat('<div>{0}</div>', $text);
+                    [ref] $null = $paragraphBuilder.AppendFormat('<div>{0}</div>', $encodedText);
                 }
                 elseif ([System.String]::IsNullOrEmpty($customStyle)) {
                     
-                    [ref] $null = $paragraphBuilder.AppendFormat('<div class="{0}">{1}</div>', $Paragraph.Style, $text);
+                    [ref] $null = $paragraphBuilder.AppendFormat('<div class="{0}">{1}</div>', $Paragraph.Style, $encodedText);
                 }
                 else {
                     
-                    [ref] $null = $paragraphBuilder.AppendFormat('<div style="{1}">{2}</div>', $Paragraph.Style, $customStyle, $text);
+                    [ref] $null = $paragraphBuilder.AppendFormat('<div style="{1}">{2}</div>', $Paragraph.Style, $customStyle, $encodedText);
                 }
                 return $paragraphBuilder.ToString();
 
@@ -557,7 +559,9 @@
                         }
                         else {
                     
-                            [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">{1}</td></tr>', $propertyStyleHtml, $Row.($propertyName));
+                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName);
+                            $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />');
+                            [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">{1}</td></tr>', $propertyStyleHtml, $encodedHtmlContent);
                         }
                     }
                     else {
@@ -568,7 +572,9 @@
                         }
                         else {
                     
-                            [ref] $null = $listTableBuilder.AppendFormat('<td>{0}</td></tr>', $Row.$propertyName);
+                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName);
+                            $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />')
+                            [ref] $null = $listTableBuilder.AppendFormat('<td>{0}</td></tr>', $encodedHtmlContent);
                         }
                     }
                 } #end for each property
@@ -614,6 +620,9 @@
                     
                         $propertyStyle = '{0}__Style' -f $propertyName;
                         $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName);
+                        #$encodedHtmlContent = $encodedHtmlContent -replace [System.Environment]::NewLine, '<br />';
+                        $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />');
+
                         if ($row.PSObject.Properties[$propertyStyle]) {
                     
                             ## Cell styles override row styles

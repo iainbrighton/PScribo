@@ -331,6 +331,12 @@ InModuleScope 'PScribo' {
                 $result | Should BeExactly $expected;
             }
 
+            It 'creates paragraph with embedded new line' {
+                $expected = '<div>Embedded<br />New Line</div>';
+                $result = Paragraph "Embedded`r`nNew Line" | OutHtmlParagraph;
+                $result | Should BeExactly $expected;
+            }
+
         } #end context By Named Parameter
 
     } #end describe OutHtmlParagraph
@@ -473,6 +479,7 @@ InModuleScope 'PScribo' {
             It 'creates a row for each object.' {
                 $html.Div.Table.Tbody.Tr.Count | Should Be $services.Count;
             }
+
         }
 
         Context 'List.' {
@@ -505,6 +512,41 @@ InModuleScope 'PScribo' {
             }
 
         } #end context List
+
+        Context 'New Lines' {
+
+            BeforeEach {
+                ## Scaffold new document to initialise options/styles
+                $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
+            }
+            
+            It 'creates a tabular table cell with an embedded new line' {
+                
+                $licenses = "Standard`r`nProfessional`r`nEnterprise"
+                $expected = '<td>Standard<br />Professional<br />Enterprise</td>';
+                $newLineTable = [PSCustomObject] @{ 'Licenses' = $licenses; }
+
+                $table = $newLineTable | Table -Name 'Test Table' | OutHtmlTable;
+
+                [Xml] $html = $table.Replace('&','&amp;');
+                $html.OuterXml | Should Match $expected;
+            }
+
+            It 'creates a list table cell with an embedded new line' {
+                
+                $licenses = "Standard`r`nProfessional`r`nEnterprise"
+                $expected = '<td>Standard<br />Professional<br />Enterprise</td>';
+                $newLineTable = [PSCustomObject] @{ 'Licenses' = $licenses; }
+
+                $table = $newLineTable | Table -Name 'Test Table' | OutHtmlTable;
+
+                [Xml] $html = $table.Replace('&','&amp;');
+                $html.OuterXml | Should Match $expected;
+                Write-Host $html.OuterXml
+
+            }
+
+        }
 
     } #end describe OutHtmlTable
 
