@@ -35,12 +35,12 @@ function OutText {
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
         
         ## Merge the document, text default and specified text options
-        $mergePScriboPluginOptionsParams = @{
+        $mergePScriboPluginOptionParams = @{
             DefaultPluginOptions = New-PScriboTextOption;
             DocumentOptions = $Document.Options;
             PluginOptions = $Options;
         }
-        $Options = Merge-PScriboPluginOptions @mergePScriboPluginOptionsParams;
+        $Options = Merge-PScriboPluginOption @mergePScriboPluginOptionParams;
 
         [System.Text.StringBuilder] $textBuilder = New-Object System.Text.StringBuilder;
         foreach ($s in $Document.Sections.GetEnumerator()) {

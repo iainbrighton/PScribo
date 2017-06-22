@@ -36,12 +36,12 @@ function OutHtml {
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
 
         ## Merge the document, plugin default and specified/specific plugin options
-        $mergePScriboPluginOptionsParams = @{
+        $mergePScriboPluginOptionParams = @{
             DefaultPluginOptions = New-PScriboHtmlOption;
             DocumentOptions = $Document.Options;
             PluginOptions = $Options;
         }
-        $options = Merge-PScriboPluginOptions @mergePScriboPluginOptionsParams;
+        $options = Merge-PScriboPluginOption @mergePScriboPluginOptionParams;
 
         $noPageLayoutStyle = $Options['NoPageLayoutStyle'];
         $topMargin = ConvertMmToEm -Millimeter $options['MarginTop'];

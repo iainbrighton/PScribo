@@ -1,4 +1,4 @@
-function Merge-PScriboPluginOptions {
+function Merge-PScriboPluginOption {
 <#
     .SYNOPSIS
         Merges the specified options along with the plugin-specific default options.

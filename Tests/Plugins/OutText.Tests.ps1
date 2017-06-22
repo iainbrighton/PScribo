@@ -367,7 +367,7 @@ InModuleScope 'PScribo' {
             }
             $expected = '^{0}\r\n-+\r\n1\s+{1}\r\n1.1\s+{2}\r\n$' -f $tocName, $heading1, $heading2;
 
-            $options = Merge-PScriboPluginOptions -DocumentOptions $Document.Options -PluginOptions (New-PScriboTextOption)
+            $options = Merge-PScriboPluginOption -DocumentOptions $Document.Options -PluginOptions (New-PScriboTextOption)
             $result = OutTextTOC -TOC $Document.Sections[0] -Verbose;
 
             $result | Should Match $expected;
