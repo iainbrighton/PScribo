@@ -1,5 +1,25 @@
 Set-StrictMode -Version Latest;
-Import-LocalizedData -BindingVariable localized -FileName Resources.psd1
+
+## Import localisation strings
+if (Test-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath $PSUICulture)) {
+
+    $importLocalizedDataParams = @{
+        BindingVariable = 'localized';
+        FileName = 'PScribo.Resources.psd1';
+        BaseDirectory = Join-Path -Path $PSScriptRoot -ChildPath $PSUICulture;
+    }
+}
+else {
+
+    # fallback to en-US
+    $importLocalizedDataParams = @{
+        BindingVariable = 'localized';
+        FileName = 'PScribo.Resources.psd1';
+        UICulture = 'en-US';
+        BaseDirectory = $PSScriptRoot;
+    }
+}
+Import-LocalizedData @importLocalizedDataParams;
 
 ## Dot source all the nested .ps1 files in the \Functions and \Plugin folders, excluding tests
 $pscriboRoot = Split-Path -Parent $PSCommandPath;
