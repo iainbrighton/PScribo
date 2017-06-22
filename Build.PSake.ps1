@@ -80,7 +80,8 @@ Task Deploy {
         'PScribo Test Doc.*',
         'PScriboExample.*',
         'TestResult.xml',
-        '.vscode'
+        '.vscode',
+        'System.IO.Packaging.dll'
     );
     Get-ModuleFile -Exclude $excludedFiles | ForEach-Object {
         $destinationPath = '{0}{1}' -f $buildPath, $PSItem.FullName.Replace($basePath, '');
@@ -124,8 +125,9 @@ Task Zip {
 Task Bundle {
     $bundlePath = Join-Path -Path $releasePath -ChildPath "PScribo-v$version-Bundle.ps1";
     Write-Host (' Creating bundle file "{0}".' -f (TrimPath -Path $bundlePath)) -ForegroundColor Yellow;
-    $bundleFiles = "$buildPath\Functions","$buildPath\Plugins";
-    Bundle-File -Path $bundleFiles -DestinationPath $bundlePath -Verbose;
+    $bundleFiles = "$buildPath\Src\Public","$buildPath\Src\Private","$buildPath\Src\Plugins";
+    $excludedFiles = '*.Tests.ps1','*.Internal.ps1','System.IO.Packaging.dll';
+    Bundle-File -Path $bundleFiles -DestinationPath $bundlePath -Exclude $excludedFiles -Verbose;
 }
 
 <#
@@ -164,11 +166,17 @@ function Combine-File {
     [CmdletBinding()]
     param (
         ## Files to bundle.
-        [Parameter(Mandatory)] [System.String[]] $Path,
+        [Parameter(Mandatory)]
+        [System.String[]] $Path,
+        
         ## Output filename.
-        [Parameter(Mandatory)] [System.String] $DestinationPath,
+        [Parameter(Mandatory)]
+        [System.String] $DestinationPath,
+        
         ## Excluded files.
-        [Parameter()] [System.String[]] [ValidateNotNullOrEmpty()] $Exclude = @('*.Tests.ps1')
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [System.String[]] $Exclude = @('*.Tests.ps1')
     )
 
     process {
@@ -200,11 +208,17 @@ function Bundle-File {
     [CmdletBinding()]
     param (
         ## Files to bundle.
-        [Parameter(Mandatory)] [System.String[]] $Path,
+        [Parameter(Mandatory)]
+        [System.String[]] $Path,
+        
         ## Output filename.
-        [Parameter(Mandatory)] [System.String] $DestinationPath,
+        [Parameter(Mandatory)]
+        [System.String] $DestinationPath,
+        
         ## Excluded files.
-        [Parameter()] [System.String[]] [ValidateNotNullOrEmpty()] $Exclude = @('*.Tests.ps1','*.Internal.ps1')
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [System.String[]] $Exclude = @('*.Tests.ps1','*.Internal.ps1')
     )
     Write-Host ('  Creating bundle header.') -ForegroundColor Cyan;
     Set-Content -Path $DestinationPath -Value "#region PScribo Bundle v$version";
@@ -217,7 +231,7 @@ function Bundle-File {
     ## TODO: Support localised bundles, eg en-US and fr-FR
     Write-Host ('  Creating bundle resources.') -ForegroundColor Cyan;
     Add-Content -Path $DestinationPath -Value "`r`n`$localized = DATA {";
-    Get-Content -Path "$currentDir\Resources.psd1" | Add-Content -Path $DestinationPath;
+    Get-Content -Path "$currentDir\PScribo.Resources.psd1" | Add-Content -Path $DestinationPath;
     Add-Content -Path $DestinationPath -Value "}`r`n";
 
     Combine-File -Path $Path -DestinationPath $DestinationPath -Exclude $Exclude;
