@@ -114,6 +114,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 * Renames 'Hide' parameter to 'Hidden' on Style keyword
   * Adds 'Hide' alias for backwards compatibility
+* Fixes errors importing localized data on en-US systems (#49)
   
 ### 0.7.16
 
