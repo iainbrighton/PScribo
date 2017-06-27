@@ -6,27 +6,14 @@ function Image {
     [CmdletBinding()]
     [OutputType([System.Management.Automation.PSCustomObject])]
     param (
-        ## Image Id and Xml element name
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName, Position = 0)]
-        [ValidateNotNullOrEmpty()]
-        [System.String] $Name,
 
-        ## Image text. If empty $Name/Id will be used.
-        [Parameter(ValueFromPipelineByPropertyName, Position = 1)]
-        [AllowNull()]
-        [System.String] $Text = $null,
-
-        ## Output value override, i.e. for Xml elements. If empty $Text will be used.
-        [Parameter(ValueFromPipelineByPropertyName, Position = 2)]
-        [AllowNull()]
-        [System.String] $Value = $null,
-        ## FilePath
-        [Parameter()]
-        [System.String] $FilePath,
-        ## Tab indent
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [ValidateRange(0,10)]
-        [System.Int32] $Tabs = 0
+                       ## FilePath
+                [Parameter(Mandatory,ValueFromPipelineByPropertyName, Position = 0)]
+                [System.String] $FilePath,
+                ## FilePath will be used.
+                [Parameter(ValueFromPipelineByPropertyName, Position = 1)]
+                [AllowNull()]
+                [System.String] $Text = $null
     )
     begin {
 
@@ -34,9 +21,9 @@ function Image {
 
     } #end begin
     process {
-
-        if ($Name.Length -gt 40) { $ImageDisplayName = '{0}[..]' -f $Name.Substring(0,36); }
-        else { $ImageDisplayName = $Name; }
+        
+        if ($Text.Length -gt 40) { $ImageDisplayName = '{0}[..]' -f $Text.Substring(0,36); }
+        else { $ImageDisplayName = $Text; }
         WriteLog -Message ($localized.ProcessingImage -f $ImageDisplayName);
         return (New-PScriboImage @PSBoundParameters);
 

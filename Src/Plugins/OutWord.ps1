@@ -1,40 +1,41 @@
 function OutWord 
 {
-<#
-    .SYNOPSIS
-        Microsoft Word output plugin for PScribo.
-    .DESCRIPTION
-        Outputs a Word document representation of a PScribo document object.
-#>
-    [CmdletBinding()]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments','pluginName')]
-    [OutputType([System.IO.FileInfo])]
-    param (
-        ## ThePScribo document object to convert to a text document
-        [Parameter(Mandatory, ValueFromPipeline)]
-        [System.Object] $Document,
+  <#
+      .SYNOPSIS
+      Microsoft Word output plugin for PScribo.
+      .DESCRIPTION
+      Outputs a Word document representation of a PScribo document object.
+  #>
+  [CmdletBinding()]
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments','pluginName')]
+  [OutputType([System.IO.FileInfo])]
+  param (
+    ## ThePScribo document object to convert to a text document
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.Object] $Document,
 
-        ## Output directory path for the .txt file
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [ValidateNotNull()]
-        [System.String] $Path,
+    ## Output directory path for the .txt file
+    [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+    [ValidateNotNull()]
+    [System.String] $Path,
 
-        ### Hashtable of all plugin supported options
-        [Parameter()]
-        [AllowNull()]
-        [System.Collections.Hashtable] $Options
-    )
-    begin {
+    ### Hashtable of all plugin supported options
+    [Parameter()]
+    [AllowNull()]
+    [System.Collections.Hashtable] $Options
+  )
+  begin {
 
     $pluginName = 'Word'
 
-        <#! OutWord.Internal.ps1 !#>
+    <#! OutWord.Internal.ps1 !#>
 
-    }
-    process {
+  }
+  process {
 
 
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
+    $Images=@()
     WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name)
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $xmlnswpdrawing = 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'
@@ -56,15 +57,15 @@ function OutWord
         
     $body = $documentXml.AppendChild($xmlDocument.CreateElement('w', 'body', $xmlnsMain))
         $Images=@()
-        ## Setup the document page size/margins
-        $sectionPrParams = @{
+    ## Setup the document page size/margins
+    $sectionPrParams = @{
       PageHeight       = $Document.Options['PageHeight']
       PageWidth        = $Document.Options['PageWidth']
       PageMarginTop    = $Document.Options['MarginTop']
       PageMarginBottom = $Document.Options['MarginBottom']
       PageMarginLeft   = $Document.Options['MarginLeft']
       PageMarginRight  = $Document.Options['MarginRight']
-        }
+    }
     [ref] $null = $body.AppendChild((GetWordSectionPr @sectionPrParams -XmlDocument $xmlDocument))
     foreach ($s in $Document.Sections.GetEnumerator()) 
     {
@@ -82,7 +83,8 @@ function OutWord
         $currentIndentationLevel = $s.Level +1
       }
       WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent $currentIndentationLevel
-            switch ($s.Type) {
+      switch ($s.Type) {
+
  
                 'PScribo.Section' { $s | OutWordSection -RootElement $body -XmlDocument $xmlDocument; }
                 'PScribo.Paragraph' { [ref] $null = $body.AppendChild((OutWordParagraph -Paragraph $s -XmlDocument $xmlDocument)); }
@@ -91,54 +93,46 @@ function OutWord
                 'PScribo.Table' { OutWordTable -Table $s -XmlDocument $xmlDocument -Element $body; }
                 'PScribo.TOC' { [ref] $null = $body.AppendChild((OutWordTOC -TOC $s -XmlDocument $xmlDocument)); }
                 'PScribo.BlankLine' { OutWordBlankLine -BlankLine $s -XmlDocument $xmlDocument -Element $body; }
-                'PScribo.Image' { 
-                    $Image=ImageSizeInEMU -Filepath $s.FilePath
-                        $Image.Id=$($Images.Count +1)
-                        $Image.Text=$s.Text
-                        $Image.MIME=Get-MimeType -CheckFile $s.FilePath
-                        $Image.RefID=New-Guid
-                        $Image.Name=('{0}{1}' -f $Image.RefID, $(get-item $s.FilePath).Extension)
-                        [ref] $null = $body.AppendChild((OutWordImage -Image $Image -XmlDocument $xmlDocument))
-                        $Images+=$Image }
-                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
-            } #end switch
-        } #end foreach
-        ## Generate the Word 'styles.xml' document part
+
+
+      } #end switch
+    } #end foreach
+    ## Generate the Word 'styles.xml' document part
     $stylesXml = OutWordStylesDocument -Styles $Document.Styles -TableStyles $Document.TableStyles
-        ## Generate the Word 'settings.xml' document part
+    ## Generate the Word 'settings.xml' document part
     if (($Document.Properties['TOCs']) -and ($Document.Properties['TOCs'] -gt 0)) 
     {
-            ## We have a TOC so flag to update the document when opened
+      ## We have a TOC so flag to update the document when opened
 
       $settingsXml = OutWordSettingsDocument -UpdateFields
-        }
+    }
 
     else 
     {
       $settingsXml = OutWordSettingsDocument
-        }
-        #Convert relative or PSDrive based path to the absolute filesystem path
-        $AbsolutePath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+    }
+    #Convert relative or PSDrive based path to the absolute filesystem path
+    $AbsolutePath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
 
     $destinationPath = Join-Path -Path $AbsolutePath -ChildPath ('{0}.docx' -f $Document.Name)
     if ($PSVersionTable.PSEdition -ne 'Core') 
     {
-            ## WindowsBase.dll is not included in Core PowerShell
+      ## WindowsBase.dll is not included in Core PowerShell
 
       Add-Type -AssemblyName WindowsBase
-        }
+    }
         
     try 
     {
       $package = [System.IO.Packaging.Package]::Open($destinationPath, [System.IO.FileMode]::Create, [System.IO.FileAccess]::ReadWrite)
-        }
+    }
 
     catch 
     {
       WriteLog -Message ($localized.OpenPackageError -f $destinationPath) -IsWarning
       throw $_
-        }
-        ## Create document.xml part
+    }
+    ## Create document.xml part
 
     $documentUri = New-Object -TypeName System.Uri -ArgumentList ('/word/document.xml', [System.UriKind]::Relative)
     WriteLog -Message ($localized.ProcessingDocumentPart -f $documentUri)
@@ -150,7 +144,7 @@ function OutWord
     $xmlWriter.Dispose()
     $streamWriter.Close()
 
-        ## Create styles.xml part
+    ## Create styles.xml part
 
     $stylesUri = New-Object -TypeName System.Uri -ArgumentList ('/word/styles.xml', [System.UriKind]::Relative)
     WriteLog -Message ($localized.ProcessingDocumentPart -f $stylesUri)
@@ -162,34 +156,41 @@ function OutWord
     $xmlWriter.Dispose()
     $streamWriter.Close()
 
-        ## Create settings.xml part
-
+    ## Create settings.xml part
                 
 
         
-        ## Create the Package relationships
+        
+    ## Create the Package relationships
     WriteLog -Message $localized.GeneratingPackageRelationships
     [ref] $null = $package.CreateRelationship($documentUri, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument', 'rId1')
     [ref] $null = $documentPart.CreateRelationship($stylesUri, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles', 'rId1')
     [ref] $null = $documentPart.CreateRelationship($settingsUri, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings', 'rId2')
-        ## Process images
-        Foreach ($Image in $Images){
-        $URI=('/word/media/{0}' -f $Image.Name)
-        $partName=New-Object System.Uri($URI, [System.UriKind]"Relative")
-        $part=$Package.CreatePart($partName, $Image.MIME)
-        $bytes=[System.IO.File]::ReadAllBytes($Image.FilePath)
-        $stream=$part.GetStream()
-        $stream.Write($bytes, 0, $bytes.Length)
-        $stream.Close()
-            [ref] $null = $documentPart.CreateRelationship($partName, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image', $Image.RefId)
-        }
+    ## Process images
+
+    $i=0
+    While ($images.Count -gt $i)
+    {      
+      $CurrentImage=$Images[$i]
+      $URI = ('/word/media/{0}' -f $CurrentImage.Name)
+      $partName = New-Object -TypeName System.Uri -ArgumentList ($URI, [System.UriKind]'Relative')
+      $part = $package.CreatePart($partName, $CurrentImage.MIME)
+      $bytes = [System.IO.File]::ReadAllBytes($CurrentImage.FilePath)
+      $stream = $part.GetStream()
+      $stream.Write($bytes, 0, $bytes.Length)
+      $stream.Close()
+
+      [ref] $null = $documentPart.CreateRelationship($partName, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image', $CurrentImage.RefId)
+      $i++
+    }
         WriteLog -Message ($localized.SavingFile -f $destinationPath);
         $package.Flush();
         $package.Close();
 
+		
 
-        ## Return the file reference to the pipeline
+    ## Return the file reference to the pipeline
 
 
-    } #end process
+  } #end process
 } #end function OutWord

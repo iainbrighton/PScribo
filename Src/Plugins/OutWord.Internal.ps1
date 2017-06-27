@@ -1,47 +1,47 @@
-        #region OutWord Private Functions
+#region OutWord Private Functions
 
 function ConvertToWordColor 
 {
-        <#
-            .SYNOPSIS
-                Converts an HTML color to RRGGBB value as Word does not support short Html color codes
-        #>
-            [CmdletBinding()]
-            param (
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [System.String] $Color
-            )
-            process {
+  <#
+      .SYNOPSIS
+      Converts an HTML color to RRGGBB value as Word does not support short Html color codes
+  #>
+  [CmdletBinding()]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.String] $Color
+  )
+  process {
 
     $Color = $Color.TrimStart('#')
     if ($Color.Length -eq 3) 
     {
       $Color = '{0}{0}{1}{1}{2}{2}' -f $Color[0], $Color[1], $Color[2]
-                }
+    }
     return $Color.ToUpper()
 
-            }
-        } #end function ConvertToWordColor
+  }
+} #end function ConvertToWordColor
 
 
 function OutWordSection 
 {
-        <#
-            .SYNOPSIS
-                Output formatted Word section (paragraph).
-        #>
-            [CmdletBinding()]
-            param (
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $Section,
+  <#
+      .SYNOPSIS
+      Output formatted Word section (paragraph).
+  #>
+  [CmdletBinding()]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.Object] $Section,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlElement] $RootElement,
+    [Parameter(Mandatory)]
+    [System.Xml.XmlElement] $RootElement,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 
@@ -49,14 +49,14 @@ function OutWordSection
     $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
     if (-not [System.String]::IsNullOrEmpty($Section.Style)) 
     {
-                    #if (-not $Section.IsExcluded) {
-                        ## If it's excluded we need a non-Heading style :( Could explicitly set the style on the run?
+      #if (-not $Section.IsExcluded) {
+      ## If it's excluded we need a non-Heading style :( Could explicitly set the style on the run?
       $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain))
       [ref] $null = $pStyle.SetAttribute('val', $xmlnsMain, $Section.Style)
-                    #}
-                }
+      #}
+    }
     $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain))
-                ## Increment heading spacing by 2pt for each section level, starting at 8pt for level 0, 10pt for level 1 etc
+    ## Increment heading spacing by 2pt for each section level, starting at 8pt for level 0, 10pt for level 1 etc
     $spacingPt = (($Section.Level * 2) + 8) * 20
     [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, $spacingPt)
     [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, $spacingPt)
@@ -88,7 +88,7 @@ function OutWordSection
         $currentIndentationLevel = $s.Level +1
       }
       WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent $currentIndentationLevel
-                    switch ($s.Type) {
+      switch ($s.Type) {
         'PScribo.Section' 
         {
           $s | OutWordSection -RootElement $RootElement -XmlDocument $XmlDocument
@@ -117,29 +117,29 @@ function OutWordSection
         {
           WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning
         }
-                    } #end switch
-                } #end foreach
+      } #end switch
+    } #end foreach
 
-            } #end process
-        } #end function OutWordSection
+  } #end process
+} #end function OutWordSection
 
 
 function OutWordParagraph 
 {
-        <#
-            .SYNOPSIS
-                Output formatted Word paragraph.
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $Paragraph,
+  <#
+      .SYNOPSIS
+      Output formatted Word paragraph.
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.Object] $Paragraph,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 
@@ -149,12 +149,12 @@ function OutWordParagraph
     {
       $ind = $pPr.AppendChild($XmlDocument.CreateElement('w', 'ind', $xmlnsMain))
       [ref] $null = $ind.SetAttribute('left', $xmlnsMain, (720 * $Paragraph.Tabs))
-                }
+    }
     if (-not [System.String]::IsNullOrEmpty($Paragraph.Style)) 
     {
       $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain))
       [ref] $null = $pStyle.SetAttribute('val', $xmlnsMain, $Paragraph.Style)
-                }
+    }
     $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain))
     [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, 0)
     [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, 0)
@@ -173,36 +173,36 @@ function OutWordParagraph
     {
       $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
       $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain))
-                ## Apply custom paragraph styles to the run..
+      ## Apply custom paragraph styles to the run..
       if ($Paragraph.Font) 
       {
         $rFonts = $rPr.AppendChild($XmlDocument.CreateElement('w', 'rFonts', $xmlnsMain))
         [ref] $null = $rFonts.SetAttribute('ascii', $xmlnsMain, $Paragraph.Font[0])
         [ref] $null = $rFonts.SetAttribute('hAnsi', $xmlnsMain, $Paragraph.Font[0])
-                }
+      }
       if ($Paragraph.Size -gt 0) 
       {
         $sz = $rPr.AppendChild($XmlDocument.CreateElement('w', 'sz', $xmlnsMain))
         [ref] $null = $sz.SetAttribute('val', $xmlnsMain, $Paragraph.Size * 2)
-                }
+      }
       if ($Paragraph.Bold -eq $true) 
       {
         [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'b', $xmlnsMain))
-                }
+      }
       if ($Paragraph.Italic -eq $true) 
       {
         [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'i', $xmlnsMain))
-                }
+      }
       if ($Paragraph.Underline -eq $true) 
       {
         $u = $rPr.AppendChild($XmlDocument.CreateElement('w', 'u', $xmlnsMain))
         [ref] $null = $u.SetAttribute('val', $xmlnsMain, 'single')
-                }
+      }
       if (-not [System.String]::IsNullOrEmpty($Paragraph.Color)) 
       {
         $Color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlnsMain))
         [ref] $null = $Color.SetAttribute('val', $xmlnsMain, (ConvertToWordColor -Color $Paragraph.Color))
-                }
+      }
 
       $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
       [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
@@ -215,31 +215,31 @@ function OutWordParagraph
         $brr = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
         $brt = $brr.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
         [ref] $null = $brt.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlnsMain))
-                }
+      }
     } #end foreach line break
 
     return $p
 
-            } #end process
-        } #end function OutWordParagraph
+  } #end process
+} #end function OutWordParagraph
 
 
 function OutWordPageBreak 
 {
-            <#
-            .SYNOPSIS
-                Output formatted Word page break.
-            #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $PageBreak,
+  <#
+      .SYNOPSIS
+      Output formatted Word page break.
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.Object] $PageBreak,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain)
@@ -248,26 +248,26 @@ function OutWordPageBreak
     [ref] $null = $br.SetAttribute('type', $xmlnsMain, 'page')
     return $p
 
-            }
-        } #end function OutWordPageBreak
+  }
+} #end function OutWordPageBreak
 
 
 function OutWordLineBreak 
 {
-        <#
-            .SYNOPSIS
-                Output formatted Word line break.
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $LineBreak,
+  <#
+      .SYNOPSIS
+      Output formatted Word line break.
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.Object] $LineBreak,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain)
@@ -280,27 +280,27 @@ function OutWordLineBreak
     [ref] $null = $bottom.SetAttribute('color', $xmlnsMain, 'auto')
     return $p
 
-            }
-        } #end function OutWordLineBreak
+  }
+} #end function OutWordLineBreak
 
 
 function GetWordTable 
 {
-        <#
-            .SYNOPSIS
-                Creates a scaffold Word <w:tbl> element
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [ValidateNotNull()]
-                [System.Object] $Table,
+  <#
+      .SYNOPSIS
+      Creates a scaffold Word <w:tbl> element
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [ValidateNotNull()]
+    [System.Object] $Table,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $tableStyle = $Document.TableStyles[$Table.Style]
@@ -310,17 +310,17 @@ function GetWordTable
     {
       $tblInd = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblInd', $xmlnsMain))
       [ref] $null = $tblInd.SetAttribute('w', $xmlnsMain, (720 * $Table.Tabs))
-                }
+    }
     if ($Table.ColumnWidths) 
     {
       $tblLayout = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblLayout', $xmlnsMain))
       [ref] $null = $tblLayout.SetAttribute('type', $xmlnsMain, 'fixed')
-                }
+    }
     elseif ($Table.Width -eq 0) 
     {
       $tblLayout = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblLayout', $xmlnsMain))
       [ref] $null = $tblLayout.SetAttribute('type', $xmlnsMain, 'autofit')
-                }
+    }
 
     if ($Table.Width -gt 0) 
     {
@@ -330,31 +330,31 @@ function GetWordTable
 
       if ($Table.Tabs -gt 0) 
       {
-                        ## We now need to deal with tables being pushed outside the page margin
+        ## We now need to deal with tables being pushed outside the page margin
         $pageWidthMm = $Document.Options['PageWidth'] - ($Document.Options['PageMarginLeft'] + $Document.Options['PageMarginRight'])
         $indentWidthMm = ConvertPtToMm -Point ($Table.Tabs * 36)
         $tableRenderMm = (($pageWidthMm / 100) * $Table.Width) + $indentWidthMm
         if ($tableRenderMm -gt $pageWidthMm) 
         {
-                            ## We've over-flowed so need to work out the maximum percentage
+          ## We've over-flowed so need to work out the maximum percentage
           $maxTableWidthMm = $pageWidthMm - $indentWidthMm
           $tableWidthRenderPct = [System.Math]::Round(($maxTableWidthMm / $pageWidthMm) * 100, 2)
           WriteLog -Message ($localized.TableWidthOverflowWarning -f $tableWidthRenderPct) -IsWarning
-                        }
-                    }
+        }
+      }
       [ref] $null = $tblW.SetAttribute('w', $xmlnsMain, $tableWidthRenderPct * 50)
-                }
+    }
 
     $spacing = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain))
     [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, 72)
     [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, 72)
 
-                #$tblLook = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblLook', $xmlnsMain));
-                #[ref] $null = $tblLook.SetAttribute('val', $xmlnsMain, '04A0');
-                #[ref] $null = $tblLook.SetAttribute('firstRow', $xmlnsMain, 1);
-                ## <w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/>
-                #$tblStyle = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblStyle', $xmlnsMain));
-                #[ref] $null = $tblStyle.SetAttribute('val', $xmlnsMain, $Table.Style);
+    #$tblLook = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblLook', $xmlnsMain));
+    #[ref] $null = $tblLook.SetAttribute('val', $xmlnsMain, '04A0');
+    #[ref] $null = $tblLook.SetAttribute('firstRow', $xmlnsMain, 1);
+    ## <w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/>
+    #$tblStyle = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblStyle', $xmlnsMain));
+    #[ref] $null = $tblStyle.SetAttribute('val', $xmlnsMain, $Table.Style);
 
     if ($tableStyle.BorderWidth -gt 0) 
     {
@@ -365,8 +365,8 @@ function GetWordTable
         [ref] $null = $b.SetAttribute('sz', $xmlnsMain, (ConvertMmToOctips $tableStyle.BorderWidth))
         [ref] $null = $b.SetAttribute('val', $xmlnsMain, 'single')
         [ref] $null = $b.SetAttribute('color', $xmlnsMain, (ConvertToWordColor -Color $tableStyle.BorderColor))
-                    }
-                }
+      }
+    }
 
     $tblCellMar = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblCellMar', $xmlnsMain))
     $top = $tblCellMar.AppendChild($XmlDocument.CreateElement('w', 'top', $xmlnsMain))
@@ -387,41 +387,41 @@ function GetWordTable
     if ($Table.List) 
     {
       $columnCount = 2
-                }
+    }
     for ($i = 0; $i -lt $Table.Columns.Count; $i++) 
     {
       [ref] $null = $tblGrid.AppendChild($XmlDocument.CreateElement('w', 'gridCol', $xmlnsMain))
-                }
+    }
 
     return $tbl
 
-            } #end process
-        } #end function GetWordTable
+  } #end process
+} #end function GetWordTable
 
 
 function OutWordTable 
 {
-        <#
-            .SYNOPSIS
-                Output formatted Word table.
-            .NOTES
-                Specifies that the current row should be repeated at the top each new page on which the table is displayed. E.g, <w:tblHeader />.
-        #>
-            [CmdletBinding()]
-            param (
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [ValidateNotNull()]
-                [System.Object] $Table,
+  <#
+      .SYNOPSIS
+      Output formatted Word table.
+      .NOTES
+      Specifies that the current row should be repeated at the top each new page on which the table is displayed. E.g, <w:tblHeader />.
+  #>
+  [CmdletBinding()]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [ValidateNotNull()]
+    [System.Object] $Table,
 
-                ## Root element to append the table(s) to. List view will create multiple tables
-                [Parameter(Mandatory)]
-                [ValidateNotNull()]
-                [System.Xml.XmlElement] $Element,
+    ## Root element to append the table(s) to. List view will create multiple tables
+    [Parameter(Mandatory)]
+    [ValidateNotNull()]
+    [System.Xml.XmlElement] $Element,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $tableStyle = $Document.TableStyles[$Table.Style]
@@ -434,18 +434,18 @@ function OutWordTable
         $row = $Table.Rows[$r]
         if ($r -gt 0) 
         {
-                            ## Add a space between each table as Word renders them together..
+          ## Add a space between each table as Word renders them together..
           [ref] $null = $Element.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain))
-                        }
+        }
 
-                        ## Create <tr><tc></tc></tr> for each property
+        ## Create <tr><tc></tc></tr> for each property
         $tbl = $Element.AppendChild((GetWordTable -Table $Table -XmlDocument $XmlDocument))
 
         $properties = @($row.PSObject.Properties)
         for ($i = 0; $i -lt $properties.Count; $i++) 
         {
           $propertyName = $properties[$i].Name
-                            ## Ignore __Style properties
+          ## Ignore __Style properties
           if (-not $propertyName.EndsWith('__Style')) 
           {
             $tr = $tbl.AppendChild($XmlDocument.CreateElement('w', 'tr', $xmlnsMain))
@@ -454,16 +454,16 @@ function OutWordTable
 
             if ($null -ne $Table.ColumnWidths) 
             {
-                                    ## TODO: Refactor out
+              ## TODO: Refactor out
               [ref] $null = ConvertMmToTwips -Millimeter $Table.ColumnWidths[0]
               $tcW1 = $tcPr1.AppendChild($XmlDocument.CreateElement('w', 'tcW', $xmlnsMain))
               [ref] $null = $tcW1.SetAttribute('w', $xmlnsMain, $Table.ColumnWidths[0] * 50)
               [ref] $null = $tcW1.SetAttribute('type', $xmlnsMain, 'pct')
-                                }
+            }
             if ($headerStyle.BackgroundColor) 
             {
               [ref] $null = $tc1.AppendChild((GetWordTableStyleCellPr -Style $headerStyle -XmlDocument $XmlDocument))
-                                }
+            }
             $p1 = $tc1.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain))
             $pPr1 = $p1.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
             $pStyle1 = $pPr1.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain))
@@ -477,11 +477,11 @@ function OutWordTable
 
             if ($null -ne $Table.ColumnWidths) 
             {
-                                    ## TODO: Refactor out
+              ## TODO: Refactor out
               $tcW2 = $tcPr2.AppendChild($XmlDocument.CreateElement('w', 'tcW', $xmlnsMain))
               [ref] $null = $tcW2.SetAttribute('w', $xmlnsMain, $Table.ColumnWidths[1] * 50)
               [ref] $null = $tcW2.SetAttribute('type', $xmlnsMain, 'pct')
-                                }
+            }
 
             $p2 = $tc2.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain))
             $cellPropertyStyle = '{0}__Style' -f $propertyName
@@ -490,23 +490,23 @@ function OutWordTable
               if (-not (Test-Path -Path Variable:\cellStyle)) 
               {
                 $cellStyle = $Document.Styles[$row.$cellPropertyStyle]
-                                    }
+              }
               elseif ($cellStyle.Id -ne $row.$cellPropertyStyle) 
               {
-                                        ## Retrieve the style if we don't already have it
+                ## Retrieve the style if we don't already have it
                 $cellStyle = $Document.Styles[$row.$cellPropertyStyle]
-                                    }
+              }
               if ($cellStyle.BackgroundColor) 
               {
                 [ref] $null = $tc2.AppendChild((GetWordTableStyleCellPr -Style $cellStyle -XmlDocument $XmlDocument))
-                                    }
+              }
               if ($row.$cellPropertyStyle) 
               {
                 $pPr2 = $p2.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
                 $pStyle2 = $pPr2.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain))
                 [ref] $null = $pStyle2.SetAttribute('val', $xmlnsMain, $row.$cellPropertyStyle)
-                                    }
-                                }
+              }
+            }
 
             ## Create a separate run for each line/break
             $lines = $row.($propertyName) -split [System.Environment]::NewLine
@@ -521,12 +521,12 @@ function OutWordTable
                 $r3 = $p2.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
                 $t3 = $r3.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
                 [ref] $null = $t3.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlnsMain))
-                            }
+              }
             } #end foreach line break
           }
-                        } #end for each property
-                     } #end foreach row
-                } #end if Table.List
+        } #end for each property
+      } #end foreach row
+    } #end if Table.List
     else 
     {
       $tbl = $Element.AppendChild((GetWordTable -Table $Table -XmlDocument $XmlDocument))
@@ -541,23 +541,23 @@ function OutWordTable
         if ($headerStyle.BackgroundColor) 
         {
           $tcPr = $tc.AppendChild((GetWordTableStyleCellPr -Style $headerStyle -XmlDocument $XmlDocument))
-                        }
+        }
         else 
         {
           $tcPr = $tc.AppendChild($XmlDocument.CreateElement('w', 'tcPr', $xmlnsMain))
-                        }
+        }
         $tcW = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'tcW', $xmlnsMain))
 
         if (($null -ne $Table.ColumnWidths) -and ($null -ne $Table.ColumnWidths[$i])) 
         {
           [ref] $null = $tcW.SetAttribute('w', $xmlnsMain, $Table.ColumnWidths[$i] * 50)
           [ref] $null = $tcW.SetAttribute('type', $xmlnsMain, 'pct')
-                        }
+        }
         else 
         {
           [ref] $null = $tcW.SetAttribute('w', $xmlnsMain, 0)
           [ref] $null = $tcW.SetAttribute('type', $xmlnsMain, 'auto')
-                        }
+        }
 
         $p = $tc.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain))
         $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
@@ -566,7 +566,7 @@ function OutWordTable
         $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
         $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
         [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($Table.Columns[$i]))
-                    } #end for Table.Columns
+      } #end for Table.Columns
 
       $isAlternatingRow = $false
       foreach ($row in $Table.Rows) 
@@ -577,39 +577,39 @@ function OutWordTable
           $cellPropertyStyle = '{0}__Style' -f $propertyName
           if ($row.PSObject.Properties[$cellPropertyStyle]) 
           {
-                                ## Cell style overrides row/default styles
+            ## Cell style overrides row/default styles
             $cellStyleName = $row.$cellPropertyStyle
-                            }
+          }
           elseif (-not [System.String]::IsNullOrEmpty($row.__Style)) 
           {
-                                ## Row style overrides default style
+            ## Row style overrides default style
             $cellStyleName = $row.__Style
-                            }
+          }
           else 
           {
-                                ## Use the table row/alternating style..
+            ## Use the table row/alternating style..
             $cellStyleName = $tableStyle.RowStyle
             if ($isAlternatingRow) 
             {
               $cellStyleName = $tableStyle.AlternateRowStyle
-                                }
-                            }
+            }
+          }
 
           if (-not (Test-Path -Path Variable:\cellStyle)) 
           {
             $cellStyle = $Document.Styles[$cellStyleName]
-                            }
+          }
           elseif ($cellStyle.Id -ne $cellStyleName) 
           {
-                                ## Retrieve the style if we don't already have it
+            ## Retrieve the style if we don't already have it
             $cellStyle = $Document.Styles[$cellStyleName]
-                            }
+          }
 
           $tc = $tr.AppendChild($XmlDocument.CreateElement('w', 'tc', $xmlnsMain))
           if ($cellStyle.BackgroundColor) 
           {
             [ref] $null = $tc.AppendChild((GetWordTableStyleCellPr -Style $cellStyle -XmlDocument $XmlDocument))
-                            }
+          }
           $p = $tc.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain))
           $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
           $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain))
@@ -630,31 +630,31 @@ function OutWordTable
               [ref] $null = $t.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlnsMain))
             }
           } #end foreach line break
-                        } #end foreach property
+        } #end foreach property
         $isAlternatingRow = !$isAlternatingRow
-                    } #end foreach row
-                } #end if not Table.List
+      } #end foreach row
+    } #end if not Table.List
 
-            } #end process
-        } #end function OutWordTable
+  } #end process
+} #end function OutWordTable
 
 
 function OutWordTOC 
 {
-        <#
-            .SYNOPSIS
-                 Output formatted Word table of contents.
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $TOC,
+  <#
+      .SYNOPSIS
+      Output formatted Word table of contents.
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.Object] $TOC,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $sdt = $XmlDocument.CreateElement('w', 'sdt', $xmlnsMain)
@@ -683,7 +683,7 @@ function OutWordTOC
     [ref] $null = $tab2.SetAttribute('pos', $xmlnsMain, '9016')
     #10790?!
     $r2 = $p2.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
-                ##TODO: Refactor duplicate code
+    ##TODO: Refactor duplicate code
     $fldChar1 = $r2.AppendChild($XmlDocument.CreateElement('w', 'fldChar', $xmlnsMain))
     [ref] $null = $fldChar1.SetAttribute('fldCharType', $xmlnsMain, 'begin')
 
@@ -698,66 +698,66 @@ function OutWordTOC
 
     $p3 = $sdtContent.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain))
     $r5 = $p3.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
-	            #$rPr3 = $r3.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain));
+    #$rPr3 = $r3.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain));
     $fldChar3 = $r5.AppendChild($XmlDocument.CreateElement('w', 'fldChar', $xmlnsMain))
     [ref] $null = $fldChar3.SetAttribute('fldCharType', $xmlnsMain, 'end')
 
     return $sdt
 
-            } #end process
-        } #end function OutWordTOC
+  } #end process
+} #end function OutWordTOC
 
 
 function OutWordBlankLine 
 {
-        <#
-            .SYNOPSIS
-                Output formatted Word xml blank line (paragraph).
-        #>
-            [CmdletBinding()]
-            param (
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $BlankLine,
+  <#
+      .SYNOPSIS
+      Output formatted Word xml blank line (paragraph).
+  #>
+  [CmdletBinding()]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.Object] $BlankLine,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument,
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlElement] $Element
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlElement] $Element
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     for ($i = 0; $i -lt $BlankLine.LineCount; $i++) 
     {
       [ref] $null = $Element.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain))
-                }
+    }
 
-            }
-        } #end function OutWordLineBreak
+  }
+} #end function OutWordLineBreak
 
 
 function GetWordStyle 
 {
-        <#
-            .SYNOPSIS
-                Generates Word Xml style element from a PScribo document style.
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                ## PScribo document style
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $Style,
+  <#
+      .SYNOPSIS
+      Generates Word Xml style element from a PScribo document style.
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    ## PScribo document style
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.Object] $Style,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument,
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument,
 
-                [Parameter(Mandatory)]
-                [ValidateSet('Paragraph','Character')]
-                [System.String] $Type
-            )
-            process {
+    [Parameter(Mandatory)]
+    [ValidateSet('Paragraph','Character')]
+    [System.String] $Type
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     if ($Type -eq 'Paragraph') 
@@ -765,37 +765,37 @@ function GetWordStyle
       $styleId = $Style.Id
       $styleName = $Style.Name
       $linkId = '{0}Char' -f $Style.Id
-                }
+    }
     else 
     {
       $styleId = '{0}Char' -f $Style.Id
       $styleName = '{0} Char' -f $Style.Name
       $linkId = $Style.Id
-                }
+    }
 
     $documentStyle = $XmlDocument.CreateElement('w', 'style', $xmlnsMain)
     [ref] $null = $documentStyle.SetAttribute('type', $xmlnsMain, $Type.ToLower())
     if ($Style.Id -eq $Document.DefaultStyle) 
     {
-                    ## Set as default style
+      ## Set as default style
       [ref] $null = $documentStyle.SetAttribute('default', $xmlnsMain, 1)
       $uiPriority = $documentStyle.AppendChild($XmlDocument.CreateElement('w', 'uiPriority', $xmlnsMain))
       [ref] $null = $uiPriority.SetAttribute('val', $xmlnsMain, 1)
-                }
+    }
     elseif ($Style.Hidden -eq $true) 
     {
-                    ## Semi hide style (headers and footers etc)
+      ## Semi hide style (headers and footers etc)
       [ref] $null = $documentStyle.AppendChild($XmlDocument.CreateElement('w', 'semiHidden', $xmlnsMain))
-                }
+    }
     elseif (($Document.TableStyles.Values | ForEach-Object -Process {
           $_.HeaderStyle
           $_.RowStyle
           $_.AlternateRowStyle
     }) -contains $Style.Id) 
     {
-                    ## Semi hide styles behind table styles (except default style!)
+      ## Semi hide styles behind table styles (except default style!)
       [ref] $null = $documentStyle.AppendChild($XmlDocument.CreateElement('w', 'semiHidden', $xmlnsMain))
-                }
+    }
 
     [ref] $null = $documentStyle.SetAttribute('styleId', $xmlnsMain, $styleId)
     $documentStyleName = $documentStyle.AppendChild($XmlDocument.CreateElement('w', 'name', $xmlnsMain))
@@ -813,48 +813,48 @@ function GetWordStyle
     $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain))
     [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, 0)
     [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, 0)
-                ## Set the <w:jc> (justification) element
+    ## Set the <w:jc> (justification) element
     $jc = $pPr.AppendChild($XmlDocument.CreateElement('w', 'jc', $xmlnsMain))
     if ($Style.Align.ToLower() -eq 'justify') 
     {
       [ref] $null = $jc.SetAttribute('val', $xmlnsMain, 'distribute')
-                }
+    }
     else 
     {
       [ref] $null = $jc.SetAttribute('val', $xmlnsMain, $Style.Align.ToLower())
-                }
+    }
     if ($Style.BackgroundColor) 
     {
       $shd = $pPr.AppendChild($XmlDocument.CreateElement('w', 'shd', $xmlnsMain))
       [ref] $null = $shd.SetAttribute('val', $xmlnsMain, 'clear')
       [ref] $null = $shd.SetAttribute('color', $xmlnsMain, 'auto')
       [ref] $null = $shd.SetAttribute('fill', $xmlnsMain, (ConvertToWordColor -Color $Style.BackgroundColor))
-                }
+    }
     [ref] $null = $documentStyle.AppendChild((GetWordStyleRunPr -Style $Style -XmlDocument $XmlDocument))
 
     return $documentStyle
 
-            } #end process
-        } #end function GetWordStyle
+  } #end process
+} #end function GetWordStyle
 
 
 function GetWordTableStyle 
 {
-        <#
-            .SYNOPSIS
-                Generates Word Xml table style element from a PScribo document table style.
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                ## PScribo document style
-                [Parameter(Mandatory, ValueFromPipeline)]
+  <#
+      .SYNOPSIS
+      Generates Word Xml table style element from a PScribo document table style.
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    ## PScribo document style
+    [Parameter(Mandatory, ValueFromPipeline)]
     [System.Object] $tableStyle,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $Style = $XmlDocument.CreateElement('w', 'style', $xmlnsMain)
@@ -874,33 +874,33 @@ function GetWordTableStyle
         [ref] $null = $b.SetAttribute('sz', $xmlnsMain, (ConvertMmToOctips $tableStyle.BorderWidth))
         [ref] $null = $b.SetAttribute('val', $xmlnsMain, 'single')
         [ref] $null = $b.SetAttribute('color', $xmlnsMain, (ConvertToWordColor -Color $tableStyle.BorderColor))
-                    }
-                }
+      }
+    }
     [ref] $null = $Style.AppendChild((GetWordTableStylePr -Style $Document.Styles[$tableStyle.HeaderStyle] -Type Header -XmlDocument $XmlDocument))
     [ref] $null = $Style.AppendChild((GetWordTableStylePr -Style $Document.Styles[$tableStyle.RowStyle] -Type Row -XmlDocument $XmlDocument))
     [ref] $null = $Style.AppendChild((GetWordTableStylePr -Style $Document.Styles[$tableStyle.AlternateRowStyle] -Type AlternateRow -XmlDocument $XmlDocument))
     return $Style
 
-            }
-        } #end function GetWordTableStyle
+  }
+} #end function GetWordTableStyle
 
 
 function GetWordStyleParagraphPr 
 {
-        <#
-            .SYNOPSIS
-                Generates Word paragraph (pPr) formatting properties
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory)]
-                [System.Object] $Style,
+  <#
+      .SYNOPSIS
+      Generates Word paragraph (pPr) formatting properties
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory)]
+    [System.Object] $Style,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $pPr = $XmlDocument.CreateElement('w', 'pPr', $xmlnsMain)
@@ -920,55 +920,55 @@ function GetWordStyleParagraphPr
     }
     return $pPr
 
-            } #end process
-        } #end function GetWordTableCellPr
+  } #end process
+} #end function GetWordTableCellPr
 
 
 function GetWordStyleRunPrColor 
 {
-        <#
-            .SYNOPSIS
-                Generates Word run (rPr) text colour formatting property only.
-            .NOTES
-                This is only required to override the text colour in table rows/headers
-                as I can't get this (yet) applied via the table style?
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory)]
-                [System.Object] $Style,
+  <#
+      .SYNOPSIS
+      Generates Word run (rPr) text colour formatting property only.
+      .NOTES
+      This is only required to override the text colour in table rows/headers
+      as I can't get this (yet) applied via the table style?
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory)]
+    [System.Object] $Style,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $rPr = $XmlDocument.CreateElement('w', 'rPr', $xmlnsMain)
     $Color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlnsMain))
     [ref] $null = $Color.SetAttribute('val', $xmlnsMain, (ConvertToWordColor -Color $Style.Color))
     return $rPr
 
-            }
-        } #end function GetWordStyleRunPrColor
+  }
+} #end function GetWordStyleRunPrColor
 
 
 function GetWordStyleRunPr 
 {
-        <#
-            .SYNOPSIS
-                Generates Word run (rPr) formatting properties
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory)]
-                [System.Object] $Style,
+  <#
+      .SYNOPSIS
+      Generates Word run (rPr) formatting properties
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory)]
+    [System.Object] $Style,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $rPr = $XmlDocument.CreateElement('w', 'rPr', $xmlnsMain)
     $rFonts = $rPr.AppendChild($XmlDocument.CreateElement('w', 'rFonts', $xmlnsMain))
@@ -977,41 +977,41 @@ function GetWordStyleRunPr
     if ($Style.Bold) 
     {
       [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'b', $xmlnsMain))
-                }
+    }
     if ($Style.Underline) 
     {
       [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'u', $xmlnsMain))
-                }
+    }
     if ($Style.Italic) 
     {
       [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'i', $xmlnsMain))
-                }
+    }
     $Color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlnsMain))
     [ref] $null = $Color.SetAttribute('val', $xmlnsMain, (ConvertToWordColor -Color $Style.Color))
     $sz = $rPr.AppendChild($XmlDocument.CreateElement('w', 'sz', $xmlnsMain))
     [ref] $null = $sz.SetAttribute('val', $xmlnsMain, $Style.Size * 2)
     return $rPr
 
-            } #end process
-        } #end function GetWordStyleRunPr
+  } #end process
+} #end function GetWordStyleRunPr
 
 
 function GetWordTableStyleCellPr 
 {
-        <#
-            .SYNOPSIS
-                Generates Word table cell (tcPr) formatting properties
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory)]
-                [System.Object] $Style,
+  <#
+      .SYNOPSIS
+      Generates Word table cell (tcPr) formatting properties
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory)]
+    [System.Object] $Style,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $tcPr = $XmlDocument.CreateElement('w', 'tcPr', $xmlnsMain)
@@ -1021,42 +1021,42 @@ function GetWordTableStyleCellPr
       [ref] $null = $shd.SetAttribute('val', $xmlnsMain, 'clear')
       [ref] $null = $shd.SetAttribute('color', $xmlnsMain, 'auto')
       [ref] $null = $shd.SetAttribute('fill', $xmlnsMain, (ConvertToWordColor -Color $Style.BackgroundColor))
-                }
+    }
     return $tcPr
 
-            } #end process
-        } #end function GetWordTableCellPr
+  } #end process
+} #end function GetWordTableCellPr
 
 
 function GetWordTableStylePr 
 {
-        <#
-            .SYNOPSIS
-                Generates Word table style (tblStylePr) formatting properties for specified table style type
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory)]
-                [System.Object] $Style,
+  <#
+      .SYNOPSIS
+      Generates Word table style (tblStylePr) formatting properties for specified table style type
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory)]
+    [System.Object] $Style,
 
-                [Parameter(Mandatory)]
-                [ValidateSet('Header','Row','AlternateRow')]
-                [System.String] $Type,
+    [Parameter(Mandatory)]
+    [ValidateSet('Header','Row','AlternateRow')]
+    [System.String] $Type,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $tblStylePr = $XmlDocument.CreateElement('w', 'tblStylePr', $xmlnsMain)
     [ref] $null = $tblStylePr.AppendChild($XmlDocument.CreateElement('w', 'tblPr', $xmlnsMain))
-                switch ($Type) {
+    switch ($Type) {
       'Header' 
       {
         $tblStylePrType = 'firstRow'
-                }
+      }
       'Row' 
       {
         $tblStylePrType = 'band2Horz'
@@ -1072,40 +1072,40 @@ function GetWordTableStylePr
     [ref] $null = $tblStylePr.AppendChild((GetWordTableStyleCellPr -Style $Style -XmlDocument $XmlDocument))
     return $tblStylePr
 
-            } #end process
-        } #end function GetWordTableStylePr
+  } #end process
+} #end function GetWordTableStylePr
 
 function GetWordSectionPr 
 {
-        <#
-            .SYNOPSIS
-                Outputs Office Open XML section element to set page size and margins.
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlElement])]
-            param (
-                [Parameter(Mandatory)]
-                [System.Single] $PageWidth,
+  <#
+      .SYNOPSIS
+      Outputs Office Open XML section element to set page size and margins.
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlElement])]
+  param (
+    [Parameter(Mandatory)]
+    [System.Single] $PageWidth,
 
-                [Parameter(Mandatory)]
-                [System.Single] $PageHeight,
+    [Parameter(Mandatory)]
+    [System.Single] $PageHeight,
 
-                [Parameter(Mandatory)]
-                [System.Single] $PageMarginTop,
+    [Parameter(Mandatory)]
+    [System.Single] $PageMarginTop,
 
-                [Parameter(Mandatory)]
-                [System.Single] $PageMarginLeft,
+    [Parameter(Mandatory)]
+    [System.Single] $PageMarginLeft,
 
-                [Parameter(Mandatory)]
-                [System.Single] $PageMarginBottom,
+    [Parameter(Mandatory)]
+    [System.Single] $PageMarginBottom,
 
-                [Parameter(Mandatory)]
-                [System.Single] $PageMarginRight,
+    [Parameter(Mandatory)]
+    [System.Single] $PageMarginRight,
 
-                [Parameter(Mandatory)]
-                [System.Xml.XmlDocument] $XmlDocument
-            )
-            process {
+    [Parameter(Mandatory)]
+    [System.Xml.XmlDocument] $XmlDocument
+  )
+  process {
 
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $sectPr = $XmlDocument.CreateElement('w', 'sectPr', $xmlnsMain)
@@ -1120,36 +1120,36 @@ function GetWordSectionPr
     [ref] $null = $pgMar.SetAttribute('right', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginRight))
     return $sectPr
 
-            } #end process
-        } #end GetWordSectionPr
+  } #end process
+} #end GetWordSectionPr
 
 
 function OutWordStylesDocument 
 {
-        <#
-            .SYNOPSIS
-                Outputs Office Open XML style document
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlDocument])]
-            param (
-                ## PScribo document styles
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Collections.Hashtable] $Styles,
+  <#
+      .SYNOPSIS
+      Outputs Office Open XML style document
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlDocument])]
+  param (
+    ## PScribo document styles
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.Collections.Hashtable] $Styles,
 
-                ## PScribo document tables styles
-                [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Collections.Hashtable] $TableStyles
-            )
-            process {
+    ## PScribo document tables styles
+    [Parameter(Mandatory, ValueFromPipeline)]
+    [System.Collections.Hashtable] $TableStyles
+  )
+  process {
 
-                ## Create the Style.xml document
+    ## Create the Style.xml document
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument'
     [ref] $null = $XmlDocument.AppendChild($XmlDocument.CreateXmlDeclaration('1.0', 'utf-8', 'yes'))
     $documentStyles = $XmlDocument.AppendChild($XmlDocument.CreateElement('w', 'styles', $xmlnsMain))
 
-                ## Create default style
+    ## Create default style
     $defaultStyle = $documentStyles.AppendChild($XmlDocument.CreateElement('w', 'style', $xmlnsMain))
     [ref] $null = $defaultStyle.SetAttribute('type', $xmlnsMain, 'paragraph')
     [ref] $null = $defaultStyle.SetAttribute('default', $xmlnsMain, '1')
@@ -1164,48 +1164,48 @@ function OutWordStylesDocument
       [ref] $null = $documentStyles.AppendChild($documentParagraphStyle)
       $documentCharacterStyle = GetWordStyle -Style $Style -XmlDocument $XmlDocument -Type Character
       [ref] $null = $documentStyles.AppendChild($documentCharacterStyle)
-                }
+    }
     foreach ($tableStyle in $TableStyles.Values) 
     {
       $documentTableStyle = GetWordTableStyle -TableStyle $tableStyle -XmlDocument $XmlDocument
       [ref] $null = $documentStyles.AppendChild($documentTableStyle)
-                }
+    }
     return $XmlDocument
 
-            } #end process
-        } #end function OutWordStyleDocument
+  } #end process
+} #end function OutWordStyleDocument
 
 
 function OutWordSettingsDocument 
 {
-        <#
-            .SYNOPSIS
-                Outputs Office Open XML settings document
-        #>
-            [CmdletBinding()]
-            [OutputType([System.Xml.XmlDocument])]
-            param (
-                [Parameter()]
-                [System.Management.Automation.SwitchParameter] $UpdateFields
-            )
-            process {
+  <#
+      .SYNOPSIS
+      Outputs Office Open XML settings document
+  #>
+  [CmdletBinding()]
+  [OutputType([System.Xml.XmlDocument])]
+  param (
+    [Parameter()]
+    [System.Management.Automation.SwitchParameter] $UpdateFields
+  )
+  process {
 
-                ## Create the Style.xml document
+    ## Create the Style.xml document
     $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
-                # <w:settings xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                # xmlns:o="urn:schemas-microsoft-com:office:office"
-                # xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
-                # xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
-                # xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word"
-                # xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-                # xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
-                # xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
-                # xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main"
-                # mc:Ignorable="w14 w15">
+    # <w:settings xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    # xmlns:o="urn:schemas-microsoft-com:office:office"
+    # xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    # xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+    # xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word"
+    # xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    # xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+    # xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+    # xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main"
+    # mc:Ignorable="w14 w15">
     $settingsDocument = New-Object -TypeName 'System.Xml.XmlDocument'
     [ref] $null = $settingsDocument.AppendChild($settingsDocument.CreateXmlDeclaration('1.0', 'utf-8', 'yes'))
     $settings = $settingsDocument.AppendChild($settingsDocument.CreateElement('w', 'settings', $xmlnsMain))
-                ## Set compatibility mode to Word 2013
+    ## Set compatibility mode to Word 2013
     $compat = $settings.AppendChild($settingsDocument.CreateElement('w', 'compat', $xmlnsMain))
     $compatSetting = $compat.AppendChild($settingsDocument.CreateElement('w', 'compatSetting', $xmlnsMain))
     [ref] $null = $compatSetting.SetAttribute('name', $xmlnsMain, 'compatibilityMode')
@@ -1215,12 +1215,13 @@ function OutWordSettingsDocument
     {
       $wupdateFields = $settings.AppendChild($settingsDocument.CreateElement('w', 'updateFields', $xmlnsMain))
       [ref] $null = $wupdateFields.SetAttribute('val', $xmlnsMain, 'true')
-                }
+    }
     return $settingsDocument
 
-            } #end process
-        } #end function OutWordSettingsDocument
-function OutWordImage {
+  } #end process
+} #end function OutWordSettingsDocument
+function OutWordImage 
+{
   <#
       .SYNOPSIS
       Output Image to Word.
@@ -1267,6 +1268,7 @@ function OutWordImage {
       [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($Image.Text))
     }
     $drawing = $t.AppendChild($XmlDocument.CreateElement('w', 'drawing', $xmlnsMain))
+    $drawing = $rPr.AppendChild($XmlDocument.CreateElement('w', 'drawing', $xmlnsMain))
     $inline = $drawing.AppendChild($XmlDocument.CreateElement('wp', 'inline', $xmlnswpdrawing))
     [ref] $null = $inline.SetAttribute('distT', '0')
     [ref] $null = $inline.SetAttribute('distB', '0')
@@ -1284,9 +1286,6 @@ function OutWordImage {
     [ref] $null = $effectextent.SetAttribute('b', '0')
 
     $docPr = $inline.AppendChild($XmlDocument.CreateElement('wp', 'docPr', $xmlnswpdrawing))
-    [ref] $null = $docPr.SetAttribute('id', $Image.Id)
-    [ref] $null = $docPr.SetAttribute('name', $Image.Text)
-    [ref] $null = $docPr.SetAttribute('descr', $Image.Text)
 
     $cNvGraphicFramePr = $inline.AppendChild($XmlDocument.CreateElement('wp', 'cNvGraphicFramePr', $xmlnswpdrawing))
     $graphicFrameLocks = $cNvGraphicFramePr.AppendChild($XmlDocument.CreateElement('a', 'graphicFrameLocks', $xmlnsdrawing))
@@ -1299,9 +1298,7 @@ function OutWordImage {
     $pic = $graphicData.AppendChild($XmlDocument.CreateElement('pic', 'pic',$xmlnspicture))
     $nvPicPr = $pic.AppendChild($XmlDocument.CreateElement('pic', 'nvPicPr', $xmlnspicture))
     $cNvPr = $nvPicPr.AppendChild($XmlDocument.CreateElement('pic', 'cNvPr', $xmlnspicture))
-    [ref] $null = $cNvPr.SetAttribute('id', $Image.Id)
-    [ref] $null = $cNvPr.SetAttribute('name', $Image.Text)
-    [ref] $null = $cNvPr.SetAttribute('descr', $Image.Text)
+
     $cNvPicPr = $nvPicPr.AppendChild($XmlDocument.CreateElement('pic', 'cNvPicPr', $xmlnspicture))
     $picLocks = $cNvPicPr.AppendChild($XmlDocument.CreateElement('a', 'picLocks',$xmlnsdrawing))
     [ref] $null = $picLocks.SetAttribute('noChangeAspect', '1')
@@ -1343,46 +1340,5 @@ function OutWordImage {
 
   } #end process
 } #end function OutWordImage
-Function ImageSizeInEMU {
-param(
-    [Parameter(Mandatory)]$FilePath
-)
-IF(-not (Test-path $filepath)){Throw ('No file found at {0}' -f $FilePath)}
-Else{
-$drawfile= Get-ChildItem -Path "$((Get-ChildItem Env:\windir).Value)\assembly" -Filter *drawing.dll -Recurse
-$dllpath=(Get-Command $($drawfile.Fullname)).definition
-[Reflection.Assembly]::LoadFrom($dllpath) | out-null
-# load the image
-$image = [Drawing.Image]::FromFile($FilePath)
-[int]$iwidth=$image.width
-[int]$iheight=$image.height
-#convert pixels to EMU
-$ImageDetails=@{
-    FilePath=$FilePath
-    PixelWidth=$iwidth
-    PixelHeight=$iheight
-    EMUWidth=[int][Math]::Round(($iWidth * 9525),0)
-    EMUHeight=[int][Math]::Round(($iWidth * 9525),0)
-}
-return $ImageDetails
-}
-}
- 
-function Get-MimeType() { 
-    param([parameter(Mandatory=$true, ValueFromPipeline=$true)][ValidateNotNullorEmpty()][System.IO.FileInfo]$CheckFile) 
-    begin { 
-        Add-Type -AssemblyName "System.Web"         
-        [System.IO.FileInfo]$check_file = $CheckFile 
-        [string]$mime_type = $null 
-    } 
-    process { 
-        if ($check_file.Exists) {  
-            $mime_type = [System.Web.MimeMapping]::GetMimeMapping($check_file.FullName)  
-        } 
-        else { 
-            $mime_type = "false" 
-        } 
-    } 
-    end { return $mime_type } 
-}
+
 #endregion OutWord Private Functions
