@@ -1246,28 +1246,11 @@ function OutWordImage
     $xmlnsmath = 'http://schemas.openxmlformats.org/officeDocument/2006/math'
     $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain)
     $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
-    if ($Image.Tabs -gt 0) 
-    {
-      $ind = $pPr.AppendChild($XmlDocument.CreateElement('w', 'ind', $xmlnsMain))
-      [ref] $null = $ind.SetAttribute('left', $xmlnsMain, (720 * $Image.Tabs))
-    }
     $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain))
     [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, 0)
     [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, 0)
     $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
     $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain))
-    $t = $rPr.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
-    [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
-    ## needs to be xml:space="preserve" NOT w:space...
-    if ([System.String]::IsNullOrEmpty($Image.Text)) 
-    {
-      [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($Image.Id))
-    }
-    else 
-    {
-      [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($Image.Text))
-    }
-    $drawing = $t.AppendChild($XmlDocument.CreateElement('w', 'drawing', $xmlnsMain))
     $drawing = $rPr.AppendChild($XmlDocument.CreateElement('w', 'drawing', $xmlnsMain))
     $inline = $drawing.AppendChild($XmlDocument.CreateElement('wp', 'inline', $xmlnswpdrawing))
     [ref] $null = $inline.SetAttribute('distT', '0')
@@ -1286,6 +1269,9 @@ function OutWordImage
     [ref] $null = $effectextent.SetAttribute('b', '0')
 
     $docPr = $inline.AppendChild($XmlDocument.CreateElement('wp', 'docPr', $xmlnswpdrawing))
+    [ref] $null = $docPr.SetAttribute('id', $Image.ImageNumber)
+    [ref] $null = $docPr.SetAttribute('name', $Image.Name)
+    [ref] $null = $docPr.SetAttribute('descr', $Image.Name)
 
     $cNvGraphicFramePr = $inline.AppendChild($XmlDocument.CreateElement('wp', 'cNvGraphicFramePr', $xmlnswpdrawing))
     $graphicFrameLocks = $cNvGraphicFramePr.AppendChild($XmlDocument.CreateElement('a', 'graphicFrameLocks', $xmlnsdrawing))
@@ -1298,7 +1284,9 @@ function OutWordImage
     $pic = $graphicData.AppendChild($XmlDocument.CreateElement('pic', 'pic',$xmlnspicture))
     $nvPicPr = $pic.AppendChild($XmlDocument.CreateElement('pic', 'nvPicPr', $xmlnspicture))
     $cNvPr = $nvPicPr.AppendChild($XmlDocument.CreateElement('pic', 'cNvPr', $xmlnspicture))
-
+    [ref] $null = $cNvPr.SetAttribute('id', $Image.ImageNumber)
+    [ref] $null = $cNvPr.SetAttribute('name', $Image.Name)
+    [ref] $null = $cNvPr.SetAttribute('descr', $Image.Name)
     $cNvPicPr = $nvPicPr.AppendChild($XmlDocument.CreateElement('pic', 'cNvPicPr', $xmlnspicture))
     $picLocks = $cNvPicPr.AppendChild($XmlDocument.CreateElement('a', 'picLocks',$xmlnsdrawing))
     [ref] $null = $picLocks.SetAttribute('noChangeAspect', '1')
