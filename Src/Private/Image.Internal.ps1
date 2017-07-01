@@ -80,7 +80,7 @@ Function ImageSizeInEMU
       PixelWidth  = $iwidth
       PixelHeight = $iheight
       EMUWidth    = [int][Math]::Round(($iwidth * 9525),0)
-      EMUHeight   = [int][Math]::Round(($iwidth * 9525),0)
+      EMUHeight   = [int][Math]::Round(($iheight * 9525),0)
     }
     return $ImageDetails
   }
