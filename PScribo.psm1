@@ -32,6 +32,7 @@ $exportedFunctions = @(
     'LineBreak',
     'PageBreak',
     'Paragraph',
+    'Image',
     'Section',
     'Style',
     'Table',

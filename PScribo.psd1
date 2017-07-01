@@ -15,6 +15,7 @@
                             'LineBreak',
                             'PageBreak',
                             'Paragraph',
+                            'Image',
                             'Section',
                             'Style',
                             'Set-Style',
