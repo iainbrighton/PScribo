@@ -214,3 +214,21 @@ function ConvertToInvariantCultureString {
     }
 
 } #end function ConvertToInvariantCultureString
+function ConvertPxToEMU {
+<#
+    .SYNOPSIS
+        Convert pixels into EMU
+#>
+    [CmdletBinding()]
+    [OutputType([System.Single])]
+    param (
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [Alias('px')]
+        [System.Single] $Pixel
+    )
+    process {
+
+        return [int][Math]::Round(($pixel * 9525),0)
+
+    }
+} #end function ConvertPxToEmu

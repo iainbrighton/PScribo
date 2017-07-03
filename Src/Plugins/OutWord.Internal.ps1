@@ -1259,11 +1259,11 @@ function OutWordImage
     [ref] $null = $inline.SetAttribute('distR', '0')
                 
     $extent = $inline.AppendChild($XmlDocument.CreateElement('wp', 'extent', $xmlnswpdrawing))
-    [ref] $null = $extent.SetAttribute('cx', $Image.EMUHeight)
-    [ref] $null = $extent.SetAttribute('cy', $Image.EMUWidth)
+    [ref] $null = $extent.SetAttribute('cx', $Image.EMUWidth)
+    [ref] $null = $extent.SetAttribute('cy', $Image.EMUHeight)
 
     $effectextent = $inline.AppendChild($XmlDocument.CreateElement('wp', 'effectExtent', $xmlnswpdrawing))
-    [ref] $null = $effectextent.SetAttribute('l', '19050')
+    [ref] $null = $effectextent.SetAttribute('l', '0')
     [ref] $null = $effectextent.SetAttribute('t', '0')
     [ref] $null = $effectextent.SetAttribute('r', '0')
     [ref] $null = $effectextent.SetAttribute('b', '0')
@@ -1312,8 +1312,8 @@ function OutWordImage
     [ref] $null = $off.SetAttribute('x', '0')
     [ref] $null = $off.SetAttribute('y', '0')
     $ext = $xfrm.AppendChild($XmlDocument.CreateElement('a', 'ext',$xmlnsdrawing))
-    [ref] $null = $ext.SetAttribute('cx',  $Image.EMUHeight)
-    [ref] $null = $ext.SetAttribute('cy',  $Image.EMUWidth)
+    [ref] $null = $ext.SetAttribute('cx',  $Image.EMUWidth)
+    [ref] $null = $ext.SetAttribute('cy',  $Image.EMUHeight)
                 
     $prstGeom = $spPr.AppendChild($XmlDocument.CreateElement('a', 'prstGeom',$xmlnsdrawing))
     [ref] $null = $prstGeom.SetAttribute('prst', 'rect')
