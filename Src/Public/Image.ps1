@@ -15,8 +15,10 @@ function Image
         [Parameter(ValueFromPipelineByPropertyName, Position = 1)]
         [AllowNull()]
         [System.String] $Text = $null,
+        [Parameter(ValueFromPipelineByPropertyName, Position = 2)]
         [AllowNull()]
         [Int32] $PixelHeight = $null,
+        [Parameter(ValueFromPipelineByPropertyName, Position = 3)]
         [AllowNull()]
         [Int32] $PixelWidth = $null
     )

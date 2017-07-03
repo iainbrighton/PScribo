@@ -89,6 +89,7 @@ Function ImageSize
         $Image = [Drawing.Image]::FromFile($FilePath)
         [int]$iwidth = $Image.width
         [int]$iheight = $Image.height
+        $image.Dispose() 
         $ImageDetails = @{
             FilePath    = $FilePath
             PixelWidth  = $iwidth
