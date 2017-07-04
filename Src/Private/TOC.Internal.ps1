@@ -13,7 +13,11 @@
             param (
                 [Parameter(ValueFromPipeline)]
                 [ValidateNotNullOrEmpty()]
-                [System.String] $Name = 'Contents'
+                [System.String] $Name = 'Contents',
+
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [ValidateNotNullOrEmpty()]
+                [System.String] $ClassId = 'TOC'
             )
             process {
 
@@ -26,10 +30,11 @@
                     Id = [System.Guid]::NewGuid().ToString();
                     Name = $Name;
                     Type = $typeName;
+                    ClassId = $ClassId;
                 }
                 return $pscriboTOC;
 
             } #end process
-        } #end function New-PScriboLTOC
+        } #end function New-PScriboTOC
 
         #endregion TOC Private Functions

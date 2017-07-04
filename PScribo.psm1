@@ -6,11 +6,6 @@ $importLocalizedDataParams = @{
     FileName = 'PScribo.Resources.psd1';
     BaseDirectory = $PSScriptRoot;
 }
-if (-not (Test-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath $PSUICulture))) {
-
-    # fallback to en-US
-    $importLocalizedDataParams['UICulture'] = 'en-US';
-}
 Import-LocalizedData @importLocalizedDataParams;
 
 ## Dot source all the nested .ps1 files in the \Functions and \Plugin folders, excluding tests

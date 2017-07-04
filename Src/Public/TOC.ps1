@@ -8,7 +8,11 @@ function TOC {
     param (
         [Parameter(ValueFromPipeline)]
         [ValidateNotNullOrEmpty()]
-        [System.String] $Name = 'Contents'
+        [System.String] $Name = 'Contents',
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $ClassId = 'TOC'
     )
     begin {
 
