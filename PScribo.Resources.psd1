@@ -58,4 +58,7 @@ DocumentProcessingCompleted      = Document '{0}' processing completed.
                                  
 TotalProcessingTime              = Total processing time '{0:N2}' seconds.
 SavingFile                       = Saving file '{0}'.
+
+IncorrectCharsInPath             = The incorrect char found in the Path.
+IncorrectCharsInName             = The incorrect char found in the Name.
 '@;
