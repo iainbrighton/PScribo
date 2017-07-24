@@ -79,7 +79,6 @@
     HISTORY OF VERSIONS
     https://github.com/it-praktyk/New-OutputObject/CHANGELOG.md
 
-
 #>
 
     [cmdletbinding()]
