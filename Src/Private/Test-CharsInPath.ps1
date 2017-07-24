@@ -27,6 +27,11 @@
     .PARAMETER SkipCheckCharsInFileNamePart
     Skip checking in the file name part of path.
 
+    .PARAMETER SkipDividingForParts
+    Skip dividing provided path to a directory and a file name.
+
+    Used usually in conjuction with SkipCheckCharsInFolderPart or SkipCheckCharsInFileNamePart.
+
     .EXAMPLE
 
     [PS] > Test-CharsInPath -Path $(Get-Item C:\Windows\Temp\new.csv') -Verbose
@@ -60,15 +65,19 @@
     KEYWORDS: PowerShell, FileSystem
 
     REMARKS:
-    # Based on the Power Tips
+    # For Windows - based on the Power Tips
     # Finding Invalid File and Path Characters
-    # http://powershell.com/cs/blogs/tips/archive/2016/04/20/finding-invalid-file-and-path-characters.aspx
+    # http://community.idera.com/powershell/powertips/b/tips/posts/finding-invalid-file-and-path-characters
+    # For PowerShell Core
+    # https://docs.microsoft.com/en-us/dotnet/api/system.io.path.getinvalidpathchars?view=netcore-2.0
+    # https://www.dwheeler.com/essays/fixing-unix-linux-filenames.html
+    # [char]0 = NULL
 
     CURRENT VERSION
-    - 0.5.4 - 2017-05-16
+    - 0.6.1 - 2017-07-23
 
     HISTORY OF VERSIONS
-    https://github.com/it-praktyk/New-OutputObject/VERSIONS.md
+    https://github.com/it-praktyk/New-OutputObject/CHANGELOG.md
 
 
 #>
@@ -83,17 +92,46 @@
         [parameter(Mandatory = $false)]
         [switch]$SkipCheckCharsInFolderPart,
         [parameter(Mandatory = $false)]
-        [switch]$SkipCheckCharsInFileNamePart
+        [switch]$SkipCheckCharsInFileNamePart,
+        [parameter(Mandatory = $false)]
+        [switch]$SkipDividingForParts
 
     )
 
     BEGIN {
 
-        $PathInvalidChars = [System.IO.Path]::GetInvalidPathChars() #36 chars
+        If ( $PSVersionTable.PSEdition -eq 'Core' -and $ISLinux) {
 
-        $FileNameInvalidChars = [System.IO.Path]::GetInvalidFileNameChars() #41 chars
+            #[char]0 = NULL
+            $PathInvalidChars = [char]0
 
-        #$FileOnlyInvalidChars = @(':', '*', '?', '\', '/') #5 chars - as a difference
+            $FileNameInvalidChars = @([char]0, '/')
+
+            $PathSeparators = @('/')
+
+        }
+        Elseif ( $PSVersionTable.PSEdition -EQ 'Core' -and $IsOSX) {
+
+            #[char]58 = ':'
+            $PathInvalidChars = [char]58
+
+            $FileNameInvalidChars = [char]58
+
+            $PathSeparators = @('/')
+
+        }
+        #Windows
+        Else {
+
+            $PathInvalidChars = [System.IO.Path]::GetInvalidPathChars() #36 chars
+
+            $FileNameInvalidChars = [System.IO.Path]::GetInvalidFileNameChars() #41 chars
+
+            #$FileOnlyInvalidChars = @(':', '*', '?', '\', '/') #5 chars - as a difference
+
+            $PathSeparators = @('/','\')
+
+        }
 
         $IncorectCharFundInPath = $false
 
@@ -104,6 +142,10 @@
     }
 
     PROCESS {
+
+        [String]$DirectoryPath = ""
+
+        [String]$FileName = ""
 
         $PathType = ($Path.GetType()).Name
 
@@ -132,40 +174,47 @@
 
         ElseIf ($PathType -eq 'String') {
 
-            [String]$DirectoryPath = ""
+            If ( $SkipDividingForParts.IsPresent -and $SkipCheckCharsInFolderPart.IsPresent ) {
 
-            #Convert String to Array of chars
-            $PathArray = $Path.ToCharArray()
-
-            $PathLength = $PathArray.Length
-
-            #It should be removed in a future and for loop changed to $i--
-            #Reverse PathArray to speedup of finding the folder indicator chars '\' or '/'
-            [array]::Reverse($PathArray)
-
-            For ($i = 0; $i -lt $PathLength; $i++) {
-
-                If (@('\', '/') -contains $PathArray[$i]) {
-
-                    [String]$DirectoryPath = [String]$Path.Substring(0, $($PathArray.Length - $i))
-
-                    break
-
-                }
+                $FileName = $Path
 
             }
+            ElseIf ( $SkipDividingForParts.IsPresent -and $SkipCheckCharsInFileNamePart.IsPresent  ) {
 
-            If ([String]::IsNullOrEmpty($DirectoryPath)) {
-
-                [String]$FileName = [String]$Path
+                $DirectoryPath = $Path
 
             }
             Else {
 
-                [String]$FileName = $Path.Replace($DirectoryPath, "")
+                #Convert String to Array of chars
+                $PathArray = $Path.ToCharArray()
+
+                $PathLength = $PathArray.Length
+
+                For ($i = ($PathLength-1); $i -ge 0; $i--) {
+
+                    If ($PathSeparators -contains $PathArray[$i]) {
+
+                        [String]$DirectoryPath = [String]$Path.Substring(0, $i +1)
+
+                        break
+
+                    }
+
+                }
+
+                If ([String]::IsNullOrEmpty($DirectoryPath)) {
+
+                    [String]$FileName = [String]$Path
+
+                }
+                Else {
+
+                    [String]$FileName = $Path.Replace($DirectoryPath, "")
+
+                }
 
             }
-
 
         }
         Else {
