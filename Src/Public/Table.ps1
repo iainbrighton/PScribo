@@ -27,7 +27,7 @@ function Table {
     .EXAMPLE
         Table -Name 'Table 1' -InputObject $(Get-Service) -Columns 'Name','DisplayName','Status' -ColumnWidths 40,20,40
 
-        
+
 
 #>
     [CmdletBinding(DefaultParameterSetName = 'InputObject')]
