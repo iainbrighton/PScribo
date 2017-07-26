@@ -629,9 +629,9 @@ InModuleScope 'PScribo' {
 
             It 'outputs table cell with embedded new line' {
                 $testTable = [Ordered] @{ Licenses = "Standard`r`nProfessional`r`nEnterprise"; }
-                
+
                 OutWordTable (Table 'TestTable' -Hashtable $testTable -List) -XmlDocument $testDocument -Element $testDocument.DocumentElement;
-                
+
                 ## Three lines = 2 line breaks
                 $null = $testDocument.DocumentElement.OuterXml -match (GetMatch '(<w:r><w:t><w:br /></w:t></w:r>.*)');
                 $matches.Count | Should Be 2;
@@ -785,9 +785,9 @@ InModuleScope 'PScribo' {
             It 'outputs table cell with embedded new line' {
                 $licenses = "Standard`r`nProfessional`r`nEnterprise"
                 $testTable = [Ordered] @{ Licenses = $licenses; }
-                
+
                 OutWordTable (Table 'TestTable' -Hashtable $testTable) -XmlDocument $testDocument -Element $testDocument.DocumentElement;
-                
+
                 $null = $testDocument.DocumentElement.OuterXml -match (GetMatch '(<w:r><w:t><w:br /></w:t></w:r>.*)');
                 $matches.Count | Should Be 2;
             }

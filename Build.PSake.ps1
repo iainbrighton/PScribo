@@ -168,11 +168,11 @@ function Combine-File {
         ## Files to bundle.
         [Parameter(Mandatory)]
         [System.String[]] $Path,
-        
+
         ## Output filename.
         [Parameter(Mandatory)]
         [System.String] $DestinationPath,
-        
+
         ## Excluded files.
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -210,11 +210,11 @@ function Bundle-File {
         ## Files to bundle.
         [Parameter(Mandatory)]
         [System.String[]] $Path,
-        
+
         ## Output filename.
         [Parameter(Mandatory)]
         [System.String] $DestinationPath,
-        
+
         ## Excluded files.
         [Parameter()]
         [ValidateNotNullOrEmpty()]

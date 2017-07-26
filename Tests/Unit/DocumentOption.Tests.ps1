@@ -10,13 +10,13 @@ InModuleScope 'PScribo' {
 
         It 'sets default space separator to "".' {
             DocumentOption;
-            
+
             $pscriboDocument.Options['SpaceSeparator'] | Should Be $null;
         }
 
         It 'defaults to 25.4mm (1 inch) margin.' {
             DocumentOption;
-            
+
             $pscriboDocument.Options['MarginTop'] | Should Be 25.4;
             $pscriboDocument.Options['MarginBottom'] | Should Be 25.4;
             $pscriboDocument.Options['MarginLeft'] | Should Be 25.4;
@@ -25,7 +25,7 @@ InModuleScope 'PScribo' {
 
         It 'defaults to "Calibri","Candara","Segoe","Segoe UI","Optima","Arial","Sans-Serif" fonts' {
             DocumentOption;
-            
+
             $pscriboDocument.Options['DefaultFont'].Count | Should Be 7;
         }
 
