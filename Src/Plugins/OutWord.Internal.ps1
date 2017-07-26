@@ -134,7 +134,7 @@
 
                 ## Create a separate run for each line/break
                 for ($l = 0; $l -lt $lines.Count; $l++) {
-                    
+
                     $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain));
                     $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain));
                     ## Apply custom paragraph styles to the run..
@@ -165,7 +165,7 @@
                     $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain));
                     [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve'); ## needs to be xml:space="preserve" NOT w:space...
                     [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($lines[$l]));
-                    
+
                     if ($l -lt ($lines.Count -1)) {
                         ## Don't add a line break to the last line/break
                         $brr = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain));
@@ -533,7 +533,7 @@
                             $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
                             $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain));
                             [ref] $null = $pStyle.SetAttribute('val', $xmlnsMain, $cellStyleName);
-                            
+
                             ## Create a separate run for each line/break
                             $lines = $row.($propertyName) -split [System.Environment]::NewLine;
                             for ($l = 0; $l -lt $lines.Count; $l++) {
@@ -542,7 +542,7 @@
                                 $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain));
                                 [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($lines[$l]));
                                 if ($l -lt ($lines.Count -1)) {
-                                
+
                                     ## Don't add a line break to the last line/break
                                     $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain));
                                     $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain));
