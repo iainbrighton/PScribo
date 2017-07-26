@@ -34,7 +34,7 @@
         try { $Path = Resolve-Path $Path -ErrorAction SilentlyContinue; }
         catch { }
 
-        If (  $(Test-CharsInPath -Path $Path -SkipCheckCharsInFileNamePart) -eq 2 ) {
+        if ( $(Test-CharsInPath -Path $Path -SkipCheckCharsInFileNamePart) -eq 2 ) {
             throw $localized.IncorrectCharsInPath;
         }
 
