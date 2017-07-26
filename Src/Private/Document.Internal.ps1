@@ -25,8 +25,8 @@
 
             begin {
 
-                If ( $(Test-CharsInPath -Path $Name -SkipCheckCharsInFolderPart) -eq 3 ) {
-                    Throw -Message ($localized.IncorrectCharsInName);
+                if ($(Test-CharsInPath -Path $Name -SkipCheckCharsInFolderPart) -eq 3 ) {
+                    throw -Message ($localized.IncorrectCharsInName);
                 }
 
             }
