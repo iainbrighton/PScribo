@@ -141,7 +141,7 @@
 
     }
 
-    PROCESS {
+    END {
 
         [String]$DirectoryPath = ""
 
@@ -274,10 +274,6 @@
             }
 
         }
-
-    }
-
-    END {
 
         If ($IncorectCharFundInPath -and $IncorectCharFundInFileName) {
 

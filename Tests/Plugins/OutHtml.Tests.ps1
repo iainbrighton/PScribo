@@ -542,7 +542,6 @@ InModuleScope 'PScribo' {
 
                 [Xml] $html = $table.Replace('&','&amp;');
                 $html.OuterXml | Should Match $expected;
-                Write-Host $html.OuterXml
 
             }
 
