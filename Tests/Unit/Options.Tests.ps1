@@ -5,7 +5,7 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe 'Options\Merge-PScriboPluginOptions' {
+    Describe 'Options\Merge-PScriboPluginOption' {
 
         It 'does not throw with empty hashtable(s)' {
             $mergePScriboPluginOptionParams = @{
