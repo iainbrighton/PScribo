@@ -1,13 +1,13 @@
 TOPIC
-	PScribo
+    PScribo
 
 SYNOPSIS
-	PScribo is a documentation framework for PowerShell.
+    PScribo is a documentation framework for PowerShell.
 
 DESCRIPTION
     PScribo is an open source project that implements a documentation domain-specific-language (DSL) for Windows
     Powershell. The latest version is available at https://github.com/iainbrighton/PScribo.
-    
+
     PScribo provides a set of functions that make it easy to create a document-like structure within Powershell without
     having to handle individual output formatting. A document's layout and contents only need to defined once. After
     report creation, the document can be exported to one or more formats simultaneously. For more detailed infomation
@@ -29,7 +29,7 @@ OTHER EXAMPLES
     directory.
 
 SEE ALSO
-   	about_Document
+       about_Document
     about_Styles
     about_Tables
     about_Plugins
