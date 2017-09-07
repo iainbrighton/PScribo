@@ -110,7 +110,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions
 
-### Unreleased
+### 0.7.18
 
 * Adds ClassId parameter to TOC for HTML output
 

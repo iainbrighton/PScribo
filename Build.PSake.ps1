@@ -9,7 +9,7 @@ Properties {
     $releaseDir = 'Release';
     $company = 'Iain Brighton';
     $author = 'Iain Brighton';
-    $thumbprint = '76BF0DF07634549D8134763F2776598E15BD1D42';
+    $thumbprint = '3DACD0F2D1E60EB33EC774B9CFC89A4BEE9037AF';
     $timeStampServer = 'http://timestamp.verisign.com/scripts/timestamp.dll';
 }
 
