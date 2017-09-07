@@ -519,9 +519,9 @@ InModuleScope 'PScribo' {
                 ## Scaffold new document to initialise options/styles
                 $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
             }
-            
+
             It 'creates a tabular table cell with an embedded new line' {
-                
+
                 $licenses = "Standard`r`nProfessional`r`nEnterprise"
                 $expected = '<td>Standard<br />Professional<br />Enterprise</td>';
                 $newLineTable = [PSCustomObject] @{ 'Licenses' = $licenses; }
@@ -533,7 +533,7 @@ InModuleScope 'PScribo' {
             }
 
             It 'creates a list table cell with an embedded new line' {
-                
+
                 $licenses = "Standard`r`nProfessional`r`nEnterprise"
                 $expected = '<td>Standard<br />Professional<br />Enterprise</td>';
                 $newLineTable = [PSCustomObject] @{ 'Licenses' = $licenses; }
@@ -542,7 +542,6 @@ InModuleScope 'PScribo' {
 
                 [Xml] $html = $table.Replace('&','&amp;');
                 $html.OuterXml | Should Match $expected;
-                Write-Host $html.OuterXml
 
             }
 

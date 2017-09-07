@@ -14,7 +14,7 @@ function Document {
         ## PScribo document DSL script block containing Section, Paragraph and/or Table etc. commands.
         [Parameter(Position = 1)]
         [System.Management.Automation.ScriptBlock] $ScriptBlock = $(throw $localized.NoScriptBlockProvidedError),
-        
+
         ## PScribo document Id
         [Parameter()]
         [System.String] $Id = $Name.Replace(' ','')
@@ -29,7 +29,7 @@ function Document {
 
         $stopwatch = [Diagnostics.Stopwatch]::StartNew();
         $pscriboDocument = New-PScriboDocument -Name $Name -Id $Id;
-        
+
         ## Call the Document script block
         foreach ($result in & $ScriptBlock) {
 
@@ -37,7 +37,7 @@ function Document {
         }
 
         Invoke-PScriboSection;
-        
+
         WriteLog -Message ($localized.DocumentProcessingCompleted -f $pscriboDocument.Name);
         $stopwatch.Stop();
         WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds);

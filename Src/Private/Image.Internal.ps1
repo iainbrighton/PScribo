@@ -1,95 +1,98 @@
 #region Image Private Functions
 
-function New-PScriboImage 
-{
+function New-PScriboImage {
     <#
-            .SYNOPSIS
-            Initializes a new PScribo Image object.
-            .NOTES
-            This is an internal function and should not be called directly.
-    #>
+    .SYNOPSIS
+        Initializes a new PScribo Image object.
+    .NOTES
+        This is an internal function and should not be called directly.
+#>
     [CmdletBinding()]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
     [OutputType([System.Management.Automation.PSCustomObject])]
     param (
-        ## FilePath
-        [Parameter(Mandatory,ValueFromPipelineByPropertyName, Position = 0)]
-        [System.String] $FilePath,
-        ## FilePath will be used.
+        ## File path
+        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
+        [Alias('FilePath','Uri')]
+        [System.String] $Path,
+
+        ## FilePath will be used. ##AltText?
         [Parameter(ValueFromPipelineByPropertyName, Position = 1)]
-        [AllowNull()]
-        [System.String] $Text = $null,
+        [System.String] $Text = $Path,
+
+        [Parameter(ValueFromPipelineByPropertyName, Position = 2)]
+        [Alias('PixelHeight')]
+        [System.UInt32] $Height,
+
+        [Parameter(ValueFromPipelineByPropertyName, Position = 3)]
+        [Alias('PixelWidth')]
+        [System.UInt32] $Width,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [System.String] $Id = [System.Guid]::NewGuid().ToString(),
-        [AllowNull()]
-        [Int32] $PixelHeight = $null,
-        [AllowNull()]
-        [Int32] $PixelWidth = $null
+        [System.String] $Id = [System.Guid]::NewGuid().ToString()
     )
     begin {
 
-        if (-not ([string]::IsNullOrEmpty($Text))) 
-        {
-            $Text = $FilePath.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper()
+        if (-not ([System.String]::IsNullOrEmpty($Text))) {
+            $Text = $Path.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper()
         }
 
     } #end begin
     process {
-        $ImageNumber = 0
-        IF ($pscriboDocument.Properties['Image'] -gt 0)
-        {
-            $ImageNumber = $pscriboDocument.Properties['Image']
-        }
+
+        $imageNumber = [System.Int32] $pscriboDocument.Properties['Image']++
         $typeName = 'PScribo.Image'
-        $RefID = ('Img{0}' -f $ImageNumber)
-        $ImageDetails = ImageSize -FilePath $FilePath
-        IF ($PixelHeight)
-        {
-            $ImageDetails.PixelHeight = $PixelHeight
+        $refID = ('Img{0}' -f $imageNumber)
+        $fileItem = Get-Item -Path $Path
+
+        $imageDetail = Get-ImageSize -FilePath $fileItem.FullName
+        if ($Height) {
+
+            $imageDetail.PixelHeight = $Height
         }
-        IF ($PixelWidth)
-        {
-            $ImageDetails.Pixelwidth = $PixelWidth
+        if ($Width) {
+            $imageDetail.Pixelwidth = $Width
         }
-        $pscriboDocument.Properties['Image']++
+
         $pscriboImage = [PSCustomObject] @{
-            ID          = $Id
-            ImageNumber = $ImageNumber
+            Id          = $Id
+            ImageNumber = $imageNumber
             Text        = $Text
             Type        = $typeName
-            FilePath    = $FilePath
-            RefID       = $RefID
-            MIME        = Get-MimeType -CheckFile $FilePath
-            Name        = ('{0}{1}' -f $RefID, $(Get-Item -Path $FilePath).Extension)
-            EMUWidth    = ConvertPxToEMU -Pixel $ImageDetails.PixelWidth
-            EMUHeight   = ConvertPxToEMU -Pixel $ImageDetails.PixelHeight
-            PixelWidth  = $ImageDetails.PixelWidth
-            PixelHeight = $ImageDetails.PixelHeight
+            Path        = $fileItem.FullName
+            Name        = '{0}{1}' -f $RefID, $fileItem.Extension
+            RefID       = $refID
+            MIMEType    = Get-MimeType -FileInfo $fileItem
+            WidthEm     = ConvertPxToEm -Pixel $imageDetail.PixelWidth
+            HeightEm    = ConvertPxToEm -Pixel $imageDetail.PixelHeight
+            Width       = $imageDetail.PixelWidth
+            Height      = $imageDetail.PixelHeight
         }
 
         return $pscriboImage
 
     } #end process
 } #end function New-PScriboImage
-Function ImageSize 
-{
-    param(
-        [Parameter(Mandatory)]$FilePath
+
+function Get-ImageSize {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [System.String] $FilePath
     )
-    IF(-not (Test-Path $FilePath))
-    {
-        Throw ('No file found at {0}' -f $FilePath)
+    if (-not (Test-Path $FilePath)) {
+
+        throw ('No file found at {0}' -f $FilePath)
+
     }
-    Else
-    {
-        $drawfile = Get-ChildItem -Path "$((Get-ChildItem -Path Env:\windir).Value)\assembly" -Filter *drawing.dll -Recurse
-        $dllpath = (Get-Command $($drawfile.Fullname)).definition
-        $null = [Reflection.Assembly]::LoadFrom($dllpath)
+    else {
+
         # load the image
-        $Image = [Drawing.Image]::FromFile($FilePath)
+        $Image = [System.Drawing.Image]::FromFile($FilePath)
         [int]$iwidth = $Image.width
         [int]$iheight = $Image.height
-        $image.Dispose() 
+        $image.Dispose()
         $ImageDetails = @{
             FilePath    = $FilePath
             PixelWidth  = $iwidth
@@ -97,26 +100,76 @@ Function ImageSize
         }
         return $ImageDetails
     }
+} #end function
+
+function Get-MimeType {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [System.IO.FileInfo] $FileInfo
+    )
+    begin {
+
+        Add-Type -AssemblyName 'System.Web'
+        [System.String] $mimeType = $null
+    }
+    process {
+
+         if ($FileInfo.Exists) {
+#             ## Requires PowerShell v4.0 (.NET Framework 4.5 dependency)
+             $mimeType = [System.Web.MimeMapping]::GetMimeMapping($FileInfo.FullName)
+         }
+         else {
+             $mimeType = 'false'
+         }
+    }
+    end {
+
+        return $mimeType
+    }
 }
- 
-function Get-MimeType() 
-{ 
-    param([parameter(Mandatory = $true, ValueFromPipeline = $true)][ValidateNotNullorEmpty()][System.IO.FileInfo]$CheckFile) 
-    begin { 
-        Add-Type -AssemblyName 'System.Web'         
-        [System.IO.FileInfo]$check_file = $CheckFile 
-        [string]$mime_type = $null 
-    } 
-    process { 
-        if ($check_file.Exists) 
-        {
-            $mime_type = [System.Web.MimeMapping]::GetMimeMapping($check_file.FullName)
-        } 
-        else 
-        {
-            $mime_type = 'false'
-        } 
-    } 
-    end { return $mime_type } 
-}
+
+
+function GetPScriboImage {
+<#
+    .SYNOPSIS
+        Retrieves PScribo.Images in a document/section
+#>
+    [CmdletBinding()]
+    [OutputType([System.Management.Automation.PSObject])]
+    param (
+        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.PSObject] $Section,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.String[]] $Id
+    )
+    process {
+
+        if ($PSBoundParameters.ContainsKey('Id')) {
+
+            $Section.Sections |
+                Where-Object { ($_.Type -eq 'PScribo.Image') -and ($_.Id -in $Id) } |
+                    Write-Output
+        }
+        else {
+
+            $Section.Sections |
+                Where-Object { $_.Type -eq 'PScribo.Image' } |
+                    Write-Output
+        }
+
+        ## Recursively search subsections
+        $Section.Sections |
+            Where-Object { $_.Type -eq 'PScribo.Section' } |
+                ForEach-Object {
+
+                    $PSBoundParameters['Section'] = $_;
+                    GetPScriboImage @PSBoundParameters;
+                }
+
+    }
+} #end function GetPScriboImage
+
+
 #endregion image Private Functions

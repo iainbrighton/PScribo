@@ -27,4 +27,4 @@ WRITING A PLUGIN
     A PScribo plugin provides a method of exporting a PScribo document [PSCustomObject] to another format. Default
     plugins include outputting to text, HTML, XML and Word formats. This functionality can be extended by writing your
     own plugin.
-    
+

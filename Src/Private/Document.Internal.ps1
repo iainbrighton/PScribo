@@ -22,6 +22,15 @@
                 [ValidateNotNullOrEmpty()]
                 [System.String] $Id = $Name.Replace(' ','')
             )
+
+            begin {
+
+                if ($(Test-CharsInPath -Path $Name -SkipCheckCharsInFolderPart) -eq 3 ) {
+                    throw -Message ($localized.IncorrectCharsInName);
+                }
+
+            }
+
             process {
 
                 WriteLog -Message ($localized.DocumentProcessingStarted -f $Name);

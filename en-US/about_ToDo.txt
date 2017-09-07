@@ -25,7 +25,6 @@ Export-Document
     Add dynamic parameter for output formats, enumerate out* functions?
 
 Output/Plugins
-    Check for invalid path characters
 
 Html Output/Plugin
     Remove numbering from TOC if section numbering is not enabled?!

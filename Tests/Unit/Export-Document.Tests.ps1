@@ -55,7 +55,7 @@ InModuleScope 'PScribo' {
             Assert-VerifiableMocks;
         }
 
-            It "throws on invalid qualified directory path." {
+        It "throws on invalid qualified directory path." {
             { Export-Document -Document $document -Format Text -Path TestDrive:\ThisShouldHopefullyNotExist -ErrorAction SilentlyContinue } |
                 Should Throw;
         }
@@ -73,6 +73,11 @@ InModuleScope 'PScribo' {
         It "does not throw on valid relative path." {
             { Export-Document -Document $document -Format Text -Path . -ErrorAction SilentlyContinue } |
                 Should Not Throw;
+        }
+
+        It "throws on invalid chars in path." {
+            { Export-Document -Document $document -Format Text -Path "C:\AppData\Loc$([char]0)al\" -ErrorAction SilentlyContinue } |
+                Should Throw;
         }
 
     }

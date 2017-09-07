@@ -22,6 +22,10 @@ InModuleScope 'PScribo' {
             $document.Name | Should BeExactly 'Test Document';
         }
 
+        It 'throws when a Name of a Document contains incorrect chars.'{
+            { Document -Name [String]"Test-File-201606$([char]0)08-1315.txt" -ScriptBlock {} } | Should Throw;
+        }
+
         It 'default Document.Options type should be hashtable.' {
             $document = Document -Name 'Test Document' -ScriptBlock { };
             $document.Options.GetType() | Should Be 'Hashtable';

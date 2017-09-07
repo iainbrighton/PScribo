@@ -70,7 +70,7 @@
 
                 ## Fix Set-StrictMode
                 if (-not (Test-Path -Path Variable:\Options)) {
-                    
+
                     $options = New-PScriboTextOption;
                 }
 
@@ -144,7 +144,7 @@
 
                 ## Fix Set-StrictMode
                 if (-not (Test-Path -Path Variable:\Options)) {
-                    
+
                     $options = New-PScriboTextOption;
                 }
 
@@ -195,7 +195,7 @@
 
                 ## Fix Set-StrictMode
                 if (-not (Test-Path -Path Variable:\Options)) {
-                    
+
                     $options = New-PScriboTextOption;
                 }
 
@@ -227,7 +227,7 @@
 
                 ## Fix Set-StrictMode
                 if (-not (Test-Path -Path Variable:\Options)) {
-                    
+
                     $options = New-PScriboTextOption;
                 }
 
@@ -272,7 +272,7 @@
 
                 ## Fix Set-StrictMode
                 if (-not (Test-Path -Path Variable:\Options)) {
-                    
+
                     $options = New-PScriboTextOption;
                 }
 

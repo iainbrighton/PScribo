@@ -42,3 +42,7 @@ $exportedAliases = @(
 );
 
 Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases;
+
+## Load the System.Drawing.dll ## TODO: THIS WON'T WORK ON .NET CORE :|
+$systemDrawingPath = Get-ChildItem -Path "$env:SystemRoot\assembly" -Filter *drawing.dll -Recurse | Select-Object -First 1
+$null = [Reflection.Assembly]::LoadFrom($systemDrawingPath.FullName)

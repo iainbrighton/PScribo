@@ -4,7 +4,7 @@ documentation domain-specific language (DSL) for Windows PowerShell, used to
 create a "document" in a standardised format. The resulting "document" can be
 exported into various formats by "plugins", for example, text, HTML, XML
 and/or Microsoft Word format.
-    
+
 PScribo provides a set of functions that make it easy to create a document-like
 structure within Powershell scripts, without having to be concerned with
 handling output formatting or supporting multiple output formats.
@@ -15,7 +15,7 @@ handling output formatting or supporting multiple output formats.
 Import-Module PScribo
 
 Document 'PScribo Example' {
-    
+
     Paragraph -Style Heading1 'This is Heading 1'
     Paragraph -Style Heading2 'This is Heading 2'
     Paragraph -Style Heading3 'This is Heading 3'
@@ -33,13 +33,13 @@ Document 'PScribo Example' {
     Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in bold italics: $env:COMPUTERNAME" -Bold -Italic
     Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in 14 point bold italics: $env:COMPUTERNAME" -Bold -Italic -Size 14
     Paragraph "This is a regular line of text indented 0 tab stops with the computer name as data in 8 point Courier New bold italics: $env:COMPUTERNAME" -Bold -Italic -Size 8 -Font 'Courier New'
-   
+
     PageBreak
-    
+
     $services = Get-CimInstance -ClassName Win32_Service | Select-Object -Property DisplayName, State, StartMode | Sort-Object -Property DisplayName
-    
+
     Style -Name 'Stopped Service' -Color White -BackgroundColor Firebrick -Bold
-    
+
     Section -Style Heading1 'Standard-Style Tables' {
         Section -Style Heading2 'Autofit Width Autofit Cell No Highlighting' {
             Paragraph -Style Heading3 'Example of an autofit table width, autofit contents and no cell highlighting.'
@@ -47,9 +47,9 @@ Document 'PScribo Example' {
             $services | Table -Columns DisplayName,State,StartMode -Headers 'Display Name','Status','Startup Type' -Width 0
         }
     }
-    
+
     PageBreak
-    
+
     Section -Style Heading2 'Full Width Autofit Cell Highlighting' {
         Paragraph -Style Heading3 'Example of a full width table with autofit columns and individual cell highlighting.'
         Paragraph "Services ($($services.Count) Services found):"
@@ -58,14 +58,14 @@ Document 'PScribo Example' {
         $stoppedAutoServicesCell | Where { $_.State -eq 'Stopped' -and $_.StartMode -eq 'Auto'} | Set-Style -Property State -Style StoppedService
         $stoppedAutoServicesCell | Table -Columns DisplayName,State,StartMode -Headers 'Display Name','Status','Startup Type' -Tabs 1
     }
-    
+
 } | Export-Document -Path ~\Desktop -Format Word,Html,Text -Verbose
 ```
 For more detailed infomation on the documentation DSL, see
 [about_Document](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/en-US/about_Document.help.txt).
 
 Pscribo can export documentation in a variety of formats and currently
-supports creation of text, xml, html and Microsoft Word formats. 
+supports creation of text, xml, html and Microsoft Word formats.
 
 ### Example Html Output
 ![](./ExampleHtmlOutput.png)
@@ -102,7 +102,7 @@ place a comment at the project home page.
 * Manual:
   * Download and unblock the latest .zip file.
   * Extract the .zip into your $PSModulePath, e.g. ~\Documents\WindowsPowerShell\Modules\.
-  * Ensure the extracted folder is named 'PScribo'. 
+  * Ensure the extracted folder is named 'PScribo'.
   * Run 'Import-Module PScribo'.
 
 For an introduction to the PScribo framework, you can view the presentation given at the
@@ -119,7 +119,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 * Renames 'Hide' parameter to 'Hidden' on Style keyword
   * Adds 'Hide' alias for backwards compatibility
 * Fixes errors importing localized data on en-US systems (#49)
-  
+
 ### 0.7.16
 
 * Supports hiding styles, e.g. in MS Word (#32)

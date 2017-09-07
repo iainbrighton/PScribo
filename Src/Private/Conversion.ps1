@@ -203,7 +203,7 @@ function ConvertToInvariantCultureString {
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.String] $Format
     )
-    
+
     if ($PSBoundParameters.ContainsKey('Format')) {
 
         return $Object.ToString($Format, [System.Globalization.CultureInfo]::InvariantCulture);
@@ -214,7 +214,8 @@ function ConvertToInvariantCultureString {
     }
 
 } #end function ConvertToInvariantCultureString
-function ConvertPxToEMU {
+
+function ConvertPxToEm {
 <#
     .SYNOPSIS
         Convert pixels into EMU
@@ -228,7 +229,7 @@ function ConvertPxToEMU {
     )
     process {
 
-        return [int][Math]::Round(($pixel * 9525),0)
+        return [System.Math]::Round(($pixel * 9525), 0)
 
     }
-} #end function ConvertPxToEmu
+} #end function ConvertPxToEm
