@@ -100,7 +100,7 @@
 
     BEGIN {
 
-        If ( $PSVersionTable.PSEdition -eq 'Core' -and $ISLinux) {
+        If (($null -ne $PSVersionTable.PSEdition) -and ($PSVersionTable.PSEdition -eq 'Core') -and $ISLinux) {
 
             #[char]0 = NULL
             $PathInvalidChars = [char]0
@@ -110,9 +110,8 @@
             $PathSeparators = @('/')
 
         }
-        Elseif ( $PSVersionTable.PSEdition -EQ 'Core' -and $IsOSX) {
+        Elseif (($null -ne $PSVersionTable.PSEdition) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsOSX) {
 
-            #[char]58 = ':'
             $PathInvalidChars = [char]58
 
             $FileNameInvalidChars = [char]58
