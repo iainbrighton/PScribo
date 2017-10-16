@@ -54,7 +54,7 @@ Describe "Test-CharsInPath" {
 
     Context "Input is a string" {
 
-        If (($null -ne $PSVersionTable.PSEdition) -and ($PSVersionTable.PSEdition -eq 'Core') -and $ISLinux) {
+        If (($PSVersionTable.ContainsKey('PSEdition')) -and ($PSVersionTable.PSEdition -eq 'Core') -and $ISLinux) {
 
             #[char]58 = NULL
 
@@ -75,7 +75,7 @@ Describe "Test-CharsInPath" {
             [String]$CorrectFileNameOnly = 'Test-File-20160608-1315.txt'
 
         }
-        ElseIf (($null -ne $PSVersionTable.PSEdition) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsOSX) {
+        ElseIf (($PSVersionTable.ContainsKey('PSEdition')) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsOSX) {
 
             #[char]58 = ':'
 
@@ -96,7 +96,7 @@ Describe "Test-CharsInPath" {
             [String]$CorrectFileNameOnly = 'Test-File-20160608-1315.txt'
 
         }
-        ElseIf (($null -ne $PSVersionTable.PSEdition) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsWindows)  {
+        ElseIf (($PSVersionTable.ContainsKey('PSEdition')) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsWindows)  {
 
             #The differences between 'normal' PowerShell (based on PSEdition: Desktop, PSVersion 5.1.15063.483) and
             #PowerShell Core (based on PSEdition: Core, PSVersion: 6.0.0-beta) are

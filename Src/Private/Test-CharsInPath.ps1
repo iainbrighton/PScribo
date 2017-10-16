@@ -100,7 +100,7 @@
 
     BEGIN {
 
-        If (($null -ne $PSVersionTable.PSEdition) -and ($PSVersionTable.PSEdition -eq 'Core') -and $ISLinux) {
+        If (($PSVersionTable.ContainsKey('PSEdition')) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsLinux) {
 
             #[char]0 = NULL
             $PathInvalidChars = [char]0
@@ -110,7 +110,7 @@
             $PathSeparators = @('/')
 
         }
-        Elseif (($null -ne $PSVersionTable.PSEdition) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsOSX) {
+        Elseif (($PSVersionTable.ContainsKey('PSEdition')) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsOSX) {
 
             $PathInvalidChars = [char]58
 
