@@ -117,7 +117,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions ##
 
-### Unreleased ###
+### 0.7.19 ###
 
 * Adds default styles for heading levels 4 - 6 (#59)
 * Fixes $PSVersionTable.PSEdition strict mode detection errors on PS3 and PS4
