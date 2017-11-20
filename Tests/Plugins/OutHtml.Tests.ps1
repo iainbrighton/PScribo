@@ -8,6 +8,26 @@ InModuleScope 'PScribo' {
     Describe 'OutHtml\OutHtml' {
         $path = (Get-PSDrive -Name TestDrive).Root;
 
+        It 'warns when 7 nested sections are defined' {
+            $testDocument = Document -Name 'IllegalNestedSections' -ScriptBlock {
+                Section -Name 'Level1' {
+                    Section -Name 'Level2' {
+                        Section -Name 'Level3' {
+                            Section -Name 'Level4' {
+                                Section -Name 'Level5' {
+                                    Section -Name 'Level6' {
+                                        Section -Name 'Level7' { }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            { $testDocument | OutHtml -Path $path -WarningAction Stop 3>&1 } | Should Throw '6 heading'
+        }
+
         It 'calls OutHtmlSection' {
             Mock -CommandName OutHtmlSection -Verifiable -MockWith { };
             Document -Name 'TestDocument' -ScriptBlock { Section -Name 'TestSection' -ScriptBlock { } } | OutHtml -Path $path;

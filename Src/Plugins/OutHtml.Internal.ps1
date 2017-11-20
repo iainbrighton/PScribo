@@ -376,10 +376,10 @@
                 [int] $headerLevel = $Section.Number.Split('.').Count;
 
                 ## Html <h5> is the maximum supported level
-                if ($headerLevel -ge 5) {
+                if ($headerLevel -gt 6) {
 
                     WriteLog -Message $localized.MaxHeadingLevelWarning -IsWarning;
-                    $headerLevel = 5;
+                    $headerLevel = 6;
                 }
 
                 if ([string]::IsNullOrEmpty($Section.Style)) {
