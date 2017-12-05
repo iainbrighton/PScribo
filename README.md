@@ -117,6 +117,10 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions ##
 
+### Unreleased ###
+
+* Fixes unit tests for Pester v4.x compatibility
+
 ### 0.7.19 ###
 
 * Adds default styles for heading levels 4 - 6 (#59)
