@@ -479,7 +479,7 @@ InModuleScope 'PScribo' {
             BeforeEach {
                 ## Scaffold new document to initialise options/styles
                 $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
-                $services = Get-Service | Select -First 3;
+                $services = Get-Service | Select-Object -First 3;
                 $table = $services | Table -Name 'Test Table' | OutHtmlTable;
                 [Xml] $html = $table.Replace('&','&amp;');
             }

@@ -559,7 +559,7 @@
                         }
                         else {
 
-                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName);
+                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName.ToString());
                             $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />');
                             [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">{1}</td></tr>', $propertyStyleHtml, $encodedHtmlContent);
                         }
@@ -572,7 +572,7 @@
                         }
                         else {
 
-                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName);
+                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName.ToString());
                             $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />')
                             [ref] $null = $listTableBuilder.AppendFormat('<td>{0}</td></tr>', $encodedHtmlContent);
                         }
@@ -619,8 +619,15 @@
                     foreach ($propertyName in $Table.Columns) {
 
                         $propertyStyle = '{0}__Style' -f $propertyName;
-                        $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName);
-                        #$encodedHtmlContent = $encodedHtmlContent -replace [System.Environment]::NewLine, '<br />';
+
+                        if ([string]::IsNullOrEmpty($Row.$propertyName)) {
+
+                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode('&nbsp;');
+                        }
+                        else {
+
+                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName.ToString());
+                        }
                         $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />');
 
                         if ($row.PSObject.Properties[$propertyStyle]) {

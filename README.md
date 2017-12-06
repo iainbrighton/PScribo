@@ -120,6 +120,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 ### Unreleased ###
 
 * Fixes unit tests for Pester v4.x compatibility
+* Fixes [DateTime] discrepancy in Word and Html table output (#68)
 
 ### 0.7.19 ###
 
