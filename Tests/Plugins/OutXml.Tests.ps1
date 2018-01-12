@@ -14,7 +14,7 @@ InModuleScope 'PScribo' {
     ## Scaffold document
     $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {
         Paragraph -Name 'TestParagraph';
-        Get-Service | Select-Object -First 3 | Table 'TestTable';
+        Get-Process | Select-Object -First 3 | Table 'TestTable';
         Section -Name 'TestSection' -ScriptBlock {
             Section -Name 'TestSubSection' { }
         }
@@ -24,7 +24,7 @@ InModuleScope 'PScribo' {
 
         It 'calls OutXmlTable' {
             Mock -CommandName OutXmlTable -MockWith { return $xmlDocument.CreateElement('TestTable') };
-            Document -Name 'TestDocument' -ScriptBlock { Get-Service | Select-Object -First 1 | Table 'TestTable' } | OutXml -Path $testDrive;
+            Document -Name 'TestDocument' -ScriptBlock { Get-Process | Select-Object -First 1 | Table 'TestTable' } | OutXml -Path $testDrive;
             Assert-MockCalled -CommandName OutXmlTable -Exactly 1;
         }
 
@@ -104,7 +104,7 @@ InModuleScope 'PScribo' {
 
         It 'calls OutXmlTable' {
             Mock -CommandName OutXmlTable -MockWith { return $xmlDocument.CreateElement('TestTable'); };
-            Section -Name TestSection -ScriptBlock { Get-Service | Select-Object -First 3 | Table TestTable } | OutXmlTable;
+            Section -Name TestSection -ScriptBlock { Get-Process | Select-Object -First 3 | Table TestTable } | OutXmlTable;
             Assert-MockCalled -CommandName OutXmlTable -Exactly 1;
         }
 
@@ -124,15 +124,15 @@ InModuleScope 'PScribo' {
     } #end describe OutXmlSection
 
     Describe 'OutXml.InternalOutXmlTable' {
-        $services = Get-Service | Select -First 3;
+        $processes = Get-Process | Select -First 3;
         $tableName = 'Test Table';
-        $tableColumns = @('Name','DisplayName','Status');
-        $tableHeaders = @('Name','Display Name','Status');
+        $tableColumns = @('ProcessName','SI','Id');
+        $tableHeaders = @('ProcessName','SI','Id');
 
         Context 'By Name Parameter.' {
 
             It 'outputs a root XmlElement' {
-                $table = $services | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
+                $table = $processes | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
                     OutXmlTable;
                 $table.LocalName | Should BeExactly ($tableName.Replace(' ','').ToLower());
                 $table.Name | Should BeExactly $tableName;
@@ -140,19 +140,19 @@ InModuleScope 'PScribo' {
             }
 
             It 'outputs a XmlElement for each table row' {
-                $table = $services | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
+                $table = $processes | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
                     OutXmlTable;
-                $table.ChildNodes.Count | Should Be $services.Count;
+                $table.ChildNodes.Count | Should Be $processes.Count;
             }
 
             It 'outputs a XmlElement for each table column' {
-                $table = $services | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
+                $table = $processes | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
                     OutXmlTable;
                 $table.FirstChild.ChildNodes.Count | Should Be $tableColumns.Count;
             }
 
             It 'creates a name attribute when headers contain spaces' {
-                $table = $services | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
+                $table = $processes | Table -Name $tableName -Columns $tableColumns -Headers $tableHeaders |
                     OutXmlTable;
                 for ($i = 0; $i -lt $table.FirstChild.ChildNodes.Count; $i++) {
                     $table.FirstChild.ChildNodes[$i].LocalName | Should BeExactly $tableColumns[$i].ToLower();
@@ -166,7 +166,7 @@ InModuleScope 'PScribo' {
          Context 'By Postional Parameter.' {
 
             It 'outputs a root XmlElement' {
-                $table = $services | Table $tableName $tableColumns $tableHeaders |
+                $table = $processes | Table $tableName $tableColumns $tableHeaders |
                     OutXmlTable;
                 $table.LocalName | Should BeExactly ($tableName.Replace(' ','').ToLower());
                 $table.Name | Should BeExactly $tableName;
@@ -174,19 +174,19 @@ InModuleScope 'PScribo' {
             }
 
             It 'outputs a XmlElement for each table row' {
-                $table = $services | Table $tableName $tableColumns $tableHeaders |
+                $table = $processes | Table $tableName $tableColumns $tableHeaders |
                     OutXmlTable;
-                $table.ChildNodes.Count | Should Be $services.Count;
+                $table.ChildNodes.Count | Should Be $processes.Count;
             }
 
             It 'outputs a XmlElement for each table column' {
-                $table = $services | Table $tableName $tableColumns $tableHeaders |
+                $table = $processes | Table $tableName $tableColumns $tableHeaders |
                     OutXmlTable;
                 $table.FirstChild.ChildNodes.Count | Should Be $tableColumns.Count;
             }
 
             It 'creates a name attribute when headers contain spaces' {
-                $table = $services | Table $tableName $tableColumns $tableHeaders |
+                $table = $processes | Table $tableName $tableColumns $tableHeaders |
                     OutXmlTable;
                 for ($i = 0; $i -lt $table.FirstChild.ChildNodes.Count; $i++) {
                     $table.FirstChild.ChildNodes[$i].LocalName | Should BeExactly $tableColumns[$i].ToLower();

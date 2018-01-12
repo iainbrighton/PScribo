@@ -42,7 +42,7 @@ InModuleScope 'PScribo' {
 
         It 'calls OutHtmlTable' {
             Mock -CommandName OutHtmlTable -MockWith { };
-            Document -Name 'TestDocument' -ScriptBlock { Get-Service | Select-Object -First 1 | Table 'TestTable' } | OutHtml -Path $path;
+            Document -Name 'TestDocument' -ScriptBlock { Get-Process | Select-Object -First 1 | Table 'TestTable' } | OutHtml -Path $path;
             Assert-MockCalled -CommandName OutHtmlTable -Exactly 1;
         }
 
@@ -379,7 +379,7 @@ InModuleScope 'PScribo' {
 
         It 'calls OutHtmlTable' {
             Mock -CommandName OutHtmlTable -MockWith { };
-            Section -Name TestSection -ScriptBlock { Get-Service | Select-Object -First 3 | Table TestTable } | OutHtmlSection;
+            Section -Name TestSection -ScriptBlock { Get-Process | Select-Object -First 3 | Table TestTable } | OutHtmlSection;
             Assert-MockCalled -CommandName OutHtmlTable -Exactly 1;
         }
 
@@ -479,8 +479,8 @@ InModuleScope 'PScribo' {
             BeforeEach {
                 ## Scaffold new document to initialise options/styles
                 $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
-                $services = Get-Service | Select-Object -First 3;
-                $table = $services | Table -Name 'Test Table' | OutHtmlTable;
+                $processes = Get-Process | Select-Object -First 3;
+                $table = $processes | Table -Name 'Test Table' | OutHtmlTable;
                 [Xml] $html = $table.Replace('&','&amp;');
             }
 
@@ -493,11 +493,11 @@ InModuleScope 'PScribo' {
             }
 
             It 'creates column for each object property.' {
-                $html.Div.Table.Thead.Tr.Th.Count | Should Be ($services | Get-Member -MemberType Properties).Count;
+                $html.Div.Table.Thead.Tr.Th.Count | Should Be ($processes | Get-Member -MemberType Properties).Count;
             }
 
             It 'creates a row for each object.' {
-                $html.Div.Table.Tbody.Tr.Count | Should Be $services.Count;
+                $html.Div.Table.Tbody.Tr.Count | Should Be $processes.Count;
             }
 
         }
@@ -507,8 +507,8 @@ InModuleScope 'PScribo' {
             BeforeEach {
                 ## Scaffold new document to initialise options/styles
                 $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
-                $services = Get-Service | Select -First 1;
-                $table = $services | Table -Name 'Test Table' -List | OutHtmlTable;
+                $processes = Get-Process | Select -First 1;
+                $table = $processes | Table -Name 'Test Table' -List | OutHtmlTable;
                 [Xml] $html = $table.Replace('&','&amp;');
             }
 
@@ -528,7 +528,7 @@ InModuleScope 'PScribo' {
             }
 
             It 'creates a row for each object property.' {
-                $html.Div.Table.Tbody.Tr.Count | Should Be ($services | Get-Member -MemberType Properties).Count;
+                $html.Div.Table.Tbody.Tr.Count | Should Be ($processes | Get-Member -MemberType Properties).Count;
             }
 
         } #end context List

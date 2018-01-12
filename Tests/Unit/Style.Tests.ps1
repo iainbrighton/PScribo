@@ -175,33 +175,33 @@ InModuleScope 'PScribo' {
 
         Context 'By Row.' {
             It 'sets row style by reference.' {
-                ($service = Get-Service | Select -Last 1) | Set-Style -Style 'MyCustomStyle';
+                ($service = Get-Process | Select -Last 1) | Set-Style -Style 'MyCustomStyle';
                 $service.__Style | Should Be 'MyCustomStyle';
             }
             It 'sets row style by pipeline.' {
-                $service = Get-Service | Select -Last 1 | Set-Style -Style 'MyCustomStyle' -PassThru;
+                $service = Get-Process | Select -Last 1 | Set-Style -Style 'MyCustomStyle' -PassThru;
                 $service.__Style | Should Be 'MyCustomStyle';
             }
         } #end context by row
 
         Context 'By Cell.' {
             It 'sets cell style on a single property by reference.' {
-                ($service = Get-Service | Select -Last 1) | Set-Style -Style 'MyCustomStyle' -Property Status;
-                $service.Status__Style | Should Be 'MyCustomStyle';
+                ($service = Get-Process | Select -Last 1) | Set-Style -Style 'MyCustomStyle' -Property SI;
+                $service.SI__Style | Should Be 'MyCustomStyle';
             }
             It 'sets cell style on a single property by pipeline.' {
-                $service = Get-Service | Select -Last 1 | Set-Style -Style 'MyCustomStyle' -Property Status -PassThru;
-                $service.Status__Style | Should Be 'MyCustomStyle';
+                $service = Get-Process | Select -Last 1 | Set-Style -Style 'MyCustomStyle' -Property SI -PassThru;
+                $service.SI__Style | Should Be 'MyCustomStyle';
             }
             It 'sets cell style on a multiple properties by reference.' {
-                ($service = Get-Service | Select -Last 1) | Set-Style -Style 'MyCustomStyle' -Property Status,Name;
-                $service.Status__Style | Should Be 'MyCustomStyle';
-                $service.Name__Style | Should Be 'MyCustomStyle';
+                ($service = Get-Process | Select -Last 1) | Set-Style -Style 'MyCustomStyle' -Property SI,ProcessName;
+                $service.SI__Style | Should Be 'MyCustomStyle';
+                $service.ProcessName__Style | Should Be 'MyCustomStyle';
             }
             It 'sets cell style on a multiple properties by pipeline.' {
-                $service = Get-Service | Select -Last 1 | Set-Style -Style 'MyCustomStyle' -Property Status,Name -PassThru;
-                $service.Status__Style | Should Be 'MyCustomStyle';
-                $service.Name__Style | Should Be 'MyCustomStyle';
+                $service = Get-Process | Select -Last 1 | Set-Style -Style 'MyCustomStyle' -Property SI,ProcessName -PassThru;
+                $service.SI__Style | Should Be 'MyCustomStyle';
+                $service.ProcessName__Style | Should Be 'MyCustomStyle';
             }
 
         } #end context by cell

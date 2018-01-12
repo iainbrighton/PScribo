@@ -9,35 +9,35 @@ InModuleScope 'PScribo' {
 
         Context 'By System.Object.' {
 
-            $service = Get-Service | Select -First 1;
+            $process = Get-Process | Select -First 1;
 
             It 'returns a PSCustomObject.' {
-                $row = New-PScriboTableRow -InputObject $service;
+                $row = New-PScriboTableRow -InputObject $process;
                 $row.GetType().Name | Should Be 'PSCustomObject';
                 $row.PSObject.Properties['__Style'].Value | Should BeNullOrEmpty;
             }
 
             It 'creates a row by a single named -Properties parameter.' {
-                $row = $service | New-PScriboTableRow -Properties 'DisplayName';
+                $row = $process | New-PScriboTableRow -Properties 'ProcessName';
                 ($row | Get-Member -MemberType Properties).Count | Should Be 2; ## Row __Style property added
             }
 
             It 'creates a row by named -Properties.' {
-                $serviceProperties = $service | Get-Member -MemberType Properties | Select-Object -ExpandProperty Name;
-                $row = New-PScriboTableRow -InputObject $service -Properties $serviceProperties;
-                ($row | Get-Member -MemberType Properties).Count | Should Be ($serviceProperties.Count +1); ## Row __Style property added
+                $processProperties = $process | Get-Member -MemberType Properties | Select-Object -ExpandProperty Name;
+                $row = New-PScriboTableRow -InputObject $process -Properties $ProcessProperties;
+                ($row | Get-Member -MemberType Properties).Count | Should Be ($processProperties.Count +1); ## Row __Style property added
             }
 
             It 'creates a row by named -Properties and -Headers parameters.' {
-                $properties = 'Name', 'ServiceName', 'DisplayName';
-                $headers = 'Name', 'Service Name', 'Display Name';
-                $row = New-PScriboTableRow -InputObject $service -Properties $properties -Headers $headers;
+                $properties = 'ProcessName', 'SI', 'Id';
+                $headers = 'Name', 'Session Id', 'Process Id';
+                $row = New-PScriboTableRow -InputObject $process -Properties $properties -Headers $headers;
                 ($row | Get-Member -MemberType Properties).Count | Should Be 4; ## Row __Style property added
                 $row.Name | Should Not Be $null;
-                $row.'Service Name' | Should Not Be $null;
-                $row.'Display Name' | Should Not Be $null;
-                $row.PSObject.Properties['ServiceName'] | Should BeNullOrEmpty;
-                $row.PSObject.Properties['DisplayName'] | Should BeNullOrEmpty;
+                $row.'Session Id' | Should Not Be $null;
+                $row.'Process Id' | Should Not Be $null;
+                $row.PSObject.Properties['SI'] | Should BeNullOrEmpty;
+                $row.PSObject.Properties['Id'] | Should BeNullOrEmpty;
             }
 
         } #end context by System.Object
@@ -119,74 +119,74 @@ InModuleScope 'PScribo' {
         $pscriboDocument = Document 'ScaffoldDocument' {};
 
         Context 'InputObject, By Named Parameter.' {
-            $services = Get-Service | Select -First 3;
+            $processes = Get-Process | Select -First 3;
 
             It 'returns a PSCustomObject object.' {
-                $table = $services | Table;
+                $table = $processes | Table;
                 $table.GetType().Name | Should Be 'PSCustomObject';
             }
 
             It 'creates a PScribo.Table type.' {
-                $table = $services | Table;
+                $table = $processes | Table;
                 $table.Type | Should Be 'PScribo.Table';
             }
 
             It 'creates a table without a name parameter.' {
-                $table = $services | Table;
+                $table = $processes | Table;
                 $table.Id | Should Not Be $null;
                 $table.Name | Should Not Be $null;
             }
 
             It 'defaults to table style "TableDefault".' {
-                $table = $services | Table;
+                $table = $processes | Table;
                 $table.Style | Should BeExactly 'TableDefault';
             }
 
             It 'creates a table with -List parameter.' {
-                $table = $services | Table -List;
+                $table = $processes | Table -List;
                 $table.List | Should Be $true;
             }
 
             It 'creates a table by named -Name parameter.' {
-                $table = $services | Table -Name 'TestTable';
+                $table = $processes | Table -Name 'TestTable';
                 $table.Id | Should BeExactly 'TESTTABLE';
                 $table.Name | Should BeExactly 'TestTable';
             }
 
             It 'creates a table by named -Name parameter with a space.' {
-                $table = $services | Table -Name 'Test Table';
+                $table = $processes | Table -Name 'Test Table';
                 $table.Id | Should BeExactly 'TESTTABLE';
                 $table.Name | Should BeExactly 'Test Table';
             }
 
             It 'creates a table by named -Columns parameters.' {
-                $columns = @( 'Name', 'ServiceName', 'DisplayName' );
-                $table = $services | Table -Columns $columns;
+                $columns = @( 'ProcessName', 'SI', 'Id' );
+                $table = $processes | Table -Columns $columns;
                 $table.Columns.Count | Should Be 3;
                 $table.Rows.Count | Should Be 3;
             }
 
             It 'creates a table by named -Columns and -Headers parameters.' {
-                $columns = @( 'Name', 'ServiceName', 'DisplayName' );
-                $headers = @( 'Name', 'Service Name', 'Display Name' );
-                $table = $services | Table -Name 'TestTable' -Columns $columns -Headers $headers;
+                $columns = @( 'ProcessName', 'SI', 'Id' );
+                $headers = @( 'Name', 'Session Id', 'Process Id' );
+                $table = $processes | Table -Name 'TestTable' -Columns $columns -Headers $headers;
                 $table.Columns.Count | Should Be 3;
                 $table.Rows.Count | Should Be 3;
             }
 
             It 'creates a table by mismatched named -Headers and -Columns parameters.' {
-                $columns = @( 'Name', 'ServiceName', 'DisplayName' );
-                $headers = @( 'Name', 'Service Name' );
-                $table = Table -InputObject $services -Name 'TestTable' -Headers $headers -Columns $columns -WarningAction SilentlyContinue;
+                $columns = @( 'ProcessName', 'SI', 'Id' );
+                $headers = @( 'Name', 'Session Id', 'Process Id' );
+                $table = Table -InputObject $processes -Name 'TestTable' -Headers $headers -Columns $columns -WarningAction SilentlyContinue;
                 $table.Columns.Count | Should Be 3;
                 $table.Rows.Count | Should Be 3;
             }
 
             It 'creates a table by named -Columns, -Headers and -Style parameters.' {
-                $columns = @( 'Name', 'ServiceName', 'DisplayName' );
-                $headers = @( 'Name', 'Service Name', 'Display Name' );
+                $columns = @( 'ProcessName', 'SI', 'Id' );
+                $headers = @( 'Name', 'Session Id', 'Process Id' );
                 $styleName = 'TestStyle';
-                $table = $services | Table -Name 'TestTable' -Columns $columns -Headers $headers -Style $styleName;
+                $table = $processes | Table -Name 'TestTable' -Columns $columns -Headers $headers -Style $styleName;
                 $table.Columns.Count | Should Be 3;
                 $table.Rows.Count | Should Be 3;
                 $table.Style | Should Be $styleName;
@@ -194,39 +194,39 @@ InModuleScope 'PScribo' {
 
             It 'warns with more than 2 columns with named -List parameter.' {
                 $columnWidths = @(100,200,300);
-                $table = $services | Table -List -ColumnWidths $columnWidths -WarningAction SilentlyContinue;
+                $table = $processes | Table -List -ColumnWidths $columnWidths -WarningAction SilentlyContinue;
                 $table.ColumnWidths | Should BeNullOrEmpty;
             }
 
             It 'warns with mismatching columns and column widths.' {
-                $columns = @( 'Name', 'ServiceName', 'DisplayName' );
+                $columns = @( 'ProcessName', 'SI', 'Id' );
                 $columnWidths = @(100,200,300,400);
-                $table = $services | Table -ColumnWidths $columnWidths -WarningAction SilentlyContinue;
+                $table = $processes | Table -ColumnWidths $columnWidths -WarningAction SilentlyContinue;
                 $table.ColumnWidths | Should BeNullOrEmpty;
             }
 
             It 'creates a table with specified column widths.' {
-                $columns = @( 'Name', 'ServiceName', 'DisplayName' );
-                $headers = @( 'Name', 'Service Name', 'Display Name' );
+                $columns = @( 'ProcessName', 'SI', 'Id' );
+                $headers = @( 'Name', 'Session Id', 'Process Id' );
                 $columnWidths = @(25,35,40);
-                $table = $services | Table -Name 'TestTable' -Columns $columns -Headers $headers -ColumnWidths $columnWidths;
+                $table = $processes | Table -Name 'TestTable' -Columns $columns -Headers $headers -ColumnWidths $columnWidths;
                 $table.ColumnWidths[0] | Should Be $columnWidths[0];
                 $table.ColumnWidths[1] | Should Be $columnWidths[1];
                 $table.ColumnWidths[2] | Should Be $columnWidths[2];
             }
 
             It 'creates a table with embedded row style' {
-                $service = $services[1];
-                Add-Member -InputObject $service -MemberType NoteProperty -Name __Style -Value 'MyRowStyle';
-                $table = $services | Table -Name 'TestTable';
+                $process = $processes[1];
+                Add-Member -InputObject $process -MemberType NoteProperty -Name __Style -Value 'MyRowStyle';
+                $table = $processes | Table -Name 'TestTable';
                 $table.Rows[1].__Style | Should Be 'MyRowStyle';
                 ($table.Columns -notlike '*__Style') -as [System.Boolean] | Should Be $true;
             }
 
             It 'creates a table with embedded cell style' {
-                $service = $services[1];
-                Add-Member -InputObject $service -MemberType NoteProperty -Name Name__Style -Value 'MyCellStyle';
-                $table = $services | Table -Name 'TestTable';
+                $process = $processes[1];
+                Add-Member -InputObject $process -MemberType NoteProperty -Name Name__Style -Value 'MyCellStyle';
+                $table = $processes | Table -Name 'TestTable';
                 $table.Rows[1].Name__Style | Should Be 'MyCellStyle';
                 ($table.Columns -notlike '*__Style') -as [System.Boolean] | Should Be $true;
             }
@@ -357,44 +357,44 @@ InModuleScope 'PScribo' {
         } #end context Hashtable, By Named Parameter
 
         Context 'InputObject, By Positional Parameters.' {
-            $services = Get-Service | Select -First 3;
+            $processes = Get-Process | Select -First 3;
             $tableName = 'TestName';
 
             It 'creates a table by positional -Name parameter.' {
-                $table = $services | Table $tableName;
+                $table = $processes | Table $tableName;
                 $table.Id | Should BeExactly $tableName.ToUpper();
                 $table.Name | Should BeExactly $tableName;
             }
 
             It 'creates a table by positional -Name parameter with a space.' {
-                $table = $services | Table 'Test Name';
+                $table = $processes | Table 'Test Name';
                 $table.Id | Should BeExactly $tableName.ToUpper();
                 $table.Name | Should BeExactly 'Test Name';
             }
 
             It 'creates a table by positional -Name and -Columns parameters.' {
                 $tableName = 'TestName';
-                $columns = @( 'Name', 'ServiceName', 'DisplayName' );
-                $table = $services | Table $tableName $columns;
+                $columns = @( 'ProcessName', 'SI', 'Id' );
+                $table = $processes | Table $tableName $columns;
                 $table.Name | Should Be $tableName;
                 $table.Columns.Count | Should Be 3;
                 $table.Rows.Count | Should Be 3;
             }
 
             It 'creates a table by positional -Name, -Columns and -Headers parameters.' {
-                $columns = @( 'Name', 'ServiceName', 'DisplayName' );
-                $headers = @( 'Name', 'Service Name', 'Display Name' );
-                $table = $services | Table $tableName $columns $headers;
+                $columns = @( 'ProcessName', 'SI', 'Id' );
+                $headers = @( 'ProcessName', 'Session Id', 'Process Id' );
+                $table = $processes | Table $tableName $columns $headers;
                 $table.Name | Should Be $tableName;
                 $table.Columns.Count | Should Be 3;
                 $table.Rows.Count | Should Be 3;
             }
 
             It 'creates a table by positional -Name, -Columns, -Headers and -Style parameters.' {
-                $columns = @( 'Name', 'ServiceName', 'DisplayName' );
-                $headers = @( 'Name', 'Service Name', 'Display Name' );
+                $columns = @( 'ProcessName', 'SI', 'Id' );
+                $headers = @( 'ProcessName', 'Session Id', 'Process Id' );
                 $styleName = 'TestStyle';
-                $table = $services | Table $tableName $columns $headers $styleName;
+                $table = $processes | Table $tableName $columns $headers $styleName;
                 $table.Name | Should Be $tableName;
                 $table.Columns.Count | Should Be 3;
                 $table.Rows.Count | Should Be 3;
