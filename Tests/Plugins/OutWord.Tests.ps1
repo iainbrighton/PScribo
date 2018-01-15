@@ -173,7 +173,7 @@ InModuleScope 'PScribo' {
                 $testDocument = NewTestDocument;
                 Mock OutWordTable { return $testDocument.CreateElement('mockTable'); };
 
-                $section = Section -Name TestSection -ScriptBlock { Get-Service | Select-Object -First 3 | Table TestTable };
+                $section = Section -Name TestSection -ScriptBlock { Get-Process | Select-Object -First 3 | Table TestTable };
                 OutWordSection -Section $section -XmlDocument $testDocument -RootElement $testDocument.DocumentElement;
 
                 Assert-MockCalled -CommandName OutWordTable -Scope It;
@@ -495,7 +495,7 @@ InModuleScope 'PScribo' {
                 $tableType = if ($tableStyle) { 'Tabular' } else { 'List' }
 
                 It "outputs $tableType table border `"<w:tblBorders>[..]</w:tblBorders>`"" {
-                    $testTable = Get-Service | Select -Property 'Name','DisplayName','Status' -First 3 | Table -Name 'Test Table' -List:$tableStyle;
+                    $testTable = Get-Process | Select -Property 'ProcessName','SI','Id' -First 3 | Table -Name 'Test Table' -List:$tableStyle;
 
                     OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 
@@ -504,7 +504,7 @@ InModuleScope 'PScribo' {
                 }
 
                 It "outputs $tableType table border color" {
-                    $testTable = Get-Service | Select -Property 'Name','DisplayName','Status' -First 3 | Table -Name 'Test Table' -List:$tableStyle;
+                    $testTable = Get-Process | Select -Property 'ProcessName','SI','Id' -First 3 | Table -Name 'Test Table' -List:$tableStyle;
                     $borderColor = ($pscriboDocument.TableStyles[$testTable.Style]).BorderColor;
 
                     OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
@@ -517,7 +517,7 @@ InModuleScope 'PScribo' {
                     $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:insideV w:sz="5.76" w:val="single" w:color="{0}" />' -f $borderColor));
                 }
                 It "outputs $tableType table cell spacing `"<w:tblCellMar>[..]</w:tblCellMar>`"" {
-                    $testTable = Get-Service | Select -Property 'Name','DisplayName','Status' -First 3 | Table -Name 'Test Table' -List:$tableStyle;
+                    $testTable = Get-Process | Select -Property 'ProcessName','SI','Id' -First 3 | Table -Name 'Test Table' -List:$tableStyle;
                     $paddingTop = ConvertToInvariantCultureString -Object (ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingTop);
                     $paddingLeft = ConvertToInvariantCultureString -Object (ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingLeft);
                     $paddingBottom = ConvertToInvariantCultureString -Object (ConvertMmToTwips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingBottom);
@@ -533,7 +533,7 @@ InModuleScope 'PScribo' {
                 }
 
                 It "outputs $tableType table spacing `"<w:spacing w:before=`"72`" w:after=`"72`" />`"" {
-                    $testTable = Get-Service | Select -Property 'Name','DisplayName','Status' -First 3 | Table -Name 'Test Table' -List:$tableStyle;
+                    $testTable = Get-Process | Select -Property 'ProcessName','SI','Id' -First 3 | Table -Name 'Test Table' -List:$tableStyle;
                     OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 
                     $expected = GetMatch ('<w:spacing w:before="72" w:after="72" />');
@@ -550,7 +550,7 @@ InModuleScope 'PScribo' {
                 $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
                 $Document = $pscriboDocument;
                 $testDocument = NewTestDocument;
-                $testTable = Get-Service | Select -Property 'Name','DisplayName','Status' -First 3 | Table -Name 'Test Table' -List;
+                $testTable = Get-Process | Select -Property 'ProcessName','SI','Id' -First 3 | Table -Name 'Test Table' -List;
             }
 
             It 'outputs table per row "(<w:tbl>[..]</w:tbl>.*){3}"' {
@@ -568,7 +568,7 @@ InModuleScope 'PScribo' {
             }
 
             It 'outputs one row per object property "(<w:tr>[..]</w:tr>.*){3}"' {
-                $testTable = Get-Service | Select -Property 'Name','DisplayName','Status' -First 1 | Table -Name 'Test Table' -List;
+                $testTable = Get-Process | Select -Property 'ProcessName','SI','Id' -First 1 | Table -Name 'Test Table' -List;
                 OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 
                 ## Ignore __Style property
@@ -578,7 +578,7 @@ InModuleScope 'PScribo' {
             }
 
             It 'outputs two cells per object property "(<w:tc>[..]</w:tc>.*){6}"' {
-                $testTable = Get-Service | Select -Property 'Name','DisplayName','Status' -First 1 | Table -Name 'Test Table' -List;
+                $testTable = Get-Process | Select -Property 'ProcessName','SI','Id' -First 1 | Table -Name 'Test Table' -List;
                 OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 
                 ## Ignore __Style property
@@ -588,7 +588,7 @@ InModuleScope 'PScribo' {
             }
 
             It 'outputs table cell percentage widths "(<w:tcW w:w="[..]" w:type="pct" />.*){6}' {
-                $testTable = Get-Service | Select -Property 'Name','DisplayName','Status' -First 1 | Table -Name 'Test Table' -List -ColumnWidths 30,70;
+                $testTable = Get-Process | Select -Property 'ProcessName','SI','Id' -First 1 | Table -Name 'Test Table' -List -ColumnWidths 30,70;
                 OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 
                 $expected = GetMatch ('(<w:tcW w:w="[..]" w:type="pct" />.*){6}')
@@ -596,7 +596,7 @@ InModuleScope 'PScribo' {
             }
 
             It 'outputs paragraph per table cell "(<w:p>[..]</w:p>.*){6}"' {
-                $testTable = Get-Service | Select -Property 'Name','DisplayName','Status' -First 1 | Table -Name 'Test Table' -List -ColumnWidths 30,70;
+                $testTable = Get-Process | Select -Property 'ProcessName','SI','Id' -First 1 | Table -Name 'Test Table' -List -ColumnWidths 30,70;
                 OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 
                 $expected = GetMatch '(<w:p>[..]</w:p>.*){6}';
@@ -645,7 +645,7 @@ InModuleScope 'PScribo' {
                 $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
                 $Document = $pscriboDocument;
                 $testDocument = NewTestDocument;
-                $testTable = Get-Service | Select -First 3 | Table -Name 'Test Table' -Columns 'Name','DisplayName' -ColumnWidths 30,70;
+                $testTable = Get-Process | Select -First 3 | Table -Name 'Test Table' -Columns 'ProcessName','SI' -ColumnWidths 30,70;
             }
 
             It 'appends table "<w:tbl>[..]</w:tbl>"' {
@@ -758,7 +758,7 @@ InModuleScope 'PScribo' {
                 };
                 $Document = $pscriboDocument;
                 $testDocument = NewTestDocument;
-                $testTable = Get-Service | Select -First 3 | Table -Name 'Test Table' -Columns 'Name','DisplayName' -Style 'CustomTableStyle';
+                $testTable = Get-Process | Select -First 3 | Table -Name 'Test Table' -Columns 'ProcessName','Id' -Style 'CustomTableStyle';
 
                 OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 

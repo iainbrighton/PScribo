@@ -43,7 +43,7 @@ InModuleScope 'PScribo' {
          It 'calls OutTextTable' {
             Mock -CommandName OutTextTable -MockWith { };
 
-            Document -Name 'TestDocument' -ScriptBlock { Get-Service | Select-Object -First 1 | Table 'TestTable' } | OutText -Path $path;
+            Document -Name 'TestDocument' -ScriptBlock { Get-Process | Select-Object -First 1 | Table 'TestTable' } | OutText -Path $path;
 
             Assert-MockCalled -CommandName OutTextTable -Exactly 1;
         }
@@ -230,7 +230,7 @@ InModuleScope 'PScribo' {
         It 'calls OutTextTable' {
             Mock -CommandName OutTextTable -MockWith { };
 
-            Section -Name TestSection -ScriptBlock { Get-Service | Select-Object -First 3 | Table TestTable } | OutTextSection;
+            Section -Name TestSection -ScriptBlock { Get-Process | Select-Object -First 3 | Table TestTable } | OutTextSection;
 
             Assert-MockCalled -CommandName OutTextTable -Exactly 1;
         }
