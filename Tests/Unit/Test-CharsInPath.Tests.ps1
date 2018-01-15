@@ -75,7 +75,7 @@ Describe "Test-CharsInPath" {
             [String]$CorrectFileNameOnly = 'Test-File-20160608-1315.txt'
 
         }
-        ElseIf (($PSVersionTable.ContainsKey('PSEdition')) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsOSX) {
+        ElseIf (($PSVersionTable.ContainsKey('PSEdition')) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsMacOS) {
 
             #[char]58 = ':'
 

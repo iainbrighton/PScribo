@@ -110,7 +110,7 @@
             $PathSeparators = @('/')
 
         }
-        Elseif (($PSVersionTable.ContainsKey('PSEdition')) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsOSX) {
+        Elseif (($PSVersionTable.ContainsKey('PSEdition')) -and ($PSVersionTable.PSEdition -eq 'Core') -and $IsMacOS) {
 
             $PathInvalidChars = [char]58
 

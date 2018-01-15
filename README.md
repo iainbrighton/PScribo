@@ -121,6 +121,8 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 * Fixes unit tests for Pester v4.x compatibility
 * Fixes [DateTime] discrepancy in Word and Html table output (#68)
+* Fixes errors importing module on non-English locales (#63)
+* Corrects PowerShell Core `IsMacOS` environment variable rename
 
 ### 0.7.19 ###
 
