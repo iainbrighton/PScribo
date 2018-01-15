@@ -231,7 +231,7 @@ function Bundle-File {
     ## TODO: Support localised bundles, eg en-US and fr-FR
     Write-Host ('  Creating bundle resources.') -ForegroundColor Cyan;
     Add-Content -Path $DestinationPath -Value "`r`n`$localized = DATA {";
-    Get-Content -Path "$currentDir\PScribo.Resources.psd1" | Add-Content -Path $DestinationPath;
+    Get-Content -Path "$currentDir\en-US\PScribo.Resources.psd1" | Add-Content -Path $DestinationPath;
     Add-Content -Path $DestinationPath -Value "}`r`n";
 
     Combine-File -Path $Path -DestinationPath $DestinationPath -Exclude $Exclude;
