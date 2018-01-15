@@ -507,7 +507,7 @@
                                 }
 
                                 ## Create a separate run for each line/break
-                                $lines = $row.($propertyName) -split [System.Environment]::NewLine
+                                $lines = $row.($propertyName).ToString() -split [System.Environment]::NewLine;
                                 for ($l = 0; $l -lt $lines.Count; $l++) {
 
                                     $r2 = $p2.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
@@ -613,7 +613,7 @@
                             [ref] $null = $pStyle.SetAttribute('val', $xmlnsMain, $cellStyleName)
 
                             ## Create a separate run for each line/break
-                            $lines = $row.($propertyName) -split [System.Environment]::NewLine
+                            $lines = $row.($propertyName).ToString() -split [System.Environment]::NewLine;
                             for ($l = 0; $l -lt $lines.Count; $l++) {
 
                                 $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))

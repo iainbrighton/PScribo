@@ -14,7 +14,7 @@ InModuleScope 'PScribo' {
                 # function PageBreak { }
                 Mock PageBreak -Verifiable { }
                 Section -Name 'Test Section' -ScriptBlock { PageBreak };
-                Assert-VerifiableMocks;
+                Assert-VerifiableMock;
             }
 
             It 'returns a PSCustomObject object.' {

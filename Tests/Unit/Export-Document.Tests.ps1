@@ -12,14 +12,14 @@ InModuleScope 'PScribo' {
         It "calls single output formatter." {
             Mock OutText -Verifiable { }
             $document | Export-Document -Format Text;
-            Assert-VerifiableMocks;
+            Assert-VerifiableMock;
         }
 
         It "calls multiple output formatters." {
             Mock OutText -Verifiable { }
             Mock OutXml -Verifiable { }
             $document | Export-Document -Format Text,XML;
-            Assert-VerifiableMocks;
+            Assert-VerifiableMock;
         }
 
         It "throws on invalid qualified directory path." {
@@ -45,14 +45,14 @@ InModuleScope 'PScribo' {
         It "calls single output formatter." {
             Mock OutText -Verifiable { }
             Export-Document -Document $document -Format Text;
-            Assert-VerifiableMocks;
+            Assert-VerifiableMock;
         }
 
         It "calls multiple output formatters." {
             Mock OutText -Verifiable { }
             Mock OutXml -Verifiable { }
             Export-Document -Document $document -Format Text,XML;
-            Assert-VerifiableMocks;
+            Assert-VerifiableMock;
         }
 
         It "throws on invalid qualified directory path." {

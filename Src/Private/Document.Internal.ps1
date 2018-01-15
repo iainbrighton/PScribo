@@ -63,6 +63,9 @@
                 Style -Name 'Heading 1' -Size 16 -Color 0072af;
                 Style -Name 'Heading 2' -Size 14 -Color 0072af;
                 Style -Name 'Heading 3' -Size 12 -Color 0072af;
+                Style -Name 'Heading 4' -Size 11 -Color 2f5496 -Italic;
+                Style -Name 'Heading 5' -Size 11 -Color 2f5496;
+                Style -Name 'Heading 6' -Size 11 -Color 1f3763;
                 Style -Name TableDefaultHeading -Size 11 -Color fff -Bold -BackgroundColor 4472c4;
                 Style -Name TableDefaultRow -Size 11;
                 Style -Name TableDefaultAltRow -BackgroundColor d0ddee;

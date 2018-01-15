@@ -119,8 +119,8 @@ function OutWord {
         }
         #Convert relative or PSDrive based path to the absolute filesystem path
         $AbsolutePath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
-        $destinationPath = Join-Path -Path $AbsolutePath -ChildPath ('{0}.docx' -f $Document.Name)
-        if ($PSVersionTable.PSEdition -ne 'Core') {
+        $destinationPath = Join-Path -Path $AbsolutePath ('{0}.docx' -f $Document.Name);
+        if ((-not $PSVersionTable.ContainsKey('PSEdition')) -or ($PSVersionTable.PSEdition -ne 'Core')) {
             ## WindowsBase.dll is not included in Core PowerShell
             Add-Type -AssemblyName WindowsBase
         }
