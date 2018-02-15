@@ -125,22 +125,22 @@ Task Zip {
 Task Bundle {
     $bundlePath = Join-Path -Path $releasePath -ChildPath "PScribo-v$version-Bundle.ps1";
     Write-Host (' Creating bundle file "{0}".' -f (TrimPath -Path $bundlePath)) -ForegroundColor Yellow;
-    $bundleFiles = "$buildPath\Src\Public","$buildPath\Src\Private","$buildPath\Src\Plugins";
+    $bundleFiles = "$buildPath\Src\Public","$buildPath\Src\Private","$buildPath\Src\Plugins\Public";
     $excludedFiles = '*.Tests.ps1','*.Internal.ps1','System.IO.Packaging.dll';
-    Bundle-File -Path $bundleFiles -DestinationPath $bundlePath -Exclude $excludedFiles -Verbose;
+    New-Bundle -Path $bundleFiles -DestinationPath $bundlePath -Exclude $excludedFiles -Verbose;
 }
 
 <#
 Task DocumentBundle {
     $bundlePath = Join-Path -Path $buildPath -ChildPath "PScribo-$version-DocumentBundle.ps1";
     $bundleFiles = "$currentDir\LICENSE","$currentDir\Functions";
-    Bundle-File -Path $bundleFiles -DestinationPath $bundlePath -Verbose;
+    New-Bundle -Path $bundleFiles -DestinationPath $bundlePath -Verbose;
 }
 
 Task OutputBundle {
     $bundlePath = Join-Path -Path $buildPath -ChildPath "PScribo-$version-OutputBundle.ps1";
     $bundleFiles = "$currentDir\LICENSE","$currentDir\Plugins";
-    Bundle-File -Path $bundleFiles -DestinationPath $bundlePath -Verbose;
+    New-Bundle -Path $bundleFiles -DestinationPath $bundlePath -Verbose;
 }
 #>
 
@@ -162,7 +162,7 @@ function TrimPath {
 }
 
 
-function Combine-File {
+function Join-BundleFile {
     [CmdletBinding()]
     param (
         ## Files to bundle.
@@ -185,7 +185,9 @@ function Combine-File {
             $internalFunctionContent = "";
             $content = Get-Content -Path $file.FullName -Raw;
             if ($content -match '(?<=<#!\s?)\S+.Internal.ps1(?=\s?!#>)') {
-                $internalFunctionPath = Join-Path -Path $file.DirectoryName -ChildPath $Matches[0];
+
+                $internalFunctionDirectory = Join-Path -Path (Split-Path -Path $file.DirectoryName -Parent) -ChildPath Private;
+                $internalFunctionPath = Join-Path -Path $internalFunctionDirectory -ChildPath $Matches[0];
 
                 if (Test-Path -Path $internalFunctionPath) {
                     Write-Host ('    Bundling internal file "{0}".' -f (TrimPath -Path $internalFunctionPath)) -ForegroundColor DarkCyan;
@@ -204,7 +206,7 @@ function Combine-File {
 }
 
 
-function Bundle-File {
+function New-Bundle {
     [CmdletBinding()]
     param (
         ## Files to bundle.
@@ -234,7 +236,7 @@ function Bundle-File {
     Get-Content -Path "$currentDir\en-US\PScribo.Resources.psd1" | Add-Content -Path $DestinationPath;
     Add-Content -Path $DestinationPath -Value "}`r`n";
 
-    Combine-File -Path $Path -DestinationPath $DestinationPath -Exclude $Exclude;
+    Join-BundleFile -Path $Path -DestinationPath $DestinationPath -Exclude $Exclude;
     Write-Host ('  Creating bundle footer.') -ForegroundColor Cyan;
     Add-Content -Path $DestinationPath -Value "#endregion PScribo Bundle v$version";
 }

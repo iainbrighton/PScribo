@@ -120,6 +120,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 ### Unreleased ###
 
 * Fixes custom table style default border color output (#71)
+* Fixes bundle creation after internal directory restructure
 
 ### 0.7.20 ###
 
