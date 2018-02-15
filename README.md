@@ -117,6 +117,10 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions ##
 
+### Unreleased ###
+
+* Fixes custom table style default border color output (#71)
+
 ### 0.7.20 ###
 
 * Fixes unit tests for Pester v4.x compatibility

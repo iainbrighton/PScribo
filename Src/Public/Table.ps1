@@ -70,7 +70,7 @@ function Table {
         ## Table style
         [Parameter(ValueFromPipelineByPropertyName, Position = 3)]
         [ValidateNotNullOrEmpty()]
-        [System.String] $Style = 'TableDefault',
+        [System.String] $Style = $pscriboDocument.DefaultTableStyle,
 
         # List view (no headers)
         [Parameter(ValueFromPipelineByPropertyName)]
