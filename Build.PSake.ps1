@@ -188,19 +188,31 @@ function Join-BundleFile {
 
                 $internalFunctionDirectory = Join-Path -Path (Split-Path -Path $file.DirectoryName -Parent) -ChildPath Private;
                 $internalFunctionPath = Join-Path -Path $internalFunctionDirectory -ChildPath $Matches[0];
-
                 if (Test-Path -Path $internalFunctionPath) {
-                    Write-Host ('    Bundling internal file "{0}".' -f (TrimPath -Path $internalFunctionPath)) -ForegroundColor DarkCyan;
-                    $internalFunctionContent = Get-Content -Path $internalFunctionPath -Raw;
-                    if ($content -match '<#!\s?\S+.Internal.ps1\s?!#>') {
-                        $replacementString = $Matches[0];
-                        Write-Debug ('Replacing text "{0}"...' -f $replacementString);
-                        ## Cannot use the -replace method as it replaces occurences of $_ too ?!
-                        $content = $content.Replace($replacementString, $internalFunctionContent.Trim());
+
+                    if (Test-Path -Path $internalFunctionPath) {
+                        Write-Host ('    Bundling internal file "{0}".' -f (TrimPath -Path $internalFunctionPath)) -ForegroundColor DarkCyan;
+                        $internalFunctionContent = Get-Content -Path $internalFunctionPath -Raw;
+                        if ($content -match '<#!\s?\S+.Internal.ps1\s?!#>') {
+                            $replacementString = $Matches[0];
+                            Write-Debug ('Replacing text "{0}"...' -f $replacementString);
+                            ## Cannot use the -replace method as it replaces occurences of $_ too ?!
+                            $content = $content.Replace($replacementString, $internalFunctionContent.Trim());
+                        }
                     }
                 }
             }
-            $content | Add-Content -Path $DestinationPath;
+
+            ## Now remove empty lines
+            $compressedContent = New-Object -TypeName System.Text.StringBuilder;
+            $content.Split("`r`n") | ForEach-Object {
+
+                if (-not [System.String]::IsNullOrWhitespace($_)) {
+
+                    [ref] $null = $compressedContent.AppendLine($_);
+                }
+            }
+            $compressedContent.ToString() | Add-Content -Path $DestinationPath;
         }
     }
 }
