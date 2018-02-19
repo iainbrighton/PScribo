@@ -117,6 +117,10 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions ##
 
+### Unreleased ###
+
+* Fixes $null Html output and [String]::Empty Word output (#72)
+
 ### 0.7.21 ###
 
 * Fixes custom table style default border color output (#71)
