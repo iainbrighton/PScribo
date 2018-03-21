@@ -117,7 +117,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions ##
 
-### Unreleased ###
+### 0.7.22 ###
 
 * Fixes $null Html output and [String]::Empty Word output (#72)
 
