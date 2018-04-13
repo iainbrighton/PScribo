@@ -122,6 +122,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 * Fixes Html TOC section hyperlinks with duplicate names (#74)
 * Adds warning to errant Document pipeline output
 * Adds tab/indentation support to `Section` headers (#73)
+* Removes trailing spaces from text table output (#67)
 
 ### 0.7.22 ###
 

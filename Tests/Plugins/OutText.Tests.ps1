@@ -299,7 +299,7 @@ InModuleScope 'PScribo' {
             It 'Default width of 120.' {
                 $table = Table -Hashtable $services -Name 'Test Table' | OutTextTable;
 
-                $table.Length | Should Be 212;
+                $table.Length | Should Be 208;  # Trailing spaces are removed (#67)
             }
 
             It 'Set width with of 35.' {
@@ -307,7 +307,7 @@ InModuleScope 'PScribo' {
 
                 $table = Table -Hashtable $services -Name 'Test Table' | OutTextTable;
 
-                $table.Length | Should Be 335; ## Text tables are now set to wrap..
+                $table.Length | Should Be 313; ## Text tables are now set to wrap.. Trailing spaces are removed (#67)
             }
 
         } #end context table
@@ -331,7 +331,7 @@ InModuleScope 'PScribo' {
 
                 $table = Table -Hashtable $services 'Test Table' -List | OutTextTable;
 
-                $table.Length | Should Be 357;
+                $table.Length | Should Be 354; # Trailing spaces are removed (#67)
             }
 
         } #end context table

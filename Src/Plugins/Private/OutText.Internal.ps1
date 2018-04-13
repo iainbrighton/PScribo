@@ -370,7 +370,7 @@
 
                 foreach ($line in ($InputObject -split '\r\n?|\n')) {
                     [ref] $null = $builder.Append($padding);
-                    [ref] $null = $builder.AppendLine($line);
+                    [ref] $null = $builder.AppendLine($line.TrimEnd()); ## Trim trailing space (#67)
                 }
                 return $builder.ToString();
 
