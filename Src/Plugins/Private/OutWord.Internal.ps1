@@ -51,6 +51,12 @@
                         [ref] $null = $pStyle.SetAttribute('val', $xmlnsMain, $Section.Style);
                     #}
                 }
+
+                if ($Section.Tabs -gt 0) {
+                    $ind = $pPr.AppendChild($XmlDocument.CreateElement('w', 'ind', $xmlnsMain));
+                    [ref] $null = $ind.SetAttribute('left', $xmlnsMain, (720 * $Section.Tabs));
+                }
+
                 $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain));
                 ## Increment heading spacing by 2pt for each section level, starting at 8pt for level 0, 10pt for level 1 etc
                 $spacingPt = (($Section.Level * 2) + 8) * 20;

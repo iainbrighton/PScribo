@@ -22,7 +22,12 @@ function Section {
 
         ## Section is excluded from TOC/section numbering.
         [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $ExcludeFromTOC
+        [System.Management.Automation.SwitchParameter] $ExcludeFromTOC,
+
+        ## Tab indent
+        [Parameter()]
+        [ValidateRange(0,10)]
+        [System.Int32] $Tabs = 0
     )
     begin {
 
@@ -32,7 +37,7 @@ function Section {
     process {
 
         WriteLog -Message ($localized.ProcessingSectionStarted -f $Name);
-        $pscriboSection = New-PScriboSection -Name $Name -Style $Style -IsExcluded:$ExcludeFromTOC;
+        $pscriboSection = New-PScriboSection -Name $Name -Style $Style -IsExcluded:$ExcludeFromTOC -Tabs:$Tabs;
         foreach ($result in & $ScriptBlock) {
 
             ## Ensure we don't have something errant passed down the pipeline (#29)

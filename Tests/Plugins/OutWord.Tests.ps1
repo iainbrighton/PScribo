@@ -30,6 +30,7 @@ InModuleScope 'PScribo' {
         $matchString = $String.Replace('/','\/');
         if (-not $String.StartsWith('^')) {
             $matchString = $matchString.Replace('[..]','[\s\S]+');
+            $matchString = $matchString.Replace('[??]','([\s\S]+)?');
             if ($Complete) {
                 $matchString = '^<w:test xmlns:w="http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main">{0}<\/w:test>$' -f $matchString;
             }
@@ -79,6 +80,7 @@ InModuleScope 'PScribo' {
                 $expected = GetMatch '<w:p>[..]</w:p>';
                 $testDocument.DocumentElement.OuterXml | Should Match $expected;
             }
+
             It 'appends section spacing "[..]<w:pPr><w:spacing w:before="160" w:after="160" /></w:pPr>[..]"' {
                 $Document = Document -Name 'TestDocument' -ScriptBlock { };
                 $pscriboDocument = $Document;
@@ -101,6 +103,18 @@ InModuleScope 'PScribo' {
                 OutWordSection -Section $testSection -XmlDocument $testDocument -RootElement $testDocument.DocumentElement;
 
                 $expected = GetMatch '[..]<w:pStyle w:val="CustomStyle" />[..]';
+                $testDocument.DocumentElement.OuterXml | Should Match $expected;
+            }
+
+            It 'outputs indented section "<w:p><w:pPr><w:ind w:left="1440" />[..]</w:p>" (#73)' {
+                $Document = Document -Name 'TestDocument' -ScriptBlock { };
+                $pscriboDocument = $Document;
+                $testDocument = NewTestDocument;
+                $testSection = Section -Name TestSection -Tabs 2 -ScriptBlock { };
+
+                OutWordSection -Section $testSection -XmlDocument $testDocument -RootElement $testDocument.DocumentElement;
+
+                $expected = GetMatch '[..]<w:pPr>[??]<w:ind w:left="1440" />[..]</w:pPr>[..]';
                 $testDocument.DocumentElement.OuterXml | Should Match $expected;
             }
 

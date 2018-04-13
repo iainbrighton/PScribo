@@ -158,7 +158,7 @@
                 }
                 else {
 
-                    [ref] $null = $divBuilder.Append('<div>' -f (ConvertMmToEm -Millimeter (12.7 * $Table.Tabs)));
+                    [ref] $null = $divBuilder.Append('<div>');
                 }
                 if ($Table.List) {
 
@@ -391,7 +391,15 @@
                     $className = $Section.Style;
                 }
 
+                if ($Section.Tabs -gt 0) {
+                    $tabEm = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Section.Tabs)) -Format 'f2';
+                    [ref] $null = $sectionBuilder.AppendFormat('<div style="margin-left: {0}em;">' -f $tabEm);
+                }
                 [ref] $null = $sectionBuilder.AppendFormat('<a name="{0}"><h{1} class="{2}">{3}</h{1}></a>', $Section.Id, $headerLevel, $className, $sectionName.TrimStart());
+                if ($Section.Tabs -gt 0) {
+                    [ref] $null = $sectionBuilder.Append('</div>');
+                }
+
                 foreach ($s in $Section.Sections.GetEnumerator()) {
 
                     if ($s.Id.Length -gt 40) {
@@ -514,7 +522,7 @@
                 }
                 else {
 
-                    [ref] $null = $paragraphBuilder.AppendFormat('<div style="{1}">{2}</div>', $Paragraph.Style, $customStyle, $encodedText);
+                    [ref] $null = $paragraphBuilder.AppendFormat('<div style="{0}">{1}</div>', $customStyle, $encodedText);
                 }
                 return $paragraphBuilder.ToString();
 
@@ -547,13 +555,14 @@
                 for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
 
                     $propertyName = $Table.Columns[$i];
+                    $rowPropertyName = $Row.$propertyName; ## Core
                     [ref] $null = $listTableBuilder.AppendFormat('<tr><td>{0}</td>', $propertyName);
                     $propertyStyle = '{0}__Style' -f $propertyName;
 
                     if ($row.PSObject.Properties[$propertyStyle]) {
 
                         $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$Row.$propertyStyle]);
-                        if ([System.String]::IsNullOrEmpty($Row.$propertyName)) {
+                        if ([System.String]::IsNullOrEmpty($rowPropertyName)) {
 
                             [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">&nbsp;</td></tr>', $propertyStyleHtml);
                         }
@@ -566,7 +575,7 @@
                     }
                     else {
 
-                        if ([System.String]::IsNullOrEmpty($Row.$propertyName)) {
+                        if ([System.String]::IsNullOrEmpty($rowPropertyName)) {
 
                             [ref] $null = $listTableBuilder.Append('<td>&nbsp;</td></tr>');
                         }
@@ -620,13 +629,14 @@
 
                         $propertyStyle = '{0}__Style' -f $propertyName;
 
-                        if ([System.String]::IsNullOrEmpty($Row.$propertyName)) {
+                        $rowPropertyName = $row.$propertyName; ## Core
+                        if ([System.String]::IsNullOrEmpty($rowPropertyName)) {
 
                             $encodedHtmlContent = '&nbsp;'; # &nbsp; is already encoded (#72)
                         }
                         else {
 
-                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName.ToString());
+                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($rowPropertyName.ToString());
                         }
                         $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />');
 

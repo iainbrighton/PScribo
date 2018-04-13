@@ -211,6 +211,12 @@ InModuleScope 'PScribo' {
         $Document = Document -Name 'TestDocument' -ScriptBlock { };
         $pscriboDocument = $Document;
 
+        It 'outputs indented section (#73)' {
+            $result = Section -Name TestSection -ScriptBlock { } -Tabs 2 | OutTextSection;
+
+            $result -match '^\r?\n        ' | Should Be $true;
+        }
+
         It 'calls OutTextParagraph' {
             Mock -CommandName OutTextParagraph -MockWith { };
 

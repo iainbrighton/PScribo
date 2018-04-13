@@ -416,6 +416,14 @@ InModuleScope 'PScribo' {
             $result -match $expected | Should Be $true;
         }
 
+        It 'outputs indented section (#73)' {
+            $sectionName = 'Test & Section';
+            $expected = '<div style="margin-left: 6.00em;">[\S\s]+</div>';
+
+            $result = Section -Name $sectionName -ScriptBlock { BlankLine } -Tabs 2 | OutHtmlSection;
+            $result -match $expected | Should Be $true;
+        }
+
         It 'calls nested OutXmlSection' {
             ## Note this must be called last in the Describe script block as the OutXmlSection gets mocked!
             Mock -CommandName OutHtmlSection -Verifiable -MockWith { };

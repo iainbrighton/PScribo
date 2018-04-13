@@ -23,7 +23,12 @@
 
                 ## Section is excluded from TOC/section numbering.
                 [Parameter(ValueFromPipelineByPropertyName)]
-                [System.Management.Automation.SwitchParameter] $IsExcluded
+                [System.Management.Automation.SwitchParameter] $IsExcluded,
+
+                ## Tab indent
+                [Parameter()]
+                [ValidateRange(0,10)]
+                [System.Int32] $Tabs = 0
             )
             process {
 
@@ -36,6 +41,7 @@
                     Name       = $Name;
                     Type       = $typeName;
                     Style      = $Style;
+                    Tabs       = $Tabs;
                     IsExcluded = $IsExcluded;
                     Sections   = (New-Object -TypeName System.Collections.ArrayList);
                 }
