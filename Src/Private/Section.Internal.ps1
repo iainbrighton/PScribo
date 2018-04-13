@@ -30,14 +30,14 @@
                 $typeName = 'PScribo.Section';
                 $pscriboDocument.Properties['Sections']++;
                 $pscriboSection = [PSCustomObject] @{
-                    Id = $Name.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper();
-                    Level = 0;
-                    Number = '';
-                    Name = $Name;
-                    Type = $typeName;
-                    Style = $Style;
+                    Id         = [System.Guid]::NewGuid().ToString();
+                    Level      = 0;
+                    Number     = '';
+                    Name       = $Name;
+                    Type       = $typeName;
+                    Style      = $Style;
                     IsExcluded = $IsExcluded;
-                    Sections = (New-Object -TypeName System.Collections.ArrayList);
+                    Sections   = (New-Object -TypeName System.Collections.ArrayList);
                 }
                 return $pscriboSection;
 

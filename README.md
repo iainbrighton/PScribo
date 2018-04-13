@@ -117,6 +117,10 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions ##
 
+### Unreleased ###
+
+* Fixes Html TOC section hyperlinks with duplicate names (#74)
+
 ### 0.7.22 ###
 
 * Fixes $null Html output and [String]::Empty Word output (#72)
