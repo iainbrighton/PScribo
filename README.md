@@ -120,6 +120,7 @@ For an introduction to the PScribo framework, you can view the presentation give
 ### Unreleased ###
 
 * Fixes Html TOC section hyperlinks with duplicate names (#74)
+* Adds warning to errant Document pipeline output
 
 ### 0.7.22 ###
 
