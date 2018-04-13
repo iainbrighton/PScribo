@@ -20,7 +20,7 @@
                 $typeName = 'PScribo.PageBreak';
                 $pscriboDocument.Properties['PageBreaks']++;
                 $pscriboPageBreak = [PSCustomObject] @{
-                    Id = $Id;
+                    Id   = $Id;
                     Type = $typeName;
                 }
                 return $pscriboPageBreak;

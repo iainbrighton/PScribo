@@ -94,18 +94,18 @@
 
                 $pscriboDocument.Properties['Styles']++;
                 $style = [PSCustomObject] @{
-                    Id   = $Id;
-                    Name = $Name;
-                    Font = $Font;
-                    Size = $Size;
-                    Color = (Resolve-PScriboStyleColor -Color $Color).ToLower();
+                    Id              = $Id;
+                    Name            = $Name;
+                    Font            = $Font;
+                    Size            = $Size;
+                    Color           = (Resolve-PScriboStyleColor -Color $Color).ToLower();
                     BackgroundColor = $BackgroundColor.ToLower();
-                    Bold = $Bold.ToBool();
-                    Italic = $Italic.ToBool();
-                    Underline = $Underline.ToBool();
-                    Align = $Align;
-                    ClassId = $ClassId;
-                    Hidden = $Hidden.ToBool();
+                    Bold            = $Bold.ToBool();
+                    Italic          = $Italic.ToBool();
+                    Underline       = $Underline.ToBool();
+                    Align           = $Align;
+                    ClassId         = $ClassId;
+                    Hidden          = $Hidden.ToBool();
                 }
                 $pscriboDocument.Styles[$Id] = $style;
                 if ($Default) { $pscriboDocument.DefaultStyle = $style.Id; }

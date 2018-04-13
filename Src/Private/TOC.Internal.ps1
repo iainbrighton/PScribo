@@ -27,9 +27,9 @@
                 }
                 $pscriboDocument.Properties['TOCs']++;
                 $pscriboTOC = [PSCustomObject] @{
-                    Id = [System.Guid]::NewGuid().ToString();
-                    Name = $Name;
-                    Type = $typeName;
+                    Id      = [System.Guid]::NewGuid().ToString();
+                    Name    = $Name;
+                    Type    = $typeName;
                     ClassId = $ClassId;
                 }
                 return $pscriboTOC;

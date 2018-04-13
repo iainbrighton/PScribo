@@ -95,19 +95,19 @@
 
                 $pscriboDocument.Properties['TableStyles']++;
                 $tableStyle = [PSCustomObject] @{
-                    Id = $Id.Replace(' ', $pscriboDocument.Options['SpaceSeparator']);
-                    Name = $Id;
-                    HeaderStyle = $HeaderStyle;
-                    RowStyle = $RowStyle;
+                    Id                = $Id.Replace(' ', $pscriboDocument.Options['SpaceSeparator']);
+                    Name              = $Id;
+                    HeaderStyle       = $HeaderStyle;
+                    RowStyle          = $RowStyle;
                     AlternateRowStyle = $AlternateRowStyle;
-                    PaddingTop = ConvertPtToMm $PaddingTop;
-                    PaddingLeft = ConvertPtToMm $PaddingLeft;
-                    PaddingBottom = ConvertPtToMm $PaddingBottom;
-                    PaddingRight = ConvertPtToMm $PaddingRight;
-                    Align = $Align;
-                    BorderWidth = ConvertPtToMm $BorderWidth;
-                    BorderStyle = $borderStyle;
-                    BorderColor = Resolve-PScriboStyleColor -Color $BorderColor;
+                    PaddingTop        = ConvertPtToMm $PaddingTop;
+                    PaddingLeft       = ConvertPtToMm $PaddingLeft;
+                    PaddingBottom     = ConvertPtToMm $PaddingBottom;
+                    PaddingRight      = ConvertPtToMm $PaddingRight;
+                    Align             = $Align;
+                    BorderWidth       = ConvertPtToMm $BorderWidth;
+                    BorderStyle       = $borderStyle;
+                    BorderColor       = Resolve-PScriboStyleColor -Color $BorderColor;
                 }
                 $pscriboDocument.TableStyles[$Id] = $tableStyle;
                 if ($Default) { $pscriboDocument.DefaultTableStyle = $tableStyle.Id; }
