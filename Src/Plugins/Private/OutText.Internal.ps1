@@ -83,7 +83,7 @@
 
                 if ($Options.ContainsKey('EnableSectionNumbering')) {
 
-                    $maxSectionNumberLength = ([System.String] ($Document.TOC.Number | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum)).Length;
+                    $maxSectionNumberLength = $Document.TOC.Number | ForEach-Object { $_.Length } | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum;
                     foreach ($tocEntry in $Document.TOC) {
                         $sectionNumberPaddingLength = $maxSectionNumberLength - $tocEntry.Number.Length;
                         $sectionNumberIndent = ''.PadRight($tocEntry.Level, ' ');

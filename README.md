@@ -117,6 +117,10 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions ##
 
+### Unreleased ###
+
+* Fixes "Non-negative number required" errors in text TOC output (#77)
+
 ### 0.7.23 ###
 
 * Fixes Html TOC section hyperlinks with duplicate names (#74)
