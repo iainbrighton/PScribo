@@ -33,7 +33,24 @@ function Document {
         ## Call the Document script block
         foreach ($result in & $ScriptBlock) {
 
-            [ref] $null = $pscriboDocument.Sections.Add($result);
+            ## Ensure we don't have something errant passed down the pipeline (#29)
+            if ($result -is [System.Management.Automation.PSCustomObject]) {
+                if (('Id' -in $result.PSObject.Properties.Name) -and
+                    ('Type' -in $result.PSObject.Properties.Name) -and
+                    ($result.Type -match '^PScribo.')) {
+
+                    [ref] $null = $pscriboDocument.Sections.Add($result);
+                }
+                else {
+
+                    WriteLog -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning;
+                }
+            }
+            else {
+
+                WriteLog -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning;
+            }
+
         }
 
         Invoke-PScriboSection;

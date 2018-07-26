@@ -117,7 +117,28 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions ##
 
-### Unreleased ###
+### 0.7.24 ###
+
+* Fixes "Non-negative number required" errors in text TOC output (#77)
+
+### 0.7.23 ###
+
+* Fixes Html TOC section hyperlinks with duplicate names (#74)
+* Adds warning to errant Document pipeline output
+* Adds tab/indentation support to `Section` headers (#73)
+* Removes trailing spaces from text table output (#67)
+
+### 0.7.22 ###
+
+* Fixes $null Html output and [String]::Empty Word output (#72)
+
+### 0.7.21 ###
+
+* Fixes custom table style default border color output (#71)
+* Fixes bundle creation after internal directory restructure
+* Fixes XML output appending rather than overwriting existing files
+
+### 0.7.20 ###
 
 * Fixes unit tests for Pester v4.x compatibility
 * Fixes [DateTime] discrepancy in Word and Html table output (#68)

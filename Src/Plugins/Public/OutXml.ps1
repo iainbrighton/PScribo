@@ -63,7 +63,7 @@ function OutXml {
         $destinationPath = Join-Path $Path ('{0}.xml' -f $Document.Name);
         WriteLog -Message ($localized.SavingFile -f $destinationPath);
         ## Core PowerShell XmlDocument requires a stream
-        $streamWriter = New-Object System.IO.StreamWriter($destinationPath, $true);
+        $streamWriter = New-Object System.IO.StreamWriter($destinationPath, $false);
         $xmlDocument.Save($streamWriter);
         $streamWriter.Close();
         WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds);

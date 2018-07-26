@@ -54,7 +54,12 @@
                     #}
                 }
 
-                $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain))
+                if ($Section.Tabs -gt 0) {
+                    $ind = $pPr.AppendChild($XmlDocument.CreateElement('w', 'ind', $xmlnsMain));
+                    [ref] $null = $ind.SetAttribute('left', $xmlnsMain, (720 * $Section.Tabs));
+                }
+
+                $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain));
                 ## Increment heading spacing by 2pt for each section level, starting at 8pt for level 0, 10pt for level 1 etc
                 $spacingPt = (($Section.Level * 2) + 8) * 20
                 [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, $spacingPt)
@@ -506,22 +511,25 @@
                                     }
                                 }
 
-                                ## Create a separate run for each line/break
-                                $lines = $row.($propertyName).ToString() -split [System.Environment]::NewLine;
-                                for ($l = 0; $l -lt $lines.Count; $l++) {
+                                if ($null -ne $row.($propertyName)) {
 
-                                    $r2 = $p2.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
-                                    $t2 = $r2.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
-                                    [ref] $null = $t2.AppendChild($XmlDocument.CreateTextNode($lines[$l]))
+                                    ## Create a separate run for each line/break
+                                    $lines = $row.($propertyName).ToString() -split [System.Environment]::NewLine;
+                                    for ($l = 0; $l -lt $lines.Count; $l++) {
 
-                                    if ($l -lt ($lines.Count - 1)) {
+                                        $r2 = $p2.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain));
+                                        $t2 = $r2.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain));
+                                        [ref] $null = $t2.AppendChild($XmlDocument.CreateTextNode($lines[$l]));
+                                        if ($l -lt ($lines.Count -1)) {
 
-                                        ## Don't add a line break to the last line/break
-                                        $r3 = $p2.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
-                                        $t3 = $r3.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
-                                        [ref] $null = $t3.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlnsMain))
-                                    }
-                                } #end foreach line break
+                                            ## Don't add a line break to the last line/break
+                                            $r3 = $p2.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain));
+                                            $t3 = $r3.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain));
+                                            [ref] $null = $t3.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlnsMain));
+                                        }
+
+                                    } #end foreach line break
+                               }
                             }
                         } #end for each property
                     } #end foreach row
@@ -612,22 +620,25 @@
                             $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain))
                             [ref] $null = $pStyle.SetAttribute('val', $xmlnsMain, $cellStyleName)
 
-                            ## Create a separate run for each line/break
-                            $lines = $row.($propertyName).ToString() -split [System.Environment]::NewLine;
-                            for ($l = 0; $l -lt $lines.Count; $l++) {
+                            if ($null -ne $row.($propertyName)) {
 
-                                $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
-                                $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
-                                [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($lines[$l]))
+                                ## Create a separate run for each line/break
+                                $lines = $row.($propertyName).ToString() -split [System.Environment]::NewLine;
+                                for ($l = 0; $l -lt $lines.Count; $l++) {
 
-                                if ($l -lt ($lines.Count - 1)) {
+                                    $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain));
+                                    $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain));
+                                    [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($lines[$l]));
+                                    if ($l -lt ($lines.Count -1)) {
 
-                                    ## Don't add a line break to the last line/break
-                                    $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
-                                    $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
-                                    [ref] $null = $t.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlnsMain))
-                                }
-                            } #end foreach line break
+                                        ## Don't add a line break to the last line/break
+                                        $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain));
+                                        $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain));
+                                        [ref] $null = $t.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlnsMain));
+                                    }
+
+                                } #end foreach line break
+                            }
 
                         } #end foreach property
                         $isAlternatingRow = !$isAlternatingRow

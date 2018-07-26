@@ -33,11 +33,6 @@ InModuleScope 'PScribo' {
                 $section.Sections.Count | Should Be 0;
             }
 
-            It 'creates a concatenated section Id.' {
-                $section = Section -Name 'Test Section' -ScriptBlock { };
-                $section.Id | Should BeExactly 'TESTSECTION';
-            }
-
             It 'creates a section by named -Name and -ScriptBlock parameters.' {
                 $section = Section -Name 'Test Section' -ScriptBlock { };
                 $section.Name | Should BeExactly 'Test Section';

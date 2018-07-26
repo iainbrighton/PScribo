@@ -83,7 +83,7 @@
 
                 if ($Options.ContainsKey('EnableSectionNumbering')) {
 
-                    $maxSectionNumberLength = ([System.String] ($Document.TOC.Number | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum)).Length;
+                    $maxSectionNumberLength = $Document.TOC.Number | ForEach-Object { $_.Length } | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum;
                     foreach ($tocEntry in $Document.TOC) {
                         $sectionNumberPaddingLength = $maxSectionNumberLength - $tocEntry.Number.Length;
                         $sectionNumberIndent = ''.PadRight($tocEntry.Level, ' ');
@@ -151,12 +151,15 @@
             }
             process {
 
+                $padding = ''.PadRight(($Section.Tabs * 4), ' ');
                 $sectionBuilder = New-Object -TypeName System.Text.StringBuilder;
                 if ($Document.Options['EnableSectionNumbering']) { [string] $sectionName = '{0} {1}' -f $Section.Number, $Section.Name; }
                 else { [string] $sectionName = '{0}' -f $Section.Name; }
                 [ref] $null = $sectionBuilder.AppendLine();
+                [ref] $null = $sectionBuilder.Append($padding);
                 [ref] $null = $sectionBuilder.AppendLine($sectionName.TrimStart());
-                [ref] $null = $sectionBuilder.AppendLine(''.PadRight($options.SeparatorWidth, $options.SectionSeparator));
+                [ref] $null = $sectionBuilder.Append($padding);
+                [ref] $null = $sectionBuilder.AppendLine(''.PadRight(($options.SeparatorWidth - $padding.Length), $options.SectionSeparator));
                 foreach ($s in $Section.Sections.GetEnumerator()) {
                     if ($s.Id.Length -gt 40) { $sectionId = '{0}..' -f $s.Id.Substring(0,38); }
                     else { $sectionId = $s.Id; }
@@ -281,15 +284,22 @@
 
                 ## Use the current output buffer width
                 if ($options.TextWidth -eq 0) { $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1; }
+                $tableWidth = $options.TextWidth - ($Table.Tabs * 4);
                 if ($Table.List) {
-                    $text = ($Table.Rows | Select-Object -Property * -ExcludeProperty '*__Style' | Format-List | Out-String -Width $options.TextWidth).Trim();
+                    $tableText = ($Table.Rows |
+                        Select-Object -Property * -ExcludeProperty '*__Style' |
+                            Format-List | Out-String -Width $tableWidth).Trim();
                 } else {
                     ## Don't trim tabs for table headers
-                    ## Tables set to AutoSize as otherwise, rendering is different between PoSh v4 and v5
-                    $text = ($Table.Rows | Select-Object -Property * -ExcludeProperty '*__Style' | Format-Table -Wrap -AutoSize | Out-String -Width $options.TextWidth).Trim("`r`n");
+                    ## Tables set to AutoSize as otherwise rendering is different between PoSh v4 and v5
+                    $tableText = ($Table.Rows |
+                                    Select-Object -Property * -ExcludeProperty '*__Style' |
+                                        Format-Table -Wrap -AutoSize |
+                                            Out-String -Width $tableWidth).Trim("`r`n");
                 }
-                # Ensure there's a space before and after the table.
-                return "`r`n$text`r`n";
+
+                $tableText = IndentString -InputObject $tableText -Tabs $Table.Tabs;
+                return ('{0}{1}' -f [System.Environment]::NewLine, $tableText);
 
             } #end process
         } #end function outtexttable
@@ -333,5 +343,38 @@
 
             } #end process
         } #end function OutStringWrap
+
+
+        function IndentString {
+        <#
+            .SYNOPSIS
+                Indents a block of text using the number of tab stops.
+        #>
+            [CmdletBinding()]
+            [OutputType([System.String])]
+            param (
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()]
+                [Object[]] $InputObject,
+
+                ## Tab indent
+                [Parameter()]
+                [ValidateRange(0,10)]
+                [System.Int32] $Tabs = 0
+            )
+            process {
+
+                $padding = ''.PadRight(($Tabs * 4), ' ');
+                ## Use a StringBuilder to write the table line by line (to indent it)
+                [System.Text.StringBuilder] $builder = New-Object System.Text.StringBuilder;
+
+                foreach ($line in ($InputObject -split '\r\n?|\n')) {
+                    [ref] $null = $builder.Append($padding);
+                    [ref] $null = $builder.AppendLine($line.TrimEnd()); ## Trim trailing space (#67)
+                }
+                return $builder.ToString();
+
+            } #endprocess
+        } #end function IndentString
 
         #endregion OutText Private Functions

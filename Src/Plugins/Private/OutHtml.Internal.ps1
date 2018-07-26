@@ -158,7 +158,7 @@
                 }
                 else {
 
-                    [ref] $null = $divBuilder.Append('<div>' -f (ConvertMmToEm -Millimeter (12.7 * $Table.Tabs)));
+                    [ref] $null = $divBuilder.Append('<div>');
                 }
                 if ($Table.List) {
 
@@ -180,7 +180,7 @@
                 }
                 if ($styleElements.Count -gt 0) {
 
-                    [ref] $null = $divBuilder.AppendFormat(' style="{0}">', [String]::Join(' ', $styleElements));
+                    [ref] $null = $divBuilder.AppendFormat(' style="{0}">', [System.String]::Join(' ', $styleElements));
                 }
                 else {
 
@@ -371,8 +371,8 @@
 
                 [System.Text.StringBuilder] $sectionBuilder = New-Object System.Text.StringBuilder;
                 $encodedSectionName = [System.Net.WebUtility]::HtmlEncode($Section.Name);
-                if ($Document.Options['EnableSectionNumbering']) { [string] $sectionName = '{0} {1}' -f $Section.Number, $encodedSectionName; }
-                else { [string] $sectionName = '{0}' -f $encodedSectionName; }
+                if ($Document.Options['EnableSectionNumbering']) { [System.String] $sectionName = '{0} {1}' -f $Section.Number, $encodedSectionName; }
+                else { [System.String] $sectionName = '{0}' -f $encodedSectionName; }
                 [int] $headerLevel = $Section.Number.Split('.').Count;
 
                 ## Html <h5> is the maximum supported level
@@ -382,7 +382,7 @@
                     $headerLevel = 6;
                 }
 
-                if ([string]::IsNullOrEmpty($Section.Style)) {
+                if ([System.String]::IsNullOrEmpty($Section.Style)) {
 
                     $className = $Document.DefaultStyle;
                 }
@@ -391,7 +391,15 @@
                     $className = $Section.Style;
                 }
 
+                if ($Section.Tabs -gt 0) {
+                    $tabEm = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Section.Tabs)) -Format 'f2';
+                    [ref] $null = $sectionBuilder.AppendFormat('<div style="margin-left: {0}em;">' -f $tabEm);
+                }
                 [ref] $null = $sectionBuilder.AppendFormat('<a name="{0}"><h{1} class="{2}">{3}</h{1}></a>', $Section.Id, $headerLevel, $className, $sectionName.TrimStart());
+                if ($Section.Tabs -gt 0) {
+                    [ref] $null = $sectionBuilder.Append('</div>');
+                }
+
                 foreach ($s in $Section.Sections.GetEnumerator()) {
 
                     if ($s.Id.Length -gt 40) {
@@ -514,7 +522,7 @@
                 }
                 else {
 
-                    [ref] $null = $paragraphBuilder.AppendFormat('<div style="{1}">{2}</div>', $Paragraph.Style, $customStyle, $encodedText);
+                    [ref] $null = $paragraphBuilder.AppendFormat('<div style="{0}">{1}</div>', $customStyle, $encodedText);
                 }
                 return $paragraphBuilder.ToString();
 
@@ -547,13 +555,14 @@
                 for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
 
                     $propertyName = $Table.Columns[$i];
+                    $rowPropertyName = $Row.$propertyName; ## Core
                     [ref] $null = $listTableBuilder.AppendFormat('<tr><td>{0}</td>', $propertyName);
                     $propertyStyle = '{0}__Style' -f $propertyName;
 
                     if ($row.PSObject.Properties[$propertyStyle]) {
 
                         $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$Row.$propertyStyle]);
-                        if ([string]::IsNullOrEmpty($Row.$propertyName)) {
+                        if ([System.String]::IsNullOrEmpty($rowPropertyName)) {
 
                             [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">&nbsp;</td></tr>', $propertyStyleHtml);
                         }
@@ -566,7 +575,7 @@
                     }
                     else {
 
-                        if ([string]::IsNullOrEmpty($Row.$propertyName)) {
+                        if ([System.String]::IsNullOrEmpty($rowPropertyName)) {
 
                             [ref] $null = $listTableBuilder.Append('<td>&nbsp;</td></tr>');
                         }
@@ -620,13 +629,14 @@
 
                         $propertyStyle = '{0}__Style' -f $propertyName;
 
-                        if ([string]::IsNullOrEmpty($Row.$propertyName)) {
+                        $rowPropertyName = $row.$propertyName; ## Core
+                        if ([System.String]::IsNullOrEmpty($rowPropertyName)) {
 
-                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode('&nbsp;');
+                            $encodedHtmlContent = '&nbsp;'; # &nbsp; is already encoded (#72)
                         }
                         else {
 
-                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName.ToString());
+                            $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($rowPropertyName.ToString());
                         }
                         $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />');
 
@@ -651,7 +661,7 @@
                             }
                             else {
 
-                                [ref] $null = $standardTableBuilder.Append('<td>&nbsp</td>');
+                                [ref] $null = $standardTableBuilder.Append('<td>&nbsp;</td>');
                             }
                         } #end if $row.PropertyStyle
                     } #end foreach property

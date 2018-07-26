@@ -1,10 +1,10 @@
 @{
     RootModule = 'PScribo.psm1';
-    ModuleVersion = '0.7.19';
+    ModuleVersion = '0.7.24';
     GUID = '058eab05-b7bc-4f8b-a2d1-737cc664b12b';
     Author = 'Iain Brighton';
     CompanyName = 'Virtual Engine';
-    Copyright = '(c) 2017 Iain Brighton. All rights reserved.';
+    Copyright = '(c) 2018 Iain Brighton. All rights reserved.';
     Description = 'PScribo documentation Powershell module/framework.';
     PowerShellVersion = '3.0';
     FunctionsToExport = @(

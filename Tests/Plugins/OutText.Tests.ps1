@@ -43,7 +43,7 @@ InModuleScope 'PScribo' {
          It 'calls OutTextTable' {
             Mock -CommandName OutTextTable -MockWith { };
 
-            Document -Name 'TestDocument' -ScriptBlock { Get-Service | Select-Object -First 1 | Table 'TestTable' } | OutText -Path $path;
+            Document -Name 'TestDocument' -ScriptBlock { Get-Process | Select-Object -First 1 | Table 'TestTable' } | OutText -Path $path;
 
             Assert-MockCalled -CommandName OutTextTable -Exactly 1;
         }
@@ -211,6 +211,12 @@ InModuleScope 'PScribo' {
         $Document = Document -Name 'TestDocument' -ScriptBlock { };
         $pscriboDocument = $Document;
 
+        It 'outputs indented section (#73)' {
+            $result = Section -Name TestSection -ScriptBlock { } -Tabs 2 | OutTextSection;
+
+            $result -match '^\r?\n        ' | Should Be $true;
+        }
+
         It 'calls OutTextParagraph' {
             Mock -CommandName OutTextParagraph -MockWith { };
 
@@ -230,7 +236,7 @@ InModuleScope 'PScribo' {
         It 'calls OutTextTable' {
             Mock -CommandName OutTextTable -MockWith { };
 
-            Section -Name TestSection -ScriptBlock { Get-Service | Select-Object -First 3 | Table TestTable } | OutTextSection;
+            Section -Name TestSection -ScriptBlock { Get-Process | Select-Object -First 3 | Table TestTable } | OutTextSection;
 
             Assert-MockCalled -CommandName OutTextTable -Exactly 1;
         }
@@ -293,7 +299,7 @@ InModuleScope 'PScribo' {
             It 'Default width of 120.' {
                 $table = Table -Hashtable $services -Name 'Test Table' | OutTextTable;
 
-                $table.Length | Should Be 212;
+                $table.Length | Should Be 208;  # Trailing spaces are removed (#67)
             }
 
             It 'Set width with of 35.' {
@@ -301,7 +307,7 @@ InModuleScope 'PScribo' {
 
                 $table = Table -Hashtable $services -Name 'Test Table' | OutTextTable;
 
-                $table.Length | Should Be 335; ## Text tables are now set to wrap..
+                $table.Length | Should Be 313; ## Text tables are now set to wrap.. Trailing spaces are removed (#67)
             }
 
         } #end context table
@@ -325,7 +331,7 @@ InModuleScope 'PScribo' {
 
                 $table = Table -Hashtable $services 'Test Table' -List | OutTextTable;
 
-                $table.Length | Should Be 357;
+                $table.Length | Should Be 354; # Trailing spaces are removed (#67)
             }
 
         } #end context table

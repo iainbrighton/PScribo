@@ -23,21 +23,27 @@
 
                 ## Section is excluded from TOC/section numbering.
                 [Parameter(ValueFromPipelineByPropertyName)]
-                [System.Management.Automation.SwitchParameter] $IsExcluded
+                [System.Management.Automation.SwitchParameter] $IsExcluded,
+
+                ## Tab indent
+                [Parameter()]
+                [ValidateRange(0,10)]
+                [System.Int32] $Tabs = 0
             )
             process {
 
                 $typeName = 'PScribo.Section';
                 $pscriboDocument.Properties['Sections']++;
                 $pscriboSection = [PSCustomObject] @{
-                    Id = $Name.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper();
-                    Level = 0;
-                    Number = '';
-                    Name = $Name;
-                    Type = $typeName;
-                    Style = $Style;
+                    Id         = [System.Guid]::NewGuid().ToString();
+                    Level      = 0;
+                    Number     = '';
+                    Name       = $Name;
+                    Type       = $typeName;
+                    Style      = $Style;
+                    Tabs       = $Tabs;
                     IsExcluded = $IsExcluded;
-                    Sections = (New-Object -TypeName System.Collections.ArrayList);
+                    Sections   = (New-Object -TypeName System.Collections.ArrayList);
                 }
                 return $pscriboSection;
 

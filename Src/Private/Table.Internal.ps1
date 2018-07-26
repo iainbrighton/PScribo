@@ -72,17 +72,17 @@
                 $typeName = 'PScribo.Table';
                 $pscriboDocument.Properties['Tables']++;
                 $pscriboTable = [PSCustomObject] @{
-                    Id = $Name.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper();
-                    Name = $Name;
-                    Type = $typeName;
-                    # Headers = $Headers; ## Headers are stored as they may be required when formatting output, i.e. Word tables
-                    Columns = $Columns;
+                    Id           = $Name.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper();
+                    Name         = $Name;
+                    Type         = $typeName;
+                    # Headers     = $Headers; ## Headers are stored as they may be required when formatting output, i.e. Word tables
+                    Columns      = $Columns;
                     ColumnWidths = $ColumnWidths;
-                    Rows = $Rows;
-                    List = $List;
-                    Style = $Style;
-                    Width = $Width;
-                    Tabs = $Tabs;
+                    Rows         = $Rows;
+                    List         = $List;
+                    Style        = $Style;
+                    Width        = $Width;
+                    Tabs         = $Tabs;
                 }
                 return $pscriboTable;
 
