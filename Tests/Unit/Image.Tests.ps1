@@ -5,77 +5,48 @@ Import-Module -Name "$moduleRoot\PScribo.psm1" -Force
 
 InModuleScope -ModuleName 'PScribo' -ScriptBlock {
 
-    function New-TestImage {
-        param (
-            $fileName
-        )
-        Add-Type -AssemblyName System.Drawing
-        $bmp = New-Object -TypeName System.Drawing.Bitmap -ArgumentList 250, 61
-        $font = New-Object -TypeName System.Drawing.Font -ArgumentList Consolas, 24
-        $brushBg = [System.Drawing.Brushes]::Yellow
-        $brushFg = [System.Drawing.Brushes]::Black
-        $graphics = [System.Drawing.Graphics]::FromImage($bmp)
-        $graphics.FillRectangle($brushBg, 0, 0, $bmp.Width, $bmp.Height)
-        $graphics.DrawString('Hello World', $font, $brushFg, 10, 10)
-        $graphics.Dispose()
-        $bmp.Save($fileName)
-    }
+    $testRoot = Split-Path -Path $PSScriptRoot -Parent;
 
     Describe -Name 'Image' -Fixture {
 
-        $pscriboDocument = Document -Name 'ScaffoldDocument' -ScriptBlock {}
-        $testFile = "$TestDrive\Test.jpg"
-        $null = New-TestImage -fileName $TestFile
+        $pscriboDocument = Document -Name 'ScaffoldDocument' -ScriptBlock { }
+        $testJpgFile = Join-Path -Path $testRoot -ChildPath 'TestImage.jpg'
+        $testPngFile = Join-Path -Path $testRoot -ChildPath 'TestImage.png'
 
-        It -name 'returns a PSCustomObject object.' -test {
-            $p = Image -FilePath $TestFile
-            $p.GetType().Name | Should -LegacyArg1 Be -LegacyArg2 'PSCustomObject'
+        It -name 'returns "PSCustomObject" object.' -test {
+            $p = Image -Path $testJpgFile -Height 61 -Width 250
+            $p.GetType().Name | Should -eq 'PSCustomObject'
         }
 
-        It -name 'creates a PScribo.Image type.' -test {
-            $p = Image -FilePath $TestFile
-            $p.Type | Should -LegacyArg1 Be -LegacyArg2 'PScribo.Image'
+        It -name 'creates "PScribo.Image" type.' -test {
+            $p = Image -Path $testJpgFile -Height 61 -Width 250
+            $p.Type | Should -eq 'PScribo.Image'
         }
 
-        It -name 'MIME image/jpeg' -test {
-            $p = Image -FilePath $TestFile
-            $p.MIMEType | Should -LegacyArg1 Be -LegacyArg2 'image/jpeg'
+        It -name 'set MIME type "jpeg"' -test {
+            $p = Image -Path $testJpgFile -Height 61 -Width 250
+            $p.MIMEType | Should -eq 'jpeg'
         }
 
-        It 'Name should be Img3.jpg' {
-            $p = Image -FilePath $TestFile
-            $p.Name | Should -LegacyArg1 Be -LegacyArg2 'Img3.jpg'
+        It -name 'set MIME type "png"' -test {
+            $p = Image -Path $testPngFile -Height 61 -Width 250
+            $p.MIMEType | Should -eq 'png'
         }
 
-        It -name 'PixelHeight Without Pixel Parameters' -test {
-            $p = Image -FilePath $TestFile
-            $p.Height | Should -LegacyArg1 Be -LegacyArg2 '61'
+        It -name 'creates image number' {
+            $p = Image -Path $testJpgFile -Height 61 -Width 250
+            $p.Name | Should -match '^Img\d+$'
         }
 
-        It -name 'PixelWidth Without Pixel Parameters' -test {
-            $p = Image -FilePath $TestFile
-            $p.Width | Should -LegacyArg1 Be -LegacyArg2 '250'
+        It -name 'sets Emu width' -test {
+            $p = Image -Path $testJpgFile -Height 61 -Width 250
+            $p.WidthEm | Should -eq 2381250
         }
 
-        It -name 'Emu width' -test {
-            $p = Image -FilePath $TestFile
-            $p.WidthEm | Should -LegacyArg1 Be -LegacyArg2 2381250
+        It -name 'sets Emu Height' -test {
+            $p = Image -Path $testJpgFile -Height 61 -Width 250
+            $p.HeightEm | Should -eq 581025
         }
-
-        It -name 'EMU Height' -test {
-            $p = Image -FilePath $TestFile
-            $p.HeightEm | Should -LegacyArg1 Be -LegacyArg2 581025
-        }
-
-        It -name 'With Pixel Height Parameters' -test {
-            $p = Image -FilePath $TestFile -PixelHeight 100
-            $p.Height | Should -LegacyArg1 Be -LegacyArg2 100
-        }
-
-        It -name 'With Pixel Width Parameters' -test {
-            $p = Image -FilePath $TestFile -PixelWidth 100
-            $p.Width | Should -LegacyArg1 Be -LegacyArg2 100
-        }
-
     }
+
 } #end describe Image

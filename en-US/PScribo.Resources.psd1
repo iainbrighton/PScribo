@@ -18,11 +18,14 @@ ListTableColumnCountWarning      = Table columns widths in list format must be 2
 TableColumnWidthMismatchWarning  = The specified number of table columns and column widths do not match. Column widths will be ignored.
 TableColumnWidthSumWarning       = The table column widths total '{0}'%. Total column width must equal 100%. Column widths will be ignored.
 TableWidthOverflowWarning        = The table width overflows the page margin and has been adjusted to '{0}'%.
+ImageHeightPercentageError       = The image height with '-AsPercent' cannot be less-than or equal to 0% and/or greater than 100%.
+ImageWidthPercentageError        = The image width with '-AsPercent' cannot be less-than or equal to 0% and/or greater than 100%.
 UnexpectedObjectWarning          = Unexpected object in document/section '{0}'.
 UnexpectedObjectTypeWarning      = Unexpected '{0}' object in document/section '{1}'.
 
 DocumentProcessingStarted        = Document '{0}' processing started.
 DocumentInvokePlugin             = Invoking '{0}' plugin.
+DocumentExportPluginComplete     = Plugin '{0}' complete.
 DocumentOptions                  = Setting global document options.
 DocumentOptionSpaceSeparator     = Setting default space separator to '{0}'.
 DocumentOptionUppercaseHeadings  = Enabling uppercase headings.

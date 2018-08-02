@@ -3,56 +3,68 @@ function Image {
     .SYNOPSIS
         Initializes a new PScribo Image object.
 #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Path')]
     [OutputType([System.Management.Automation.PSCustomObject])]
     param (
-        ## File path
-        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
-        [Alias('FilePath','Uri')]
+        ## Image file path
+        [Parameter(Mandatory, ParameterSetName = 'Path', ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
         [System.String] $Path,
 
-        ## FilePath will be used. ##AltText?
-        [Parameter(ValueFromPipelineByPropertyName, Position = 1)]
-        [System.String] $Text = $Path,
+        ## Image web uri
+        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
+        [System.String] $Uri,
 
-        [Parameter(ValueFromPipelineByPropertyName, Position = 2)]
-        [Alias('PixelHeight')]
+        ## Image width (in pixels)
+        [Parameter(Mandatory, ParameterSetName = 'Path', ValueFromPipelineByPropertyName, Position = 1)]
+        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipelineByPropertyName, Position = 1)]
         [System.UInt32] $Height,
 
-        [Parameter(ValueFromPipelineByPropertyName, Position = 3)]
-        [Alias('PixelWidth')]
+        ## Image width (in pixels)
+        [Parameter(Mandatory, ParameterSetName = 'Path', ValueFromPipelineByPropertyName, Position = 2)]
+        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipelineByPropertyName, Position = 2)]
         [System.UInt32] $Width,
 
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $AsPercent
+        ## Image MIME type
+        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
+        [ValidateSet('bmp','gif','jpeg','tiff','png')]
+        [System.String] $MimeType,
+
+        ## Image AltText
+        [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
+        [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
+        [System.String] $Text = $Path,
+
+        [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
+        [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $Id = [System.Guid]::NewGuid().ToString()
     )
     begin {
 
-        if ($AsPercent -and ($Height -le 0 -or $Height -gt 100)) {
+        if ($PSBoundParameters.ContainsKey('Uri')) {
 
-            throw ("Height with '-AsPercent' cannot be less-than or equal to 0% and/or greater than 100%.")
-        }
-        elseif ($AsPercent -and ($Width -le 0 -or $Width -gt 100)) {
+            if (-not $PSBoundParameters.ContainsKey('Text')) {
 
-            throw ("Width with '-AsPercent' cannot be less-than or equal to 0% and/or greater than 100%.")
+                $Text = $Uri;
+            }
         }
+
+        $PSBoundParameters['Text'] = $Text;
+
 
         <#! Image.Internal.ps1 !#>
 
     } #end begin
     process {
 
+        $imageDisplayName = $Text;
         if ($Text.Length -gt 40) {
 
-            $ImageDisplayName = '{0}[..]' -f $Text.Substring(0, 36)
-        }
-        else {
-
-            $ImageDisplayName = $Text
+            $imageDisplayName = '{0}[..]' -f $Text.Substring(0, 36);
         }
 
-        WriteLog -Message ($localized.ProcessingImage -f $ImageDisplayName)
-        return (New-PScriboImage @PSBoundParameters)
+        WriteLog -Message ($localized.ProcessingImage -f $ImageDisplayName);
+        return (New-PScriboImage @PSBoundParameters);
 
     } #end process
 } #end function Image

@@ -5,6 +5,7 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
+    $testRoot = Split-Path -Path $PSScriptRoot -Parent;
     function NewTestDocument {
         [CmdletBinding()]
         param (
@@ -227,6 +228,18 @@ InModuleScope 'PScribo' {
                 OutWordSection -Section $section -XmlDocument $testDocument -RootElement $testDocument.DocumentElement;
 
                 Assert-MockCalled -CommandName OutWordBlankLine -Scope It;
+            }
+
+            It 'calls "OutWordImage"' {
+                $Document = Document -Name 'TestDocument' -ScriptBlock { };
+                $pscriboDocument = $Document;
+                $testDocument = NewTestDocument;
+                Mock OutWordImage { return $testDocument.CreateElement('mockImage'); };
+
+                $section = Section -Name TestSection -ScriptBlock { Image -Path "$testRoot\TestImage.jpg" -Height 61 -Width 250 };
+                OutWordSection -Section $section -XmlDocument $testDocument -RootElement $testDocument.DocumentElement;
+
+                Assert-MockCalled -CommandName OutWordImage -Scope It;
             }
 
             It 'calls nested "OutWordSection"' {

@@ -62,6 +62,8 @@
             }
 
             $fileInfo = & $outputFormat @outputParams;
+            WriteLog -Message ($localized.DocumentExportPluginComplete -f $f) -Plugin 'Export';
+
             if ($PassThru) {
 
                 Write-Output -InputObject $fileInfo;

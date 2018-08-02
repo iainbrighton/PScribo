@@ -4,7 +4,8 @@ Set-StrictMode -Version Latest;
 Import-LocalizedData -BindingVariable localized -BaseDirectory $PSScriptRoot -FileName PScribo.Resources.psd1 -ErrorAction SilentlyContinue
 
 #Fallback to en-US culture strings
-If ([String]::IsNullOrEmpty($localized)) {
+if (-not (Test-Path -Path 'Variable:\localized')) {
+#If ([String]::IsNullOrEmpty($localized)) {
     Import-LocalizedData -BaseDirectory $PSScriptRoot -BindingVariable localized -UICulture 'en-US' -FileName PScribo.Resources.psd1 -ErrorAction Stop
 }
 
@@ -42,7 +43,3 @@ $exportedAliases = @(
 );
 
 Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases;
-
-## Load the System.Drawing.dll ## TODO: THIS WON'T WORK ON .NET CORE :|
-$systemDrawingPath = Get-ChildItem -Path "$env:SystemRoot\assembly" -Filter *drawing.dll -Recurse | Select-Object -First 1
-$null = [Reflection.Assembly]::LoadFrom($systemDrawingPath.FullName)

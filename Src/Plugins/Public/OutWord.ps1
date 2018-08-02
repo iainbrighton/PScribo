@@ -175,12 +175,20 @@ function OutWord {
         foreach ($image in (GetPScriboImage -Section $Document.Sections)) {
             $URI = ('/word/media/{0}' -f $image.Name)
             $partName = New-Object -TypeName System.Uri -ArgumentList ($URI, [System.UriKind]'Relative')
-            $part = $package.CreatePart($partName, $image.MIMEType)
-            $bytes = [System.IO.File]::ReadAllBytes($image.Path)
+            $mimeType = 'image/{0}' -f $image.MimeType;
+            $part = $package.CreatePart($partName, $mimeType)
+
+            if ($image.Uri.IsFile) {
+                $imageBytes = [System.IO.File]::ReadAllBytes($image.Uri.LocalPath);
+            }
+            else {
+                $imageBytes = GetImageUriBytes -Uri $image.Uri.AbsoluteUri;
+            }
+
             $stream = $part.GetStream()
-            $stream.Write($bytes, 0, $bytes.Length)
+            $stream.Write($imageBytes, 0, $imageBytes.Length);
             $stream.Close()
-            [ref] $null = $documentPart.CreateRelationship($partName, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image', $image.RefId)
+            [ref] $null = $documentPart.CreateRelationship($partName, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image', $image.Name)
         }
 
         $package.Flush()

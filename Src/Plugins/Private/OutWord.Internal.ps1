@@ -1305,7 +1305,7 @@
 
                 $blipFill = $pic.AppendChild($XmlDocument.CreateElement('pic', 'blipFill', $xmlnsDrawingPicture))
                 $blip = $blipFill.AppendChild($XmlDocument.CreateElement('a', 'blip', $xmlnsDrawingMain))
-                [ref] $null = $blip.SetAttribute('embed', $xmlnsRelationships, $Image.RefId)
+                [ref] $null = $blip.SetAttribute('embed', $xmlnsRelationships, $Image.Name)
                 [ref] $null = $blip.SetAttribute('cstate', 'print')
                 $extlst = $blip.AppendChild($XmlDocument.CreateElement('a', 'extlst', $xmlnsDrawingMain))
                 $ext = $extlst.AppendChild($XmlDocument.CreateElement('a', 'ext', $xmlnsDrawingMain))
