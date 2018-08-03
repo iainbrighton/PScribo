@@ -1253,13 +1253,13 @@
                 $xmlnsDrawingMain = 'http://schemas.openxmlformats.org/drawingml/2006/main'
                 $xmlnsDrawingPicture = 'http://schemas.openxmlformats.org/drawingml/2006/picture'
                 $xmlnsRelationships = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
-                #$xmlnsofficeword14 = 'http://schemas.microsoft.com/office/drawing/2010/main'
-                #$xmlnsmath = 'http://schemas.openxmlformats.org/officeDocument/2006/math'
                 $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain)
                 $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
                 $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain))
                 [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, 0)
                 [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, 0)
+                $jc = $pPr.AppendChild($XmlDocument.CreateElement('w', 'jc', $xmlnsMain))
+                [ref] $null = $jc.SetAttribute('val', $xmlnsMain, $Image.Align.ToLower())
                 $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
                 $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain))
                 $drawing = $rPr.AppendChild($XmlDocument.CreateElement('w', 'drawing', $xmlnsMain))
@@ -1310,8 +1310,6 @@
                 $extlst = $blip.AppendChild($XmlDocument.CreateElement('a', 'extlst', $xmlnsDrawingMain))
                 $ext = $extlst.AppendChild($XmlDocument.CreateElement('a', 'ext', $xmlnsDrawingMain))
                 [ref] $null = $ext.SetAttribute('uri', '')
-                #$useLocalDpi  = $ext.AppendChild($xmlDocument.CreateElement('a14', 'useLocalDpi',$xmlnsofficeword14))
-                #[ref] $null = $useLocalDpi.SetAttribute('val', '0')
                 [ref] $null = $blipFill.AppendChild($XmlDocument.CreateElement('a', 'srcRect', $xmlnsDrawingMain))
                 $stretch = $blipFill.AppendChild($XmlDocument.CreateElement('a', 'stretch', $xmlnsDrawingMain))
                 [ref] $null = $stretch.AppendChild($XmlDocument.CreateElement('a', 'fillRect', $xmlnsDrawingMain))

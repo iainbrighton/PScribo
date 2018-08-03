@@ -29,6 +29,12 @@ function Image {
         [ValidateSet('bmp','gif','jpeg','tiff','png')]
         [System.String] $MimeType,
 
+        ## Image alignment
+        [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
+        [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
+        [ValidateSet('Left','Center','Right')]
+        [System.String] $Align = 'Left',
+
         ## Image AltText
         [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
         [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]

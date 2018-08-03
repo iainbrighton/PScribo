@@ -164,27 +164,20 @@ function OutWord {
         $xmlWriter.Dispose()
         $streamWriter.Close()
 
-
-
         ## Create the Package relationships
         WriteLog -Message $localized.GeneratingPackageRelationships
         [ref] $null = $package.CreateRelationship($documentUri, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument', 'rId1')
         [ref] $null = $documentPart.CreateRelationship($stylesUri, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles', 'rId1')
         [ref] $null = $documentPart.CreateRelationship($settingsUri, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings', 'rId2')
+
         ## Process images
         foreach ($image in (GetPScriboImage -Section $Document.Sections)) {
             $URI = ('/word/media/{0}' -f $image.Name)
             $partName = New-Object -TypeName System.Uri -ArgumentList ($URI, [System.UriKind]'Relative')
             $mimeType = 'image/{0}' -f $image.MimeType;
             $part = $package.CreatePart($partName, $mimeType)
-
-            if ($image.Uri.IsFile) {
-                $imageBytes = [System.IO.File]::ReadAllBytes($image.Uri.LocalPath);
-            }
-            else {
-                $imageBytes = GetImageUriBytes -Uri $image.Uri.AbsoluteUri;
-            }
-
+            if ($image.Uri.IsFile) { $imageBytes = [System.IO.File]::ReadAllBytes($image.Uri.LocalPath); }
+            else { $imageBytes = GetImageUriBytes -Uri $image.Uri.AbsoluteUri; }
             $stream = $part.GetStream()
             $stream.Write($imageBytes, 0, $imageBytes.Length);
             $stream.Close()

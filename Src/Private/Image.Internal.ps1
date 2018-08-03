@@ -34,6 +34,12 @@ function New-PScriboImage {
         [ValidateSet('bmp','gif','jpeg','tiff','png')]
         [System.String] $MimeType,
 
+        ## Image alignment
+        [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
+        [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
+        [ValidateSet('Left','Center','Right')]
+        [System.String] $Align = 'Left',
+
         ## Image AltText
         [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
         [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
@@ -76,10 +82,8 @@ function New-PScriboImage {
             Type        = 'PScribo.Image';
             Uri         = $imageUri;
             Name        = 'Img{0}' -f $imageNumber;
-            ##RefID       = 'Img{0}' -f $imageNumber
+            Align       = $Align;
             MIMEType    = $MimeType;
-            ## Bytes       = [System.IO.File]::ReadAllBytes($imageUri.LocalPath);
-
             WidthEm     = ConvertPxToEm -Pixel $Width;
             HeightEm    = ConvertPxToEm -Pixel $Height;
             Width       = $Width;
@@ -151,21 +155,33 @@ function GetPScriboImage {
     )
     process {
 
-        if ($PSBoundParameters.ContainsKey('Id')) {
+        if ($Section.Type -eq 'PScribo.Image') {
 
-            $Section.Sections |
-                Where-Object { ($_.Type -eq 'PScribo.Image') -and ($_.Id -in $Id) } |
-                    Write-Output;
+            if ($PSBoundParameters.ContainsKey('Id') -and ($Section.Id -eq $Id)) {
+                return $Section;
+            }
+            else {
+                return $Section;
+            }
         }
         else {
 
-            $Section.Sections |
-                Where-Object { $_.Type -eq 'PScribo.Image' } |
-                    Write-Output;
-        }
+            if ($PSBoundParameters.ContainsKey('Id')) {
 
-        ## Recursively search subsections
-        $Section.Sections |
+                $Section.Sections |
+                    Where-Object { ($_.Type -eq 'PScribo.Image') -and ($_.Id -in $Id) } |
+                        Write-Output;
+            }
+            else {
+
+                $Section.Sections |
+                    Where-Object { $_.Type -eq 'PScribo.Image' } |
+                        Write-Output;
+
+            }
+
+            ## Recursively search subsections
+            $Section.Sections |
             Where-Object { $_.Type -eq 'PScribo.Section' } |
                 ForEach-Object {
 
@@ -173,6 +189,7 @@ function GetPScriboImage {
                     GetPScriboImage @PSBoundParameters;
                 }
 
+        }
     }
 } #end function GetPScriboImage
 

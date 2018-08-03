@@ -5,7 +5,6 @@ Import-LocalizedData -BindingVariable localized -BaseDirectory $PSScriptRoot -Fi
 
 #Fallback to en-US culture strings
 if (-not (Test-Path -Path 'Variable:\localized')) {
-#If ([String]::IsNullOrEmpty($localized)) {
     Import-LocalizedData -BaseDirectory $PSScriptRoot -BindingVariable localized -UICulture 'en-US' -FileName PScribo.Resources.psd1 -ErrorAction Stop
 }
 
