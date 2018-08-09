@@ -103,7 +103,7 @@ place a comment at the project home page.
 
 ## Installation ##
 
-* Automatic (via PowerShell Gallery:
+* Automatic (via PowerShell Gallery):
   * Run 'Install-Module PScribo'.
   * Run 'Import-Module PScribo'.
 * Manual:
