@@ -4,7 +4,7 @@ Set-StrictMode -Version Latest;
 Import-LocalizedData -BindingVariable localized -BaseDirectory $PSScriptRoot -FileName PScribo.Resources.psd1 -ErrorAction SilentlyContinue
 
 #Fallback to en-US culture strings
-If ([String]::IsNullOrEmpty($localized)) {
+if (-not (Test-Path -Path 'Variable:\localized')) {
     Import-LocalizedData -BaseDirectory $PSScriptRoot -BindingVariable localized -UICulture 'en-US' -FileName PScribo.Resources.psd1 -ErrorAction Stop
 }
 
