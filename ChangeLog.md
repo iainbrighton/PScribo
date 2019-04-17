@@ -5,6 +5,7 @@
 ### Unreleased ###
 
 * Adds AppVeyor build
+* Adds orientation support to document root `Section` (#81)
 
 ### 0.7.24 ###
 
