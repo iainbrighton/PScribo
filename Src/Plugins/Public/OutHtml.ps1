@@ -53,7 +53,8 @@ function OutHtml {
         [ref] $null = $htmlBuilder.AppendLine('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">');
         [ref] $null = $htmlBuilder.AppendLine('<html xmlns="http://www.w3.org/1999/xhtml">');
         [ref] $null = $htmlBuilder.AppendLine('<head><title>{0}</title>' -f $Document.Name);
-        [ref] $null = $htmlBuilder.AppendLine('{0}</head><body><page>' -f (OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles -NoPageLayoutStyle:$noPageLayoutStyle));
+        [ref] $null = $htmlBuilder.AppendLine('{0}</head><body>' -f (OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles -NoPageLayoutStyle:$noPageLayoutStyle));
+        [ref] $null = $htmlBuilder.AppendFormat('<div class="{0}">', $options['PageOrientation'].ToLower());
         [ref] $null = $htmlBuilder.AppendFormat('<div class="{0}" style="padding-top: {1}em; padding-left: {2}em; padding-bottom: {3}em; padding-right: {4}em;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine();
         foreach ($s in $Document.Sections.GetEnumerator()) {
             if ($s.Id.Length -gt 40) { $sectionId = '{0}[..]' -f $s.Id.Substring(0,36); }
@@ -66,12 +67,13 @@ function OutHtml {
                 'PScribo.Paragraph' { [ref] $null = $htmlBuilder.Append((OutHtmlParagraph -Paragraph $s)); }
                 'PScribo.Table' { [ref] $null = $htmlBuilder.Append((OutHtmlTable -Table $s)); }
                 'PScribo.LineBreak' { [ref] $null = $htmlBuilder.Append((OutHtmlLineBreak)); }
-                'PScribo.PageBreak' { [ref] $null = $htmlBuilder.Append((OutHtmlPageBreak)); } ## Page breaks are implemented as line breaks with extra padding
+                'PScribo.PageBreak' { [ref] $null = $htmlBuilder.Append((OutHtmlPageBreak -Orientation $options['PageOrientation'])); }
                 'PScribo.TOC' { [ref] $null = $htmlBuilder.Append((OutHtmlTOC -TOC $s)); }
                 'PScribo.BlankLine' { [ref] $null = $htmlBuilder.Append((OutHtmlBlankLine -BlankLine $s)); }
                 Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
             } #end switch
         } #end foreach section
+        [ref] $null = $htmlBuilder.AppendLine('</div></div></body>');
         $stopwatch.Stop();
         WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name);
         $destinationPath = Join-Path $Path ('{0}.html' -f $Document.Name);

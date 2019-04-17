@@ -120,12 +120,8 @@ function DocumentOption {
 
         ## Convert page size
         ($localized.DocumentOptionPageOrientation -f $Orientation) | WriteLog;
-        if ($Orientation -eq 'Landscape') {
-            ## Swap the height/width measurements
-            $pageHeight = $pscriboDocument.Options['PageHeight'];
-            $pscriboDocument.Options['PageHeight'] = $pscriboDocument.Options['PageWidth'];
-            $pscriboDocument.Options['PageWidth'] = $pageHeight;
-        }
+        $pscriboDocument.Options['PageOrientation'] = $Orientation;
+        $script:currentOrientation = $Orientation;
         ($localized.DocumentOptionPageHeight -f $pscriboDocument.Options['PageHeight']) | WriteLog;
         ($localized.DocumentOptionPageWidth -f $pscriboDocument.Options['PageWidth']) | WriteLog;
 

@@ -43,8 +43,9 @@
 
                 $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 
-                $p = $RootElement.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain))
-                $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
+                $p = $RootElement.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain));
+                $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
+
                 if (-not [System.String]::IsNullOrEmpty($Section.Style)) {
 
                     #if (-not $Section.IsExcluded) {
@@ -123,6 +124,20 @@
                     } #end switch
                 } #end foreach
 
+                if ($Section.IsSectionBreakEnd) {
+
+                    $sectionPrParams = @{
+                        PageHeight       = if ($Section.Orientation -eq 'Portrait') { $Document.Options['PageHeight'] } else { $Document.Options['PageWidth'] }
+                        PageWidth        = if ($Section.Orientation -eq 'Portrait') { $Document.Options['PageWidth'] } else { $Document.Options['PageHeight'] }
+                        PageMarginTop    = $Document.Options['MarginTop'];
+                        PageMarginBottom = $Document.Options['MarginBottom'];
+                        PageMarginLeft   = $Document.Options['MarginLeft'];
+                        PageMarginRight  = $Document.Options['MarginRight'];
+                        Orientation      = $Section.Orientation;
+                    }
+                    [ref] $null = $pPr.AppendChild((GetWordSectionPr @sectionPrParams -XmlDocument $xmlDocument));
+                }
+
             } #end process
         } #end function OutWordSection
 
@@ -145,8 +160,8 @@
 
                 $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 
-                $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain)
-                $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
+                $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain);
+                $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
 
                 if ($Paragraph.Tabs -gt 0) {
 
@@ -220,7 +235,21 @@
                     }
                 } #end foreach line break
 
-                return $p
+                if ($Paragraph.IsSectionBreakEnd) {
+
+                    $paragraphPrParams = @{
+                        PageHeight       = if ($Paragraph.Orientation -eq 'Portrait') { $Document.Options['PageHeight'] } else { $Document.Options['PageWidth'] }
+                        PageWidth        = if ($Paragraph.Orientation -eq 'Portrait') { $Document.Options['PageWidth'] } else { $Document.Options['PageHeight'] }
+                        PageMarginTop    = $Document.Options['MarginTop'];
+                        PageMarginBottom = $Document.Options['MarginBottom'];
+                        PageMarginLeft   = $Document.Options['MarginLeft'];
+                        PageMarginRight  = $Document.Options['MarginRight'];
+                        Orientation      = $Paragraph.Orientation;
+                    }
+                    [ref] $null = $pPr.AppendChild((GetWordSectionPr @paragraphPrParams -XmlDocument $xmlDocument));
+                }
+
+                return $p;
 
             } #end process
         } #end function OutWordParagraph
@@ -1111,22 +1140,25 @@
                 [System.Single] $PageMarginRight,
 
                 [Parameter(Mandatory)]
+                [System.String] $Orientation,
+
+                [Parameter(Mandatory)]
                 [System.Xml.XmlDocument] $XmlDocument
             )
             process {
 
-                $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
-                $sectPr = $XmlDocument.CreateElement('w', 'sectPr', $xmlnsMain)
-                $pgSz = $sectPr.AppendChild($XmlDocument.CreateElement('w', 'pgSz', $xmlnsMain))
-                [ref] $null = $pgSz.SetAttribute('w', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageWidth))
-                [ref] $null = $pgSz.SetAttribute('h', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageHeight))
-                [ref] $null = $pgSz.SetAttribute('orient', $xmlnsMain, 'portrait')
-                $pgMar = $sectPr.AppendChild($XmlDocument.CreateElement('w', 'pgMar', $xmlnsMain))
-                [ref] $null = $pgMar.SetAttribute('top', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginTop))
-                [ref] $null = $pgMar.SetAttribute('bottom', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginBottom))
-                [ref] $null = $pgMar.SetAttribute('left', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginLeft))
-                [ref] $null = $pgMar.SetAttribute('right', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginRight))
-                return $sectPr
+                $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+                $sectPr = $XmlDocument.CreateElement('w', 'sectPr', $xmlnsMain);
+                $pgSz = $sectPr.AppendChild($XmlDocument.CreateElement('w', 'pgSz', $xmlnsMain));
+                [ref] $null = $pgSz.SetAttribute('w', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageWidth));
+                [ref] $null = $pgSz.SetAttribute('h', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageHeight));
+                [ref] $null = $pgSz.SetAttribute('orient', $xmlnsMain, $Orientation.ToLower());
+                $pgMar = $sectPr.AppendChild($XmlDocument.CreateElement('w', 'pgMar', $xmlnsMain));
+                [ref] $null = $pgMar.SetAttribute('top', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginTop));
+                [ref] $null = $pgMar.SetAttribute('bottom', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginBottom));
+                [ref] $null = $pgMar.SetAttribute('left', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginLeft));
+                [ref] $null = $pgMar.SetAttribute('right', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginRight));
+                return $sectPr;
 
             } #end process
         } #end GetWordSectionPr

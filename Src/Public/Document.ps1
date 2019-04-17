@@ -29,6 +29,7 @@ function Document {
 
         $stopwatch = [Diagnostics.Stopwatch]::StartNew();
         $pscriboDocument = New-PScriboDocument -Name $Name -Id $Id;
+        $script:currentOrientation = $pscriboDocument.Options['PageOrientation'];
 
         ## Call the Document script block
         foreach ($result in & $ScriptBlock) {
@@ -54,6 +55,24 @@ function Document {
         }
 
         Invoke-PScriboSection;
+
+        ## Locate the last sections (for Word plugin)
+        $pscriboDocument.Sections | Where-Object { $_.Type -in 'PScribo.Section','PScribo.Paragraph' } | Select-Object -Last 1 | ForEach-Object { $_.IsLastSection = $true; }
+        ## Process IsSectionBreakEnd (for Word plugin)
+        if ($pscriboDocument.Sections.Count -gt 0) {
+
+            $previousPScriboSection = $pscriboDocument.Sections[0];
+            for ($i = 0; $i -lt $pscriboDocument.Sections.Count; $i++) {
+
+                $pscriboSection = $pscriboDocument.Sections[$i];
+                if ($pscriboSection.Type -in 'PScribo.Section','PScribo.Paragraph') {
+                    if (($null -ne $pscriboSection.PSObject.Properties['IsSectionBreak']) -and ($pscriboSection.IsSectionBreak)) {
+                        $previousPScriboSection.IsSectionBreakEnd = $true;
+                    }
+                    $previousPScriboSection = $pscriboSection;
+                }
+            }
+        }
 
         WriteLog -Message ($localized.DocumentProcessingCompleted -f $pscriboDocument.Name);
         $stopwatch.Stop();

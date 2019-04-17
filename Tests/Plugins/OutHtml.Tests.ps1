@@ -303,14 +303,14 @@ InModuleScope 'PScribo' {
     Describe 'OutHtml.Internal\OutHtmlPageBreak' {
         ## Scaffold new document to initialise options/styles
         $Document = Document -Name 'Test' -ScriptBlock { };
-        $text = OutHtmlPageBreak;
+        $text = OutHtmlPageBreak -Orientation Portrait;
 
-        It 'closes previous </page> and </div> tags.' {
-            $text.StartsWith('</div></page>') | Should Be $true;
+        It 'closes previous </div> tags.' {
+            $text.StartsWith('</div></div>') | Should Be $true;
         }
 
-        It 'creates new <page>.' {
-            $text -match '<page>' | Should Be $true;
+        It 'creates new <div class="portrait">.' {
+            $text -match '<div class="portrait">' | Should Be $true;
         }
 
         It 'sets page class to default style' {

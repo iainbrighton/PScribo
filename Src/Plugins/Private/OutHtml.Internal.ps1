@@ -322,7 +322,12 @@
                     [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }');
                     [ref] $null = $stylesBuilder.AppendLine('@media print { body, page { margin: 0; box-shadow: 0; } }');
                     [ref] $null = $stylesBuilder.AppendLine('hr { margin-top: 1.0em; }');
+                    [ref] $null = $stylesBuilder.Append(" .portrait { background: white; width: $($Document.Options['PageWidth'])mm; display: block; margin-top: 1em; margin-left: auto; margin-right: auto; margin-bottom: 1em; ");
+                    [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }');
+                    [ref] $null = $stylesBuilder.Append(" .landscape { background: white; width: $($Document.Options['PageHeight'])mm; display: block; margin-top: 1em; margin-left: auto; margin-right: auto; margin-bottom: 1em; ");
+                    [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }');
                 }
+
                 foreach ($style in $Styles.Keys) {
 
                     ## Build style
@@ -370,6 +375,10 @@
             process {
 
                 [System.Text.StringBuilder] $sectionBuilder = New-Object System.Text.StringBuilder;
+                if ($Section.IsSectionBreak) {
+
+                    [ref] $null = $sectionBuilder.Append((OutHtmlPageBreak -Orientation $Section.Orientation));
+                }
                 $encodedSectionName = [System.Net.WebUtility]::HtmlEncode($Section.Name);
                 if ($Document.Options['EnableSectionNumbering']) { [System.String] $sectionName = '{0} {1}' -f $Section.Number, $encodedSectionName; }
                 else { [System.String] $sectionName = '{0}' -f $encodedSectionName; }
@@ -421,7 +430,7 @@
                         'PScribo.Section' { [ref] $null = $sectionBuilder.Append((OutHtmlSection -Section $s)); }
                         'PScribo.Paragraph' { [ref] $null = $sectionBuilder.Append((OutHtmlParagraph -Paragraph $s)); }
                         'PScribo.LineBreak' { [ref] $null = $sectionBuilder.Append((OutHtmlLineBreak)); }
-                        'PScribo.PageBreak' { [ref] $null = $sectionBuilder.Append((OutHtmlPageBreak)); }
+                        'PScribo.PageBreak' { [ref] $null = $sectionBuilder.Append((OutHtmlPageBreak -Orientation $Section.Orientation)); }
                         'PScribo.Table' { [ref] $null = $sectionBuilder.Append((OutHtmlTable -Table $s)); }
                         'PScribo.BlankLine' { [ref] $null = $sectionBuilder.Append((OutHtmlBlankLine -BlankLine $s)); }
                         Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
@@ -739,16 +748,20 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param ( )
+            param (
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [System.String] $Orientation
+            )
             process {
 
                 [System.Text.StringBuilder] $pageBreakBuilder = New-Object 'System.Text.StringBuilder';
-                [ref] $null = $pageBreakBuilder.Append('</div></page>');
+                [ref] $null = $pageBreakBuilder.Append('</div></div>');
                 $topMargin = ConvertMmToEm $Document.Options['MarginTop'];
                 $leftMargin = ConvertMmToEm $Document.Options['MarginLeft'];
                 $bottomMargin = ConvertMmToEm $Document.Options['MarginBottom'];
                 $rightMargin = ConvertMmToEm $Document.Options['MarginRight'];
-                [ref] $null = $pageBreakBuilder.AppendFormat('<page><div class="{0}" style="padding-top: {1}em; padding-left: {2}em; padding-bottom: {3}em; padding-right: {4}em;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine();
+                [ref] $null = $pageBreakBuilder.AppendFormat('<div class="{0}">', $Orientation.ToLower());
+                [ref] $null = $pageBreakBuilder.AppendFormat('<div class="{0}" style="padding-top: {1}em; padding-left: {2}em; padding-bottom: {3}em; padding-right: {4}em;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine();
                 return $pageBreakBuilder.ToString();
 
             }

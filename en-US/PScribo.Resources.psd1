@@ -22,6 +22,7 @@ ImageHeightPercentageError       = The image height with '-AsPercent' cannot be 
 ImageWidthPercentageError        = The image width with '-AsPercent' cannot be less-than or equal to 0% and/or greater than 100%.
 UnexpectedObjectWarning          = Unexpected object in document/section '{0}'.
 UnexpectedObjectTypeWarning      = Unexpected '{0}' object in document/section '{1}'.
+CannotSetOrientationWarning      = Orientation can only be set on a document root 'Section'. Section orientation will be ignored.
 
 DocumentProcessingStarted        = Document '{0}' processing started.
 DocumentInvokePlugin             = Invoking '{0}' plugin.

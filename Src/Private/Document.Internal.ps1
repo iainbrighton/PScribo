@@ -51,6 +51,7 @@
                 $defaultDocumentOptionParams = @{
                     MarginTopAndBottom = 72;
                     MarginLeftAndRight = 54;
+                    Orientation = 'Portrait';
                     PageSize = 'A4';
                     DefaultFont = 'Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif';
                 }
