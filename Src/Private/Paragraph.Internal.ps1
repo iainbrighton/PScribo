@@ -83,19 +83,22 @@
                 $typeName = 'PScribo.Paragraph';
                 $pscriboDocument.Properties['Paragraphs']++;
                 $pscriboParagraph = [PSCustomObject] @{
-                    Id        = $Name;
-                    Text      = $Text;
-                    Type      = $typeName;
-                    Style     = $Style;
-                    Value     = $Value;
-                    NewLine   = -not $NoNewLine;
-                    Tabs      = $Tabs;
-                    Bold      = $Bold;
-                    Italic    = $Italic;
-                    Underline = $Underline;
-                    Font      = $Font;
-                    Size      = $Size;
-                    Color     = $Color;
+                    Id                = $Name;
+                    Text              = $Text;
+                    Type              = $typeName;
+                    Style             = $Style;
+                    Value             = $Value;
+                    NewLine           = -not $NoNewLine;
+                    Tabs              = $Tabs;
+                    Bold              = $Bold;
+                    Italic            = $Italic;
+                    Underline         = $Underline;
+                    Font              = $Font;
+                    Size              = $Size;
+                    Color             = $Color;
+                    Orientation       = $script:currentOrientation;
+                    IsSectionBreakEnd = $false;
+                    IsLastSection     = $false;
                 }
                 return $pscriboParagraph;
 

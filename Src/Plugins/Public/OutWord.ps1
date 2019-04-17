@@ -40,13 +40,7 @@ function OutWord {
         $documentXml = $xmlDocument.AppendChild($xmlDocument.CreateElement('w', 'document', $xmlnsMain));
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:xml', 'http://www.w3.org/XML/1998/namespace');
         $body = $documentXml.AppendChild($xmlDocument.CreateElement('w', 'body', $xmlnsMain));
-        ## Setup the document page size/margins
-        $sectionPrParams = @{
-            PageHeight = $Document.Options['PageHeight']; PageWidth = $Document.Options['PageWidth'];
-            PageMarginTop = $Document.Options['MarginTop']; PageMarginBottom = $Document.Options['MarginBottom'];
-            PageMarginLeft = $Document.Options['MarginLeft']; PageMarginRight = $Document.Options['MarginRight'];
-        }
-        [ref] $null = $body.AppendChild((GetWordSectionPr @sectionPrParams -XmlDocument $xmlDocument));
+
         foreach ($s in $Document.Sections.GetEnumerator()) {
             if ($s.Id.Length -gt 40) { $sectionId = '{0}[..]' -f $s.Id.Substring(0,36); }
             else { $sectionId = $s.Id; }
@@ -64,6 +58,20 @@ function OutWord {
                 Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
             } #end switch
         } #end foreach
+
+        ## Last section's properties are a child element of body
+        $lastSectionOrientation = $Document.Sections | Where-Object { $_.IsLastSection -eq $true } | Select-Object -ExpandProperty Orientation
+        $sectionPrParams = @{
+            PageHeight       = if ($lastSectionOrientation -eq 'Portrait') { $Document.Options['PageHeight'] } else { $Document.Options['PageWidth'] }
+            PageWidth        = if ($lastSectionOrientation -eq 'Portrait') { $Document.Options['PageWidth'] } else { $Document.Options['PageHeight'] }
+            PageMarginTop    = $Document.Options['MarginTop'];
+            PageMarginBottom = $Document.Options['MarginBottom'];
+            PageMarginLeft   = $Document.Options['MarginLeft'];
+            PageMarginRight  = $Document.Options['MarginRight'];
+            Orientation      = $lastSectionOrientation
+        }
+        [ref] $null = $body.AppendChild((GetWordSectionPr @sectionPrParams -XmlDocument $xmlDocument));
+
         ## Generate the Word 'styles.xml' document part
         $stylesXml = OutWordStylesDocument -Styles $Document.Styles -TableStyles $Document.TableStyles;
         ## Generate the Word 'settings.xml' document part

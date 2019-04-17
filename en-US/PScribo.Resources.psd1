@@ -20,6 +20,7 @@ TableColumnWidthSumWarning       = The table column widths total '{0}'%. Total c
 TableWidthOverflowWarning        = The table width overflows the page margin and has been adjusted to '{0}'%.
 UnexpectedObjectWarning          = Unexpected object in document/section '{0}'.
 UnexpectedObjectTypeWarning      = Unexpected '{0}' object in document/section '{1}'.
+CannotSetOrientationWarning      = Orientation can only be set on a document root 'Section'. Section orientation will be ignored.
 
 DocumentProcessingStarted        = Document '{0}' processing started.
 DocumentInvokePlugin             = Invoking '{0}' plugin.

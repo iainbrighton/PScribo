@@ -117,6 +117,10 @@ For an introduction to the PScribo framework, you can view the presentation give
 
 ## Versions ##
 
+### Unreleased ###
+
+* Adds section orientation support (#81)
+
 ### 0.7.24 ###
 
 * Fixes "Non-negative number required" errors in text TOC output (#77)
