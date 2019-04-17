@@ -116,4 +116,3 @@ place a comment at the project home page.
 
 For an introduction to the PScribo framework, you can view the presentation given at the
 [PowerShell Summit Europe 2015](https://www.youtube.com/watch?v=pNIC70bjBZE).
-

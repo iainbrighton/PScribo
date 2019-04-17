@@ -44,6 +44,7 @@
 
                 $p = $RootElement.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain));
                 $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
+
                 if (-not [System.String]::IsNullOrEmpty($Section.Style)) {
                     #if (-not $Section.IsExcluded) {
                         ## If it's excluded we need a non-Heading style :( Could explicitly set the style on the run?
@@ -95,6 +96,20 @@
                     } #end switch
                 } #end foreach
 
+                if ($Section.IsSectionBreakEnd) {
+
+                    $sectionPrParams = @{
+                        PageHeight       = if ($Section.Orientation -eq 'Portrait') { $Document.Options['PageHeight'] } else { $Document.Options['PageWidth'] }
+                        PageWidth        = if ($Section.Orientation -eq 'Portrait') { $Document.Options['PageWidth'] } else { $Document.Options['PageHeight'] }
+                        PageMarginTop    = $Document.Options['MarginTop'];
+                        PageMarginBottom = $Document.Options['MarginBottom'];
+                        PageMarginLeft   = $Document.Options['MarginLeft'];
+                        PageMarginRight  = $Document.Options['MarginRight'];
+                        Orientation      = $Section.Orientation;
+                    }
+                    [ref] $null = $pPr.AppendChild((GetWordSectionPr @sectionPrParams -XmlDocument $xmlDocument));
+                }
+
             } #end process
         } #end function OutWordSection
 
@@ -119,6 +134,7 @@
 
                 $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain);
                 $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
+
                 if ($Paragraph.Tabs -gt 0) {
                     $ind = $pPr.AppendChild($XmlDocument.CreateElement('w', 'ind', $xmlnsMain));
                     [ref] $null = $ind.SetAttribute('left', $xmlnsMain, (720 * $Paragraph.Tabs));
@@ -180,6 +196,20 @@
                     }
 
                 } #end foreach line break
+
+                if ($Paragraph.IsSectionBreakEnd) {
+
+                    $paragraphPrParams = @{
+                        PageHeight       = if ($Paragraph.Orientation -eq 'Portrait') { $Document.Options['PageHeight'] } else { $Document.Options['PageWidth'] }
+                        PageWidth        = if ($Paragraph.Orientation -eq 'Portrait') { $Document.Options['PageWidth'] } else { $Document.Options['PageHeight'] }
+                        PageMarginTop    = $Document.Options['MarginTop'];
+                        PageMarginBottom = $Document.Options['MarginBottom'];
+                        PageMarginLeft   = $Document.Options['MarginLeft'];
+                        PageMarginRight  = $Document.Options['MarginRight'];
+                        Orientation      = $Paragraph.Orientation;
+                    }
+                    [ref] $null = $pPr.AppendChild((GetWordSectionPr @paragraphPrParams -XmlDocument $xmlDocument));
+                }
 
                 return $p;
 
@@ -990,6 +1020,9 @@
                 [System.Single] $PageMarginRight,
 
                 [Parameter(Mandatory)]
+                [System.String] $Orientation,
+
+                [Parameter(Mandatory)]
                 [System.Xml.XmlDocument] $XmlDocument
             )
             process {
@@ -999,7 +1032,7 @@
                 $pgSz = $sectPr.AppendChild($XmlDocument.CreateElement('w', 'pgSz', $xmlnsMain));
                 [ref] $null = $pgSz.SetAttribute('w', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageWidth));
                 [ref] $null = $pgSz.SetAttribute('h', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageHeight));
-                [ref] $null = $pgSz.SetAttribute('orient', $xmlnsMain, 'portrait');
+                [ref] $null = $pgSz.SetAttribute('orient', $xmlnsMain, $Orientation.ToLower());
                 $pgMar = $sectPr.AppendChild($XmlDocument.CreateElement('w', 'pgMar', $xmlnsMain));
                 [ref] $null = $pgMar.SetAttribute('top', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginTop));
                 [ref] $null = $pgMar.SetAttribute('bottom', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginBottom));
