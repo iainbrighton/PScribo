@@ -27,6 +27,7 @@ $exportedFunctions = @(
     'LineBreak',
     'PageBreak',
     'Paragraph',
+    'Image',
     'Section',
     'Style',
     'Table',
@@ -39,5 +40,7 @@ $exportedFunctions = @(
 $exportedAliases = @(
     'GlobalOption'
 );
+
+Add-Type -AssemblyName 'System.Drawing'
 
 Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases;

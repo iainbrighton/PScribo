@@ -70,6 +70,7 @@ function OutHtml {
                 'PScribo.PageBreak' { [ref] $null = $htmlBuilder.Append((OutHtmlPageBreak -Orientation $options['PageOrientation'])); }
                 'PScribo.TOC' { [ref] $null = $htmlBuilder.Append((OutHtmlTOC -TOC $s)); }
                 'PScribo.BlankLine' { [ref] $null = $htmlBuilder.Append((OutHtmlBlankLine -BlankLine $s)); }
+                'PScribo.Image' { [ref] $null = $htmlBuilder.Append((OutHtmlImage -Image $s)); }
                 Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
             } #end switch
         } #end foreach section

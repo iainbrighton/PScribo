@@ -11,6 +11,8 @@ UndefinedAltTableRowStyleError   = Undefined table alternating row style '{0}' s
 InvalidTableBorderColorError     = Invalid table border color '{0}' specified.
 UndefinedStyleError              = Undefined style '{0}' specified.
 OpenPackageError                 = Error opening package '{0}'. Ensure the file in not in use by another process.
+IncorrectCharsInPathError        = The incorrect char found in the Path.
+
 MaxHeadingLevelWarning           = Html5 supports a maximum of 6 heading levels. Reduce the number of nested Document sections to remove the unsupported tags in the resulting Html output.
 TableHeadersWithNoColumnsWarning = Table headers have been specified with no table columns/properties. Headers will be ignored.
 TableHeadersCountMismatchWarning = The number of table headers specified does not match the number of specified columns/properties. Headers will be ignored.
@@ -18,12 +20,15 @@ ListTableColumnCountWarning      = Table columns widths in list format must be 2
 TableColumnWidthMismatchWarning  = The specified number of table columns and column widths do not match. Column widths will be ignored.
 TableColumnWidthSumWarning       = The table column widths total '{0}'%. Total column width must equal 100%. Column widths will be ignored.
 TableWidthOverflowWarning        = The table width overflows the page margin and has been adjusted to '{0}'%.
+ImageHeightPercentageError       = The image height with '-AsPercent' cannot be less-than or equal to 0% and/or greater than 100%.
+ImageWidthPercentageError        = The image width with '-AsPercent' cannot be less-than or equal to 0% and/or greater than 100%.
 UnexpectedObjectWarning          = Unexpected object in document/section '{0}'.
 UnexpectedObjectTypeWarning      = Unexpected '{0}' object in document/section '{1}'.
 CannotSetOrientationWarning      = Orientation can only be set on a document root 'Section'. Section orientation will be ignored.
 
 DocumentProcessingStarted        = Document '{0}' processing started.
 DocumentInvokePlugin             = Invoking '{0}' plugin.
+DocumentExportPluginComplete     = Plugin '{0}' complete.
 DocumentOptions                  = Setting global document options.
 DocumentOptionSpaceSeparator     = Setting default space separator to '{0}'.
 DocumentOptionUppercaseHeadings  = Enabling uppercase headings.
@@ -56,10 +61,6 @@ WritingDocumentPart              = Writing document part '{0}'.
 GeneratingPackageRelationships   = Generating package relationships.
 PluginUnsupportedSection         = Unsupported section '{0}'.
 DocumentProcessingCompleted      = Document '{0}' processing completed.
-
 TotalProcessingTime              = Total processing time '{0:N2}' seconds.
 SavingFile                       = Saving file '{0}'.
-
-IncorrectCharsInPath             = The incorrect char found in the Path.
-IncorrectCharsInName             = The incorrect char found in the Name.
 '@;

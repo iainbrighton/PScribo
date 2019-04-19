@@ -37,7 +37,6 @@
             )
             begin {
                 if ($PSBoundParameters.ContainsKey('Orientation') -and ((Get-PSCallStack)[3].FunctionName -ne 'Document<Process>')) {
-                    Write-Host (Get-PSCallStack)[3].FunctionName
                     WriteLog -Message $localized.CannotSetOrientationWarning -IsWarning;
                     $null = $PSBoundParameters.Remove('Orientation')
                 }
@@ -59,7 +58,6 @@
                     Orientation       = if ($PSBoundParameters.ContainsKey('Orientation')) { $Orientation } else { $script:currentOrientation }
                     IsSectionBreak    = $false;
                     IsSectionBreakEnd = $false;
-                    IsLastSection     = $false;
                 }
 
                 ## Has the orientation changed from the parent scope

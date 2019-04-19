@@ -100,7 +100,7 @@ InModuleScope 'PScribo' {
 
     } #end describe OutXmlParagraph
 
-    Describe 'OutXml.InternalOutXmlSection' {
+    Describe 'OutXml.Internal\OutXmlSection' {
 
         It 'calls OutXmlTable' {
             Mock -CommandName OutXmlTable -MockWith { return $xmlDocument.CreateElement('TestTable'); };
@@ -123,7 +123,7 @@ InModuleScope 'PScribo' {
 
     } #end describe OutXmlSection
 
-    Describe 'OutXml.InternalOutXmlTable' {
+    Describe 'OutXml.Internal\OutXmlTable' {
         $processes = Get-Process | Select -First 3;
         $tableName = 'Test Table';
         $tableColumns = @('ProcessName','SI','Id');
@@ -198,6 +198,56 @@ InModuleScope 'PScribo' {
         } #end context By Positional Parameter
 
     } #end describe OutXmlTable
+
+    Describe 'OutXml.Internal\OutXmlImage' {
+
+        It 'outputs a XmlElement' {
+            $testImage = [PSCustomObject] @{
+                Bytes    = [byte[]] @(0,1,2,3)
+                MimeType = 'image/jpg'
+                Text     = 'Dummy Image'
+            }
+            $image = OutXmlImage -Image $testImage
+
+            $image.GetType() | Should Be 'System.Xml.XmlElement';
+        }
+
+        It 'sets image Mime type attribute' {
+            $testImage = [PSCustomObject] @{
+                Bytes    = [byte[]] @(0,1,2,3)
+                MimeType = 'image/jpg'
+                Text     = 'Dummy Image'
+            }
+
+            $result = OutXmlImage -Image $testImage
+
+            $result.mimeType | Should Be $testImage.MimeType
+        }
+
+        It 'sets image text attribute' {
+            $testImage = [PSCustomObject] @{
+                Bytes    = [byte[]] @(0,1,2,3)
+                MimeType = 'image/jpg'
+                Text     = 'Dummy Image'
+            }
+
+            $result = OutXmlImage -Image $testImage
+
+            $result.text | Should Be $testImage.Text
+        }
+
+        It 'base64 encodes image' {
+            $testImage = [PSCustomObject] @{
+                Bytes    = [byte[]] @(0,1,2,3)
+                MimeType = 'image/jpg'
+                Text     = 'Dummy Image'
+            }
+
+            $result = OutXmlImage -Image $testImage
+
+            $result.'#text' | Should Be 'AAECAw=='
+        }
+    } #end describe OutXml.Internal\OutXmlImage
 
 } #end inmodulescope
 

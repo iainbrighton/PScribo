@@ -14,7 +14,7 @@
             process {
 
                 $sectionId = ($Section.Id -replace '[^a-z0-9-_\.]','').ToLower();
-                $element = $xmlDocument.CreateElement($sectionId);
+                $element = $xmlDocument.CreateElement('section');
                 [ref] $null = $element.SetAttribute("name", $Section.Name);
                 foreach ($s in $Section.Sections.GetEnumerator()) {
                     if ($s.Id.Length -gt 40) { $sectionId = '{0}..' -f $s.Id.Substring(0,38); }
@@ -30,6 +30,7 @@
                         'PScribo.LineBreak' { } ## Line breaks are not implemented for Xml output
                         'PScribo.BlankLine' { } ## Blank lines are not implemented for Xml output
                         'PScribo.TOC' { } ## TOC is not implemented for Xml output
+                        'PScribo.Image' { [ref] $null = $element.AppendChild((OutXmlImage -Image $s)); }
                         Default {
                             WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning;
                         }
@@ -112,5 +113,28 @@
 
             } #end process
         } #end outxmltable
+
+        function OutXmlImage {
+        <#
+            .SYNOPSIS
+                Output embedded Xml image.
+        #>
+            [CmdletBinding()]
+            param (
+                ## PScribo Image object
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()] [System.Object] $Image
+            )
+            process {
+
+                $imageElement = $xmlDocument.CreateElement('image')
+                [ref] $null = $imageElement.SetAttribute('text', $Image.Text)
+                [ref] $null = $imageElement.SetAttribute('mimeType', $Image.MimeType)
+                $imageBase64 = [System.Convert]::ToBase64String($Image.Bytes)
+                [ref] $null = $imageElement.AppendChild($xmlDocument.CreateTextNode($imageBase64))
+                return $imageElement
+
+            } #end process
+        } #end function outxmlimage
 
         #endregion OutXml Private Functions

@@ -433,6 +433,7 @@
                         'PScribo.PageBreak' { [ref] $null = $sectionBuilder.Append((OutHtmlPageBreak -Orientation $Section.Orientation)); }
                         'PScribo.Table' { [ref] $null = $sectionBuilder.Append((OutHtmlTable -Table $s)); }
                         'PScribo.BlankLine' { [ref] $null = $sectionBuilder.Append((OutHtmlBlankLine -BlankLine $s)); }
+                        'PScribo.Image' { [ref] $null = $sectionBuilder.Append((OutHtmlImage -Image $s)); }
                         Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
                     } #end switch
                 } #end foreach
@@ -766,5 +767,27 @@
 
             }
         } #end function OutHtmlPageBreak
+
+        function OutHtmlImage {
+        <#
+            .SYNOPSIS
+                Output embedded Html image.
+        #>
+            [CmdletBinding()]
+            param (
+                ## PScribo Image object
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()] [System.Object] $Image
+            )
+            process {
+
+                [System.Text.StringBuilder] $imageBuilder = New-Object -TypeName 'System.Text.StringBuilder'
+                [ref] $null = $imageBuilder.AppendFormat('<div align="{0}">', $Image.Align).AppendLine()
+                $imageBase64 = [System.Convert]::ToBase64String($Image.Bytes)
+                [ref] $null = $imageBuilder.AppendFormat('<img src="data:{0};base64, {1}" alt="{2}" height="{3}" width="{4}" />', $Image.MimeType, $imageBase64, $Image.Text, $Image.Height, $Image.Width).AppendLine()
+                [ref] $null = $imageBuilder.AppendLine('</div>')
+                return $imageBuilder.ToString()
+            }
+        } #end function OutHtmlImage
 
         #endregion OutHtml Private Functions

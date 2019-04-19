@@ -1,5 +1,5 @@
 TOPIC
-Styles
+    Styles
 
 SYNOPSIS
     PScribo uses styles to apply specific formatting to document objects, e.g. sections, paragraphs and tables.

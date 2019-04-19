@@ -29,14 +29,14 @@ OTHER EXAMPLES
     directory.
 
 SEE ALSO
-       about_Document
+    about_Document
     about_Styles
     about_Tables
     about_Plugins
     Document
     DocumentOption
-    *Header
-    *Footer
+    *Header (not yet implemented)
+    *Footer (not yet implemented)
     Style
     TableStyle
     Section
@@ -44,3 +44,4 @@ SEE ALSO
     Table
     PageBreak
     LineBreak
+    Image

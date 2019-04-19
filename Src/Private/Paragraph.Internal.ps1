@@ -98,7 +98,6 @@
                     Color             = $Color;
                     Orientation       = $script:currentOrientation;
                     IsSectionBreakEnd = $false;
-                    IsLastSection     = $false;
                 }
                 return $pscriboParagraph;
 

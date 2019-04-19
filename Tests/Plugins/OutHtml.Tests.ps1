@@ -82,9 +82,9 @@ InModuleScope 'PScribo' {
         ## Scaffold new document to initialise options/styles
         $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
 
-        Context 'By named parameter.' {
+        Context 'By named parameter' {
 
-            It 'creates single font default style.' {
+            It 'creates single font default style' {
                 Style -Name Test -Font Helvetica;
                 $fontFamily = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-family:*' ;
                 ($fontFamily.Split(':').Trim())[1] | Should BeExactly "'Helvetica'";
@@ -113,74 +113,74 @@ InModuleScope 'PScribo' {
                 ($fontSize.Split(':').Trim())[1] | Should BeExactly '0.92em';
             }
 
-            It 'creates multiple font default style.' {
+            It 'creates multiple font default style' {
                 Style -Name Test -Font Helvetica,Arial,Sans-Serif;
                 $fontFamily = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-family:*' ;
                 ($fontFamily.Split(':').Trim())[1] | Should BeExactly "'Helvetica','Arial','Sans-Serif'";
             }
 
-            It 'creates single 12pt font.' {
+            It 'creates single 12pt font' {
                 Style -Name Test -Font Helvetica -Size 12;
                 $fontSize = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-size:*' ;
                 ($fontSize.Split(':').Trim())[1] | Should BeExactly '1.00em';
             }
 
-            It 'creates bold font style.' {
+            It 'creates bold font style' {
                 Style -Name Test -Font Helvetica -Bold;
                 $fontWeight = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-weight:*' ;
                 ($fontWeight.Split(':').Trim())[1] | Should BeExactly 'bold';
             }
 
-            It 'creates center aligned font style.' {
+            It 'creates center aligned font style' {
                 Style -Name Test -Font Helvetica -Align Center;
                 $textAlign = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'text-align:*' ;
                 ($textAlign.Split(':').Trim())[1] | Should BeExactly 'center';
             }
 
-            It 'creates right aligned font style.' {
+            It 'creates right aligned font style' {
                 Style -Name Test -Font Helvetica -Align Right;
                 $textAlign = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'text-align:*' ;
                 ($textAlign.Split(':').Trim())[1] | Should BeExactly 'right';
             }
 
-            It 'creates justified font style.' {
+            It 'creates justified font style' {
                 Style -Name Test -Font Helvetica -Align Justify;
                 $textAlign = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'text-align:*' ;
                 ($textAlign.Split(':').Trim())[1] | Should BeExactly 'justify';
             }
 
-            It 'creates underline font style.' {
+            It 'creates underline font style' {
                 Style -Name Test -Font Helvetica -Underline;
                 $textDecoration = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'text-decoration:*' ;
                 ($textDecoration.Split(':').Trim())[1] | Should BeExactly 'underline';
             }
 
-            It 'creates italic font style.' {
+            It 'creates italic font style' {
                 Style -Name Test -Font Helvetica -Italic;
                 $fontStyle = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-style:*' ;
                 ($fontStyle.Split(':').Trim())[1] | Should BeExactly 'italic';
             }
 
-            It 'creates colored font style.' {
+            It 'creates colored font style' {
                 Style -Name Test -Font Helvetica -Color ABC;
                 $color = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'color:*' ;
                 ($color.Split(':').Trim())[1] | Should BeExactly '#abc';
             }
 
-            It 'creates colored font style with #.' {
+            It 'creates colored font style with #' {
                 Style -Name Test -Font Helvetica -Color '#ABC';
                 $color = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'color:*' ;
                 ($color.Split(':').Trim())[1] | Should BeExactly '#abc';
             }
 
-            It 'creates background colored font style.' {
+            It 'creates background colored font style' {
                 Style -Name Test -Font Helvetica -BackgroundColor '#DEF';
                 $backgroundColor = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'background-color:*' ;
                 ($backgroundColor.Split(':').Trim())[1] | Should BeExactly '#def';
 
             }
 
-            It 'creates background colored font without #.' {
+            It 'creates background colored font without #' {
                 Style -Name Test -Font Helvetica -BackgroundColor 'DEF';
                 $backgroundColor = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'background-color:*' ;
                 ($backgroundColor.Split(':').Trim())[1] | Should BeExactly '#def';
@@ -194,9 +194,9 @@ InModuleScope 'PScribo' {
         ## Scaffold new document to initialise options/styles
         $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
 
-        Context 'By Named Parameter.' {
+        Context 'By Named Parameter' {
 
-            It 'creates default table style.' {
+            It 'creates default table style' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle;
 
@@ -212,7 +212,7 @@ InModuleScope 'PScribo' {
                 ($borderCollapse.Split(':').Trim())[1] | Should BeExactly 'collapse';
             }
 
-            It 'creates custom table padding style of 5pt, 10pt, 5pt and 10pt.' {
+            It 'creates custom table padding style of 5pt, 10pt, 5pt and 10pt' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle -PaddingTop 5 -PaddingRight 10 -PaddingBottom 5 -PaddingLeft 10;
 
@@ -220,7 +220,7 @@ InModuleScope 'PScribo' {
                 ($padding.Split(':').Trim())[1] | Should BeExactly '0.42em 0.83em 0.42em 0.83em';
             }
 
-            It 'creates custom table border color style when -BorderWidth is specified.' {
+            It 'creates custom table border color style when -BorderWidth is specified' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle -BorderColor CcC -BorderWidth 1;
 
@@ -230,7 +230,7 @@ InModuleScope 'PScribo' {
                 ($borderStyle.Split(':').Trim())[1] | Should BeExactly 'solid';
             }
 
-             It 'creates custom table border width style of 3pt.' {
+             It 'creates custom table border width style of 3pt' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle -BorderWidth 3;
 
@@ -240,7 +240,7 @@ InModuleScope 'PScribo' {
                 ($borderStyle.Split(':').Trim())[1] | Should BeExactly 'solid';
             }
 
-            It 'creates custom table border with no color style when no -BorderWidth specified.' {
+            It 'creates custom table border with no color style when no -BorderWidth specified' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle -BorderColor '#aAaAaA';
 
@@ -248,7 +248,7 @@ InModuleScope 'PScribo' {
                 ($borderStyle.Split(':').Trim())[1] | Should BeExactly 'none';
             }
 
-            It 'creates custom table border color style.' {
+            It 'creates custom table border color style' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle -BorderColor '#aAaAaA' -BorderWidth 2;
 
@@ -258,7 +258,7 @@ InModuleScope 'PScribo' {
                 ($borderStyle.Split(':').Trim())[1] | Should BeExactly 'solid';
             }
 
-            It 'centers table.' {
+            It 'centers table' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle -Align Center;
                 $marginLeft = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'margin-left:*' ;
@@ -267,7 +267,7 @@ InModuleScope 'PScribo' {
                 ($marginRight.Split(':').Trim())[1] | Should BeExactly 'auto';
             }
 
-            It 'aligns table to the right.' {
+            It 'aligns table to the right' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle -Align Right;
                 $marginLeft = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'margin-left:*' ;
@@ -284,18 +284,18 @@ InModuleScope 'PScribo' {
         ## Scaffold new document to initialise options/styles
         $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
 
-        It 'creates a single <br /> html tag.' {
+        It 'creates a single <br /> html tag' {
             BlankLine | OutHtmlBlankLine | Should BeExactly '<br />';
         }
 
-        It 'creates two <br /> html tags.' {
+        It 'creates two <br /> html tags' {
             BlankLine -Count 2 | OutHtmlBlankLine | Should BeExactly '<br /><br />';
         }
     }
 
     Describe 'OutHtml.Internal\OutHtmlLineBreak' {
 
-        It 'creates a <hr /> html tag.' {
+        It 'creates a <hr /> html tag' {
             OutHtmlLineBreak | Should BeExactly '<hr />';
         }
     }
@@ -305,11 +305,11 @@ InModuleScope 'PScribo' {
         $Document = Document -Name 'Test' -ScriptBlock { };
         $text = OutHtmlPageBreak -Orientation Portrait;
 
-        It 'closes previous </div> tags.' {
+        It 'closes previous </div> tags' {
             $text.StartsWith('</div></div>') | Should Be $true;
         }
 
-        It 'creates new <div class="portrait">.' {
+        It 'creates new <div class="portrait">' {
             $text -match '<div class="portrait">' | Should Be $true;
         }
 
@@ -318,7 +318,7 @@ InModuleScope 'PScribo' {
             $text -match $divStyleMatch | Should Be $true;
         }
 
-        It 'includes page margins.' {
+        It 'includes page margins' {
             $text -match 'padding-top:[\s\S]+em' | Should Be $true;
             $text -match 'padding-right:[\s\S]+em' | Should Be $true;
             $text -match 'padding-bottom:[\s\S]+em' | Should Be $true;
@@ -331,9 +331,9 @@ InModuleScope 'PScribo' {
         ## Scaffold new document to initialise options/styles
         $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
 
-        Context 'By Named Parameter.' {
+        Context 'By Named Parameter' {
 
-            It 'creates paragraph with no style and new line.' {
+            It 'creates paragraph with no style and new line' {
                 Paragraph 'Test paragraph.' | OutHtmlParagraph | Should BeExactly "<div>Test paragraph.</div>";
             }
 
@@ -341,7 +341,7 @@ InModuleScope 'PScribo' {
                 Paragraph -Name 'Test' -Text 'Test paragraph.' -NoNewLine | OutHtmlParagraph | Should BeExactly "<div>Test paragraph.</div>";
             }
 
-            It 'creates paragraph with named -Style parameter.' {
+            It 'creates paragraph with named -Style parameter' {
                 Paragraph 'Test paragraph.' -Style Named | OutHtmlParagraph | Should BeExactly "<div class=`"Named`">Test paragraph.</div>";
             }
 
@@ -435,7 +435,7 @@ InModuleScope 'PScribo' {
 
     Describe 'OutHtml.Internal\OutHtmlStyle' {
 
-        It 'creates <style> tag.' {
+        It 'creates <style> tag' {
             $Document = Document -Name 'Test' -ScriptBlock { };
             $text = OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles;
 
@@ -482,7 +482,7 @@ InModuleScope 'PScribo' {
 
     Describe 'OutHtml.Internal\OutHtmlTable' {
 
-        Context 'Table.' {
+        Context 'Table' {
 
             BeforeEach {
                 ## Scaffold new document to initialise options/styles
@@ -492,25 +492,25 @@ InModuleScope 'PScribo' {
                 [Xml] $html = $table.Replace('&','&amp;');
             }
 
-            It 'creates default table class of tabledefault.' {
+            It 'creates default table class of tabledefault' {
                 $html.Div.Table.Class | Should BeExactly 'tabledefault';
             }
 
-            It 'creates table headings row.' {
+            It 'creates table headings row' {
                 $html.Div.Table.Thead | Should Not BeNullOrEmpty;
             }
 
-            It 'creates column for each object property.' {
+            It 'creates column for each object property' {
                 $html.Div.Table.Thead.Tr.Th.Count | Should Be ($processes | Get-Member -MemberType Properties).Count;
             }
 
-            It 'creates a row for each object.' {
+            It 'creates a row for each object' {
                 $html.Div.Table.Tbody.Tr.Count | Should Be $processes.Count;
             }
 
         }
 
-        Context 'List.' {
+        Context 'List' {
 
             BeforeEach {
                 ## Scaffold new document to initialise options/styles
@@ -522,20 +522,20 @@ InModuleScope 'PScribo' {
 
             #Write-Host $html.OuterXml -ForegroundColor Yellow
 
-            It 'creates no table heading row.' {
+            It 'creates no table heading row' {
                 ## Fix Set-StrictMode
                 $html.Div.Table.PSObject.Properties['Thead'] | Should BeNullOrEmpty;
             }
 
-            It 'creates default table class of tabledefault-list.' {
+            It 'creates default table class of tabledefault-list' {
                 $html.Div.Table.Class | Should BeExactly 'tabledefault-list';
             }
 
-            It 'creates a two column table.' {
+            It 'creates a two column table' {
                 $html.Div.Table.Tbody.Tr[0].Td.Count | Should Be 2;
             }
 
-            It 'creates a row for each object property.' {
+            It 'creates a row for each object property' {
                 $html.Div.Table.Tbody.Tr.Count | Should Be ($processes | Get-Member -MemberType Properties).Count;
             }
 
@@ -576,6 +576,94 @@ InModuleScope 'PScribo' {
         }
 
     } #end describe OutHtmlTable
+
+    Describe 'OutHtml.Internal\OutHtmlImage' {
+
+        foreach ($alignment in 'Left','Center','Right')
+        {
+            $testImage = [PSCustomObject] @{
+                Align    = $alignment
+                Bytes    = [byte[]] @(0,1,2,3)
+                MimeType = 'image/jpg'
+                Text     = 'Dummy Image'
+                Height   = 0
+                Width    = 0
+            }
+
+            It "aligns image '$alignment'" {
+                $expected = '<div align="{0}">' -f $alignment;
+
+                $result = OutHtmlImage -Image $testImage
+
+                $result -match $expected | Should Be $true
+            }
+        }
+
+        It 'sets image Mime type' {
+            $testImage = [PSCustomObject] @{
+                Align    = $alignment
+                Bytes    = [byte[]] @(0,1,2,3)
+                MimeType = 'image/jpg'
+                Text     = 'Dummy Image'
+                Height   = 123
+                Width    = 321
+            }
+            $expected = 'data:{0}' -f $testImage.MimeType;
+
+            $result = OutHtmlImage -Image $testImage
+
+            $result -match $expected | Should Be $true
+        }
+
+        It 'sets image height' {
+            $testImage = [PSCustomObject] @{
+                Align    = $alignment
+                Bytes    = [byte[]] @(0,1,2,3)
+                MimeType = 'image/jpg'
+                Text     = 'Dummy Image'
+                Height   = 123
+                Width    = 321
+            }
+            $expected = 'height="{0}"' -f $testImage.Height;
+
+            $result = OutHtmlImage -Image $testImage
+
+            $result -match $expected | Should Be $true
+        }
+
+        It 'sets image width' {
+            $testImage = [PSCustomObject] @{
+                Align    = $alignment
+                Bytes    = [byte[]] @(0,1,2,3)
+                MimeType = 'image/jpg'
+                Text     = 'Dummy Image'
+                Height   = 123
+                Width    = 321
+            }
+            $expected = 'width="{0}"' -f $testImage.Width;
+
+            $result = OutHtmlImage -Image $testImage
+
+            $result -match $expected | Should Be $true
+        }
+
+        It 'adds alttext to image' {
+            $testImage = [PSCustomObject] @{
+                Align    = $alignment
+                Bytes    = [byte[]] @(0,1,2,3)
+                MimeType = 'image/jpg'
+                Text     = 'Dummy Image'
+                Height   = 0
+                Width    = 0
+            }
+            $expected = 'alt="{0}"' -f $testImage.Text;
+
+            $result = OutHtmlImage -Image $testImage
+
+            $result -match $expected | Should Be $true
+        }
+
+    } #end describe OutHtmlImage
 
 } #end inmodulescope
 

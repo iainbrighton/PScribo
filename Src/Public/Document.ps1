@@ -56,8 +56,6 @@ function Document {
 
         Invoke-PScriboSection;
 
-        ## Locate the last sections (for Word plugin)
-        $pscriboDocument.Sections | Where-Object { $_.Type -in 'PScribo.Section','PScribo.Paragraph' } | Select-Object -Last 1 | ForEach-Object { $_.IsLastSection = $true; }
         ## Process IsSectionBreakEnd (for Word plugin)
         if ($pscriboDocument.Sections.Count -gt 0) {
 
@@ -67,7 +65,14 @@ function Document {
                 $pscriboSection = $pscriboDocument.Sections[$i];
                 if ($pscriboSection.Type -in 'PScribo.Section','PScribo.Paragraph') {
                     if (($null -ne $pscriboSection.PSObject.Properties['IsSectionBreak']) -and ($pscriboSection.IsSectionBreak)) {
-                        $previousPScriboSection.IsSectionBreakEnd = $true;
+                        if (($previousPScriboSection.Type -eq 'PScribo.Paragraph') -or ($previousPScriboSection.Sections.Count -eq 0)) {
+                            ## Set the last childless section or paragraph as the section end
+                            $previousPScriboSection.IsSectionBreakEnd = $true
+                        }
+                        else {
+                            ## Set the last child section/paragraph element as the section end
+                            SetIsSectionBreakEnd -Section $previousPScriboSection
+                        }
                     }
                     $previousPScriboSection = $pscriboSection;
                 }
