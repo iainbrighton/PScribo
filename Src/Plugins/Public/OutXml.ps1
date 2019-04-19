@@ -53,6 +53,7 @@ function OutXml {
                 'PScribo.LineBreak' { } ## Line breaks are not implemented for Xml output
                 'PScribo.BlankLine' { } ## Blank lines are not implemented for Xml output
                 'PScribo.TOC' { } ## TOC is not implemented for Xml output
+                'PScribo.Image' { [ref] $null = $element.AppendChild((OutXmlImage -Image $s)); }
                 Default {
                     WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning;
                 }

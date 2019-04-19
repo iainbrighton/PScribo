@@ -7,15 +7,13 @@ Minified bundle.
 DocumentlOption
     EnableSectionNumbering - Support multiple formats, i.e. a), b), c) or i), ii) or iii)
     Add a Title "shortcut" for document name and -Style Title?
-    Implement as booleans? Bit of a 'hack' but we need to make the settings idempotent. Could use a hashtable but
-    that's prone to typos.
-    Rename to DocumentOption?
     Add section numbering separator, i.e. 1.2.3 - <Section Name>. Default to blank though :)
 
 Sections
     Indent each section?
 
 Headers/Footers
+    Footer style, report header
 
 Themes
     Add standard themes, e.g. "Virtual Engine" and "Webster" themes.
@@ -27,8 +25,6 @@ Export-Document
 Output/Plugins
 
 Html Output/Plugin
-    Remove numbering from TOC if section numbering is not enabled?!
-    Escape html characters, e.g. < and >
     Add option to set default/base font size?
     Support external/custom CSS.
 
@@ -43,4 +39,3 @@ Xml Output/Plugin
 
 Word Output/Plugin
     Need to flag update if page numbers are used in headers/footers, e.g. OutWordSettingsDocument -UpdateFields
-

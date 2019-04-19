@@ -1,76 +1,88 @@
 function Image {
-    <#
+<#
     .SYNOPSIS
         Initializes a new PScribo Image object.
 #>
-    [CmdletBinding(DefaultParameterSetName = 'Path')]
+    [CmdletBinding(DefaultParameterSetName = 'PathSize')]
     [OutputType([System.Management.Automation.PSCustomObject])]
     param (
-        ## Image file path
-        [Parameter(Mandatory, ParameterSetName = 'Path', ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
+        ## Local file path to the image
+        [Parameter(Mandatory, ParameterSetName = 'PathSize')]
+        [Parameter(Mandatory, ParameterSetName = 'PathPercent')]
         [System.String] $Path,
-
-        ## Image web uri
-        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
+        ## Remote image web URL path
+        [Parameter(Mandatory, ParameterSetName = 'UriSize')]
+        [Parameter(Mandatory, ParameterSetName = 'UriPercent')]
         [System.String] $Uri,
-
-        ## Image width (in pixels)
-        [Parameter(Mandatory, ParameterSetName = 'Path', ValueFromPipelineByPropertyName, Position = 1)]
-        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipelineByPropertyName, Position = 1)]
+        ## Base64 encoded image file
+        [Parameter(Mandatory, ParameterSetName = 'Base64Size')]
+        [Parameter(Mandatory, ParameterSetName = 'Base64Percent')]
+        [System.String] $Base64,
+        ## Specifies required the image pixel width
+        [Parameter(ParameterSetName = 'PathSize')]
+        [Parameter(ParameterSetName = 'UriSize')]
+        [Parameter(ParameterSetName = 'Base64Size')]
         [System.UInt32] $Height,
-
-        ## Image width (in pixels)
-        [Parameter(Mandatory, ParameterSetName = 'Path', ValueFromPipelineByPropertyName, Position = 2)]
-        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipelineByPropertyName, Position = 2)]
+        ## Specifies required the image pixel width
+        [Parameter(ParameterSetName = 'PathSize')]
+        [Parameter(ParameterSetName = 'UriSize')]
+        [Parameter(ParameterSetName = 'Base64Size')]
         [System.UInt32] $Width,
-
-        ## Image MIME type
-        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
-        [ValidateSet('bmp','gif','jpeg','tiff','png')]
-        [System.String] $MimeType,
-
+        ## Specifies the required scaling percentage
+        [Parameter(Mandatory, ParameterSetName = 'PathPercent')]
+        [Parameter(Mandatory, ParameterSetName = 'UriPercent')]
+        [Parameter(Mandatory, ParameterSetName = 'Base64Percent')]
+        [System.UInt32] $Percent,
         ## Image alignment
-        [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
-        [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
+        [Parameter()]
         [ValidateSet('Left','Center','Right')]
         [System.String] $Align = 'Left',
-
-        ## Image AltText
-        [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
-        [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
-        [System.String] $Text = $Path,
-
-        [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
-        [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
+        ## Accessibility image description
+        [Parameter(Mandatory, ParameterSetName = 'Base64Size')]
+        [Parameter(Mandatory, ParameterSetName = 'Base64Percent')]
+        [Parameter(ParameterSetName = 'PathSize')]
+        [Parameter(ParameterSetName = 'PathPercent')]
+        [Parameter(ParameterSetName = 'UriSize')]
+        [Parameter(ParameterSetName = 'UriPercent')]
+        [System.String] $Text,
+        ## Internal image Id
+        [Parameter()]
         [ValidateNotNullOrEmpty()]
         [System.String] $Id = [System.Guid]::NewGuid().ToString()
     )
-    begin {
-
-        if ($PSBoundParameters.ContainsKey('Uri')) {
-
-            if (-not $PSBoundParameters.ContainsKey('Text')) {
-
-                $Text = $Uri;
-            }
+    begin
+    {
+        <#! Image.Internal.ps1 !#>
+    }
+    process
+    {
+        if ($PSBoundParameters.ContainsKey('Path'))
+        {
+            $Uri = ResolveImagePath -Path $Path;
+            $null = $PSBoundParameters.Remove('Path')
+            $PSBoundParameters['Uri'] = $Uri
+        }
+        elseif ($PSBoundParameters.ContainsKey('Uri'))
+        {
+            $Uri = ResolveImagePath -Path $Uri;
+        }
+        elseif ($PSBoundParameters.ContainsKey('Base64'))
+        {
+            $Uri = ResolveImagePath -Path 'about:blank';
         }
 
-        $PSBoundParameters['Text'] = $Text;
-
-
-        <#! Image.Internal.ps1 !#>
-
-    } #end begin
-    process {
+        if (-not ($PSBoundParameters.ContainsKey('Text')))
+        {
+            $Text = $Uri
+        }
 
         $imageDisplayName = $Text;
-        if ($Text.Length -gt 40) {
-
-            $imageDisplayName = '{0}[..]' -f $Text.Substring(0, 36);
+        if ($Text.Length -gt 40)
+        {
+            $imageDisplayName = '{0}[..]' -f $Text.Substring(0, 36)
         }
 
-        WriteLog -Message ($localized.ProcessingImage -f $ImageDisplayName);
-        return (New-PScriboImage @PSBoundParameters);
-
-    } #end process
-} #end function Image
+        WriteLog -Message ($localized.ProcessingImage -f $ImageDisplayName)
+        return (New-PScriboImage @PSBoundParameters)
+    }
+}

@@ -412,12 +412,6 @@
                 [ref] $null = $right.SetAttribute('type', $xmlnsMain, 'dxa')
 
                 $tblGrid = $tbl.AppendChild($XmlDocument.CreateElement('w', 'tblGrid', $xmlnsMain))
-                $columnCount = $Table.Columns.Count
-
-                if ($Table.List) {
-
-                    $columnCount = 2
-                }
                 for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
 
                     [ref] $null = $tblGrid.AppendChild($XmlDocument.CreateElement('w', 'gridCol', $xmlnsMain))
@@ -569,7 +563,7 @@
 
                     $tr = $tbl.AppendChild($XmlDocument.CreateElement('w', 'tr', $xmlnsMain))
                     $trPr = $tr.AppendChild($XmlDocument.CreateElement('w', 'trPr', $xmlnsMain))
-                    [ref] $rblHeader = $trPr.AppendChild($XmlDocument.CreateElement('w', 'tblHeader', $xmlnsMain))
+                    $null = $trPr.AppendChild($XmlDocument.CreateElement('w', 'tblHeader', $xmlnsMain))
                     ## Flow headers across pages
                     for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
 
@@ -1360,10 +1354,10 @@
                 [ref] $null = $prstGeom.SetAttribute('prst', 'rect')
                 [ref] $null = $prstGeom.AppendChild($XmlDocument.CreateElement('a', 'avLst', $xmlnsDrawingMain))
 
-                $noFill = $spPr.AppendChild($XmlDocument.CreateElement('a', 'noFill', $xmlnsDrawingMain))
+                $null = $spPr.AppendChild($XmlDocument.CreateElement('a', 'noFill', $xmlnsDrawingMain))
 
                 $ln = $spPr.AppendChild($XmlDocument.CreateElement('a', 'ln', $xmlnsDrawingMain))
-                $noFill = $ln.AppendChild($XmlDocument.CreateElement('a', 'noFill', $xmlnsDrawingMain))
+                $null = $ln.AppendChild($XmlDocument.CreateElement('a', 'noFill', $xmlnsDrawingMain))
 
                 return $p
 

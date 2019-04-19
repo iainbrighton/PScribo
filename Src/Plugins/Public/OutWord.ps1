@@ -98,8 +98,11 @@ function OutWord {
             } #end switch
         } #end foreach
 
-        ## Last section's properties are a child element of body
-        $lastSectionOrientation = $Document.Sections | Where-Object { $_.IsLastSection -eq $true } | Select-Object -ExpandProperty Orientation
+        ## Last section's properties are a child element of body element
+        $lastSectionOrientation = $Document.Sections |
+            Where-Object { $_.Type -in 'PScribo.Section','PScribo.Paragraph' } |
+                Select-Object -Last 1 -ExpandProperty Orientation
+
         $sectionPrParams = @{
             PageHeight       = if ($lastSectionOrientation -eq 'Portrait') { $Document.Options['PageHeight'] } else { $Document.Options['PageWidth'] }
             PageWidth        = if ($lastSectionOrientation -eq 'Portrait') { $Document.Options['PageWidth'] } else { $Document.Options['PageHeight'] }
@@ -176,16 +179,25 @@ function OutWord {
 
         ## Process images
         foreach ($image in (GetPScriboImage -Section $Document.Sections)) {
-            $URI = ('/word/media/{0}' -f $image.Name)
-            $partName = New-Object -TypeName System.Uri -ArgumentList ($URI, [System.UriKind]'Relative')
-            $mimeType = 'image/{0}' -f $image.MimeType;
-            $part = $package.CreatePart($partName, $mimeType)
-            if ($image.Uri.IsFile) { $imageBytes = [System.IO.File]::ReadAllBytes($image.Uri.LocalPath); }
-            else { $imageBytes = GetImageUriBytes -Uri $image.Uri.AbsoluteUri; }
-            $stream = $part.GetStream()
-            $stream.Write($imageBytes, 0, $imageBytes.Length);
-            $stream.Close()
-            [ref] $null = $documentPart.CreateRelationship($partName, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image', $image.Name)
+
+            try {
+
+                $uri = ('/word/media/{0}' -f $image.Name)
+                $partName = New-Object -TypeName 'System.Uri' -ArgumentList ($uri, [System.UriKind]'Relative')
+                $part = $package.CreatePart($partName, $image.MimeType)
+                $stream = $part.GetStream()
+                $stream.Write($image.Bytes, 0, $image.Bytes.Length)
+                $stream.Close()
+                [ref] $null = $documentPart.CreateRelationship($partName, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image', $image.Name)
+            }
+            catch {
+
+                throw $_
+            }
+            finally {
+
+                if ($null -ne $stream) { $stream.Close() }
+            }
         }
 
         $package.Flush()

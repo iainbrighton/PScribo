@@ -1,4 +1,4 @@
-﻿Function Test-CharsInPath {
+Function Test-CharsInPath {
 
 <#
 

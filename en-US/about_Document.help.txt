@@ -1,5 +1,5 @@
 TOPIC
-Document
+    Document
 
 SYNOPSIS
     PScribo is a documentation domain-specific language for Powershell. The Document keyword is used to instantiate a
@@ -30,8 +30,8 @@ CREATING A DOCUMENT
     contain any standard Powershell code in addition to PScribo document-specific keywords such as:
 
         DocumentOption - sets global or plugin-specific options
-        *Header        - defines the document header displayed on all pages
-        *Footer        - defines the document footer displayed on all pages
+        *Header        - defines the document header displayed on all pages (not yet implemented)
+        *Footer        - defines the document footer displayed on all pages (not yet implemented)
         Style          - defines a custom formatting style that can be applied to sections, paragraphs and within table
                          styles.
         TableStyle     - defines a custom formatting style for tables that is comprised of a heading, row and alternate
@@ -43,11 +43,13 @@ CREATING A DOCUMENT
         PageBreak      - inserts a page break.
         LineBreak      - inserts a line break.
         BlankLine      - inserts a blank line.
+        Image          - inserts an image.
 
 SETTING DOCUMENT OPTIONS
     The DocumentOption cmdlet is used to set global document options, including page size and page margins. Supported
     parameters include:
 
+        Orientation - the document's page orientation.
         SpaceSeparator - the character used when spaces are encountered and need to be replaced.
         ForceUppercaseHeader - forces headings to uppercase.
         ForceUppercaseSection - forces section names to uppercase.
@@ -86,7 +88,3 @@ SEE ALSO
     about_Plugins
     about_Styles
     about_Tables
-
-# Built-in styles
-# Footer style, report header
-# DocumentOption settings overwritten upon each call.

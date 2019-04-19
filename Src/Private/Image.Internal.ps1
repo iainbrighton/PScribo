@@ -1,293 +1,271 @@
-#region Image Private Functions
+        #region Image Private Functions
 
-function New-PScriboImage {
-    <#
-    .SYNOPSIS
-        Initializes a new PScribo Image object.
-    .NOTES
-        This is an internal function and should not be called directly.
-#>
-    [CmdletBinding(DefaultParameterSetName = 'Path')]
-    #[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
-    [OutputType([System.Management.Automation.PSCustomObject])]
-    param (
-        ## Image file path
-        [Parameter(Mandatory, ParameterSetName = 'Path', ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
-        [System.String] $Path,
+        function New-PScriboImage {
+            <#
+            .SYNOPSIS
+                Initializes a new PScribo Image object.
+            .NOTES
+                This is an internal function and should not be called directly.
+        #>
+            [CmdletBinding(DefaultParameterSetName = 'UriSize')]
+            [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
+            [OutputType([System.Management.Automation.PSCustomObject])]
+            param (
+                [Parameter(Mandatory, ParameterSetName = 'UriSize')]
+                [Parameter(Mandatory, ParameterSetName = 'UriPercent')]
+                [System.String] $Uri,
 
-        ## Image web uri
-        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
-        [System.String] $Uri,
+                [Parameter(Mandatory, ParameterSetName = 'Base64Size')]
+                [Parameter(Mandatory, ParameterSetName = 'Base64Percent')]
+                [System.String] $Base64,
 
-        ## Image width (in pixels)
-        [Parameter(Mandatory, ParameterSetName = 'Path', ValueFromPipelineByPropertyName, Position = 1)]
-        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipelineByPropertyName, Position = 1)]
-        [System.UInt32] $Height,
+                [Parameter(ParameterSetName = 'UriSize')]
+                [Parameter(ParameterSetName = 'Base64Size')]
+                [System.UInt32] $Height,
 
-        ## Image width (in pixels)
-        [Parameter(Mandatory, ParameterSetName = 'Path', ValueFromPipelineByPropertyName, Position = 2)]
-        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipelineByPropertyName, Position = 2)]
-        [System.UInt32] $Width,
+                [Parameter(ParameterSetName = 'UriSize')]
+                [Parameter(ParameterSetName = 'Base64Size')]
+                [System.UInt32] $Width,
 
-        ## Image MIME type
-        [Parameter(Mandatory, ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
-        [ValidateSet('bmp','gif','jpeg','tiff','png')]
-        [System.String] $MimeType,
+                [Parameter(Mandatory, ParameterSetName = 'UriPercent')]
+                [Parameter(Mandatory, ParameterSetName = 'Base64Percent')]
+                [System.UInt32] $Percent,
 
-        ## Image alignment
-        [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
-        [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
-        [ValidateSet('Left','Center','Right')]
-        [System.String] $Align = 'Left',
+                [Parameter()]
+                [ValidateSet('Left','Center','Right')]
+                [System.String] $Align = 'Left',
 
-        ## Image AltText
-        [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
-        [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
-        [System.String] $Text = $Path,
+                [Parameter(Mandatory, ParameterSetName = 'Base64Size')]
+                [Parameter(Mandatory, ParameterSetName = 'Base64Percent')]
+                [Parameter(ParameterSetName = 'UriSize')]
+                [Parameter(ParameterSetName = 'UriPercent')]
+                [System.String] $Text = $Uri,
 
-        [Parameter(ParameterSetName = 'Path', ValueFromPipelineByPropertyName)]
-        [Parameter(ParameterSetName = 'Uri', ValueFromPipelineByPropertyName)]
-        [ValidateNotNullOrEmpty()]
-        [System.String] $Id = [System.Guid]::NewGuid().ToString()
-    )
-    begin {
+                [Parameter()]
+                [ValidateNotNullOrEmpty()]
+                [System.String] $Id = [System.Guid]::NewGuid().ToString()
+            )
+            process
+            {
+                $imageNumber = [System.Int32] $pscriboDocument.Properties['Images']++;
 
-        if (-not ([System.String]::IsNullOrEmpty($Text))) {
-            $Text = $Path.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper()
-        }
-
-    } #end begin
-    process {
-
-        $imageNumber = [System.Int32] $pscriboDocument.Properties['Images']++;
-
-        if ($PSBoundParameters.ContainsKey('Path')) {
-
-            $imageUri = ResolveImagePath -Path $Path;
-        }
-        else {
-
-            $imageUri = ResolveImagePath -Path $Uri;
-        }
-
-        if (-not $PSBoundParameters.ContainsKey('MimeType')) {
-
-            $MimeType = GetImageMimeType -Path $Path;
-        }
-
-        $pscriboImage = [PSCustomObject] @{
-            Id          = $Id;
-            ImageNumber = $imageNumber;
-            Text        = $Text
-            Type        = 'PScribo.Image';
-            Uri         = $imageUri;
-            Name        = 'Img{0}' -f $imageNumber;
-            Align       = $Align;
-            MIMEType    = $MimeType;
-            WidthEm     = ConvertPxToEm -Pixel $Width;
-            HeightEm    = ConvertPxToEm -Pixel $Height;
-            Width       = $Width;
-            Height      = $Height;
-        }
-
-        return $pscriboImage;
-
-    } #end process
-} #end function New-PScriboImage
-
-
-function GetImageMimeType {
-    <#
-        .SYNOPSIS
-            Returns an image's MIME type based upon the file extension.
-    #>
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [System.String] $Path
-    )
-    process {
-
-        $fileInfo = Get-Item -Path $Path;
-        $mimeTypes = @{
-            '.bmp'  = 'bmp';
-            '.cod'  = 'cis-cod';
-            '.gif'  = 'gif';
-            '.ief'  = 'ief';
-            '.jpe'  = 'jpeg';
-            '.jpeg' = 'jpeg';
-            '.jpg'  = 'jpeg';
-            '.jfif' = 'pipeg';
-            '.svg'  = 'svg+sml';
-            '.tif'  = 'tiff';
-            '.tiff' = 'tiff';
-            '.ras'  = 'x-cmu-raster';
-            '.cmx'  = 'x-cmx';
-            '.ico'  = 'x-icon';
-            '.png'  = 'png';
-            '.pnm'  = 'x-portable-anymap';
-            '.pbm'  = 'x-portable-bitmap';
-            '.pgm'  = 'x-portable-graymap';
-            '.ppm'  = 'x-portable-pixmap';
-            '.rgb'  = 'x-rgb';
-            '.xbm'  = 'x-xbitmap';
-            '.xpm'  = 'x-xbitmap';
-            '.xwd'  = 'x-xwindowdump';
-        }
-        return $mimeTypes[$fileInfo.Extension];
-
-    } #end process
-} #end function
-
-function GetPScriboImage {
-<#
-    .SYNOPSIS
-        Retrieves PScribo.Images in a document/section
-#>
-    [CmdletBinding()]
-    [OutputType([System.Management.Automation.PSObject])]
-    param (
-        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.PSObject] $Section,
-
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [System.String[]] $Id
-    )
-    process {
-
-        if ($Section.Type -eq 'PScribo.Image') {
-
-            if ($PSBoundParameters.ContainsKey('Id') -and ($Section.Id -eq $Id)) {
-                return $Section;
-            }
-            else {
-                return $Section;
-            }
-        }
-        else {
-
-            if ($PSBoundParameters.ContainsKey('Id')) {
-
-                $Section.Sections |
-                    Where-Object { ($_.Type -eq 'PScribo.Image') -and ($_.Id -in $Id) } |
-                        Write-Output;
-            }
-            else {
-
-                $Section.Sections |
-                    Where-Object { $_.Type -eq 'PScribo.Image' } |
-                        Write-Output;
-
-            }
-
-            ## Recursively search subsections
-            $Section.Sections |
-            Where-Object { $_.Type -eq 'PScribo.Section' } |
-                ForEach-Object {
-
-                    $PSBoundParameters['Section'] = $_;
-                    GetPScriboImage @PSBoundParameters;
+                if ($PSBoundParameters.ContainsKey('Uri'))
+                {
+                    $imageBytes = GetImageUriBytes -Uri $Uri
+                }
+                elseif ($PSBoundParameters.ContainsKey('Base64'))
+                {
+                    $imageBytes = [System.Convert]::FromBase64String($Base64)
                 }
 
-        }
-    }
-} #end function GetPScriboImage
+                $image = GetImageFromBytes -Bytes $imageBytes
 
-#endregion image Private Functions
+                if ($PSBoundParameters.ContainsKey('Percent'))
+                {
+                    $Width = ($image.Width / 100) * $Percent
+                    $Height = ($image.Height / 100) * $Percent
+                }
+                elseif (-not ($PSBoundParameters.ContainsKey('Width')) -and (-not $PSBoundParameters.ContainsKey('Height')))
+                {
+                    $Width = $image.Width
+                    $Height = $image.Height
+                }
 
-function GetImageUriBytes {
-<#
-    .SYNOPSIS
-        Gets a web image's content as a byte[]
-#>
-    [CmdletBinding()]
-    [OutputType([System.Byte[]])]
-    param (
-        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [System.Uri] $Uri
-    )
-    process {
+                $pscriboImage = [PSCustomObject] @{
+                    Id          = $Id;
+                    ImageNumber = $imageNumber;
+                    Text        = $Text
+                    Type        = 'PScribo.Image';
+                    Bytes       = $imageBytes;
+                    Uri         = $Uri;
+                    Name        = 'Img{0}' -f $imageNumber;
+                    Align       = $Align;
+                    MIMEType    = GetImageMimeType -Image $image
+                    WidthEm     = ConvertPxToEm -Pixel $Width;
+                    HeightEm    = ConvertPxToEm -Pixel $Height;
+                    Width       = $Width;
+                    Height      = $Height;
+                }
 
-        try {
-            $webClient = New-Object -TypeName System.Net.WebClient;
-            [System.IO.Stream] $contentStream = $webClient.OpenRead($uri.AbsoluteUri);
-            [System.IO.MemoryStream] $memoryStream = New-Object System.IO.MemoryStream;
-            $contentStream.CopyTo($memoryStream);
-            return $memoryStream.ToArray();
-        }
-        catch {
-            $_
-        }
-        finally {
-            $memoryStream.Close();
-            $contentStream.Close();
-            $webClient.Dispose();
-        }
+                return $pscriboImage;
 
-    } #end process
-} #end function
+            } #end process
+        } #end function New-PScriboImage
 
-function WriteImageBytes {
-<#
-    .SYNOPSIS
-        Writes an image (byte[]) to file
-#>
-    [CmdletBinding()]
-    [OutputType([System.IO.FileInfo])]
-    param (
-        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [System.Byte[]] $Bytes,
+        function ResolveImagePath {
+        <#
+            .SYNOPSIS
+                Converts an image path into a Uri.
+            .NOTES
+                A Uri includes information about whether the path is local etc. This is useful for plugins
+                to be able to determine whether to embed images or not.
+        #>
+            [CmdletBinding()]
+            [OutputType([System.Uri])]
+            param (
+                [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+                [System.String] $Path
+            )
+            process {
 
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [System.String] $Path
-    )
-    begin {
+                if (Test-Path -Path $Path)
+                {
+                    $Path = Resolve-Path -Path $Path
+                }
+                $uri = New-Object -TypeName System.Uri -ArgumentList @($Path)
+                return $uri
 
-        $Path = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path);
-
-    }
-    process {
-
-        try {
-            [System.IO.FileStream] $fileStream = New-Object System.IO.FileStream @($Path, [System.IO.FileMode]::Create);
-            $fileStream.WriteByte($Bytes, 0, $Bytes.Length);
-        }
-        catch {
-            $_
-        }
-        finally {
-            $fileStream.Close();
-        }
-
-    } #end process
-} #end function
-
-function ResolveImagePath {
-    <#
-        .SYNOPSIS
-            Converts an image path into a Uri.
-        .NOTES
-            A Uri includes information about whether the path is local etc. This is useful for plugins
-            to be able to determine whether to embed images or not.
-    #>
-        [CmdletBinding()]
-        [OutputType([System.Uri])]
-        param (
-            [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-            [System.String] $Path
-        )
-        process {
-
-            if (Test-Path -Path $Path) {
-
-                $Path = Resolve-Path -Path $Path;
             }
+        } #end function
 
-            $uri = New-Object -TypeName System.Uri @($Path);
+        function GetImageMimeType {
+            [CmdletBinding()]
+            [OutputType([System.String])]
+            param (
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [System.Drawing.Image] $Image
+            )
+            process
+            {
+                if ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Jpeg)) {
+                    return 'image/jpeg'
+                }
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Png)) {
+                    return 'image/png'
+                }
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Bmp)) {
+                    return 'image/bmp'
+                }
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Emf)) {
+                    return 'image/emf'
+                }
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Gif)) {
+                    return 'image/gif'
+                }
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Icon)) {
+                    return 'image/icon'
+                }
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Tiff)) {
+                    return 'image/tiff'
+                }
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Wmf)) {
+                    return 'image/wmf'
+                }
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Exif)) {
+                    return 'image/exif'
+                }
+                else {
+                    return 'image/unknown'
+                }
+            }
+        } #end function
 
-            return $uri;
+        function GetImageUriBytes {
+        <#
+            .SYNOPSIS
+                Gets an image's content as a byte[]
+        #>
+            [CmdletBinding()]
+            [OutputType([System.Byte[]])]
+            param (
+                [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+                [System.Uri] $Uri
+            )
+            process
+            {
+                try
+                {
+                    $webClient = New-Object -TypeName 'System.Net.WebClient'
+                    [System.IO.Stream] $contentStream = $webClient.OpenRead($uri.AbsoluteUri)
+                    [System.IO.MemoryStream] $memoryStream = New-Object System.IO.MemoryStream
+                    $contentStream.CopyTo($memoryStream)
+                    return $memoryStream.ToArray()
+                }
+                catch
+                {
+                    $_
+                }
+                finally
+                {
+                    if ($null -ne $memoryStream) { $memoryStream.Close() }
+                    if ($null -ne $contentStream) { $contentStream.Close() }
+                    if ($null -ne $webClient) { $webClient.Dispose() }
+                }
 
-        }
-    } #end function
+            } #end process
+        } #end function
 
-#endregion image Private Functions
+        function GetImageFromBytes {
+        <#
+            .SYNOPSIS
+                Creates an image from a byte[]
+        #>
+            [CmdletBinding()]
+            [OutputType([System.Drawing.Image])]
+            param (
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [System.Byte[]] $Bytes
+            )
+            process
+            {
+                try
+                {
+                    [System.IO.MemoryStream] $memoryStream = New-Object -TypeName 'System.IO.MemoryStream' -ArgumentList @(,$Bytes)
+                    [System.Drawing.Image] $image = [System.Drawing.Image]::FromStream($memoryStream)
+                    Write-Output -InputObject $image
+                }
+                catch
+                {
+                    $_
+                }
+                finally
+                {
+                    if ($null -ne $memoryStream) { $memoryStream.Close() }
+                }
+            } #end process
+        } #end function
+
+
+        function GetPScriboImage {
+        <#
+            .SYNOPSIS
+                Retrieves PScribo.Images in a document/section
+        #>
+            [CmdletBinding()]
+            [OutputType([System.Management.Automation.PSObject])]
+            param (
+                [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+                [System.Management.Automation.PSObject[]] $Section,
+
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [System.String[]] $Id
+            )
+            process {
+
+                foreach ($subSection in $Section)
+                {
+                    if ($subSection.Type -eq 'PScribo.Image')
+                    {
+                        if ($PSBoundParameters.ContainsKey('Id'))
+                        {
+                            if ($subSection.Id -in $Id)
+                            {
+                                Write-Output -InputObject $subSection
+                            }
+                        }
+                        else
+                        {
+                            Write-Output -InputObject $subSection
+                        }
+                    }
+                    elseif ($subSection.Type -eq 'PScribo.Section')
+                    {
+                        ## Recursively search subsections
+                        $PSBoundParameters['Section'] = $subSection.Sections
+                        GetPScriboImage @PSBoundParameters
+                    }
+                }
+            }
+        } #end function GetPScriboImage
+
+        #endregion image Private Functions

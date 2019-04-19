@@ -57,6 +57,7 @@ function OutText {
                 'PScribo.Table' { [ref] $null = $textBuilder.AppendLine(($s | OutTextTable)); }
                 'PScribo.TOC' { [ref] $null = $textBuilder.AppendLine(($s | OutTextTOC)); }
                 'PScribo.BlankLine' { [ref] $null = $textBuilder.AppendLine(($s | OutTextBlankLine)); }
+                'PScribo.Image' { [ref] $null = $textBuilder.AppendLine(($s | OutTextImage)); }
                 Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
             } #end switch
         } #end foreach

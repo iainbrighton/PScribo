@@ -1,4 +1,4 @@
-﻿function ConvertPtToMm {
+function ConvertPtToMm {
 <#
     .SYNOPSIS
         Convert points into millimeters
