@@ -102,6 +102,7 @@ function OutWord {
         $lastSectionOrientation = $Document.Sections |
             Where-Object { $_.Type -in 'PScribo.Section','PScribo.Paragraph' } |
                 Select-Object -Last 1 -ExpandProperty Orientation
+        if ($null -eq $lastSectionOrientation) { $lastSectionOrientation = $Document.Options['PageOrientation'];}
 
         $sectionPrParams = @{
             PageHeight       = if ($lastSectionOrientation -eq 'Portrait') { $Document.Options['PageHeight'] } else { $Document.Options['PageWidth'] }
