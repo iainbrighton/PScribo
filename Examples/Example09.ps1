@@ -1,4 +1,8 @@
-param ([System.Management.Automation.SwitchParameter] $PassThru)
+param (
+    [System.String[]] $Format = 'Html',
+    [System.String] $Path = '~\Desktop',
+    [System.Management.Automation.SwitchParameter] $PassThru
+)
 
 Import-Module PScribo -Force;
 
@@ -52,4 +56,4 @@ $example9 = Document -Name 'PScribo Example 9' {
         }
     }
 }
-$example9 | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru
+$example9 | Export-Document -Path $Path -Format $Format -PassThru:$PassThru

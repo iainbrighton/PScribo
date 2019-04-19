@@ -1,3 +1,8 @@
+param (
+    [System.String] $Path = '~\Desktop\Example1.CliXml',
+    [System.Management.Automation.SwitchParameter] $PassThru
+)
+
 <#
     From Powershell v3 onwards, the module should not need to be explicitly imported. It is included
     here to avoid any ambiguity.
@@ -22,4 +27,4 @@ $example1 = Document -Name 'PScribo Example 1' {
     permit the creation of a document on one machine, and converted into an external document format on another. The following
     command will export the 'PScribo Example 1' document to a file named Example1.CliXml on the desktop.
 #>
-$example1 | Export-Clixml -Depth 128 -Path ~\Desktop\Example1.CliXml -Force
+$example1 | Export-Clixml -Depth 128 -Path $Path -Force

@@ -1,4 +1,6 @@
-param ([System.Management.Automation.SwitchParameter] $PassThru)
+param (
+    [System.Management.Automation.SwitchParameter] $PassThru
+)
 
 Import-Module PScribo -Force;
 

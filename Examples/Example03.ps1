@@ -1,4 +1,8 @@
-param ([System.Management.Automation.SwitchParameter] $PassThru)
+param (
+    [System.String[]] $Format = 'Html',
+    [System.String] $Path = '~\Desktop',
+    [System.Management.Automation.SwitchParameter] $PassThru
+)
 
 Import-Module PScribo -Force;
 
@@ -32,4 +36,4 @@ Document -Name 'PScribo Example 3' {
     #>
     DocumentOption -PageSize Letter -MarginTopAndBottom 54 -MarginLeftAndRight 36
 
-} | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru
+} | Export-Document -Path $Path -Format $Format -PassThru:$PassThru
