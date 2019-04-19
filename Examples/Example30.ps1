@@ -1,4 +1,8 @@
-param ([System.Management.Automation.SwitchParameter] $PassThru)
+param (
+    [System.String[]] $Format = 'Html',
+    [System.String] $Path = '~\Desktop',
+    [System.Management.Automation.SwitchParameter] $PassThru
+)
 
 Import-Module PScribo -Force;
 
@@ -16,4 +20,4 @@ $example30 = Document -Name 'PScribo Example 30' {
     $services | Where-Object { $_.Status -ne 'Running' } | Set-Style -Style 'StoppedService'
     Table -InputObject $services -Columns Name,DisplayName,Status -Headers 'Name','Display Name','State'
 }
-$example30 | Export-Document -Format Html -Path ~\Desktop -Options @{ NoPageLayoutStyle = $true }  -PassThru:$PassThru
+$example30 | Export-Document -Format $Format -Path $Path -Options @{ NoPageLayoutStyle = $true }  -PassThru:$PassThru
