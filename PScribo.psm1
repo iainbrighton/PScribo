@@ -20,21 +20,21 @@ Get-ChildItem -Path "$pscriboRoot\Src\" -Include '*.ps1' -Recurse |
     }
 
 $exportedFunctions = @(
+    'BlankLine',
     'Document',
-    'Export-Document',
-    'Section',
     'DocumentOption',
+    'Export-Document',
+    'Image',
     'LineBreak',
     'PageBreak',
     'Paragraph',
-    'Image',
     'Section',
+    'Set-Style',
     'Style',
     'Table',
     'TableStyle',
-    'Set-Style',
     'TOC',
-    'BlankLine'
+    'Write-PScriboMessage'
 );
 
 $exportedAliases = @(

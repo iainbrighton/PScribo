@@ -4,9 +4,10 @@
 
 ### Unreleased ###
 
-* Adds AppVeyor build
-* Adds `-Orientation` support to document root `Section` (#81)
+* Adds page orientation support to document root `Section` s (#81)
 * Adds `Image` support (#12)
+* Exposes `Write-PScriboMessage` function externally (#89)
+* Adds AppVeyor build
 * Adds linting tests
 
 ### 0.7.24 ###

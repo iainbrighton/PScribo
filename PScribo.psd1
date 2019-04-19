@@ -12,16 +12,17 @@
                             'Document',
                             'DocumentOption',
                             'Export-Document',
+                            'Image',
                             'LineBreak',
                             'PageBreak',
                             'Paragraph',
-                            'Image',
                             'Section',
-                            'Style',
                             'Set-Style',
+                            'Style',
                             'Table',
                             'TableStyle',
-                            'TOC'
+                            'TOC',
+                            'Write-PScriboMessage'
                         );
     AliasesToExport   = @(
                             'GlobalOption'
