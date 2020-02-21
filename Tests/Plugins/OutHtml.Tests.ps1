@@ -89,7 +89,7 @@ InModuleScope 'PScribo' {
                 $fontFamily = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-family:*' ;
                 ($fontFamily.Split(':').Trim())[1] | Should BeExactly "'Helvetica'";
                 $fontSize = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-size:*' ;
-                ($fontSize.Split(':').Trim())[1] | Should BeExactly '0.92em';
+                ($fontSize.Split(':').Trim())[1] | Should BeExactly '0.92rem';
                 $fontWeight = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-weight:*' ;
                 ($fontWeight.Split(':').Trim())[1] | Should BeExactly 'normal';
                 $fontStyle = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-style:*' ;
@@ -110,7 +110,7 @@ InModuleScope 'PScribo' {
                 [System.Threading.Thread]::CurrentThread.CurrentCulture = 'da-DK';
                 $fontSize = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-size:*' ;
                 [System.Threading.Thread]::CurrentThread.CurrentCulture = $currentCulture;
-                ($fontSize.Split(':').Trim())[1] | Should BeExactly '0.92em';
+                ($fontSize.Split(':').Trim())[1] | Should BeExactly '0.92rem';
             }
 
             It 'creates multiple font default style' {
@@ -122,7 +122,7 @@ InModuleScope 'PScribo' {
             It 'creates single 12pt font' {
                 Style -Name Test -Font Helvetica -Size 12;
                 $fontSize = ((GetHtmlStyle -Style $pscriboDocument.Styles['Test']).Split(';').Trim()) -like 'font-size:*' ;
-                ($fontSize.Split(':').Trim())[1] | Should BeExactly '1.00em';
+                ($fontSize.Split(':').Trim())[1] | Should BeExactly '1.00rem';
             }
 
             It 'creates bold font style' {
@@ -201,7 +201,7 @@ InModuleScope 'PScribo' {
                 TableStyle -Name TestTableStyle;
 
                 $padding = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'padding:*' ;
-                ($padding.Split(':').Trim())[1] | Should BeExactly '0.08em 0.33em 0em 0.33em';
+                ($padding.Split(':').Trim())[1] | Should BeExactly '0.08rem 0.33rem 0rem 0.33rem';
                 #$borderColor = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'border-color:*' ;
                 #($borderColor.Split(':').Trim())[1] | Should BeExactly '#000';
                 #$borderWidth = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'border-width:*' ;
@@ -217,7 +217,7 @@ InModuleScope 'PScribo' {
                 TableStyle -Name TestTableStyle -PaddingTop 5 -PaddingRight 10 -PaddingBottom 5 -PaddingLeft 10;
 
                 $padding = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'padding:*' ;
-                ($padding.Split(':').Trim())[1] | Should BeExactly '0.42em 0.83em 0.42em 0.83em';
+                ($padding.Split(':').Trim())[1] | Should BeExactly '0.42rem 0.83rem 0.42rem 0.83rem';
             }
 
             It 'creates custom table border color style when -BorderWidth is specified' {
@@ -235,7 +235,7 @@ InModuleScope 'PScribo' {
                 TableStyle -Name TestTableStyle -BorderWidth 3;
 
                 $borderWidth = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'border-width:*' ;
-                ($borderWidth.Split(':').Trim())[1] | Should BeExactly '0.25em';
+                ($borderWidth.Split(':').Trim())[1] | Should BeExactly '0.25rem';
                 $borderStyle = ((GetHtmlTableStyle -TableStyle $pscriboDocument.TableStyles['TestTableStyle']).Split(';').Trim()) -like 'border-style:*' ;
                 ($borderStyle.Split(':').Trim())[1] | Should BeExactly 'solid';
             }
@@ -418,7 +418,7 @@ InModuleScope 'PScribo' {
 
         It 'outputs indented section (#73)' {
             $sectionName = 'Test & Section';
-            $expected = '<div style="margin-left: 6.00em;">[\S\s]+</div>';
+            $expected = '<div style="margin-left: 6.00rem;">[\S\s]+</div>';
 
             $result = Section -Name $sectionName -ScriptBlock { BlankLine } -Tabs 2 | OutHtmlSection;
             $result -match $expected | Should Be $true;
@@ -474,7 +474,7 @@ InModuleScope 'PScribo' {
             $result = (Paragraph 'Test paragraph.' -Size 11 | OutHtmlParagraph) -match '(?<=style=").+(?=">)';
             $fontSize = ($Matches[0]).Trim(';');
 
-            ($fontSize.Split(':').Trim())[1] | Should BeExactly '0.92em';
+            ($fontSize.Split(':').Trim())[1] | Should BeExactly '0.92rem';
             [System.Threading.Thread]::CurrentThread.CurrentCulture = $currentCulture;
         }
 
@@ -487,6 +487,7 @@ InModuleScope 'PScribo' {
             BeforeEach {
                 ## Scaffold new document to initialise options/styles
                 $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
+                $Document = $pscriboDocument
                 $processes = Get-Process | Select-Object -First 3;
                 $table = $processes | Table -Name 'Test Table' | OutHtmlTable;
                 [Xml] $html = $table.Replace('&','&amp;');
@@ -515,12 +516,13 @@ InModuleScope 'PScribo' {
             BeforeEach {
                 ## Scaffold new document to initialise options/styles
                 $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
+                $Document = $pscriboDocument
+
                 $processes = Get-Process | Select -First 1;
                 $table = $processes | Table -Name 'Test Table' -List | OutHtmlTable;
-                [Xml] $html = $table.Replace('&','&amp;');
-            }
 
-            #Write-Host $html.OuterXml -ForegroundColor Yellow
+                [Xml] $html = $table.Replace('&','&amp;').Replace('<p />','');
+            }
 
             It 'creates no table heading row' {
                 ## Fix Set-StrictMode
@@ -546,6 +548,7 @@ InModuleScope 'PScribo' {
             BeforeEach {
                 ## Scaffold new document to initialise options/styles
                 $pscriboDocument = Document -Name 'Test' -ScriptBlock { };
+                $Document = $pscriboDocument
             }
 
             It 'creates a tabular table cell with an embedded new line' {

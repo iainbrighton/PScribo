@@ -2,8 +2,9 @@
 
 ## Versions ##
 
-### Unreleased ###
+### 0.7.25 ###
 
+* Replaces Html `em` output with `rem` to maintain correct font sizing
 * Adds page orientation support to document root `Section` s (#81)
 * Adds `Image` support (#12)
 * Exposes `Write-PScriboMessage` function externally (#89)

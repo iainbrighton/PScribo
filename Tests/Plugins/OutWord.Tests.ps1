@@ -552,7 +552,7 @@ InModuleScope 'PScribo' {
 
                     OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 
-                    $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:tblCellMar>[..]</w:tblCellMar>' -f $paddingTop));
+                    $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:tblCellMar>[..]</w:tblCellMar>'));
                     $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:top w:w="{0}" w:type="dxa" />' -f $paddingTop));
                     $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:start w:w="{0}" w:type="dxa" />' -f $paddingLeft));
                     $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:bottom w:w="{0}" w:type="dxa" />' -f $paddingBottom));

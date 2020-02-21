@@ -55,7 +55,7 @@ function OutHtml {
         [ref] $null = $htmlBuilder.AppendLine('<head><title>{0}</title>' -f $Document.Name);
         [ref] $null = $htmlBuilder.AppendLine('{0}</head><body>' -f (OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles -NoPageLayoutStyle:$noPageLayoutStyle));
         [ref] $null = $htmlBuilder.AppendFormat('<div class="{0}">', $options['PageOrientation'].ToLower());
-        [ref] $null = $htmlBuilder.AppendFormat('<div class="{0}" style="padding-top: {1}em; padding-left: {2}em; padding-bottom: {3}em; padding-right: {4}em;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine();
+        [ref] $null = $htmlBuilder.AppendFormat('<div class="{0}" style="padding-top: {1}rem; padding-left: {2}rem; padding-bottom: {3}rem; padding-right: {4}rem;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine();
         foreach ($s in $Document.Sections.GetEnumerator()) {
             if ($s.Id.Length -gt 40) { $sectionId = '{0}[..]' -f $s.Id.Substring(0,36); }
             else { $sectionId = $s.Id; }
