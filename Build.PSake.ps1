@@ -1,168 +1,74 @@
 #requires -Version 5;
 #requires -Modules VirtualEngine.Build;
+
 $psake.use_exit_on_error = $true;
 
 Properties {
-    $currentDir = Resolve-Path -Path (Get-Location -PSProvider FileSystem);
+    $moduleName = (Get-Item $PSScriptRoot\*.psd1)[0].BaseName;
     $basePath = $psake.build_script_dir;
-    $buildDir = 'Build';
-    $releaseDir = 'Release';
-    $company = 'Iain Brighton';
-    $author = 'Iain Brighton';
-    $thumbprint = '3DACD0F2D1E60EB33EC774B9CFC89A4BEE9037AF';
-    $timeStampServer = 'http://timestamp.verisign.com/scripts/timestamp.dll';
-}
-
-Task Default -Depends Build;
-Task Build -Depends Clean, Setup, Test, Deploy;
-Task Stage -Depends Build, Version, Bundle, Sign, Zip;
-#Task Publish -Depends Stage, Release;
-
-
-Task Test {
-    $testResult = Invoke-Pester -Path $basePath -OutputFile "$buildPath\TestResult.xml" -OutputFormat NUnitXml -Strict -PassThru;
-    if ($testResult.FailedCount -gt 0) {
-        Write-Error ('Failed "{0}" unit tests.' -f $testResult.FailedCount);
-    }
-}
-
-
-Task Clean {
-    Write-Host (' Base directory "{0}".' -f $basePath) -ForegroundColor Yellow;
-    ## Remove build directory
-    $baseBuildPath = Join-Path -Path $psake.build_script_dir -ChildPath $buildDir;
-    if (Test-Path -Path $baseBuildPath) {
-        Write-Host (' Removing build base directory "{0}".' -f (TrimPath -Path $baseBuildPath)) -ForegroundColor Yellow;
-        Remove-Item $baseBuildPath -Recurse -Force -ErrorAction Stop;
-    }
-}
-
-
-Task Setup {
-    # Properties are not available in the script scope.
-    Set-Variable manifest -Value (Get-ModuleManifest) -Scope Script;
-    Set-Variable buildPath -Value (Join-Path -Path $psake.build_script_dir -ChildPath "$buildDir\$($manifest.Name)") -Scope Script;
-    Set-Variable releasePath -Value (Join-Path -Path $psake.build_script_dir -ChildPath $releaseDir) -Scope Script;
-    $newModuleVersion = New-Object -TypeName System.Version -ArgumentList $manifest.Version.Major, $manifest.Version.Minor,$manifest.Version.Build,(Get-GitRevision);
-    Set-Variable version -Value ($newModuleVersion.ToString()) -Scope Script;
-
-    Write-Host (' Building module "{0}".' -f $manifest.Name) -ForegroundColor Yellow;
-    Write-Host (' Using version number "{0}".' -f $version) -ForegroundColor Yellow;
-
-    ## Create the build directory
-    Write-Host (' Creating build directory "{0}".' -f (TrimPath -Path $buildPath)) -ForegroundColor Yellow;
-    [Ref] $null = New-Item $buildPath -ItemType Directory -Force -ErrorAction Stop;
-
-    ## Create the release directory
-    if (!(Test-Path -Path $releasePath)) {
-        Write-Host (' Creating release directory "{0}".' -f (TrimPath -Path $releasePath)) -ForegroundColor Yellow;
-        [Ref] $null = New-Item $releasePath -ItemType Directory -Force -ErrorAction Stop;
-    }
-}
-
-
-Task Deploy {
-    ## Copy release files
-    Write-Host (' Copying release files to build directory "{0}".' -f (TrimPath -Path $buildPath)) -ForegroundColor Yellow;
-    $excludedFiles = @(
-        '*.Tests.ps1',
-        'Build.PSake.ps1',
+    $buildDir = 'Release';
+    $buildPath = (Join-Path -Path $basePath -ChildPath $buildDir);
+    $releasePath = (Join-Path -Path $buildPath -ChildPath $moduleName);
+    $thumbprint = '177FC8E667D4C022C7CD9CFDFEB66991890F4090';
+    $timeStampServer = 'http://timestamp.digicert.com';
+    $exclude = @(
         '.git*',
-        '*.png',
-        'Build',
+        '.vscode',
         'Release',
-        'readme.md',
-        'bin',
-        'obj',
-        '*.sln',
-        '*.suo',
-        '*.pssproj',
+        'Tests',
+        'Build.PSake.ps1',
+        '*.png',
+        '*.md',
+        '*.enc',
+        'TestResults.xml',
+        'appveyor.yml',
+        'appveyor-tools'
         'PScribo Test Doc.*',
         'PScriboExample.*',
-        'TestResult.xml',
-        '.vscode',
+        'TestResults.xml',
         'System.IO.Packaging.dll'
     );
-    Get-ModuleFile -Exclude $excludedFiles | ForEach-Object {
-        $destinationPath = '{0}{1}' -f $buildPath, $PSItem.FullName.Replace($basePath, '');
-        Write-Host ('  Copying release file "{0}".' -f (TrimPath -Path $destinationPath)) -ForegroundColor DarkCyan;
-        [Ref] $null = New-Item -ItemType File -Path $destinationPath -Force;
-        Copy-Item -Path $PSItem.FullName -Destination $destinationPath -Force;
-    }
+    $signExclude = @('Examples','en-US');
 }
 
+#region functions
 
-Task Version {
-    ## Version module manifest prior to build
-    $manifestPath = Join-Path $buildPath -ChildPath "$($manifest.Name).psd1";
-    Write-Host (' Versioning module manifest "{0}".' -f $manifestPath) -ForegroundColor Yellow;
-    Set-ModuleManifestProperty -Path $manifestPath -Version $version -CompanyName $company -Author $author;
-    ## Reload module manifest to ensure the version number is picked back up
-    Set-Variable manifest -Value (Get-ModuleManifest -Path $manifestPath) -Scope Script -Force;
-}
-
-
-Task Sign {
-    Get-ChildItem -Path $buildPath -Include *.ps* -Recurse -File | % {
-        Write-Host (' Signing file "{0}":' -f (TrimPath -Path $PSItem.FullName)) -ForegroundColor Yellow -NoNewline;
-        $signResult = Set-ScriptSignature -Path $PSItem.FullName -Thumbprint $thumbprint -TimeStampServer $timeStampServer -ErrorAction Stop;
-        Write-Host (' {0}.' -f $signResult.Status) -ForegroundColor Green;
-    }
-}
-
-
-Task Zip {
-    ## Creates the release files in the $releaseDir
-    $zipReleaseName = '{0}-v{1}.zip' -f $manifest.Name, $version;
-    $zipPath = Join-Path -Path $releasePath -ChildPath $zipReleaseName;
-    Write-Host (' Creating zip file "{0}".' -f (TrimPath -Path $zipPath)) -ForegroundColor Yellow;
-    ## Zip the parent directory
-    $zipSourcePath = Split-Path -Path $buildPath -Parent;
-    $zipFile = New-ZipArchive -Path $zipSourcePath -DestinationPath $zipPath;
-    Write-Host (' Zip file "{0}" created.' -f (TrimPath -Path $zipFile.Fullname)) -ForegroundColor Yellow;
-}
-
-Task Bundle {
-    $bundlePath = Join-Path -Path $releasePath -ChildPath "PScribo-v$version-Bundle.ps1";
-    Write-Host (' Creating bundle file "{0}".' -f (TrimPath -Path $bundlePath)) -ForegroundColor Yellow;
-    $bundleFiles = "$buildPath\Src\Public","$buildPath\Src\Private","$buildPath\Src\Plugins\Public";
-    $excludedFiles = '*.Tests.ps1','*.Internal.ps1','System.IO.Packaging.dll';
-    New-Bundle -Path $bundleFiles -DestinationPath $bundlePath -Exclude $excludedFiles -Verbose;
-}
-
-<#
-Task DocumentBundle {
-    $bundlePath = Join-Path -Path $buildPath -ChildPath "PScribo-$version-DocumentBundle.ps1";
-    $bundleFiles = "$currentDir\LICENSE","$currentDir\Functions";
-    New-Bundle -Path $bundleFiles -DestinationPath $bundlePath -Verbose;
-}
-
-Task OutputBundle {
-    $bundlePath = Join-Path -Path $buildPath -ChildPath "PScribo-$version-OutputBundle.ps1";
-    $bundleFiles = "$currentDir\LICENSE","$currentDir\Plugins";
-    New-Bundle -Path $bundleFiles -DestinationPath $bundlePath -Verbose;
-}
-#>
-
-Task Minify { }
-
-
-function TrimPath {
-<#
-    .SYNOPSIS
-        Trims a directory path to a relative path to avoid wrapping issues
-#>
+function New-PscriboBundle {
     [CmdletBinding()]
-    [OutputType([System.String])]
     param (
-        [Parameter(Mandatory, ValueFromPipeline)]
-        [System.String] $Path
+        ## Files to bundle.
+        [Parameter(Mandatory)]
+        [System.String[]] $Path,
+
+        ## Output filename.
+        [Parameter(Mandatory)]
+        [System.String] $DestinationPath,
+
+        ## Excluded files.
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [System.String[]] $Exclude = @('*.Tests.ps1','*.Internal.ps1')
     )
-    return ($Path.Replace($basePath, ''));
+    Write-Host ('  Creating bundle header.') -ForegroundColor Cyan;
+    Set-Content -Path $DestinationPath -Value "#region PScribo Bundle v$version";
+    Add-Content -Path $DestinationPath -Value "#requires -Version 3`r`n";
+
+    ## Import LICENSE
+    Write-Host ('  Creating bundle license.') -ForegroundColor Cyan;
+    Get-Content -Path "$currentDir\LICENSE" | Add-Content -Path $DestinationPath;
+
+    ## TODO: Support localised bundles, eg en-US and fr-FR
+    Write-Host ('  Creating bundle resources.') -ForegroundColor Cyan;
+    Add-Content -Path $DestinationPath -Value "`r`n`$localized = DATA {";
+    Get-Content -Path "$currentDir\en-US\PScribo.Resources.psd1" | Add-Content -Path $DestinationPath;
+    Add-Content -Path $DestinationPath -Value "}`r`n";
+
+    Join-PscriboBundleFile -Path $Path -DestinationPath $DestinationPath -Exclude $Exclude;
+    Write-Host ('  Creating bundle footer.') -ForegroundColor Cyan;
+    Add-Content -Path $DestinationPath -Value "#endregion PScribo Bundle v$version";
 }
 
-
-function Join-BundleFile {
+function Join-PscriboBundleFile {
     [CmdletBinding()]
     param (
         ## Files to bundle.
@@ -217,38 +123,123 @@ function Join-BundleFile {
     }
 }
 
+#endregion functions
 
-function New-Bundle {
-    [CmdletBinding()]
-    param (
-        ## Files to bundle.
-        [Parameter(Mandatory)]
-        [System.String[]] $Path,
+# Synopsis: Initialises build variables
+Task Init {
 
-        ## Output filename.
-        [Parameter(Mandatory)]
-        [System.String] $DestinationPath,
+    # Properties are not available in the script scope.
+    Set-Variable manifest -Value (Get-ModuleManifest) -Scope Script;
+    Set-Variable version -Value $manifest.Version -Scope Script;
+    Write-Host (" Building module '{0}'." -f $manifest.Name) -ForegroundColor Yellow;
+    Write-Host (" Building version '{0}'." -f $version) -ForegroundColor Yellow;
+} #end task Init
 
-        ## Excluded files.
-        [Parameter()]
-        [ValidateNotNullOrEmpty()]
-        [System.String[]] $Exclude = @('*.Tests.ps1','*.Internal.ps1')
-    )
-    Write-Host ('  Creating bundle header.') -ForegroundColor Cyan;
-    Set-Content -Path $DestinationPath -Value "#region PScribo Bundle v$version";
-    Add-Content -Path $DestinationPath -Value "#requires -Version 3`r`n";
+# Synopsis: Cleans the release directory
+Task Clean -Depends Init {
 
-    ## Import LICENSE
-    Write-Host ('  Creating bundle license.') -ForegroundColor Cyan;
-    Get-Content -Path "$currentDir\LICENSE" | Add-Content -Path $DestinationPath;
+    Write-Host (' Cleaning release directory "{0}".' -f $buildPath) -ForegroundColor Yellow;
+    if (Test-Path -Path $buildPath) {
+        Remove-Item -Path $buildPath -Include * -Recurse -Force;
+    }
+    [ref] $null = New-Item -Path $buildPath -ItemType Directory -Force;
+    [ref] $null = New-Item -Path $releasePath -ItemType Directory -Force;
+} #end task Clean
 
-    ## TODO: Support localised bundles, eg en-US and fr-FR
-    Write-Host ('  Creating bundle resources.') -ForegroundColor Cyan;
-    Add-Content -Path $DestinationPath -Value "`r`n`$localized = DATA {";
-    Get-Content -Path "$currentDir\en-US\PScribo.Resources.psd1" | Add-Content -Path $DestinationPath;
-    Add-Content -Path $DestinationPath -Value "}`r`n";
+# Synopsis: Invokes Pester tests
+Task Test -Depends Init {
 
-    Join-BundleFile -Path $Path -DestinationPath $DestinationPath -Exclude $Exclude;
-    Write-Host ('  Creating bundle footer.') -ForegroundColor Cyan;
-    Add-Content -Path $DestinationPath -Value "#endregion PScribo Bundle v$version";
+    $invokePesterParams = @{
+        Path = "$basePath\Tests";
+        OutputFile = "$basePath\TestResults.xml";
+        OutputFormat = 'NUnitXml';
+        Strict = $true;
+        PassThru = $true;
+        Verbose = $false;
+    }
+    $testResult = Invoke-Pester @invokePesterParams;
+    if ($testResult.FailedCount -gt 0) {
+        Write-Error ('Failed "{0}" unit tests.' -f $testResult.FailedCount);
+    }
 }
+
+# Synopsis: Copies release files to the release directory
+Task Deploy -Depends Clean {
+
+    Get-ChildItem -Path $basePath -Exclude $exclude | ForEach-Object {
+        Write-Host (' Copying {0}' -f $PSItem.FullName) -ForegroundColor Yellow;
+        Copy-Item -Path $PSItem -Destination $releasePath -Recurse;
+    }
+} #end
+
+# Synopsis: Signs files in release directory
+Task Sign -Depends Deploy {
+
+    if (-not (Get-ChildItem -Path Cert:\CurrentUser\My | Where-Object Thumbprint -eq $thumbprint)) {
+        ## Decrypt and import code signing cert
+        .\appveyor-tools\secure-file.exe -decrypt .\VE_Certificate_2021.pfx.enc -secret $env:certificate_secret
+        $certificatePassword = ConvertTo-SecureString -String $env:certificate_secret -AsPlainText -Force
+        Import-PfxCertificate -FilePath .\VE_Certificate_2021.pfx -CertStoreLocation 'Cert:\CurrentUser\My' -Password $certificatePassword
+    }
+
+    Get-ChildItem -Path $releasePath -Exclude $signExclude | ForEach-Object {
+        if ($PSItem -is [System.IO.DirectoryInfo]) {
+            Get-ChildItem -Path $PSItem.FullName -Include *.ps* -Recurse | ForEach-Object {
+                Write-Host (' Signing {0}' -f $PSItem.FullName) -ForegroundColor Yellow -NoNewline;
+                $signResult = Set-ScriptSignature -Path $PSItem.FullName -Thumbprint $thumbprint -TimeStampServer $timeStampServer -ErrorAction Stop;
+                Write-Host (' {0}.' -f $signResult.Status) -ForegroundColor Green;
+            }
+
+        }
+        elseif ($PSItem.Name -like '*.ps*') {
+            Write-Host (' Signing {0}' -f $PSItem.FullName) -ForegroundColor Yellow -NoNewline;
+            $signResult = Set-ScriptSignature -Path $PSItem.FullName -Thumbprint $thumbprint -TimeStampServer $timeStampServer -ErrorAction Stop;
+            Write-Host (' {0}.' -f $signResult.Status) -ForegroundColor Green;
+        }
+    }
+}
+
+Task Version -Depends Deploy {
+
+    $nuSpecPath = Join-Path -Path $releasePath -ChildPath "$ModuleName.nuspec"
+    $nuspec = [System.Xml.XmlDocument] (Get-Content -Path $nuSpecPath -Raw)
+    $nuspec.Package.MetaData.Version = $version.ToString()
+    $nuspec.Save($nuSpecPath)
+}
+
+# Synopsis: Publishes release module to PSGallery
+Task Publish_PSGallery -Depends Version {
+
+    Publish-Module -Path $releasePath -NuGetApiKey "$env:gallery_api_key" -Verbose
+} #end task Publish
+
+# Synopsis: Creates release module Nuget package
+Task Package -Depends Build {
+
+    $targetNuSpecPath = Join-Path -Path $releasePath -ChildPath "$ModuleName.nuspec"
+    NuGet.exe pack "$targetNuSpecPath" -OutputDirectory "$env:TEMP"
+}
+
+# Synopsis: Publish release module to Dropbox repository
+Task Publish_Dropbox -Depends Package {
+
+    $targetNuPkgPath = Join-Path -Path "$env:TEMP" -ChildPath "$ModuleName.$version.nupkg"
+    $destinationPath = "$env:USERPROFILE\Dropbox\PSRepository"
+    Copy-Item -Path "$targetNuPkgPath"-Destination $destinationPath -Force -Verbose
+}
+
+# Synopsis: Publish test results to AppVeyor
+Task AppVeyor {
+
+    Get-ChildItem -Path "$basePath\*Results*.xml" | Foreach-Object {
+        $address = 'https://ci.appveyor.com/api/testresults/nunit/{0}' -f $env:APPVEYOR_JOB_ID
+        $source = $_.FullName
+        Write-Verbose "UPLOADING TEST FILE: $address $source" -Verbose
+        (New-Object 'System.Net.WebClient').UploadFile( $address, $source )
+    }
+}
+
+Task Default -Depends Init, Clean, Test
+Task Build -Depends Default, Deploy, Version, Sign;
+Task Publish -Depends Build, Package, Publish_PSGallery
+Task Local -Depends Build, Package, Publish_Dropbox

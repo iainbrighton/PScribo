@@ -173,6 +173,7 @@
                         'PScribo.LineBreak' { [ref] $null = $sectionBuilder.AppendLine((OutTextLineBreak)); }
                         'PScribo.Table' { [ref] $null = $sectionBuilder.AppendLine(($s | OutTextTable)); }
                         'PScribo.BlankLine' { [ref] $null = $sectionBuilder.AppendLine(($s | OutTextBlankLine)); }
+                        'PScribo.Image' { [ref] $null = $sectionBuilder.AppendLine(($s | OutTextImage)); }
                         Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
                     } #end switch
                 } #end foreach
@@ -376,5 +377,34 @@
 
             } #endprocess
         } #end function IndentString
+
+        function OutTextimage {
+        <#
+            .SYNOPSIS
+                Output formatted image text.
+        #>
+            [CmdletBinding()]
+            [OutputType([System.String])]
+            param (
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()]
+                [System.Object] $Image
+            )
+            begin {
+
+                ## Fix Set-StrictMode
+                if (-not (Test-Path -Path Variable:\Options)) {
+
+                    $options = New-PScriboTextOption;
+                }
+
+            }
+            process {
+
+                $imageText = '[Image Text="{0}"]' -f $Image.Text
+                return OutStringWrap -InputObject $imageText -Width $Options.TextWidth
+
+            } #end process
+        } #end function outtextimage
 
         #endregion OutText Private Functions

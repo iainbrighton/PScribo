@@ -24,6 +24,31 @@
             } #end process
         } #end function New-PScriboHtmlOption
 
+        function GetHtmlPaddedTableStyle {
+        <#
+            .SYNOPSIS
+                Generates padded html stylesheet style attributes from a PScribo table style.
+        #>
+            [CmdletBinding()]
+            [OutputType([System.String])]
+            param (
+                ## PScribo document table style
+                [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $TableStyle
+            )
+            process {
+
+                $styleBuilder = New-Object -TypeName System.Text.StringBuilder;
+
+                [ref] $null = $styleBuilder.AppendFormat(' padding: {0}rem {1}rem {2}rem {3}rem;',
+                    (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingTop)),
+                        (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingRight)),
+                            (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingBottom)),
+                                (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingLeft)))
+
+                return $styleBuilder.ToString();
+            }
+        } #end function
+
         function GetHtmlStyle {
         <#
             .SYNOPSIS
@@ -41,7 +66,7 @@
                 [ref] $null = $styleBuilder.AppendFormat(" font-family: '{0}';", $Style.Font -join "','");
                 ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
                 $invariantFontSize = ConvertToInvariantCultureString -Object ($Style.Size / 12) -Format 'f2';
-                [ref] $null = $styleBuilder.AppendFormat(' font-size: {0}em;', $invariantFontSize);
+                [ref] $null = $styleBuilder.AppendFormat(' font-size: {0}rem;', $invariantFontSize);
                 [ref] $null = $styleBuilder.AppendFormat(' text-align: {0};', $Style.Align.ToLower());
                 if ($Style.Bold) {
 
@@ -99,17 +124,17 @@
             process {
 
                 $tableStyleBuilder = New-Object -TypeName 'System.Text.StringBuilder';
-                [ref] $null = $tableStyleBuilder.AppendFormat(' padding: {0}em {1}em {2}em {3}em;',
+                [ref] $null = $tableStyleBuilder.AppendFormat(' padding: {0}rem {1}rem {2}rem {3}rem;',
                     (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingTop)),
                         (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingRight)),
                             (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingBottom)),
-                                (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingLeft))),
+                                (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingLeft)))
                 [ref] $null = $tableStyleBuilder.AppendFormat(' border-style: {0};', $TableStyle.BorderStyle.ToLower());
 
                 if ($TableStyle.BorderWidth -gt 0) {
 
                     $invariantBorderWidth = ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.BorderWidth);
-                    [ref] $null = $tableStyleBuilder.AppendFormat(' border-width: {0}em;', $invariantBorderWidth);
+                    [ref] $null = $tableStyleBuilder.AppendFormat(' border-width: {0}rem;', $invariantBorderWidth);
                     if ($TableStyle.BorderColor.Contains('#')) {
 
                         [ref] $null = $tableStyleBuilder.AppendFormat(' border-color: {0};', $TableStyle.BorderColor);
@@ -154,7 +179,7 @@
                 if ($Table.Tabs -gt 0) {
 
                     $invariantMarginLeft = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Table.Tabs));
-                    [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}em;">' -f $invariantMarginLeft);
+                    [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}rem;">' -f $invariantMarginLeft);
                 }
                 else {
 
@@ -318,11 +343,16 @@
 
                     ## Add HTML page layout styling options, e.g. when emailing HTML documents
                     [ref] $null = $stylesBuilder.AppendLine('html { height: 100%; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; background: #f8f8f8; }');
-                    [ref] $null = $stylesBuilder.Append("page { background: white; width: $($Document.Options['PageWidth'])mm; display: block; margin-top: 1em; margin-left: auto; margin-right: auto; margin-bottom: 1em; ");
+                    [ref] $null = $stylesBuilder.Append("page { background: white; width: $($Document.Options['PageWidth'])mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ");
                     [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }');
                     [ref] $null = $stylesBuilder.AppendLine('@media print { body, page { margin: 0; box-shadow: 0; } }');
-                    [ref] $null = $stylesBuilder.AppendLine('hr { margin-top: 1.0em; }');
+                    [ref] $null = $stylesBuilder.AppendLine('hr { margin-top: 1.0rem; }');
+                    [ref] $null = $stylesBuilder.Append(" .portrait { background: white; width: $($Document.Options['PageWidth'])mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ");
+                    [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }');
+                    [ref] $null = $stylesBuilder.Append(" .landscape { background: white; width: $($Document.Options['PageHeight'])mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ");
+                    [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }');
                 }
+
                 foreach ($style in $Styles.Keys) {
 
                     ## Build style
@@ -334,18 +364,18 @@
                     $tStyle = $TableStyles[$tableStyle];
                     $tableStyleId = $tStyle.Id.ToLower();
                     $htmlTableStyle = GetHtmlTableStyle -TableStyle $tStyle;
-                    $htmlHeaderStyle = GetHtmlStyle -Style $Styles[$tStyle.HeaderStyle];
                     $htmlRowStyle = GetHtmlStyle -Style $Styles[$tStyle.RowStyle];
                     $htmlAlternateRowStyle = GetHtmlStyle -Style $Styles[$tStyle.AlternateRowStyle];
                     ## Generate Standard table styles
                     [ref] $null = $stylesBuilder.AppendFormat(' table.{0} {{{1} }}', $tableStyleId, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} th {{{1}{2} }}', $tableStyleId, $htmlHeaderStyle, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(odd) td {{{1}{2} }}', $tableStyleId, $htmlRowStyle, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(even) td {{{1}{2} }}', $tableStyleId, $htmlAlternateRowStyle, $htmlTableStyle).AppendLine();
+                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} th, td {{{1} }}', $tableStyleId, $htmlTableStyle).AppendLine();
+                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(odd) {{{1}{2} }}', $tableStyleId, $htmlRowStyle, $htmlTableStyle).AppendLine();
+                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(even) {{{1}{2} }}', $tableStyleId, $htmlAlternateRowStyle, $htmlTableStyle).AppendLine();
                     ## Generate List table styles
                     [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list {{{1} }}', $tableStyleId, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list td:nth-child(1) {{{1}{2} }}', $tableStyleId, $htmlHeaderStyle, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list td:nth-child(2) {{{1}{2} }}', $tableStyleId, $htmlRowStyle, $htmlTableStyle).AppendLine();
+                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list th, td {{{1} }}', $tableStyleId, $htmlTableStyle).AppendLine();
+                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list tr:nth-child(odd) {{{1}{2} }}', $tableStyleId, $htmlRowStyle, $htmlTableStyle).AppendLine();
+                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list tr:nth-child(even) {{{1}{2} }}', $tableStyleId, $htmlAlternateRowStyle, $htmlTableStyle).AppendLine();
                 } #end foreach style
 
                 [ref] $null = $stylesBuilder.AppendLine('</style>');
@@ -370,6 +400,10 @@
             process {
 
                 [System.Text.StringBuilder] $sectionBuilder = New-Object System.Text.StringBuilder;
+                if ($Section.IsSectionBreak) {
+
+                    [ref] $null = $sectionBuilder.Append((OutHtmlPageBreak -Orientation $Section.Orientation));
+                }
                 $encodedSectionName = [System.Net.WebUtility]::HtmlEncode($Section.Name);
                 if ($Document.Options['EnableSectionNumbering']) { [System.String] $sectionName = '{0} {1}' -f $Section.Number, $encodedSectionName; }
                 else { [System.String] $sectionName = '{0}' -f $encodedSectionName; }
@@ -393,7 +427,7 @@
 
                 if ($Section.Tabs -gt 0) {
                     $tabEm = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Section.Tabs)) -Format 'f2';
-                    [ref] $null = $sectionBuilder.AppendFormat('<div style="margin-left: {0}em;">' -f $tabEm);
+                    [ref] $null = $sectionBuilder.AppendFormat('<div style="margin-left: {0}rem;">' -f $tabEm);
                 }
                 [ref] $null = $sectionBuilder.AppendFormat('<a name="{0}"><h{1} class="{2}">{3}</h{1}></a>', $Section.Id, $headerLevel, $className, $sectionName.TrimStart());
                 if ($Section.Tabs -gt 0) {
@@ -421,9 +455,10 @@
                         'PScribo.Section' { [ref] $null = $sectionBuilder.Append((OutHtmlSection -Section $s)); }
                         'PScribo.Paragraph' { [ref] $null = $sectionBuilder.Append((OutHtmlParagraph -Paragraph $s)); }
                         'PScribo.LineBreak' { [ref] $null = $sectionBuilder.Append((OutHtmlLineBreak)); }
-                        'PScribo.PageBreak' { [ref] $null = $sectionBuilder.Append((OutHtmlPageBreak)); }
+                        'PScribo.PageBreak' { [ref] $null = $sectionBuilder.Append((OutHtmlPageBreak -Orientation $Section.Orientation)); }
                         'PScribo.Table' { [ref] $null = $sectionBuilder.Append((OutHtmlTable -Table $s)); }
                         'PScribo.BlankLine' { [ref] $null = $sectionBuilder.Append((OutHtmlBlankLine -BlankLine $s)); }
+                        'PScribo.Image' { [ref] $null = $sectionBuilder.Append((OutHtmlImage -Image $s)); }
                         Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
                     } #end switch
                 } #end foreach
@@ -451,7 +486,7 @@
 
                     ## Default to 1/2in tab spacing
                     $tabEm = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Paragraph.Tabs)) -Format 'f2';
-                    [ref] $null = $paragraphStyleBuilder.AppendFormat(' margin-left: {0}em;', $tabEm);
+                    [ref] $null = $paragraphStyleBuilder.AppendFormat(' margin-left: {0}rem;', $tabEm);
                 }
                 if ($Paragraph.Font) {
 
@@ -461,7 +496,7 @@
 
                     ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
                     $invariantParagraphSize = ConvertToInvariantCultureString -Object ($Paragraph.Size / 12) -Format 'f2';
-                    [ref] $null = $paragraphStyleBuilder.AppendFormat(' font-size: {0}em;', $invariantParagraphSize);
+                    [ref] $null = $paragraphStyleBuilder.AppendFormat(' font-size: {0}rem;', $invariantParagraphSize);
                 }
                 if ($Paragraph.Bold -eq $true) {
 
@@ -531,10 +566,10 @@
 
 
         function GetHtmlTableList {
-        <#
-            .SYNOPSIS
-                Generates list html <table> from a PScribo.Table row object.
-        #>
+            <#
+                .SYNOPSIS
+                    Generates list html <table> from a PScribo.Table row object.
+            #>
             [CmdletBinding()]
             [OutputType([System.String])]
             param (
@@ -713,7 +748,7 @@
                 #Write-Output ($tableBuilder.ToString()) -NoEnumerate;
 
             } #end process
-        } #end function outhtmltable
+        } #end function OutHtmlTable
 
 
         function OutHtmlLineBreak {
@@ -739,19 +774,45 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param ( )
+            param (
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [System.String] $Orientation
+            )
             process {
 
                 [System.Text.StringBuilder] $pageBreakBuilder = New-Object 'System.Text.StringBuilder';
-                [ref] $null = $pageBreakBuilder.Append('</div></page>');
+                [ref] $null = $pageBreakBuilder.Append('</div></div>');
                 $topMargin = ConvertMmToEm $Document.Options['MarginTop'];
                 $leftMargin = ConvertMmToEm $Document.Options['MarginLeft'];
                 $bottomMargin = ConvertMmToEm $Document.Options['MarginBottom'];
                 $rightMargin = ConvertMmToEm $Document.Options['MarginRight'];
-                [ref] $null = $pageBreakBuilder.AppendFormat('<page><div class="{0}" style="padding-top: {1}em; padding-left: {2}em; padding-bottom: {3}em; padding-right: {4}em;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine();
+                [ref] $null = $pageBreakBuilder.AppendFormat('<div class="{0}">', $Orientation.ToLower());
+                [ref] $null = $pageBreakBuilder.AppendFormat('<div class="{0}" style="padding-top: {1}rem; padding-left: {2}rem; padding-bottom: {3}rem; padding-right: {4}rem;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine();
                 return $pageBreakBuilder.ToString();
 
             }
         } #end function OutHtmlPageBreak
+
+        function OutHtmlImage {
+        <#
+            .SYNOPSIS
+                Output embedded Html image.
+        #>
+            [CmdletBinding()]
+            param (
+                ## PScribo Image object
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [ValidateNotNull()] [System.Object] $Image
+            )
+            process {
+
+                [System.Text.StringBuilder] $imageBuilder = New-Object -TypeName 'System.Text.StringBuilder'
+                [ref] $null = $imageBuilder.AppendFormat('<div align="{0}">', $Image.Align).AppendLine()
+                $imageBase64 = [System.Convert]::ToBase64String($Image.Bytes)
+                [ref] $null = $imageBuilder.AppendFormat('<img src="data:{0};base64, {1}" alt="{2}" height="{3}" width="{4}" />', $Image.MimeType, $imageBase64, $Image.Text, $Image.Height, $Image.Width).AppendLine()
+                [ref] $null = $imageBuilder.AppendLine('</div>')
+                return $imageBuilder.ToString()
+            }
+        } #end function OutHtmlImage
 
         #endregion OutHtml Private Functions

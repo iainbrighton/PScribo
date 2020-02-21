@@ -27,7 +27,12 @@ function Section {
         ## Tab indent
         [Parameter()]
         [ValidateRange(0,10)]
-        [System.Int32] $Tabs = 0
+        [System.Int32] $Tabs = 0,
+
+        ## Section orientation
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateSet('Portrait','Landscape')]
+        [System.String] $Orientation
     )
     begin {
 
@@ -37,7 +42,19 @@ function Section {
     process {
 
         WriteLog -Message ($localized.ProcessingSectionStarted -f $Name);
-        $pscriboSection = New-PScriboSection -Name $Name -Style $Style -IsExcluded:$ExcludeFromTOC -Tabs:$Tabs;
+
+        $newPScriboSectionParams = @{
+            Name        = $Name;
+            Style       = $Style;
+            IsExcluded  = $ExcludeFromTOC;
+            Tabs        = $Tabs;
+            #Orientation = if ($PSBoundParameters.ContainsKey('Orientation')) { $Orientation } else { $script:currentOrientation }
+        }
+        if ($PSBoundParameters.ContainsKey('Orientation')) {
+
+            $newPScriboSectionParams['Orientation'] = $Orientation
+        }
+        $pscriboSection = New-PScriboSection @newPScriboSectionParams;
         foreach ($result in & $ScriptBlock) {
 
             ## Ensure we don't have something errant passed down the pipeline (#29)

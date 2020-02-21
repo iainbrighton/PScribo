@@ -1,20 +1,21 @@
-function WriteLog {
+function Write-PScriboMessage {
 <#
     .SYNOPSIS
-        Writes message to the verbose, warning or debug streams. Output is
+        Writes PScribo-formatted message to the verbose, warning or debug streams. Output is
         prefixed with the time and PScribo plugin name.
 #>
     [CmdletBinding(DefaultParameterSetName = 'Verbose')]
+    [Alias('WriteLog')]
     param (
-        ## Message to send to the Verbose stream
-        [Parameter(ValueFromPipeline, ParameterSetName = 'Verbose')]
-        [Parameter(ValueFromPipeline, ParameterSetName = 'Warning')]
-        [Parameter(ValueFromPipeline, ParameterSetName = 'Debug')]
+        ## Message to send to the stream
+        [Parameter(Position = 0, ValueFromPipeline, ParameterSetName = 'Verbose')]
+        [Parameter(Position = 0, ValueFromPipeline, ParameterSetName = 'Warning')]
+        [Parameter(Position = 0, ValueFromPipeline, ParameterSetName = 'Debug')]
         [ValidateNotNullOrEmpty()]
         [System.String] $Message,
 
         ## PScribo plugin name
-        [Parameter(ValueFromPipelineByPropertyName)]
+        [Parameter(Position = 1, ValueFromPipelineByPropertyName)]
         [System.String] $Plugin,
 
         ## Redirect message to the Warning stream
@@ -30,7 +31,7 @@ function WriteLog {
         [Parameter(ValueFromPipeline, ParameterSetName = 'Warning')]
         [Parameter(ValueFromPipeline, ParameterSetName = 'Debug')]
         [ValidateNotNullOrEmpty()]
-        [System.Int16] $Indent
+        [System.UInt16] $Indent
     )
     process {
 
@@ -54,4 +55,4 @@ function WriteLog {
         }
 
     } #end process
-} #end function WriteLog
+} #end function Write-PScriboMessage

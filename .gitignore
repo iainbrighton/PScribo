@@ -1,4 +1,4 @@
-Build/
-Release/
-TestResult.xml
+/Release
+TestResults.xml
 /Src/Plugins/System.IO.Packaging.dll
+/.vscode

@@ -398,6 +398,21 @@ InModuleScope 'PScribo' {
         }
     }
 
+    Describe 'OutText.Internal\OutTextImage' {
+
+        It 'adds alttext to image' {
+            $testImage = [PSCustomObject] @{
+                Text     = 'Dummy Image'
+            }
+            $expected = '\[Image Text="{0}"\]' -f $testImage.Text;
+
+            $result = OutTextImage -Image $testImage
+
+            $result -match $expected | Should Be $true
+        }
+
+    }
+
 } #end inmodulescope
 
 <#

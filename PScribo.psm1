@@ -4,7 +4,7 @@ Set-StrictMode -Version Latest;
 Import-LocalizedData -BindingVariable localized -BaseDirectory $PSScriptRoot -FileName PScribo.Resources.psd1 -ErrorAction SilentlyContinue
 
 #Fallback to en-US culture strings
-If ([String]::IsNullOrEmpty($localized)) {
+if (-not (Test-Path -Path 'Variable:\localized')) {
     Import-LocalizedData -BaseDirectory $PSScriptRoot -BindingVariable localized -UICulture 'en-US' -FileName PScribo.Resources.psd1 -ErrorAction Stop
 }
 
@@ -20,24 +20,27 @@ Get-ChildItem -Path "$pscriboRoot\Src\" -Include '*.ps1' -Recurse |
     }
 
 $exportedFunctions = @(
+    'BlankLine',
     'Document',
-    'Export-Document',
-    'Section',
     'DocumentOption',
+    'Export-Document',
+    'Image',
     'LineBreak',
     'PageBreak',
     'Paragraph',
     'Section',
+    'Set-Style',
     'Style',
     'Table',
     'TableStyle',
-    'Set-Style',
     'TOC',
-    'BlankLine'
+    'Write-PScriboMessage'
 );
 
 $exportedAliases = @(
     'GlobalOption'
 );
+
+Add-Type -AssemblyName 'System.Drawing'
 
 Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases;

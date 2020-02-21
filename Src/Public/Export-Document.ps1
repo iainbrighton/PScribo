@@ -1,4 +1,4 @@
-﻿function Export-Document {
+function Export-Document {
 <#
     .SYNOPSIS
         Exports a PScribo document object to one or more output formats.
@@ -35,7 +35,7 @@
         catch { }
 
         if ( $(Test-CharsInPath -Path $Path -SkipCheckCharsInFileNamePart -Verbose:$false) -eq 2 ) {
-            throw $localized.IncorrectCharsInPath;
+            throw $localized.IncorrectCharsInPathError;
         }
 
         if (-not (Test-Path $Path -PathType Container)) {
@@ -62,6 +62,8 @@
             }
 
             $fileInfo = & $outputFormat @outputParams;
+            WriteLog -Message ($localized.DocumentExportPluginComplete -f $f) -Plugin 'Export';
+
             if ($PassThru) {
 
                 Write-Output -InputObject $fileInfo;

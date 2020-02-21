@@ -1,4 +1,8 @@
-param ([System.Management.Automation.SwitchParameter] $PassThru)
+param (
+    [System.String[]] $Format = 'Html',
+    [System.String] $Path = '~\Desktop',
+    [System.Management.Automation.SwitchParameter] $PassThru
+)
 
 Import-Module PScribo -Force;
 
@@ -14,4 +18,4 @@ $example4 = Document -Name 'PScribo Example 4' {
     Paragraph 'If you wish to indent a paragraph, specify the -Tabs parameter. This is an integer number that indents a paragraph at 12.7mm/0.5inch intervals.' -Tabs 1
     Paragraph 'Of course you are free to combine multiple styling parameters to a single paragraph :).' -Color DarkOrchid -Size 14 -Bold
 }
-$example4 | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru
+$example4 | Export-Document -Path $Path -Format $Format -PassThru:$PassThru

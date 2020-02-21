@@ -5,6 +5,7 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
+    $testRoot = Split-Path -Path $PSScriptRoot -Parent;
     function NewTestDocument {
         [CmdletBinding()]
         param (
@@ -227,6 +228,18 @@ InModuleScope 'PScribo' {
                 OutWordSection -Section $section -XmlDocument $testDocument -RootElement $testDocument.DocumentElement;
 
                 Assert-MockCalled -CommandName OutWordBlankLine -Scope It;
+            }
+
+            It 'calls "OutWordImage"' {
+                $Document = Document -Name 'TestDocument' -ScriptBlock { };
+                $pscriboDocument = $Document;
+                $testDocument = NewTestDocument;
+                Mock OutWordImage { return $testDocument.CreateElement('mockImage'); };
+
+                $section = Section -Name TestSection -ScriptBlock { Image -Path "$testRoot\TestImage.jpg" -Height 61 -Width 250 };
+                OutWordSection -Section $section -XmlDocument $testDocument -RootElement $testDocument.DocumentElement;
+
+                Assert-MockCalled -CommandName OutWordImage -Scope It;
             }
 
             It 'calls nested "OutWordSection"' {
@@ -539,7 +552,7 @@ InModuleScope 'PScribo' {
 
                     OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 
-                    $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:tblCellMar>[..]</w:tblCellMar>' -f $paddingTop));
+                    $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:tblCellMar>[..]</w:tblCellMar>'));
                     $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:top w:w="{0}" w:type="dxa" />' -f $paddingTop));
                     $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:start w:w="{0}" w:type="dxa" />' -f $paddingLeft));
                     $testDocument.DocumentElement.OuterXml | Should Match (GetMatch ('<w:bottom w:w="{0}" w:type="dxa" />' -f $paddingBottom));

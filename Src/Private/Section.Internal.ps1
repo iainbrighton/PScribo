@@ -28,23 +28,44 @@
                 ## Tab indent
                 [Parameter()]
                 [ValidateRange(0,10)]
-                [System.Int32] $Tabs = 0
+                [System.Int32] $Tabs = 0,
+
+                ## Section orientation
+                [Parameter(ValueFromPipelineByPropertyName)]
+                [ValidateSet('Portrait','Landscape')]
+                [System.String] $Orientation
             )
+            begin {
+                if ($PSBoundParameters.ContainsKey('Orientation') -and ((Get-PSCallStack)[3].FunctionName -ne 'Document<Process>')) {
+                    WriteLog -Message $localized.CannotSetOrientationWarning -IsWarning;
+                    $null = $PSBoundParameters.Remove('Orientation')
+                }
+            }
             process {
 
                 $typeName = 'PScribo.Section';
                 $pscriboDocument.Properties['Sections']++;
                 $pscriboSection = [PSCustomObject] @{
-                    Id         = [System.Guid]::NewGuid().ToString();
-                    Level      = 0;
-                    Number     = '';
-                    Name       = $Name;
-                    Type       = $typeName;
-                    Style      = $Style;
-                    Tabs       = $Tabs;
-                    IsExcluded = $IsExcluded;
-                    Sections   = (New-Object -TypeName System.Collections.ArrayList);
+                    Id                = [System.Guid]::NewGuid().ToString();
+                    Level             = 0;
+                    Number            = '';
+                    Name              = $Name;
+                    Type              = $typeName;
+                    Style             = $Style;
+                    Tabs              = $Tabs;
+                    IsExcluded        = $IsExcluded;
+                    Sections          = (New-Object -TypeName System.Collections.ArrayList);
+                    Orientation       = if ($PSBoundParameters.ContainsKey('Orientation')) { $Orientation } else { $script:currentOrientation }
+                    IsSectionBreak    = $false;
+                    IsSectionBreakEnd = $false;
                 }
+
+                ## Has the orientation changed from the parent scope
+                if ($PSBoundParameters.ContainsKey('Orientation') -and ($Orientation -ne $script:currentOrientation)) {
+                    $pscriboSection.IsSectionBreak = $true;
+                    $script:currentOrientation = $Orientation;
+                }
+
                 return $pscriboSection;
 
             } #end process

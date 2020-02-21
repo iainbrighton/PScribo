@@ -1,4 +1,8 @@
-param ([System.Management.Automation.SwitchParameter] $PassThru)
+param (
+    [System.String[]] $Format = 'Html',
+    [System.String] $Path = '~\Desktop',
+    [System.Management.Automation.SwitchParameter] $PassThru
+)
 
 Import-Module PScribo -Force;
 
@@ -18,4 +22,4 @@ $example22 = Document -Name 'PScribo Example 22' {
     TableStyle -Name 'BasicGrid' -HeaderStyle Normal -RowStyle Normal -BorderWidth 1 -BorderColor OrangeRed
     Get-Service | Select-Object -Property Name,DisplayName,Status -First 3 | Table -Style BasicGrid
 }
-$example22 | Export-Document -Format Html -Path ~\Desktop -PassThru:$PassThru
+$example22 | Export-Document -Path $Path -Format $Format -PassThru:$PassThru
