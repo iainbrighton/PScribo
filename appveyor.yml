@@ -6,7 +6,7 @@ version: 0.7.{build}
 environment:
   gallery_api_key:
     secure: WeDp1yZJECZBjjW+22A8lA8+gmz+wiYostPKtU4pdLXORfK//eJCdR7f0k3oJ+2r
-  certificatesecret:
+  certificate_secret:
     secure: 2NeBUwfDSJomxCyxUlwnqw==
 
 install:

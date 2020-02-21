@@ -177,8 +177,9 @@ Task Sign -Depends Deploy {
 
     if (-not (Get-ChildItem -Path Cert:\CurrentUser\My | Where-Object Thumbprint -eq $thumbprint)) {
         ## Decrypt and import code signing cert
-        $certificatePassword = ConvertTo-SecureString -String "$env:certificatesecret" -AsPlainText -Force
-        & .\appveyor-tools\secure-file.exe -decrypt .\VE_Certificate_2021.pfx.enc -secret "$env:certificatesecret"
+        if ($env:certificate_secret) { Write-Host "!! cert_password set!" } else { Write-Host "!! cert_password NOT set" }
+        .\appveyor-tools\secure-file.exe -decrypt .\VE_Certificate_2021.pfx.enc -secret $env:certificate_secret
+        $certificatePassword = ConvertTo-SecureString -String $env:certificate_secret -AsPlainText -Force
         Import-PfxCertificate -FilePath .\VE_Certificate_2019.pfx -CertStoreLocation 'Cert:\CurrentUser\My' -Password $certificatePassword
     }
 
