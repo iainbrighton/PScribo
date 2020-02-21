@@ -10,7 +10,7 @@ Properties {
     $buildPath = (Join-Path -Path $basePath -ChildPath $buildDir);
     $releasePath = (Join-Path -Path $buildPath -ChildPath $moduleName);
     $thumbprint = '177FC8E667D4C022C7CD9CFDFEB66991890F4090';
-    $timeStampServer = 'http://timestamp.verisign.com/scripts/timestamp.dll';
+    $timeStampServer = 'http://timestamp.digicert.com';
     $exclude = @(
         '.git*',
         '.vscode',
@@ -177,8 +177,8 @@ Task Sign -Depends Deploy {
 
     if (-not (Get-ChildItem -Path Cert:\CurrentUser\My | Where-Object Thumbprint -eq $thumbprint)) {
         ## Decrypt and import code signing cert
-        .\appveyor-tools\secure-file.exe -decrypt .\VE_Certificate_2021.pfx.enc -secret $env:certificate_secret
-        $certificatePassword = ConvertTo-SecureString -String $env:certificate_secret -AsPlainText -Force
+        $certificatePassword = ConvertTo-SecureString -String "$env:certificatesecret" -AsPlainText -Force
+        & .\appveyor-tools\secure-file.exe -decrypt .\VE_Certificate_2021.pfx.enc -secret "$env:certificatesecret"
         Import-PfxCertificate -FilePath .\VE_Certificate_2019.pfx -CertStoreLocation 'Cert:\CurrentUser\My' -Password $certificatePassword
     }
 
