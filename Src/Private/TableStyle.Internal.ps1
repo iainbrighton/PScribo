@@ -28,11 +28,11 @@
                 [ValidateNotNullOrEmpty()]
                 [System.String] $RowStyle = 'Normal',
 
-                ## Header Row Style Id
+                ## Alternate Row Style Id
                 [Parameter(ValueFromPipelineByPropertyName, Position = 3)]
                 [AllowNull()]
                 [Alias('AlternatingRowStyle')]
-                [System.String] $AlternateRowStyle = 'Normal',
+                [System.String] $AlternateRowStyle = $RowStyle,
 
                 ## Table border size/width (pt)
                 [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Border')]

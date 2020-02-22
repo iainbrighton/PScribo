@@ -2,6 +2,10 @@
 
 ## Versions ##
 
+### 0.7.26 ###
+
+* Fixes bug in Html table header CSS style output
+
 ### 0.7.25 ###
 
 * Replaces Html `em` output with `rem` to maintain correct font sizing

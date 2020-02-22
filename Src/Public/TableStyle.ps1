@@ -31,7 +31,7 @@ function TableStyle {
         [Parameter(ValueFromPipelineByPropertyName, Position = 3)]
         [AllowNull()]
         [Alias('AlternatingRowStyle')]
-        [System.String] $AlternateRowStyle = 'Default',
+        [System.String] $AlternateRowStyle = $RowStyle,
 
         ## Table border size/width (pt)
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Border')]

@@ -529,12 +529,12 @@ InModuleScope 'PScribo' {
                 $html.Div.Table.PSObject.Properties['Thead'] | Should BeNullOrEmpty;
             }
 
-            It 'creates default table class of tabledefault-list' {
-                $html.Div.Table.Class | Should BeExactly 'tabledefault-list';
+            It 'creates default table class of tabledefault' {
+                $html.Div.Table.Class | Should BeExactly 'tabledefault';
             }
 
             It 'creates a two column table' {
-                $html.Div.Table.Tbody.Tr[0].Td.Count | Should Be 2;
+                $html.Div.Table.Tbody.Tr[0].ChildNodes.Count | Should Be 2;
             }
 
             It 'creates a row for each object property' {
