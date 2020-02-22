@@ -35,7 +35,8 @@ function ConvertPxToMm {
     )
     process {
 
-        return [System.Math]::Round((25.4 / $Dpi) * $Pixel, 2);
+        $mm = (25.4 / $Dpi) * $Pixel
+        return [System.Math]::Round($mm, 2);
 
     }
 } #end function ConvertPxToMm
@@ -55,7 +56,8 @@ function ConvertInToMm {
     )
     process {
 
-        return [System.Math]::Round($Inch * 25.4, 2);
+        $mm = $Inch * 25.4
+        return [System.Math]::Round($mm, 2)
 
     }
 } #end function ConvertInToMm
@@ -75,7 +77,8 @@ function ConvertMmToIn {
     )
     process {
 
-        return [System.Math]::Round($Millimeter / 25.4, 2);
+        $in = $Millimeter / 25.4
+        return [System.Math]::Round($in, 2)
 
     }
 } #end function ConvertMmToIn
@@ -94,7 +97,9 @@ function ConvertMmToPt {
         [System.Single] $Millimeter
     )
     process {
-        return ((ConvertMmToIn $Millimeter) / 0.0138888888888889);
+
+        $pt = (ConvertMmToIn $Millimeter) / 0.0138888888888889
+        return [System.Math]::Round($pt, 2)
 
     }
 } #end function ConvertMmToPt
@@ -116,7 +121,8 @@ function ConvertMmToTwips {
     )
     process {
 
-        return (ConvertMmToIn -Millimeter $Millimeter) * 1440;
+        $twips = (ConvertMmToIn -Millimeter $Millimeter) * 1440
+        return [System.Math]::Round($twips, 2)
 
     }
 } #end function ConvertMmToTwips
@@ -138,7 +144,8 @@ function ConvertMmToOctips {
     )
     process {
 
-        return (ConvertMmToIn -Millimeter $Millimeter) * 576;
+        $octips = (ConvertMmToIn -Millimeter $Millimeter) * 576
+        return [System.Math]::Round($octips, 2)
 
     }
 } #end function ConvertMmToOctips
@@ -158,7 +165,8 @@ function ConvertMmToEm {
     )
     process {
 
-        return [System.Math]::Round($Millimeter / 4.23333333333333, 2);
+        $em = $Millimeter / 4.23333333333333
+        return [System.Math]::Round($em, 2)
 
     }
 } #end function ConvertMmToEm
@@ -181,9 +189,9 @@ function ConvertMmToPx {
     )
     process {
 
-        $pixels = [System.Int16] ((ConvertMmToIn -Millimeter $Millimeter) * $Dpi);
-        if ($pixels -lt 1) { return (1 -as [System.Int16]); }
-        else { return $pixels; }
+        $px = [System.Int16] ((ConvertMmToIn -Millimeter $Millimeter) * $Dpi)
+        if ($px -lt 1) { return (1 -as [System.Int16]) }
+        else { return $px }
 
     }
 } #end function ConvertMmToPx
@@ -229,7 +237,8 @@ function ConvertPxToEm {
     )
     process {
 
-        return [System.Math]::Round(($pixel * 9525), 0)
+        $em = $pixel * 9525
+        return [System.Math]::Round($em, 0)
 
     }
 } #end function ConvertPxToEm
