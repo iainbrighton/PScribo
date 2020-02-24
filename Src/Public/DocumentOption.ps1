@@ -93,14 +93,14 @@ function DocumentOption {
         {
             if ($MarginTopAndBottom -eq 0) { $MarginTopAndBottom = 72; }
             if ($MarginLeftAndRight -eq 0) { $MarginTopAndBottom = 72; }
-            $pscriboDocument.Options['MarginTop'] = ConvertPtToMm -Point $MarginTopAndBottom;
+            $pscriboDocument.Options['MarginTop'] = ConvertTo-Mm -Point $MarginTopAndBottom;
             $pscriboDocument.Options['MarginBottom'] = $pscriboDocument.Options['MarginTop'];
-            $pscriboDocument.Options['MarginLeft'] = ConvertPtToMm -Point $MarginLeftAndRight;
+            $pscriboDocument.Options['MarginLeft'] = ConvertTo-Mm -Point $MarginLeftAndRight;
             $pscriboDocument.Options['MarginRight'] = $pscriboDocument.Options['MarginLeft'];
         }
         else
         {
-            $pscriboDocument.Options['MarginTop'] = ConvertPtToMm -Point $Margin;
+            $pscriboDocument.Options['MarginTop'] = ConvertTo-Mm -Point $Margin;
             $pscriboDocument.Options['MarginBottom'] = $pscriboDocument.Options['MarginTop'];
             $pscriboDocument.Options['MarginLeft'] = $pscriboDocument.Options['MarginTop'];
             $pscriboDocument.Options['MarginRight'] = $pscriboDocument.Options['MarginTop'];

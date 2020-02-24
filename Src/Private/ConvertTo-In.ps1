@@ -1,11 +1,8 @@
-function ConvertMmToOctips
+function ConvertTo-In
 {
 <#
     .SYNOPSIS
-        Convert millimeters into octips
-
-    .NOTES
-        1 "octip" = 1/8th pt
+        Convert millimeters into inches
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]
@@ -17,7 +14,7 @@ function ConvertMmToOctips
     )
     process
     {
-        $octips = (ConvertMmToIn -Millimeter $Millimeter) * 576
-        return [System.Math]::Round($octips, 2)
+        $in = $Millimeter / 25.4
+        return [System.Math]::Round($in, 2)
     }
 }

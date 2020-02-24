@@ -42,10 +42,10 @@ function OutHtml {
         }
         $options = Merge-PScriboPluginOption @mergePScriboPluginOptionParams;
         $noPageLayoutStyle = $Options['NoPageLayoutStyle'];
-        $topMargin = ConvertMmToEm -Millimeter $options['MarginTop'];
-        $leftMargin = ConvertMmToEm -Millimeter $options['MarginLeft'];
-        $bottomMargin = ConvertMmToEm -Millimeter $options['MarginBottom'];
-        $rightMargin = ConvertMmToEm -Millimeter $options['MarginRight'];
+        $topMargin = ConvertTo-Em -Millimeter $options['MarginTop'];
+        $leftMargin = ConvertTo-Em -Millimeter $options['MarginLeft'];
+        $bottomMargin = ConvertTo-Em -Millimeter $options['MarginBottom'];
+        $rightMargin = ConvertTo-Em -Millimeter $options['MarginRight'];
 
         [System.Text.StringBuilder] $htmlBuilder = New-Object System.Text.StringBuilder;
         [ref] $null = $htmlBuilder.AppendLine('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">');

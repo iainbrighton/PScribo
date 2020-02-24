@@ -18,7 +18,7 @@ function GetHtmlParagraphStyle
         if ($Paragraph.Tabs -gt 0)
         {
             ## Default to 1/2in tab spacing
-            $tabEm = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Paragraph.Tabs)) -Format 'f2';
+            $tabEm = ConvertToInvariantCultureString -Object (ConvertTo-Em -Millimeter (12.7 * $Paragraph.Tabs)) -Format 'f2';
             [ref] $null = $paragraphStyleBuilder.AppendFormat(' margin-left: {0}rem;', $tabEm);
         }
         if ($Paragraph.Font)

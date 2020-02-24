@@ -81,8 +81,8 @@ function New-PScriboImage
             Name        = 'Img{0}' -f $imageNumber;
             Align       = $Align;
             MIMEType    = GetImageMimeType -Image $image
-            WidthEm     = ConvertPxToEm -Pixel $Width;
-            HeightEm    = ConvertPxToEm -Pixel $Height;
+            WidthEm     = ConvertTo-Em -Pixel $Width;
+            HeightEm    = ConvertTo-Em -Pixel $Height;
             Width       = $Width;
             Height      = $Height;
         }

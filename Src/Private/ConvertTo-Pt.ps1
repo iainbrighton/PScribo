@@ -1,4 +1,4 @@
-function ConvertMmToPt
+function ConvertTo-Pt
 {
 <#
     .SYNOPSIS
@@ -14,7 +14,7 @@ function ConvertMmToPt
     )
     process
     {
-        $pt = (ConvertMmToIn $Millimeter) / 0.0138888888888889
+        $pt = (ConvertTo-In -Millimeter $Millimeter) / 0.0138888888888889
         return [System.Math]::Round($pt, 2)
     }
 }

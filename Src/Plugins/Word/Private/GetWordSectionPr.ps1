@@ -37,14 +37,14 @@ function GetWordSectionPr
         $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
         $sectPr = $XmlDocument.CreateElement('w', 'sectPr', $xmlnsMain);
         $pgSz = $sectPr.AppendChild($XmlDocument.CreateElement('w', 'pgSz', $xmlnsMain));
-        [ref] $null = $pgSz.SetAttribute('w', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageWidth));
-        [ref] $null = $pgSz.SetAttribute('h', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageHeight));
+        [ref] $null = $pgSz.SetAttribute('w', $xmlnsMain, (ConvertTo-Twips -Millimeter $PageWidth));
+        [ref] $null = $pgSz.SetAttribute('h', $xmlnsMain, (ConvertTo-Twips -Millimeter $PageHeight));
         [ref] $null = $pgSz.SetAttribute('orient', $xmlnsMain, $Orientation.ToLower());
         $pgMar = $sectPr.AppendChild($XmlDocument.CreateElement('w', 'pgMar', $xmlnsMain));
-        [ref] $null = $pgMar.SetAttribute('top', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginTop));
-        [ref] $null = $pgMar.SetAttribute('bottom', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginBottom));
-        [ref] $null = $pgMar.SetAttribute('left', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginLeft));
-        [ref] $null = $pgMar.SetAttribute('right', $xmlnsMain, (ConvertMmToTwips -Millimeter $PageMarginRight));
+        [ref] $null = $pgMar.SetAttribute('top', $xmlnsMain, (ConvertTo-Twips -Millimeter $PageMarginTop));
+        [ref] $null = $pgMar.SetAttribute('bottom', $xmlnsMain, (ConvertTo-Twips -Millimeter $PageMarginBottom));
+        [ref] $null = $pgMar.SetAttribute('left', $xmlnsMain, (ConvertTo-Twips -Millimeter $PageMarginLeft));
+        [ref] $null = $pgMar.SetAttribute('right', $xmlnsMain, (ConvertTo-Twips -Millimeter $PageMarginRight));
         return $sectPr;
     }
 }

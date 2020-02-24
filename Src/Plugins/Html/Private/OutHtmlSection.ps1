@@ -42,7 +42,7 @@ function OutHtmlSection
 
         if ($Section.Tabs -gt 0)
         {
-            $tabEm = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Section.Tabs)) -Format 'f2';
+            $tabEm = ConvertToInvariantCultureString -Object (ConvertTo-Em -Millimeter (12.7 * $Section.Tabs)) -Format 'f2';
             [ref] $null = $sectionBuilder.AppendFormat('<div style="margin-left: {0}rem;">' -f $tabEm);
         }
         [ref] $null = $sectionBuilder.AppendFormat('<a name="{0}"><h{1} class="{2}">{3}</h{1}></a>', $Section.Id, $headerLevel, $className, $sectionName.TrimStart());

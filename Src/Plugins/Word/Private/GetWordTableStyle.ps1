@@ -33,7 +33,7 @@ function GetWordTableStyle
             foreach ($border in @('top', 'bottom', 'start', 'end', 'insideH', 'insideV'))
             {
                 $b = $tblBorders.AppendChild($XmlDocument.CreateElement('w', $border, $xmlnsMain))
-                [ref] $null = $b.SetAttribute('sz', $xmlnsMain, (ConvertMmToOctips $tableStyle.BorderWidth))
+                [ref] $null = $b.SetAttribute('sz', $xmlnsMain, (ConvertTo-Octips $tableStyle.BorderWidth))
                 [ref] $null = $b.SetAttribute('val', $xmlnsMain, 'single')
                 [ref] $null = $b.SetAttribute('color', $xmlnsMain, (ConvertToWordColor -Color $tableStyle.BorderColor))
             }

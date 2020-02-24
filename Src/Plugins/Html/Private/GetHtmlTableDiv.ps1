@@ -17,7 +17,7 @@ function GetHtmlTableDiv
         $divBuilder = New-Object -TypeName 'System.Text.StringBuilder';
         if ($Table.Tabs -gt 0)
         {
-            $invariantMarginLeft = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Table.Tabs));
+            $invariantMarginLeft = ConvertToInvariantCultureString -Object (ConvertTo-Em -Millimeter (12.7 * $Table.Tabs));
             [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}rem;">' -f $invariantMarginLeft);
         }
         else

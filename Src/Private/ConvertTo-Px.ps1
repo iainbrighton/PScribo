@@ -1,4 +1,4 @@
-function ConvertMmToPx
+function ConvertTo-Px
 {
 <#
     .SYNOPSIS
@@ -17,7 +17,7 @@ function ConvertMmToPx
     )
     process
     {
-        $px = [System.Int16] ((ConvertMmToIn -Millimeter $Millimeter) * $Dpi)
+        $px = [System.Int16] ((ConvertTo-In -Millimeter $Millimeter) * $Dpi)
         if ($px -lt 1)
         {
             return (1 -as [System.Int16])

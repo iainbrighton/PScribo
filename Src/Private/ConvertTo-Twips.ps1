@@ -1,4 +1,4 @@
-function ConvertMmToTwips
+function ConvertTo-Twips
 {
 <#
     .SYNOPSIS
@@ -8,6 +8,7 @@ function ConvertMmToTwips
         1 twip = 1/20th pt
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns','')]
     [OutputType([System.Single])]
     param
     (
@@ -17,7 +18,7 @@ function ConvertMmToTwips
     )
     process
     {
-        $twips = (ConvertMmToIn -Millimeter $Millimeter) * 1440
+        $twips = (ConvertTo-In -Millimeter $Millimeter) * 1440
         return [System.Math]::Round($twips, 2)
     }
 }

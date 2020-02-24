@@ -56,7 +56,7 @@ function OutWordTable
                         if ($null -ne $Table.ColumnWidths)
                         {
                             ## TODO: Refactor out
-                            [ref] $null = ConvertMmToTwips -Millimeter $Table.ColumnWidths[0]
+                            [ref] $null = ConvertTo-Twips -Millimeter $Table.ColumnWidths[0]
                             $tcW1 = $tcPr1.AppendChild($XmlDocument.CreateElement('w', 'tcW', $xmlnsMain))
                             [ref] $null = $tcW1.SetAttribute('w', $xmlnsMain, $Table.ColumnWidths[0] * 50)
                             [ref] $null = $tcW1.SetAttribute('type', $xmlnsMain, 'pct')

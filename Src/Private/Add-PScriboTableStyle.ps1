@@ -112,12 +112,12 @@ function Add-PScriboTableStyle
             HeaderStyle       = $HeaderStyle;
             RowStyle          = $RowStyle;
             AlternateRowStyle = $AlternateRowStyle;
-            PaddingTop        = ConvertPtToMm $PaddingTop;
-            PaddingLeft       = ConvertPtToMm $PaddingLeft;
-            PaddingBottom     = ConvertPtToMm $PaddingBottom;
-            PaddingRight      = ConvertPtToMm $PaddingRight;
+            PaddingTop        = ConvertTo-Mm -Point $PaddingTop;
+            PaddingLeft       = ConvertTo-Mm -Point $PaddingLeft;
+            PaddingBottom     = ConvertTo-Mm -Point $PaddingBottom;
+            PaddingRight      = ConvertTo-Mm -Point $PaddingRight;
             Align             = $Align;
-            BorderWidth       = ConvertPtToMm $BorderWidth;
+            BorderWidth       = ConvertTo-Mm -Point $BorderWidth;
             BorderStyle       = $borderStyle;
             BorderColor       = Resolve-PScriboStyleColor -Color $BorderColor;
         }

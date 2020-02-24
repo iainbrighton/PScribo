@@ -49,7 +49,7 @@ function GetWordTable
             {
                 ## We now need to deal with tables being pushed outside the page margin
                 $pageWidthMm = $Document.Options['PageWidth'] - ($Document.Options['PageMarginLeft'] + $Document.Options['PageMarginRight'])
-                $indentWidthMm = ConvertPtToMm -Point ($Table.Tabs * 36)
+                $indentWidthMm = ConvertTo-Mm -Point ($Table.Tabs * 36)
                 $tableRenderMm = (($pageWidthMm / 100) * $Table.Width) + $indentWidthMm
                 if ($tableRenderMm -gt $pageWidthMm)
                 {
@@ -79,7 +79,7 @@ function GetWordTable
             foreach ($border in @('top', 'bottom', 'start', 'end', 'insideH', 'insideV'))
             {
                 $b = $tblBorders.AppendChild($XmlDocument.CreateElement('w', $border, $xmlnsMain))
-                [ref] $null = $b.SetAttribute('sz', $xmlnsMain, (ConvertMmToOctips $tableStyle.BorderWidth))
+                [ref] $null = $b.SetAttribute('sz', $xmlnsMain, (ConvertTo-Octips $tableStyle.BorderWidth))
                 [ref] $null = $b.SetAttribute('val', $xmlnsMain, 'single')
                 [ref] $null = $b.SetAttribute('color', $xmlnsMain, (ConvertToWordColor -Color $tableStyle.BorderColor))
             }
@@ -87,16 +87,16 @@ function GetWordTable
 
         $tblCellMar = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblCellMar', $xmlnsMain))
         $top = $tblCellMar.AppendChild($XmlDocument.CreateElement('w', 'top', $xmlnsMain))
-        [ref] $null = $top.SetAttribute('w', $xmlnsMain, (ConvertMmToTwips $tableStyle.PaddingTop))
+        [ref] $null = $top.SetAttribute('w', $xmlnsMain, (ConvertTo-Twips $tableStyle.PaddingTop))
         [ref] $null = $top.SetAttribute('type', $xmlnsMain, 'dxa')
         $left = $tblCellMar.AppendChild($XmlDocument.CreateElement('w', 'start', $xmlnsMain))
-        [ref] $null = $left.SetAttribute('w', $xmlnsMain, (ConvertMmToTwips $tableStyle.PaddingLeft))
+        [ref] $null = $left.SetAttribute('w', $xmlnsMain, (ConvertTo-Twips $tableStyle.PaddingLeft))
         [ref] $null = $left.SetAttribute('type', $xmlnsMain, 'dxa')
         $bottom = $tblCellMar.AppendChild($XmlDocument.CreateElement('w', 'bottom', $xmlnsMain))
-        [ref] $null = $bottom.SetAttribute('w', $xmlnsMain, (ConvertMmToTwips $tableStyle.PaddingBottom))
+        [ref] $null = $bottom.SetAttribute('w', $xmlnsMain, (ConvertTo-Twips $tableStyle.PaddingBottom))
         [ref] $null = $bottom.SetAttribute('type', $xmlnsMain, 'dxa')
         $right = $tblCellMar.AppendChild($XmlDocument.CreateElement('w', 'end', $xmlnsMain))
-        [ref] $null = $right.SetAttribute('w', $xmlnsMain, (ConvertMmToTwips $tableStyle.PaddingRight))
+        [ref] $null = $right.SetAttribute('w', $xmlnsMain, (ConvertTo-Twips $tableStyle.PaddingRight))
         [ref] $null = $right.SetAttribute('type', $xmlnsMain, 'dxa')
 
         $tblGrid = $tbl.AppendChild($XmlDocument.CreateElement('w', 'tblGrid', $xmlnsMain))
