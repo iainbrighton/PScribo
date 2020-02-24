@@ -1,4 +1,4 @@
-function ConvertToInvariantCultureString
+function ConvertTo-InvariantCultureString
 {
 <#
     .SYNOPSIS

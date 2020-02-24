@@ -49,50 +49,50 @@ InModuleScope -ModuleName 'PScribo' -ScriptBlock {
         }
     } #end describe Image\Image
 
-    Describe -Name 'Image\ResolveImagePath' -Fixture {
+    Describe -Name 'Image\Resolve-ImageUri' -Fixture {
 
         It "returns 'System.Uri' type" {
 
             $testPath = 'about:Blank'
 
-            $result = ResolveImagePath -Path $testPath
+            $result = Resolve-ImageUri -Path $testPath
 
             $result -is [System.Uri] | Should Be $true
         }
 
-    } #end describe Image\ResolveImagePath
+    } #end describe Image\Resolve-ImageUri
 
-    Describe -Name 'Image\GetImageUriBytes' -Fixture {
+    Describe -Name 'Image\Get-UriBytes' -Fixture {
 
         It "returns 'System.Byte[]' type" {
 
             $testPath = Join-Path -Path $testRoot -ChildPath 'TestImage.jpg'
-            $testUri = ResolveImagePath -Path $testPath
+            $testUri = Resolve-ImageUri -Path $testPath
 
-            $result = GetImageUriBytes -Uri $testUri
+            $result = Get-UriBytes -Uri $testUri
 
             $result -is [System.Object[]] | Should Be $true
             $result[0] -is [System.Byte] | Should Be $true
         }
 
-    } #end describe Image\GetImageUriBytes
+    } #end describe Image\Get-UriBytes
 
-    Describe -Name 'Image\GetImageFromBytes' -Fixture {
+    Describe -Name 'Image\ConvertTo-Image' -Fixture {
 
         It "returns 'System.Drawing.Image' type" {
 
             $testPath = Join-Path -Path $testRoot -ChildPath 'TestImage.jpg'
-            $testUri = ResolveImagePath -Path $testPath
-            $testBytes = GetImageUriBytes -Uri $testUri
+            $testUri = Resolve-ImageUri -Path $testPath
+            $testBytes = Get-UriBytes -Uri $testUri
 
-            $result = GetImageFromBytes -Bytes $testBytes
+            $result = ConvertTo-Image -Bytes $testBytes
 
             $result -is [System.Drawing.Image] | Should Be $true
         }
 
-    } #end describe Image\GetImageFromBytes
+    } #end describe Image\ConvertTo-Image
 
-    Describe -Name 'Image\GetPScriboImage' -Fixture {
+    Describe -Name 'Image\Get-PScriboImage' -Fixture {
 
 
         $pscriboDocument = Document -Name 'ScaffoldDocument' -ScriptBlock {
@@ -104,18 +104,18 @@ InModuleScope -ModuleName 'PScribo' -ScriptBlock {
 
         It 'finds all Images' {
 
-            $result = GetPScriboImage -Section $pscriboDocument.Sections
+            $result = Get-PScriboImage -Section $pscriboDocument.Sections
 
             $result.Count | Should Be 2
         }
 
         It 'finds Image by Id' {
 
-            $result = @(GetPScriboImage -Section $pscriboDocument.Sections -Id 2)
+            $result = @(Get-PScriboImage -Section $pscriboDocument.Sections -Id 2)
 
             $result.Count | Should Be 1
         }
 
-    } #end describe Image\GetPScriboImage
+    } #end describe Image\Get-PScriboImage
 
 }

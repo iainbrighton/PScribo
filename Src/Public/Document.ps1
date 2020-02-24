@@ -76,7 +76,7 @@ function Document {
                         else
                         {
                             ## Set the last child section/paragraph element as the section end
-                            SetIsSectionBreakEnd -Section $previousPScriboSection
+                            Set-PScriboSectionBreakEnd -Section $previousPScriboSection
                         }
                     }
                     $previousPScriboSection = $pscriboSection;

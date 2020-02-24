@@ -2,7 +2,7 @@ function ConvertTo-Em
 {
 <#
     .SYNOPSIS
-        Convert pixels into EMU
+        Convert pixels or millimeters into EMU
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]

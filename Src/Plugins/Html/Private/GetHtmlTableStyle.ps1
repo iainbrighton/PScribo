@@ -16,15 +16,15 @@ function GetHtmlTableStyle
     {
         $tableStyleBuilder = New-Object -TypeName 'System.Text.StringBuilder';
         [ref] $null = $tableStyleBuilder.AppendFormat(' padding: {0}rem {1}rem {2}rem {3}rem;',
-            (ConvertToInvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingTop)),
-                (ConvertToInvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingRight)),
-                    (ConvertToInvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingBottom)),
-                        (ConvertToInvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingLeft)))
+            (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingTop)),
+                (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingRight)),
+                    (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingBottom)),
+                        (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingLeft)))
         [ref] $null = $tableStyleBuilder.AppendFormat(' border-style: {0};', $TableStyle.BorderStyle.ToLower());
 
         if ($TableStyle.BorderWidth -gt 0)
         {
-            $invariantBorderWidth = ConvertToInvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.BorderWidth);
+            $invariantBorderWidth = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.BorderWidth);
             [ref] $null = $tableStyleBuilder.AppendFormat(' border-width: {0}rem;', $invariantBorderWidth);
             if ($TableStyle.BorderColor.Contains('#'))
             {

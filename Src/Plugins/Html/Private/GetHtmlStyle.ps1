@@ -17,7 +17,7 @@ function GetHtmlStyle
         $styleBuilder = New-Object -TypeName System.Text.StringBuilder;
         [ref] $null = $styleBuilder.AppendFormat(" font-family: '{0}';", $Style.Font -join "','");
         ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
-        $invariantFontSize = ConvertToInvariantCultureString -Object ($Style.Size / 12) -Format 'f2';
+        $invariantFontSize = ConvertTo-InvariantCultureString -Object ($Style.Size / 12) -Format 'f2';
         [ref] $null = $styleBuilder.AppendFormat(' font-size: {0}rem;', $invariantFontSize);
         [ref] $null = $styleBuilder.AppendFormat(' text-align: {0};', $Style.Align.ToLower());
         if ($Style.Bold) {

@@ -1,4 +1,4 @@
-function GetImageFromBytes
+function ConvertTo-Image
 {
 <#
     .SYNOPSIS

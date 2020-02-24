@@ -545,10 +545,10 @@ InModuleScope 'PScribo' {
                 }
                 It "outputs $tableType table cell spacing `"<w:tblCellMar>[..]</w:tblCellMar>`"" {
                     $testTable = Get-Process | Select -Property 'ProcessName','SI','Id' -First 3 | Table -Name 'Test Table' -List:$tableStyle;
-                    $paddingTop = ConvertToInvariantCultureString -Object (ConvertTo-Twips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingTop);
-                    $paddingLeft = ConvertToInvariantCultureString -Object (ConvertTo-Twips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingLeft);
-                    $paddingBottom = ConvertToInvariantCultureString -Object (ConvertTo-Twips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingBottom);
-                    $paddingRight = ConvertToInvariantCultureString -Object (ConvertTo-Twips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingRight);
+                    $paddingTop = ConvertTo-InvariantCultureString -Object (ConvertTo-Twips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingTop);
+                    $paddingLeft = ConvertTo-InvariantCultureString -Object (ConvertTo-Twips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingLeft);
+                    $paddingBottom = ConvertTo-InvariantCultureString -Object (ConvertTo-Twips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingBottom);
+                    $paddingRight = ConvertTo-InvariantCultureString -Object (ConvertTo-Twips ($pscriboDocument.TableStyles[$testTable.Style]).PaddingRight);
 
                     OutWordTable $testTable -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 

@@ -1,9 +1,11 @@
-function SetIsSectionBreakEnd
+function Set-PScriboSectionBreakEnd
 {
 <#
-    Sets the IsSectionBreak end on the last (nested) paragraph/subsection (required by Word plugin)
+    .SYNOPSIS
+        Sets the IsSectionBreak end on the last (nested) paragraph/subsection (required by Word plugin)
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
     param
     (
         [Parameter(Mandatory, ValueFromPipeline)]
@@ -20,7 +22,7 @@ function SetIsSectionBreakEnd
                     }
                     else
                     {
-                        SetIsSectionBreakEnd -Section $PSItem
+                        Set-PScriboSectionBreakEnd -Section $PSItem
                     }
                 }
     }

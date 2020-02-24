@@ -67,17 +67,17 @@ function Image {
     {
         if ($PSBoundParameters.ContainsKey('Path'))
         {
-            $Uri = ResolveImagePath -Path $Path;
+            $Uri = Resolve-ImageUri -Path $Path;
             $null = $PSBoundParameters.Remove('Path')
             $PSBoundParameters['Uri'] = $Uri
         }
         elseif ($PSBoundParameters.ContainsKey('Uri'))
         {
-            $Uri = ResolveImagePath -Path $Uri;
+            $Uri = Resolve-ImageUri -Path $Uri;
         }
         elseif ($PSBoundParameters.ContainsKey('Base64'))
         {
-            $Uri = ResolveImagePath -Path 'about:blank';
+            $Uri = Resolve-ImageUri -Path 'about:blank';
         }
 
         if (-not ($PSBoundParameters.ContainsKey('Text')))

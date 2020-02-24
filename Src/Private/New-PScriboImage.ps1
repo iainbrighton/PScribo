@@ -3,6 +3,7 @@ function New-PScriboImage
 <#
     .SYNOPSIS
         Initializes a new PScribo Image object.
+
     .NOTES
         This is an internal function and should not be called directly.
 #>
@@ -51,14 +52,14 @@ function New-PScriboImage
 
         if ($PSBoundParameters.ContainsKey('Uri'))
         {
-            $imageBytes = GetImageUriBytes -Uri $Uri
+            $imageBytes = Get-UriBytes -Uri $Uri
         }
         elseif ($PSBoundParameters.ContainsKey('Base64'))
         {
             $imageBytes = [System.Convert]::FromBase64String($Base64)
         }
 
-        $image = GetImageFromBytes -Bytes $imageBytes
+        $image = ConvertTo-Image -Bytes $imageBytes
 
         if ($PSBoundParameters.ContainsKey('Percent'))
         {
@@ -80,7 +81,7 @@ function New-PScriboImage
             Uri         = $Uri;
             Name        = 'Img{0}' -f $imageNumber;
             Align       = $Align;
-            MIMEType    = GetImageMimeType -Image $image
+            MIMEType    = Get-ImageMimeType -Image $image
             WidthEm     = ConvertTo-Em -Pixel $Width;
             HeightEm    = ConvertTo-Em -Pixel $Height;
             Width       = $Width;

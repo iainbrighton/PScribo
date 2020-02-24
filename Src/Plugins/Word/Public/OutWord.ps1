@@ -189,7 +189,7 @@ function OutWord
         [ref] $null = $documentPart.CreateRelationship($settingsUri, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings', 'rId2')
 
         ## Process images
-        foreach ($image in (GetPScriboImage -Section $Document.Sections))
+        foreach ($image in (Get-PScriboImage -Section $Document.Sections))
         {
             try
             {

@@ -1,10 +1,11 @@
-function GetImageUriBytes
+function Get-UriBytes
 {
 <#
     .SYNOPSIS
         Gets an image's content as a byte[]
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns','')]
     [OutputType([System.Byte[]])]
     param
     (

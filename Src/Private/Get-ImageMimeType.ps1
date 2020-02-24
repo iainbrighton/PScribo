@@ -1,5 +1,9 @@
-function GetImageMimeType
+function Get-ImageMimeType
 {
+<#
+    .SYNOPSIS
+        Returns an image's Mime type
+#>
     [CmdletBinding()]
     [OutputType([System.String])]
     param

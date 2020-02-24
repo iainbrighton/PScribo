@@ -18,7 +18,7 @@ function GetHtmlParagraphStyle
         if ($Paragraph.Tabs -gt 0)
         {
             ## Default to 1/2in tab spacing
-            $tabEm = ConvertToInvariantCultureString -Object (ConvertTo-Em -Millimeter (12.7 * $Paragraph.Tabs)) -Format 'f2';
+            $tabEm = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter (12.7 * $Paragraph.Tabs)) -Format 'f2';
             [ref] $null = $paragraphStyleBuilder.AppendFormat(' margin-left: {0}rem;', $tabEm);
         }
         if ($Paragraph.Font)
@@ -28,7 +28,7 @@ function GetHtmlParagraphStyle
         if ($Paragraph.Size -gt 0)
         {
             ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
-            $invariantParagraphSize = ConvertToInvariantCultureString -Object ($Paragraph.Size / 12) -Format 'f2';
+            $invariantParagraphSize = ConvertTo-InvariantCultureString -Object ($Paragraph.Size / 12) -Format 'f2';
             [ref] $null = $paragraphStyleBuilder.AppendFormat(' font-size: {0}rem;', $invariantParagraphSize);
         }
         if ($Paragraph.Bold -eq $true)

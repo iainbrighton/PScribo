@@ -1,4 +1,4 @@
-function GetPScriboImage
+function Get-PScriboImage
 {
 <#
     .SYNOPSIS
@@ -36,7 +36,7 @@ function GetPScriboImage
             {
                 ## Recursively search subsections
                 $PSBoundParameters['Section'] = $subSection.Sections
-                GetPScriboImage @PSBoundParameters
+                Get-PScriboImage @PSBoundParameters
             }
         }
     }
