@@ -98,7 +98,8 @@
                 foreach ($row in $Table.Rows) {
                     $groupElement = $tableElement.AppendChild($xmlDocument.CreateElement('group'));
                     foreach ($property in $row.PSObject.Properties) {
-                        if (-not ($property.Name).EndsWith('__Style')) {
+                        if (-not ($property.Name).EndsWith('__Style', 'CurrentCultureIgnoreCase'))
+                        {
                             $propertyId = ($property.Name -replace '[^a-z0-9-_\.]','').ToLower();
                             $rowElement = $groupElement.AppendChild($xmlDocument.CreateElement($propertyId));
                             ## Only add the Name attribute if there's a difference

@@ -359,6 +359,7 @@
                     $tStyle = $TableStyles[$tableStyle];
                     $tableStyleId = $tStyle.Id.ToLower();
                     $htmlTableStyle = GetHtmlTableStyle -TableStyle $tStyle;
+                    $htmlHeaderStyle = GetHtmlStyle -Style $Styles[$tStyle.HeaderStyle];
                     $htmlRowStyle = GetHtmlStyle -Style $Styles[$tStyle.RowStyle];
                     $htmlAlternateRowStyle = GetHtmlStyle -Style $Styles[$tStyle.AlternateRowStyle];
                     ## Generate table style
