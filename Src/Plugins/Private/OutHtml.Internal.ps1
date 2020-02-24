@@ -185,14 +185,9 @@
 
                     [ref] $null = $divBuilder.Append('<div>');
                 }
-                if ($Table.List) {
 
-                    [ref] $null = $divBuilder.AppendFormat('<table class="{0}-list"', $Table.Style.ToLower());
-                }
-                else {
+                [ref] $null = $divBuilder.AppendFormat('<table class="{0}"', $Table.Style.ToLower());
 
-                    [ref] $null = $divBuilder.AppendFormat('<table class="{0}"', $Table.Style.ToLower());
-                }
                 $styleElements = @();
                 if ($Table.Width -gt 0) {
 
@@ -366,16 +361,12 @@
                     $htmlTableStyle = GetHtmlTableStyle -TableStyle $tStyle;
                     $htmlRowStyle = GetHtmlStyle -Style $Styles[$tStyle.RowStyle];
                     $htmlAlternateRowStyle = GetHtmlStyle -Style $Styles[$tStyle.AlternateRowStyle];
-                    ## Generate Standard table styles
+                    ## Generate table style
                     [ref] $null = $stylesBuilder.AppendFormat(' table.{0} {{{1} }}', $tableStyleId, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} th, td {{{1} }}', $tableStyleId, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(odd) {{{1}{2} }}', $tableStyleId, $htmlRowStyle, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(even) {{{1}{2} }}', $tableStyleId, $htmlAlternateRowStyle, $htmlTableStyle).AppendLine();
-                    ## Generate List table styles
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list {{{1} }}', $tableStyleId, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list th, td {{{1} }}', $tableStyleId, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list tr:nth-child(odd) {{{1}{2} }}', $tableStyleId, $htmlRowStyle, $htmlTableStyle).AppendLine();
-                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0}-list tr:nth-child(even) {{{1}{2} }}', $tableStyleId, $htmlAlternateRowStyle, $htmlTableStyle).AppendLine();
+                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} th {{{1}{2} }}', $tableStyleId, $htmlHeaderStyle, $htmlTableStyle).AppendLine();
+                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(odd) td {{{1}{2} }}', $tableStyleId, $htmlRowStyle, $htmlTableStyle).AppendLine();
+                    [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(even) td {{{1}{2} }}', $tableStyleId, $htmlAlternateRowStyle, $htmlTableStyle).AppendLine();
+
                 } #end foreach style
 
                 [ref] $null = $stylesBuilder.AppendLine('</style>');
@@ -591,7 +582,7 @@
 
                     $propertyName = $Table.Columns[$i];
                     $rowPropertyName = $Row.$propertyName; ## Core
-                    [ref] $null = $listTableBuilder.AppendFormat('<tr><td>{0}</td>', $propertyName);
+                    [ref] $null = $listTableBuilder.AppendFormat('<tr><th>{0}</th>', $propertyName);
                     $propertyStyle = '{0}__Style' -f $propertyName;
 
                     if ($row.PSObject.Properties[$propertyStyle]) {
