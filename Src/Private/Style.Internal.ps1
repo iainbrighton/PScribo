@@ -6,7 +6,8 @@
                 Initializes a new PScribo style object.
         #>
             [CmdletBinding()]
-            param (
+            param
+            (
                 ## Style name
                 [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
                 [ValidateNotNullOrEmpty()]
@@ -66,32 +67,31 @@
                 ## Set as default style
                 [Parameter(ValueFromPipelineByPropertyName)]
                 [System.Management.Automation.SwitchParameter] $Default
-            ) #end param
-            begin {
-
-                if (-not (Test-PScriboStyleColor -Color $Color)) {
-
+            )
+            begin
+            {
+                if (-not (Test-PScriboStyleColor -Color $Color))
+                {
                     throw ($localized.InvalidHtmlColorError -f $Color);
                 }
-                if ($BackgroundColor) {
-
-                    if (-not (Test-PScriboStyleColor -Color $BackgroundColor)) {
-
+                if ($BackgroundColor)
+                {
+                    if (-not (Test-PScriboStyleColor -Color $BackgroundColor))
+                    {
                         throw ($localized.InvalidHtmlBackgroundColorError -f $BackgroundColor);
                     }
-                    else {
-
+                    else
+                    {
                         $BackgroundColor = Resolve-PScriboStyleColor -Color $BackgroundColor;
                     }
                 }
-                if (-not ($Font)) {
-
+                if (-not ($Font))
+                {
                     $Font = $pscriboDocument.Options['DefaultFont'];
                 }
-
-            } #end begin
-            process {
-
+            }
+            process
+            {
                 $pscriboDocument.Properties['Styles']++;
                 $style = [PSCustomObject] @{
                     Id              = $Id;
@@ -108,9 +108,11 @@
                     Hidden          = $Hidden.ToBool();
                 }
                 $pscriboDocument.Styles[$Id] = $style;
-                if ($Default) { $pscriboDocument.DefaultStyle = $style.Id; }
-
-            } #end process
-        } #end function Add-PScriboStyle
+                if ($Default)
+                {
+                    $pscriboDocument.DefaultStyle = $style.Id;
+                }
+            }
+        }
 
         #endregion Style Private Functions

@@ -5,17 +5,17 @@ function ConvertPtToMm {
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('pt')]
         [System.Single] $Point
     )
-    process {
-
+    process
+    {
         return [System.Math]::Round(($Point / 72) * 25.4, 2);
-
     }
-} #end function ConvertPtToMm
+}
 
 
 function ConvertPxToMm {
@@ -25,7 +25,8 @@ function ConvertPxToMm {
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('px')]
         [System.Single] $Pixel,
@@ -33,13 +34,12 @@ function ConvertPxToMm {
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.Int16] $Dpi = 96
     )
-    process {
-
+    process
+    {
         $mm = (25.4 / $Dpi) * $Pixel
         return [System.Math]::Round($mm, 2);
-
     }
-} #end function ConvertPxToMm
+}
 
 
 function ConvertInToMm {
@@ -49,18 +49,18 @@ function ConvertInToMm {
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('in')]
         [System.Single] $Inch
     )
-    process {
-
+    process
+    {
         $mm = $Inch * 25.4
         return [System.Math]::Round($mm, 2)
-
     }
-} #end function ConvertInToMm
+}
 
 
 function ConvertMmToIn {
@@ -70,18 +70,18 @@ function ConvertMmToIn {
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('mm','Millimetre')]
         [System.Single] $Millimeter
     )
-    process {
-
+    process
+    {
         $in = $Millimeter / 25.4
         return [System.Math]::Round($in, 2)
-
     }
-} #end function ConvertMmToIn
+}
 
 
 function ConvertMmToPt {
@@ -91,64 +91,66 @@ function ConvertMmToPt {
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('mm','Millimetre')]
         [System.Single] $Millimeter
     )
-    process {
-
+    process
+    {
         $pt = (ConvertMmToIn $Millimeter) / 0.0138888888888889
         return [System.Math]::Round($pt, 2)
-
     }
-} #end function ConvertMmToPt
+}
 
 
 function ConvertMmToTwips {
 <#
     .SYNOPSIS
         Convert millimeters into twips
+
     .NOTES
         1 twip = 1/20th pt
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('mm','Millimetre')]
         [System.Single] $Millimeter
     )
-    process {
-
+    process
+    {
         $twips = (ConvertMmToIn -Millimeter $Millimeter) * 1440
         return [System.Math]::Round($twips, 2)
-
     }
-} #end function ConvertMmToTwips
+}
 
 
 function ConvertMmToOctips {
 <#
     .SYNOPSIS
         Convert millimeters into octips
+
     .NOTES
         1 "octip" = 1/8th pt
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('mm','Millimetre')]
         [System.Single] $Millimeter
     )
-    process {
-
+    process
+    {
         $octips = (ConvertMmToIn -Millimeter $Millimeter) * 576
         return [System.Math]::Round($octips, 2)
-
     }
-} #end function ConvertMmToOctips
+}
 
 
 function ConvertMmToEm {
@@ -158,18 +160,18 @@ function ConvertMmToEm {
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('mm','Millimetre')]
         [System.Single] $Millimeter
     )
-    process {
-
+    process
+    {
         $em = $Millimeter / 4.23333333333333
         return [System.Math]::Round($em, 2)
-
     }
-} #end function ConvertMmToEm
+}
 
 
 function ConvertMmToPx {
@@ -179,7 +181,8 @@ function ConvertMmToPx {
 #>
     [CmdletBinding()]
     [OutputType([System.Int16])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('mm','Millimetre')]
         [System.Single] $Millimeter,
@@ -187,14 +190,14 @@ function ConvertMmToPx {
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.Int16] $Dpi = 96
     )
-    process {
-
+    process
+    {
         $px = [System.Int16] ((ConvertMmToIn -Millimeter $Millimeter) * $Dpi)
         if ($px -lt 1) { return (1 -as [System.Int16]) }
         else { return $px }
 
     }
-} #end function ConvertMmToPx
+}
 
 function ConvertToInvariantCultureString {
     <#
@@ -202,7 +205,8 @@ function ConvertToInvariantCultureString {
             Convert to a number to a string with a culture-neutral representation #6, #42.
     #>
     [CmdletBinding()]
-    param (
+    param
+    (
         ## The sinle/double
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [System.Object] $Object,
@@ -211,17 +215,18 @@ function ConvertToInvariantCultureString {
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.String] $Format
     )
-
-    if ($PSBoundParameters.ContainsKey('Format')) {
-
-        return $Object.ToString($Format, [System.Globalization.CultureInfo]::InvariantCulture);
+    process
+    {
+        if ($PSBoundParameters.ContainsKey('Format'))
+        {
+            return $Object.ToString($Format, [System.Globalization.CultureInfo]::InvariantCulture);
+        }
+        else
+        {
+            return $Object.ToString([System.Globalization.CultureInfo]::InvariantCulture);
+        }
     }
-    else {
-
-        return $Object.ToString([System.Globalization.CultureInfo]::InvariantCulture);
-    }
-
-} #end function ConvertToInvariantCultureString
+}
 
 function ConvertPxToEm {
 <#
@@ -230,15 +235,15 @@ function ConvertPxToEm {
 #>
     [CmdletBinding()]
     [OutputType([System.Single])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline)]
         [Alias('px')]
         [System.Single] $Pixel
     )
-    process {
-
+    process
+    {
         $em = $pixel * 9525
         return [System.Math]::Round($em, 0)
-
     }
-} #end function ConvertPxToEm
+}

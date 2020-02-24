@@ -4,10 +4,12 @@
         <#
             .SYNOPSIS
                 Defines a new PScribo table formatting style.
+
             .DESCRIPTION
                 Creates a standard table formatting style that can be applied
                 to the PScribo table keyword, e.g. a combination of header and
                 row styles and borders.
+
             .NOTES
                 Not all plugins support all options.
         #>
@@ -75,23 +77,33 @@
                 ## Set as default table style
                 [Parameter(ValueFromPipelineByPropertyName)]
                 [System.Management.Automation.SwitchParameter] $Default
-            ) #end param
+            )
             begin
             {
-                if ($BorderWidth -gt 0) { $borderStyle = 'Solid'; } else {$borderStyle = 'None'; }
-                if (-not ($pscriboDocument.Styles.ContainsKey($HeaderStyle))) {
+                if ($BorderWidth -gt 0)
+                {
+                    $borderStyle = 'Solid';
+                }
+                else {
+                    $borderStyle = 'None';
+                }
+                if (-not ($pscriboDocument.Styles.ContainsKey($HeaderStyle)))
+                {
                     throw ($localized.UndefinedTableHeaderStyleError -f $HeaderStyle);
                 }
-                if (-not ($pscriboDocument.Styles.ContainsKey($RowStyle))) {
+                if (-not ($pscriboDocument.Styles.ContainsKey($RowStyle)))
+                {
                     throw ($localized.UndefinedTableRowStyleError -f $RowStyle);
                 }
-                if (-not ($pscriboDocument.Styles.ContainsKey($AlternateRowStyle))) {
+                if (-not ($pscriboDocument.Styles.ContainsKey($AlternateRowStyle)))
+                {
                     throw ($localized.UndefinedAltTableRowStyleError -f $AlternateRowStyle);
                 }
-                if (-not (Test-PScriboStyleColor -Color $BorderColor)) {
+                if (-not (Test-PScriboStyleColor -Color $BorderColor))
+                {
                     throw ($localized.InvalidTableBorderColorError -f $BorderColor);
                 }
-            } #end begin
+            }
             process
             {
                 $pscriboDocument.Properties['TableStyles']++;
@@ -115,8 +127,7 @@
                 {
                     $pscriboDocument.DefaultTableStyle = $tableStyle.Id;
                 }
-
-            } #end process
-        } #end function Add-PScriboTableStyle
+            }
+        }
 
         #endregion TableStyle Private Functions

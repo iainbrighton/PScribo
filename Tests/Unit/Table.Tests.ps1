@@ -144,7 +144,7 @@ InModuleScope 'PScribo' {
 
             It 'creates a table with -List parameter.' {
                 $table = $processes | Table -List;
-                $table.List | Should Be $true;
+                $table.IsList | Should Be $true;
             }
 
             It 'creates a table by named -Name parameter.' {
@@ -263,7 +263,7 @@ InModuleScope 'PScribo' {
 
             It 'creates a table with -List parameter.' {
                 $table = Table -Hashtable $services -List;
-                $table.List | Should Be $true;
+                $table.IsList | Should Be $true;
             }
 
             It 'creates a table by named -Name parameter.' {

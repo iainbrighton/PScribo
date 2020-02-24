@@ -10,19 +10,19 @@
             [CmdletBinding()]
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
             [OutputType([System.Collections.Hashtable])]
-            param (
+            param
+            (
                 [Parameter(ValueFromPipelineByPropertyName)]
                 [ValidateNotNull()]
                 [System.Boolean] $NoPageLayoutStyle = $false
             )
-            process {
-
+            process
+            {
                 return @{
                     NoPageLayoutStyle = $NoPageLayoutStyle;
                 }
-
-            } #end process
-        } #end function New-PScriboHtmlOption
+            }
+        }
 
         function GetHtmlPaddedTableStyle {
         <#
@@ -33,10 +33,11 @@
             [OutputType([System.String])]
             param (
                 ## PScribo document table style
-                [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $TableStyle
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [System.Management.Automation.PSObject] $TableStyle
             )
-            process {
-
+            process
+            {
                 $styleBuilder = New-Object -TypeName System.Text.StringBuilder;
 
                 [ref] $null = $styleBuilder.AppendFormat(' padding: {0}rem {1}rem {2}rem {3}rem;',
@@ -47,7 +48,7 @@
 
                 return $styleBuilder.ToString();
             }
-        } #end function
+        }
 
         function GetHtmlStyle {
         <#
@@ -56,12 +57,14 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 ## PScribo document style
-                [Parameter(Mandatory, ValueFromPipeline)] [System.Object] $Style
+                [Parameter(Mandatory, ValueFromPipeline)]
+                [System.Management.Automation.PSObject] $Style
             )
-            process {
-
+            process
+            {
                 $styleBuilder = New-Object -TypeName System.Text.StringBuilder;
                 [ref] $null = $styleBuilder.AppendFormat(" font-family: '{0}';", $Style.Font -join "','");
                 ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
@@ -104,9 +107,8 @@
                     }
                 }
                 return $styleBuilder.ToString();
-
             }
-        } #end function GetHtmlStyle
+        }
 
 
         function GetHtmlTableStyle {
@@ -116,13 +118,14 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 ## PScribo document table style
                 [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $TableStyle
+                [System.Management.Automation.PSObject] $TableStyle
             )
-            process {
-
+            process
+            {
                 $tableStyleBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $tableStyleBuilder.AppendFormat(' padding: {0}rem {1}rem {2}rem {3}rem;',
                     (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingTop)),
@@ -131,34 +134,33 @@
                                 (ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.PaddingLeft)))
                 [ref] $null = $tableStyleBuilder.AppendFormat(' border-style: {0};', $TableStyle.BorderStyle.ToLower());
 
-                if ($TableStyle.BorderWidth -gt 0) {
-
+                if ($TableStyle.BorderWidth -gt 0)
+                {
                     $invariantBorderWidth = ConvertToInvariantCultureString -Object (ConvertMmToEm $TableStyle.BorderWidth);
                     [ref] $null = $tableStyleBuilder.AppendFormat(' border-width: {0}rem;', $invariantBorderWidth);
-                    if ($TableStyle.BorderColor.Contains('#')) {
-
+                    if ($TableStyle.BorderColor.Contains('#'))
+                    {
                         [ref] $null = $tableStyleBuilder.AppendFormat(' border-color: {0};', $TableStyle.BorderColor);
                     }
-                    else {
-
+                    else
+                    {
                         [ref] $null = $tableStyleBuilder.AppendFormat(' border-color: #{0};', $TableStyle.BorderColor);
                     }
                 }
 
                 [ref] $null = $tableStyleBuilder.Append(' border-collapse: collapse;');
                 ## <table align="center"> is deprecated in Html5
-                if ($TableStyle.Align -eq 'Center') {
-
+                if ($TableStyle.Align -eq 'Center')
+                {
                     [ref] $null = $tableStyleBuilder.Append(' margin-left: auto; margin-right: auto;');
                 }
-                elseif ($TableStyle.Align -eq 'Right') {
-
+                elseif ($TableStyle.Align -eq 'Right')
+                {
                     [ref] $null = $tableStyleBuilder.Append(' margin-left: auto; margin-right: 0;');
                 }
                 return $tableStyleBuilder.ToString();
-
             }
-        } #end function Outhtmltablestyle
+        }
 
 
         function GetHtmlTableDiv {
@@ -168,48 +170,48 @@
             .NOTES
                 A <div> is required to ensure that the table stays within the "page" boundaries/margins.
         #>
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
                 [ValidateNotNull()]
-                [System.Object] $Table
+                [System.Management.Automation.PSObject] $Table
             )
-            process {
-
+            process
+            {
                 $divBuilder = New-Object -TypeName 'System.Text.StringBuilder';
-                if ($Table.Tabs -gt 0) {
-
+                if ($Table.Tabs -gt 0)
+                {
                     $invariantMarginLeft = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Table.Tabs));
                     [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}rem;">' -f $invariantMarginLeft);
                 }
-                else {
-
+                else
+                {
                     [ref] $null = $divBuilder.Append('<div>');
                 }
 
                 [ref] $null = $divBuilder.AppendFormat('<table class="{0}"', $Table.Style.ToLower());
 
                 $styleElements = @();
-                if ($Table.Width -gt 0) {
-
+                if ($Table.Width -gt 0)
+                {
                     $styleElements += 'width:{0}%;' -f $Table.Width;
                 }
-                if ($Table.ColumnWidths) {
-
+                if ($Table.ColumnWidths)
+                {
                     $styleElements += 'table-layout: fixed;';
                     $styleElements += 'word-break: break-word;'
                 }
-                if ($styleElements.Count -gt 0) {
-
+                if ($styleElements.Count -gt 0)
+                {
                     [ref] $null = $divBuilder.AppendFormat(' style="{0}">', [System.String]::Join(' ', $styleElements));
                 }
-                else {
-
+                else
+                {
                     [ref] $null = $divBuilder.Append('>');
                 }
                 return $divBuilder.ToString();
-
             }
-        } #end function GetHtmlTableDiv
+        }
 
 
         function GetHtmlTableColGroup {
@@ -219,35 +221,34 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
                 [ValidateNotNull()]
-                [System.Object] $Table
+                [System.Management.Automation.PSObject] $Table
             )
-            process {
-
+            process
+            {
                 $colGroupBuilder = New-Object -TypeName 'System.Text.StringBuilder';
-                if ($Table.ColumnWidths) {
-
+                if ($Table.ColumnWidths)
+                {
                     [ref] $null = $colGroupBuilder.Append('<colgroup>');
-                    foreach ($columnWidth in $Table.ColumnWidths) {
-
-                        if ($null -eq $columnWidth) {
-
+                    foreach ($columnWidth in $Table.ColumnWidths)
+                    {
+                        if ($null -eq $columnWidth)
+                        {
                             [ref] $null = $colGroupBuilder.Append('<col />');
                         }
-                        else {
-
+                        else
+                        {
                             [ref] $null = $colGroupBuilder.AppendFormat('<col style="max-width:{0}%; min-width:{0}%; width:{0}%" />', $columnWidth);
                         }
                     }
-
                     [ref] $null = $colGroupBuilder.AppendLine('</colgroup>');
                 }
                 return $colGroupBuilder.ToString();
-
             }
-        } #end function GetHtmlTableDiv
+        }
 
 
         function OutHtmlTOC {
@@ -257,33 +258,33 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $TOC
+                [System.Management.Automation.PSObject] $TOC
             )
-            process {
-
+            process
+            {
                 $tocBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $tocBuilder.AppendFormat('<h1 class="{0}">{1}</h1>', $TOC.ClassId, $TOC.Name);
                 #[ref] $null = $tocBuilder.AppendLine('<table style="width: 100%;">');
                 [ref] $null = $tocBuilder.AppendLine('<table>');
-                foreach ($tocEntry in $Document.TOC) {
-
+                foreach ($tocEntry in $Document.TOC)
+                {
                     $sectionNumberIndent = '&nbsp;&nbsp;&nbsp;' * $tocEntry.Level;
-                    if ($Document.Options['EnableSectionNumbering']) {
-
+                    if ($Document.Options['EnableSectionNumbering'])
+                    {
                         [ref] $null = $tocBuilder.AppendFormat('<tr><td>{0}</td><td>{1}<a href="#{2}" style="text-decoration: none;">{3}</a></td></tr>', $tocEntry.Number, $sectionNumberIndent, $tocEntry.Id, $tocEntry.Name).AppendLine();
                     }
-                    else {
-
+                    else
+                    {
                         [ref] $null = $tocBuilder.AppendFormat('<tr><td>{0}<a href="#{1}" style="text-decoration: none;">{2}</a></td></tr>', $sectionNumberIndent, $tocEntry.Id, $tocEntry.Name).AppendLine();
                     }
                 }
                 [ref] $null = $tocBuilder.AppendLine('</table>');
                 return $tocBuilder.ToString();
-
-            } #end process
-        } #end function OutHtmlTOC
+            }
+        }
 
 
         function OutHtmlBlankLine {
@@ -293,21 +294,21 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $BlankLine
+                [System.Management.Automation.PSObject] $BlankLine
             )
-            process {
-
+            process
+            {
                 $blankLineBuilder = New-Object -TypeName System.Text.StringBuilder;
-                for ($i = 0; $i -lt $BlankLine.LineCount; $i++) {
-
+                for ($i = 0; $i -lt $BlankLine.LineCount; $i++)
+                {
                     [ref] $null = $blankLineBuilder.Append('<br />');
                 }
                 return $blankLineBuilder.ToString();
-
-            } #end process
-        } #end function OutHtmlBlankLine
+            }
+        }
 
 
         function OutHtmlStyle {
@@ -317,7 +318,8 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 ## PScribo document styles
                 [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
                 [System.Collections.Hashtable] $Styles,
@@ -330,12 +332,12 @@
                 [Parameter(ValueFromPipelineByPropertyName)]
                 [System.Management.Automation.SwitchParameter] $NoPageLayoutStyle
             )
-            process {
-
+            process
+            {
                 $stylesBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 [ref] $null = $stylesBuilder.AppendLine('<style type="text/css">');
-                if (-not $NoPageLayoutStyle) {
-
+                if (-not $NoPageLayoutStyle)
+                {
                     ## Add HTML page layout styling options, e.g. when emailing HTML documents
                     [ref] $null = $stylesBuilder.AppendLine('html { height: 100%; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; background: #f8f8f8; }');
                     [ref] $null = $stylesBuilder.Append("page { background: white; width: $($Document.Options['PageWidth'])mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ");
@@ -348,14 +350,14 @@
                     [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }');
                 }
 
-                foreach ($style in $Styles.Keys) {
-
+                foreach ($style in $Styles.Keys)
+                {
                     ## Build style
                     $htmlStyle = GetHtmlStyle -Style $Styles[$style];
                     [ref] $null = $stylesBuilder.AppendFormat(' .{0} {{{1} }}', $Styles[$style].Id, $htmlStyle).AppendLine();
                 }
-                foreach ($tableStyle in $TableStyles.Keys) {
-
+                foreach ($tableStyle in $TableStyles.Keys)
+                {
                     $tStyle = $TableStyles[$tableStyle];
                     $tableStyleId = $tStyle.Id.ToLower();
                     $htmlTableStyle = GetHtmlTableStyle -TableStyle $tStyle;
@@ -367,14 +369,12 @@
                     [ref] $null = $stylesBuilder.AppendFormat(' table.{0} th {{{1}{2} }}', $tableStyleId, $htmlHeaderStyle, $htmlTableStyle).AppendLine();
                     [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(odd) td {{{1}{2} }}', $tableStyleId, $htmlRowStyle, $htmlTableStyle).AppendLine();
                     [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(even) td {{{1}{2} }}', $tableStyleId, $htmlAlternateRowStyle, $htmlTableStyle).AppendLine();
-
-                } #end foreach style
+                }
 
                 [ref] $null = $stylesBuilder.AppendLine('</style>');
                 return $stylesBuilder.ToString().TrimEnd();
-
-            } #end process
-        } #end function OutHtmlStyle
+            }
+        }
 
 
         function OutHtmlSection {
@@ -384,16 +384,17 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 ## Section to output
                 [Parameter(Mandatory, ValueFromPipeline)]
-                [System.Object] $Section
+                [System.Management.Automation.PSObject] $Section
             )
-            process {
-
+            process
+            {
                 [System.Text.StringBuilder] $sectionBuilder = New-Object System.Text.StringBuilder;
-                if ($Section.IsSectionBreak) {
-
+                if ($Section.IsSectionBreak)
+                {
                     [ref] $null = $sectionBuilder.Append((OutHtmlPageBreak -Orientation $Section.Orientation));
                 }
                 $encodedSectionName = [System.Net.WebUtility]::HtmlEncode($Section.Name);
@@ -402,48 +403,51 @@
                 [int] $headerLevel = $Section.Number.Split('.').Count;
 
                 ## Html <h5> is the maximum supported level
-                if ($headerLevel -gt 6) {
-
+                if ($headerLevel -gt 6)
+                {
                     WriteLog -Message $localized.MaxHeadingLevelWarning -IsWarning;
                     $headerLevel = 6;
                 }
 
-                if ([System.String]::IsNullOrEmpty($Section.Style)) {
-
+                if ([System.String]::IsNullOrEmpty($Section.Style))
+                {
                     $className = $Document.DefaultStyle;
                 }
-                else {
-
+                else
+                {
                     $className = $Section.Style;
                 }
 
-                if ($Section.Tabs -gt 0) {
+                if ($Section.Tabs -gt 0)
+                {
                     $tabEm = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Section.Tabs)) -Format 'f2';
                     [ref] $null = $sectionBuilder.AppendFormat('<div style="margin-left: {0}rem;">' -f $tabEm);
                 }
                 [ref] $null = $sectionBuilder.AppendFormat('<a name="{0}"><h{1} class="{2}">{3}</h{1}></a>', $Section.Id, $headerLevel, $className, $sectionName.TrimStart());
-                if ($Section.Tabs -gt 0) {
+                if ($Section.Tabs -gt 0)
+                {
                     [ref] $null = $sectionBuilder.Append('</div>');
                 }
 
-                foreach ($s in $Section.Sections.GetEnumerator()) {
-
-                    if ($s.Id.Length -gt 40) {
-
+                foreach ($s in $Section.Sections.GetEnumerator())
+                {
+                    if ($s.Id.Length -gt 40)
+                    {
                         $sectionId = '{0}[..]' -f $s.Id.Substring(0,36);
                     }
-                    else {
-
+                    else
+                    {
                         $sectionId = $s.Id;
                     }
 
                     $currentIndentationLevel = 1;
-                    if ($null -ne $s.PSObject.Properties['Level']) {
-
+                    if ($null -ne $s.PSObject.Properties['Level'])
+                    {
                         $currentIndentationLevel = $s.Level +1;
                     }
                     WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent $currentIndentationLevel;
-                    switch ($s.Type) {
+                    switch ($s.Type)
+                    {
                         'PScribo.Section' { [ref] $null = $sectionBuilder.Append((OutHtmlSection -Section $s)); }
                         'PScribo.Paragraph' { [ref] $null = $sectionBuilder.Append((OutHtmlParagraph -Paragraph $s)); }
                         'PScribo.LineBreak' { [ref] $null = $sectionBuilder.Append((OutHtmlLineBreak)); }
@@ -452,12 +456,11 @@
                         'PScribo.BlankLine' { [ref] $null = $sectionBuilder.Append((OutHtmlBlankLine -BlankLine $s)); }
                         'PScribo.Image' { [ref] $null = $sectionBuilder.Append((OutHtmlImage -Image $s)); }
                         Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning; }
-                    } #end switch
-                } #end foreach
+                    }
+                }
                 return $sectionBuilder.ToString();
-
-            } #end process
-        } # end function OutHtmlSection
+            }
+        }
 
 
         function GetHtmlParagraphStyle {
@@ -467,53 +470,54 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
-                [ValidateNotNull()] [System.Object] $Paragraph
+                [ValidateNotNull()]
+                [System.Management.Automation.PSObject] $Paragraph
             )
-            process {
-
+            process
+            {
                 $paragraphStyleBuilder = New-Object -TypeName System.Text.StringBuilder;
-                if ($Paragraph.Tabs -gt 0) {
-
+                if ($Paragraph.Tabs -gt 0)
+                {
                     ## Default to 1/2in tab spacing
                     $tabEm = ConvertToInvariantCultureString -Object (ConvertMmToEm -Millimeter (12.7 * $Paragraph.Tabs)) -Format 'f2';
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(' margin-left: {0}rem;', $tabEm);
                 }
-                if ($Paragraph.Font) {
-
+                if ($Paragraph.Font)
+                {
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(" font-family: '{0}';", $Paragraph.Font -Join "','");
                 }
-                if ($Paragraph.Size -gt 0) {
-
+                if ($Paragraph.Size -gt 0)
+                {
                     ## Create culture invariant decimal https://github.com/iainbrighton/PScribo/issues/6
                     $invariantParagraphSize = ConvertToInvariantCultureString -Object ($Paragraph.Size / 12) -Format 'f2';
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(' font-size: {0}rem;', $invariantParagraphSize);
                 }
-                if ($Paragraph.Bold -eq $true) {
-
+                if ($Paragraph.Bold -eq $true)
+                {
                     [ref] $null = $paragraphStyleBuilder.Append(' font-weight: bold;');
                 }
-                if ($Paragraph.Italic -eq $true) {
-
+                if ($Paragraph.Italic -eq $true)
+                {
                     [ref] $null = $paragraphStyleBuilder.Append(' font-style: italic;');
                 }
-                if ($Paragraph.Underline -eq $true) {
-
+                if ($Paragraph.Underline -eq $true)
+                {
                     [ref] $null = $paragraphStyleBuilder.Append(' text-decoration: underline;');
                 }
-                if (-not [System.String]::IsNullOrEmpty($Paragraph.Color) -and $Paragraph.Color.StartsWith('#')) {
-
+                if (-not [System.String]::IsNullOrEmpty($Paragraph.Color) -and $Paragraph.Color.StartsWith('#'))
+                {
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(' color: {0};', $Paragraph.Color.ToLower());
                 }
-                elseif (-not [System.String]::IsNullOrEmpty($Paragraph.Color)) {
-
+                elseif (-not [System.String]::IsNullOrEmpty($Paragraph.Color))
+                {
                     [ref] $null = $paragraphStyleBuilder.AppendFormat(' color: #{0};', $Paragraph.Color.ToLower());
                 }
                 return $paragraphStyleBuilder.ToString().TrimStart();
-
-            } #end process
-        } #end function GetHtmlParagraphStyle
+            }
+        }
 
 
         function OutHtmlParagraph {
@@ -523,91 +527,93 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
                 [ValidateNotNull()]
-                [System.Object] $Paragraph
+                [System.Management.Automation.PSObject] $Paragraph
             )
-            process {
-
+            process
+            {
                 [System.Text.StringBuilder] $paragraphBuilder = New-Object -TypeName 'System.Text.StringBuilder';
                 $encodedText = [System.Net.WebUtility]::HtmlEncode($Paragraph.Text);
-                if ([System.String]::IsNullOrEmpty($encodedText)) {
-
+                if ([System.String]::IsNullOrEmpty($encodedText))
+                {
                     $encodedText = [System.Net.WebUtility]::HtmlEncode($Paragraph.Id);
                 }
                 # $encodedText = $encodedText -replace [System.Environment]::NewLine, '<br />';
                 $encodedText = $encodedText.Replace([System.Environment]::NewLine, '<br />');
                 $customStyle = GetHtmlParagraphStyle -Paragraph $Paragraph;
-                if ([System.String]::IsNullOrEmpty($Paragraph.Style) -and [System.String]::IsNullOrEmpty($customStyle)) {
-
+                if ([System.String]::IsNullOrEmpty($Paragraph.Style) -and [System.String]::IsNullOrEmpty($customStyle))
+                {
                     [ref] $null = $paragraphBuilder.AppendFormat('<div>{0}</div>', $encodedText);
                 }
-                elseif ([System.String]::IsNullOrEmpty($customStyle)) {
-
+                elseif ([System.String]::IsNullOrEmpty($customStyle))
+                {
                     [ref] $null = $paragraphBuilder.AppendFormat('<div class="{0}">{1}</div>', $Paragraph.Style, $encodedText);
                 }
-                else {
-
+                else
+                {
                     [ref] $null = $paragraphBuilder.AppendFormat('<div style="{0}">{1}</div>', $customStyle, $encodedText);
                 }
                 return $paragraphBuilder.ToString();
-
-            } #end process
-        } #end OutHtmlParagraph
+            }
+        }
 
 
         function GetHtmlTableList {
-            <#
-                .SYNOPSIS
-                    Generates list html <table> from a PScribo.Table row object.
-            #>
+        <#
+            .SYNOPSIS
+                Generates list html <table> from a PScribo.Table row object.
+        #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
                 [ValidateNotNull()]
-                [System.Object] $Table,
+                [System.Management.Automation.PSObject] $Table,
 
                 [Parameter(Mandatory)]
-                [System.Object] $Row
+                [System.Management.Automation.PSObject] $Row
             )
-            process {
-
+            process
+            {
                 $listTableBuilder = New-Object -TypeName System.Text.StringBuilder;
                 [ref] $null = $listTableBuilder.Append((GetHtmlTableDiv -Table $Table));
                 [ref] $null = $listTableBuilder.Append((GetHtmlTableColGroup -Table $Table));
                 [ref] $null = $listTableBuilder.Append('<tbody>');
 
-                for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
-
+                for ($i = 0; $i -lt $Table.Columns.Count; $i++)
+                {
                     $propertyName = $Table.Columns[$i];
                     $rowPropertyName = $Row.$propertyName; ## Core
                     [ref] $null = $listTableBuilder.AppendFormat('<tr><th>{0}</th>', $propertyName);
                     $propertyStyle = '{0}__Style' -f $propertyName;
 
-                    if ($row.PSObject.Properties[$propertyStyle]) {
-
+                    if ($row.PSObject.Properties[$propertyStyle])
+                    {
                         $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$Row.$propertyStyle]);
-                        if ([System.String]::IsNullOrEmpty($rowPropertyName)) {
+                        if ([System.String]::IsNullOrEmpty($rowPropertyName))
+                        {
 
                             [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">&nbsp;</td></tr>', $propertyStyleHtml);
                         }
-                        else {
-
+                        else
+                        {
                             $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName.ToString());
                             $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />');
                             [ref] $null = $listTableBuilder.AppendFormat('<td style="{0}">{1}</td></tr>', $propertyStyleHtml, $encodedHtmlContent);
                         }
                     }
-                    else {
-
-                        if ([System.String]::IsNullOrEmpty($rowPropertyName)) {
-
+                    else
+                    {
+                        if ([System.String]::IsNullOrEmpty($rowPropertyName))
+                        {
                             [ref] $null = $listTableBuilder.Append('<td>&nbsp;</td></tr>');
                         }
-                        else {
-
+                        else
+                        {
                             $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($row.$propertyName.ToString());
                             $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />')
                             [ref] $null = $listTableBuilder.AppendFormat('<td>{0}</td></tr>', $encodedHtmlContent);
@@ -616,9 +622,8 @@
                 } #end for each property
                 [ref] $null = $listTableBuilder.AppendLine('</tbody></table></div>');
                 return $listTableBuilder.ToString();
-
-            } #end process
-        } #end function GetHtmlTableList
+            }
+        }
 
 
         function GetHtmlTable {
@@ -628,66 +633,67 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
                 [ValidateNotNull()]
-                [System.Object] $Table
+                [System.Management.Automation.PSObject] $Table
             )
-            process {
-
+            process
+            {
                 $standardTableBuilder = New-Object -TypeName System.Text.StringBuilder;
                 [ref] $null = $standardTableBuilder.Append((GetHtmlTableDiv -Table $Table));
                 [ref] $null = $standardTableBuilder.Append((GetHtmlTableColGroup -Table $Table));
 
                 ## Table headers
                 [ref] $null = $standardTableBuilder.Append('<thead><tr>');
-                for ($i = 0; $i -lt $Table.Columns.Count; $i++) {
-
+                for ($i = 0; $i -lt $Table.Columns.Count; $i++)
+                {
                     [ref] $null = $standardTableBuilder.AppendFormat('<th>{0}</th>', $Table.Columns[$i]);
                 }
                 [ref] $null = $standardTableBuilder.Append('</tr></thead>');
 
                 ## Table body
                 [ref] $null = $standardTableBuilder.AppendLine('<tbody>');
-                foreach ($row in $Table.Rows) {
-
+                foreach ($row in $Table.Rows)
+                {
                     [ref] $null = $standardTableBuilder.Append('<tr>');
-                    foreach ($propertyName in $Table.Columns) {
-
+                    foreach ($propertyName in $Table.Columns)
+                    {
                         $propertyStyle = '{0}__Style' -f $propertyName;
 
                         $rowPropertyName = $row.$propertyName; ## Core
-                        if ([System.String]::IsNullOrEmpty($rowPropertyName)) {
-
+                        if ([System.String]::IsNullOrEmpty($rowPropertyName))
+                        {
                             $encodedHtmlContent = '&nbsp;'; # &nbsp; is already encoded (#72)
                         }
-                        else {
-
+                        else
+                        {
                             $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($rowPropertyName.ToString());
                         }
                         $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />');
 
-                        if ($row.PSObject.Properties[$propertyStyle]) {
-
+                        if ($row.PSObject.Properties[$propertyStyle])
+                        {
                             ## Cell styles override row styles
                             $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.$propertyStyle]).Trim();
                             [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $propertyStyleHtml, $encodedHtmlContent);
                         }
-                        elseif (($row.PSObject.Properties['__Style']) -and (-not [System.String]::IsNullOrEmpty($row.__Style))) {
-
+                        elseif (($row.PSObject.Properties['__Style']) -and (-not [System.String]::IsNullOrEmpty($row.__Style)))
+                        {
                             ## We have a row style
                             $rowStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.__Style]).Trim();
                             [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $rowStyleHtml, $encodedHtmlContent);
                         }
-                        else {
-
-                            if ($null -ne $row.$propertyName) {
-
+                        else
+                        {
+                            if ($null -ne $row.$propertyName)
+                            {
                                 ## Check that the property has a value
                                 [ref] $null = $standardTableBuilder.AppendFormat('<td>{0}</td>', $encodedHtmlContent);
                             }
-                            else {
-
+                            else
+                            {
                                 [ref] $null = $standardTableBuilder.Append('<td>&nbsp;</td>');
                             }
                         } #end if $row.PropertyStyle
@@ -696,9 +702,8 @@
                 } #end foreach row
                 [ref] $null = $standardTableBuilder.AppendLine('</tbody></table></div>');
                 return $standardTableBuilder.ToString();
-
-            } #end process
-        } #end function GetHtmlTableList
+            }
+        }
 
 
         function OutHtmlTable {
@@ -710,37 +715,36 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
-                [ValidateNotNull()] [System.Object] $Table
+                [ValidateNotNull()]
+                [System.Management.Automation.PSObject] $Table
             )
-            process {
-
+            process
+            {
                 [System.Text.StringBuilder] $tableBuilder = New-Object -TypeName 'System.Text.StringBuilder';
-                if ($Table.List) {
-
+                if ($Table.IsList)
+                {
                     ## Create a table for each row
-                    for ($r = 0; $r -lt $Table.Rows.Count; $r++) {
-
+                    for ($r = 0; $r -lt $Table.Rows.Count; $r++)
+                    {
                         $row = $Table.Rows[$r];
-                        if ($r -gt 0) {
-
+                        if ($r -gt 0)
+                        {
                             ## Add a space between each table to mirror Word output rendering
                             [ref] $null = $tableBuilder.AppendLine('<p />');
                         }
                         [ref] $null = $tableBuilder.Append((GetHtmlTableList -Table $Table -Row $row));
-
                     } #end foreach row
                 }
-                else {
-
+                else
+                {
                     [ref] $null = $tableBuilder.Append((GetHtmlTable -Table $Table));
-                } #end if
+                }
                 return $tableBuilder.ToString();
-                #Write-Output ($tableBuilder.ToString()) -NoEnumerate;
-
-            } #end process
-        } #end function OutHtmlTable
+            }
+        }
 
 
         function OutHtmlLineBreak {
@@ -751,12 +755,11 @@
             [CmdletBinding()]
             [OutputType([System.String])]
             param ( )
-            process {
-
+            process
+            {
                 return '<hr />';
-
             }
-        } #end function OutHtmlLineBreak
+        }
 
 
         function OutHtmlPageBreak {
@@ -766,12 +769,13 @@
         #>
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
                 [System.String] $Orientation
             )
-            process {
-
+            process
+            {
                 [System.Text.StringBuilder] $pageBreakBuilder = New-Object 'System.Text.StringBuilder';
                 [ref] $null = $pageBreakBuilder.Append('</div></div>');
                 $topMargin = ConvertMmToEm $Document.Options['MarginTop'];
@@ -781,9 +785,8 @@
                 [ref] $null = $pageBreakBuilder.AppendFormat('<div class="{0}">', $Orientation.ToLower());
                 [ref] $null = $pageBreakBuilder.AppendFormat('<div class="{0}" style="padding-top: {1}rem; padding-left: {2}rem; padding-bottom: {3}rem; padding-right: {4}rem;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine();
                 return $pageBreakBuilder.ToString();
-
             }
-        } #end function OutHtmlPageBreak
+        }
 
         function OutHtmlImage {
         <#
@@ -791,13 +794,15 @@
                 Output embedded Html image.
         #>
             [CmdletBinding()]
-            param (
+            param
+            (
                 ## PScribo Image object
                 [Parameter(Mandatory, ValueFromPipeline)]
-                [ValidateNotNull()] [System.Object] $Image
+                [ValidateNotNull()]
+                [System.Management.Automation.PSObject] $Image
             )
-            process {
-
+            process
+            {
                 [System.Text.StringBuilder] $imageBuilder = New-Object -TypeName 'System.Text.StringBuilder'
                 [ref] $null = $imageBuilder.AppendFormat('<div align="{0}">', $Image.Align).AppendLine()
                 $imageBase64 = [System.Convert]::ToBase64String($Image.Bytes)
@@ -805,6 +810,6 @@
                 [ref] $null = $imageBuilder.AppendLine('</div>')
                 return $imageBuilder.ToString()
             }
-        } #end function OutHtmlImage
+        }
 
         #endregion OutHtml Private Functions

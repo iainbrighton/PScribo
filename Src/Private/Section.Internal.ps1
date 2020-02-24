@@ -4,13 +4,15 @@
         <#
             .SYNOPSIS
                 Initializes new PScribo section object.
+
             .NOTES
                 This is an internal function and should not be called directly.
         #>
             [CmdletBinding()]
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
             [OutputType([System.Management.Automation.PSCustomObject])]
-            param (
+            param
+            (
                 ## PScribo section heading/name.
                 [Parameter(Mandatory)]
                 [ValidateNotNullOrEmpty()]
@@ -35,14 +37,16 @@
                 [ValidateSet('Portrait','Landscape')]
                 [System.String] $Orientation
             )
-            begin {
-                if ($PSBoundParameters.ContainsKey('Orientation') -and ((Get-PSCallStack)[3].FunctionName -ne 'Document<Process>')) {
+            begin
+            {
+                if ($PSBoundParameters.ContainsKey('Orientation') -and ((Get-PSCallStack)[3].FunctionName -ne 'Document<Process>'))
+                {
                     WriteLog -Message $localized.CannotSetOrientationWarning -IsWarning;
                     $null = $PSBoundParameters.Remove('Orientation')
                 }
             }
-            process {
-
+            process
+            {
                 $typeName = 'PScribo.Section';
                 $pscriboDocument.Properties['Sections']++;
                 $pscriboSection = [PSCustomObject] @{
@@ -61,14 +65,13 @@
                 }
 
                 ## Has the orientation changed from the parent scope
-                if ($PSBoundParameters.ContainsKey('Orientation') -and ($Orientation -ne $script:currentOrientation)) {
+                if ($PSBoundParameters.ContainsKey('Orientation') -and ($Orientation -ne $script:currentOrientation))
+                {
                     $pscriboSection.IsSectionBreak = $true;
                     $script:currentOrientation = $Orientation;
                 }
-
                 return $pscriboSection;
-
-            } #end process
-        } #end function new-pscribosection
+            }
+        }
 
         #endregion Section Private Functions

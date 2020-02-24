@@ -10,7 +10,8 @@
             [CmdletBinding(DefaultParameterSetName = 'UriSize')]
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
             [OutputType([System.Management.Automation.PSCustomObject])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ParameterSetName = 'UriSize')]
                 [Parameter(Mandatory, ParameterSetName = 'UriPercent')]
                 [System.String] $Uri,
@@ -86,11 +87,9 @@
                     Width       = $Width;
                     Height      = $Height;
                 }
-
                 return $pscriboImage;
-
-            } #end process
-        } #end function New-PScriboImage
+            }
+        }
 
         function ResolveImagePath {
         <#
@@ -102,63 +101,74 @@
         #>
             [CmdletBinding()]
             [OutputType([System.Uri])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
                 [System.String] $Path
             )
-            process {
-
+            process
+            {
                 if (Test-Path -Path $Path)
                 {
                     $Path = Resolve-Path -Path $Path
                 }
                 $uri = New-Object -TypeName System.Uri -ArgumentList @($Path)
                 return $uri
-
             }
-        } #end function
+        }
 
         function GetImageMimeType {
             [CmdletBinding()]
             [OutputType([System.String])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
                 [System.Drawing.Image] $Image
             )
             process
             {
-                if ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Jpeg)) {
+                if ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Jpeg))
+                {
                     return 'image/jpeg'
                 }
-                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Png)) {
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Png))
+                {
                     return 'image/png'
                 }
-                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Bmp)) {
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Bmp))
+                {
                     return 'image/bmp'
                 }
-                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Emf)) {
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Emf))
+                {
                     return 'image/emf'
                 }
-                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Gif)) {
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Gif))
+                {
                     return 'image/gif'
                 }
-                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Icon)) {
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Icon))
+                {
                     return 'image/icon'
                 }
-                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Tiff)) {
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Tiff))
+                {
                     return 'image/tiff'
                 }
-                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Wmf)) {
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Wmf))
+                {
                     return 'image/wmf'
                 }
-                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Exif)) {
+                elseif ($Image.RawFormat.Equals([System.Drawing.Imaging.ImageFormat]::Exif))
+                {
                     return 'image/exif'
                 }
-                else {
+                else
+                {
                     return 'image/unknown'
                 }
             }
-        } #end function
+        }
 
         function GetImageUriBytes {
         <#
@@ -167,7 +177,8 @@
         #>
             [CmdletBinding()]
             [OutputType([System.Byte[]])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
                 [System.Uri] $Uri
             )
@@ -191,9 +202,8 @@
                     if ($null -ne $contentStream) { $contentStream.Close() }
                     if ($null -ne $webClient) { $webClient.Dispose() }
                 }
-
-            } #end process
-        } #end function
+            }
+        }
 
         function GetImageFromBytes {
         <#
@@ -202,7 +212,8 @@
         #>
             [CmdletBinding()]
             [OutputType([System.Drawing.Image])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline)]
                 [System.Byte[]] $Bytes
             )
@@ -222,8 +233,8 @@
                 {
                     if ($null -ne $memoryStream) { $memoryStream.Close() }
                 }
-            } #end process
-        } #end function
+            }
+        }
 
 
         function GetPScriboImage {
@@ -233,15 +244,16 @@
         #>
             [CmdletBinding()]
             [OutputType([System.Management.Automation.PSObject])]
-            param (
+            param
+            (
                 [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
                 [System.Management.Automation.PSObject[]] $Section,
 
                 [Parameter(ValueFromPipelineByPropertyName)]
                 [System.String[]] $Id
             )
-            process {
-
+            process
+            {
                 foreach ($subSection in $Section)
                 {
                     if ($subSection.Type -eq 'PScribo.Image')
@@ -266,6 +278,6 @@
                     }
                 }
             }
-        } #end function GetPScriboImage
+        }
 
         #endregion image Private Functions

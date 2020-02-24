@@ -3,10 +3,12 @@ function TableStyle
 <#
     .SYNOPSIS
         Defines a new PScribo table formatting style.
+
     .DESCRIPTION
         Creates a standard table formatting style that can be applied
         to the PScribo table keyword, e.g. a combination of header and
         row styles and borders.
+
     .NOTES
         Not all plugins support all options.
 #>
@@ -87,12 +89,10 @@ function TableStyle
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Padding')]
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]
         [System.Management.Automation.SwitchParameter] $Default
-    ) #end param
+    )
     begin
     {
-
         <#! TableStyle.Internal.ps1 !#>
-
     }
     process
     {
@@ -106,6 +106,5 @@ function TableStyle
         }
         WriteLog -Message ($localized.ProcessingTableStyle -f $Id);
         Add-PScriboTableStyle @PSBoundParameters;
-
     }
-} #end function tablestyle
+}

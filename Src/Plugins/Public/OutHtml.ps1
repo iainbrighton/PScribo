@@ -2,16 +2,18 @@ function OutHtml {
 <#
     .SYNOPSIS
         Html output plugin for PScribo.
+
     .DESCRIPTION
         Outputs a Html file representation of a PScribo document object.
 #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments','pluginName')]
     [OutputType([System.IO.FileInfo])]
-    param (
+    param
+    (
         ## PScribo document object to convert to a text document
         [Parameter(Mandatory, ValueFromPipeline)]
-        [PSCustomObject] $Document,
+        [System.Management.Automation.PSObject] $Document,
 
         ## Output directory path for the .html file
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
@@ -23,15 +25,14 @@ function OutHtml {
         [AllowNull()]
         [System.Collections.Hashtable] $Options
     )
-    begin {
-
+    begin
+    {
         $pluginName = 'Html';
 
         <#! OutHtml.Internal.ps1 !#>
-
-    } #end begin
-    process {
-
+    }
+    process
+    {
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew();
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
 
@@ -42,7 +43,6 @@ function OutHtml {
             PluginOptions = $Options;
         }
         $options = Merge-PScriboPluginOption @mergePScriboPluginOptionParams;
-
         $noPageLayoutStyle = $Options['NoPageLayoutStyle'];
         $topMargin = ConvertMmToEm -Millimeter $options['MarginTop'];
         $leftMargin = ConvertMmToEm -Millimeter $options['MarginLeft'];
@@ -56,13 +56,15 @@ function OutHtml {
         [ref] $null = $htmlBuilder.AppendLine('{0}</head><body>' -f (OutHtmlStyle -Styles $Document.Styles -TableStyles $Document.TableStyles -NoPageLayoutStyle:$noPageLayoutStyle));
         [ref] $null = $htmlBuilder.AppendFormat('<div class="{0}">', $options['PageOrientation'].ToLower());
         [ref] $null = $htmlBuilder.AppendFormat('<div class="{0}" style="padding-top: {1}rem; padding-left: {2}rem; padding-bottom: {3}rem; padding-right: {4}rem;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine();
-        foreach ($s in $Document.Sections.GetEnumerator()) {
+        foreach ($s in $Document.Sections.GetEnumerator())
+        {
             if ($s.Id.Length -gt 40) { $sectionId = '{0}[..]' -f $s.Id.Substring(0,36); }
             else { $sectionId = $s.Id; }
             $currentIndentationLevel = 1;
             if ($null -ne $s.PSObject.Properties['Level']) { $currentIndentationLevel = $s.Level +1; }
             WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent $currentIndentationLevel;
-            switch ($s.Type) {
+            switch ($s.Type)
+            {
                 'PScribo.Section' { [ref] $null = $htmlBuilder.Append((OutHtmlSection -Section $s)); }
                 'PScribo.Paragraph' { [ref] $null = $htmlBuilder.Append((OutHtmlParagraph -Paragraph $s)); }
                 'PScribo.Table' { [ref] $null = $htmlBuilder.Append((OutHtmlTable -Table $s)); }
@@ -83,6 +85,5 @@ function OutHtml {
         [ref] $null = $htmlBuilder;
         WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds);
         Write-Output (Get-Item -Path $destinationPath);
-
-    } #end process
-} #end function OutHtml
+    }
+}

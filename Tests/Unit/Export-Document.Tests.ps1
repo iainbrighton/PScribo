@@ -7,7 +7,7 @@ InModuleScope 'PScribo' {
 
     Describe "Export-Document\Export-Document" {
 
-        $document = Document 'ScaffoldDocument' {};
+        $document = Document 'ScaffoldDocument' { };
 
         It "calls single output formatter." {
             Mock OutText -Verifiable { }

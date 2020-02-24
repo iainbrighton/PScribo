@@ -4,18 +4,20 @@
         <#
             .SYNOPSIS
                 Initializes a new PScribo blank line break.
+
             .NOTES
                 This is an internal function and should not be called directly.
         #>
             [CmdletBinding()]
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
             [OutputType([System.Management.Automation.PSCustomObject])]
-            param (
+            param
+            (
                 [Parameter(ValueFromPipeline)]
                 [System.UInt32] $Count = 1
             )
-            process {
-
+            process
+            {
                 $typeName = 'PScribo.BlankLine';
                 $pscriboDocument.Properties['BlankLines']++;
                 $pscriboBlankLine = [PSCustomObject] @{
@@ -24,8 +26,7 @@
                     Type = $typeName;
                 }
                 return $pscriboBlankLine;
-
             }
-        } #end function New-PScriboBlankLine
+        }
 
         #endregion BlankLine Private Functions

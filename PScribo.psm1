@@ -42,5 +42,4 @@ $exportedAliases = @(
 );
 
 Add-Type -AssemblyName 'System.Drawing'
-
-Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases;
+Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases

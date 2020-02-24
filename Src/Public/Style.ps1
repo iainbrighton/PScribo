@@ -5,13 +5,14 @@ function Resolve-PScriboStyleColor {
 #>
     [CmdletBinding()]
     [OutputType([System.String])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline, Position = 0)]
         [ValidateNotNull()]
         [System.String] $Color
     )
-    begin {
-
+    begin
+    {
         # http://www.jadecat.com/tuts/colorsplus.html
         $wordColorConstants = @{
             AliceBlue = 'F0F8FF'; AntiqueWhite = 'FAEBD7'; Aqua = '00FFFF'; Aquamarine = '7FFFD4'; Azure = 'F0FFFF'; Beige = 'F5F5DC';
@@ -41,34 +42,32 @@ function Resolve-PScriboStyleColor {
             Tan = 'D2B48C'; Teal = '008080'; Thistle = 'D8BFD8'; Tomato = 'FF6347'; Turquoise = '40E0D0'; Violet = 'EE82EE'; Wheat = 'F5DEB3';
             White = 'FFFFFF'; WhiteSmoke = 'F5F5F5'; Yellow = 'FFFF00'; YellowGreen = '9ACD32';
         };
-
-    } #end begin
-    process {
-
+    }
+    process
+    {
         $pscriboColor = $Color;
-        if ($wordColorConstants.ContainsKey($pscriboColor)) {
-
+        if ($wordColorConstants.ContainsKey($pscriboColor))
+        {
             return $wordColorConstants[$pscriboColor].ToLower();
         }
-        elseif ($pscriboColor.Length -eq 6 -or $pscriboColor.Length -eq 3) {
-
+        elseif ($pscriboColor.Length -eq 6 -or $pscriboColor.Length -eq 3)
+        {
             $pscriboColor = '#{0}' -f $pscriboColor;
         }
-        elseif ($pscriboColor.Length -eq 7 -or $pscriboColor.Length -eq 4) {
-
-            if (-not ($pscriboColor.StartsWith('#'))) {
-
+        elseif ($pscriboColor.Length -eq 7 -or $pscriboColor.Length -eq 4)
+        {
+            if (-not ($pscriboColor.StartsWith('#')))
+            {
                 return $null;
             }
         }
-        if ($pscriboColor -notmatch '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$') {
-
+        if ($pscriboColor -notmatch '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$')
+        {
             return $null;
         }
         return $pscriboColor.TrimStart('#').ToLower();
-
-    } #end process
-} #end function ResolvePScriboColor
+    }
+}
 
 
 function Test-PScriboStyleColor {
@@ -78,18 +77,18 @@ function Test-PScriboStyleColor {
 #>
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline, Position = 0)]
         [ValidateNotNullOrEmpty()]
         [System.String] $Color
     )
-    process {
-
+    process
+    {
         if (Resolve-PScriboStyleColor -Color $Color) { return $true; }
         else { return $false; }
-
-    } #end process
-} #end function test-pscribostylecolor
+    }
+}
 
 
 function Test-PScriboStyle {
@@ -99,32 +98,35 @@ function Test-PScriboStyle {
 #>
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline, Position = 0)]
         [ValidateNotNullOrEmpty()]
         [System.String] $Name
     )
-    process {
-
+    process
+    {
         return $PScriboDocument.Styles.ContainsKey($Name);
-
     }
-} #end function Test-PScriboStyle
+}
 
 
 function Style {
 <#
     .SYNOPSIS
         Defines a new PScribo formatting style.
+
     .DESCRIPTION
         Creates a standard format formatting style that can be applied
         to PScribo document keywords, e.g. a combination of font style, font
         weight and font size.
+
     .NOTES
         Not all plugins support all options.
 #>
     [CmdletBinding()]
-    param (
+    param
+    (
         ## Style name
         [Parameter(Mandatory, ValueFromPipelineByPropertyName, Position = 0)]
         [ValidateNotNullOrEmpty()]
@@ -185,18 +187,16 @@ function Style {
         [Alias('Hide')]
         [System.Management.Automation.SwitchParameter] $Hidden
     )
-    begin {
-
+    begin
+    {
         <#! Style.Internal.ps1 !#>
-
     }
-    process {
-
+    process
+    {
         WriteLog -Message ($localized.ProcessingStyle -f $Id);
         Add-PScriboStyle @PSBoundParameters;
-
-    } #end process
-} #end function Style
+    }
+}
 
 
 function Set-Style {
@@ -207,7 +207,8 @@ function Set-Style {
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
     [OutputType([System.Object])]
-    param (
+    param
+    (
         ## PSCustomObject to apply the style to
         [Parameter(Mandatory, ValueFromPipeline)]
         [System.Object[]] [Ref] $InputObject,
@@ -224,30 +225,29 @@ function Set-Style {
         ## Passes the modified object back to the pipeline
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.Management.Automation.SwitchParameter] $PassThru
-    ) #end param
-    begin {
-
-        if (-not (Test-PScriboStyle -Name $Style)) {
+    )
+    begin
+    {
+        if (-not (Test-PScriboStyle -Name $Style))
+        {
             Write-Error ($localized.UndefinedStyleError -f $Style);
             return;
         }
-
     }
-    process {
-
-        foreach ($object in $InputObject) {
-
-            foreach ($p in $Property) {
-
+    process
+    {
+        foreach ($object in $InputObject)
+        {
+            foreach ($p in $Property)
+            {
                 ## If $Property not set, __Style will apply to the whole row.
                 $propertyName = '{0}__Style' -f $p;
                 $object | Add-Member -MemberType NoteProperty -Name $propertyName -Value $Style -Force;
             }
         }
-        if ($PassThru) {
-
+        if ($PassThru)
+        {
             return $object;
         }
-
-    } #end process
-} #end function Set-Style
+    }
+}

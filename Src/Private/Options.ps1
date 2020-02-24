@@ -5,7 +5,8 @@ function Merge-PScriboPluginOption {
 #>
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param (
+    param
+    (
         ## Default/document options
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [AllowNull()]
@@ -20,31 +21,27 @@ function Merge-PScriboPluginOption {
         [AllowNull()]
         [System.Collections.Hashtable] $PluginOptions
     )
-    process {
-
+    process
+    {
         $mergedOptions = $DocumentOptions.Clone();
 
-        if ($null -ne $DefaultPluginOptions) {
-
+        if ($null -ne $DefaultPluginOptions)
+        {
             ## Overwrite the default document option with the plugin default option/value
-            foreach ($option in $DefaultPluginOptions.GetEnumerator()) {
-
+            foreach ($option in $DefaultPluginOptions.GetEnumerator())
+            {
                 $mergedOptions[$($option.Key)] = $option.Value;
             }
-
         }
 
-        if ($null -ne $PluginOptions) {
-
+        if ($null -ne $PluginOptions)
+        {
             ## Overwrite the default document/plugin default option/value with the specified/runtime option
-            foreach ($option in $PluginOptions.GetEnumerator()) {
-
+            foreach ($option in $PluginOptions.GetEnumerator())
+            {
                 $mergedOptions[$($option.Key)] = $option.Value;
             }
-
         }
-
         return $mergedOptions;
-
-    } #end process
-} #end function
+    }
+}

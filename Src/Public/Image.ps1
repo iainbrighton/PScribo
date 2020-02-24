@@ -5,38 +5,46 @@ function Image {
 #>
     [CmdletBinding(DefaultParameterSetName = 'PathSize')]
     [OutputType([System.Management.Automation.PSCustomObject])]
-    param (
+    param
+    (
         ## Local file path to the image
         [Parameter(Mandatory, ParameterSetName = 'PathSize')]
         [Parameter(Mandatory, ParameterSetName = 'PathPercent')]
         [System.String] $Path,
+
         ## Remote image web URL path
         [Parameter(Mandatory, ParameterSetName = 'UriSize')]
         [Parameter(Mandatory, ParameterSetName = 'UriPercent')]
         [System.String] $Uri,
+
         ## Base64 encoded image file
         [Parameter(Mandatory, ParameterSetName = 'Base64Size')]
         [Parameter(Mandatory, ParameterSetName = 'Base64Percent')]
         [System.String] $Base64,
+
         ## Specifies required the image pixel width
         [Parameter(ParameterSetName = 'PathSize')]
         [Parameter(ParameterSetName = 'UriSize')]
         [Parameter(ParameterSetName = 'Base64Size')]
         [System.UInt32] $Height,
+
         ## Specifies required the image pixel width
         [Parameter(ParameterSetName = 'PathSize')]
         [Parameter(ParameterSetName = 'UriSize')]
         [Parameter(ParameterSetName = 'Base64Size')]
         [System.UInt32] $Width,
+
         ## Specifies the required scaling percentage
         [Parameter(Mandatory, ParameterSetName = 'PathPercent')]
         [Parameter(Mandatory, ParameterSetName = 'UriPercent')]
         [Parameter(Mandatory, ParameterSetName = 'Base64Percent')]
         [System.UInt32] $Percent,
+
         ## Image alignment
         [Parameter()]
         [ValidateSet('Left','Center','Right')]
         [System.String] $Align = 'Left',
+
         ## Accessibility image description
         [Parameter(Mandatory, ParameterSetName = 'Base64Size')]
         [Parameter(Mandatory, ParameterSetName = 'Base64Percent')]
@@ -45,6 +53,7 @@ function Image {
         [Parameter(ParameterSetName = 'UriSize')]
         [Parameter(ParameterSetName = 'UriPercent')]
         [System.String] $Text,
+
         ## Internal image Id
         [Parameter()]
         [ValidateNotNullOrEmpty()]

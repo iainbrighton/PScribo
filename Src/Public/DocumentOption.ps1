@@ -2,12 +2,14 @@ function DocumentOption {
 <#
     .SYNOPSIS
         Initializes a new PScribo global/document options/settings.
+
     .NOTES
         Options are reset upon each invocation.
 #>
     [CmdletBinding(DefaultParameterSetName = 'Margin')]
     [Alias('GlobalOption')]
-    param (
+    param
+    (
         ## Forces document header to be displayed in upper case.
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.Management.Automation.SwitchParameter] $ForceUppercaseHeader,
@@ -53,36 +55,42 @@ function DocumentOption {
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.String[]] $DefaultFont = @('Calibri','Candara','Segoe','Segoe UI','Optima','Arial','Sans-Serif')
     )
-    process {
-
+    process
+    {
         $localized.DocumentOptions | WriteLog;
-        if ($SpaceSeparator) {
+        if ($SpaceSeparator)
+        {
             WriteLog -Message ($localized.DocumentOptionSpaceSeparator -f $SpaceSeparator);
             $pscriboDocument.Options['SpaceSeparator'] = $SpaceSeparator;
         }
 
-        if ($ForceUppercaseHeader) {
+        if ($ForceUppercaseHeader)
+        {
             $localized.DocumentOptionUppercaseHeadings | WriteLog;
             $pscriboDocument.Options['ForceUppercaseHeader'] = $true;
             $pscriboDocument.Name = $pscriboDocument.Name.ToUpper();
-        } #end if ForceUppercaseHeader
+        }
 
-        if ($ForceUppercaseSection) {
+        if ($ForceUppercaseSection)
+        {
             $localized.DocumentOptionUppercaseSections | WriteLog;
             $pscriboDocument.Options['ForceUppercaseSection'] = $true;
-        } #end if ForceUppercaseSection
+        }
 
-        if ($EnableSectionNumbering) {
+        if ($EnableSectionNumbering)
+        {
             $localized.DocumentOptionSectionNumbering | WriteLog;
             $pscriboDocument.Options['EnableSectionNumbering'] = $true;
         }
 
-        if ($DefaultFont) {
+        if ($DefaultFont)
+        {
             WriteLog -Message ($localized.DocumentOptionDefaultFont -f ([System.String]::Join(', ', $DefaultFont)));
             $pscriboDocument.Options['DefaultFont'] = $DefaultFont;
         }
 
-        if ($PSCmdlet.ParameterSetName -eq 'CustomMargin') {
+        if ($PSCmdlet.ParameterSetName -eq 'CustomMargin')
+        {
             if ($MarginTopAndBottom -eq 0) { $MarginTopAndBottom = 72; }
             if ($MarginLeftAndRight -eq 0) { $MarginTopAndBottom = 72; }
             $pscriboDocument.Options['MarginTop'] = ConvertPtToMm -Point $MarginTopAndBottom;
@@ -90,7 +98,8 @@ function DocumentOption {
             $pscriboDocument.Options['MarginLeft'] = ConvertPtToMm -Point $MarginLeftAndRight;
             $pscriboDocument.Options['MarginRight'] = $pscriboDocument.Options['MarginLeft'];
         }
-        else {
+        else
+        {
             $pscriboDocument.Options['MarginTop'] = ConvertPtToMm -Point $Margin;
             $pscriboDocument.Options['MarginBottom'] = $pscriboDocument.Options['MarginTop'];
             $pscriboDocument.Options['MarginLeft'] = $pscriboDocument.Options['MarginTop'];
@@ -103,7 +112,8 @@ function DocumentOption {
 
         ## Convert page size
         ($localized.DocumentOptionPageSize -f $PageSize) | WriteLog;
-        switch ($PageSize) {
+        switch ($PageSize)
+        {
             'A4' {
                 $pscriboDocument.Options['PageWidth'] = 210.0;
                 $pscriboDocument.Options['PageHeight'] = 297.0;
@@ -116,7 +126,7 @@ function DocumentOption {
                 $pscriboDocument.Options['PageWidth'] = 215.9;
                 $pscriboDocument.Options['PageHeight'] = 279.4;
             }
-        } #end switch
+        }
 
         ## Convert page size
         ($localized.DocumentOptionPageOrientation -f $Orientation) | WriteLog;
@@ -124,6 +134,5 @@ function DocumentOption {
         $script:currentOrientation = $Orientation;
         ($localized.DocumentOptionPageHeight -f $pscriboDocument.Options['PageHeight']) | WriteLog;
         ($localized.DocumentOptionPageWidth -f $pscriboDocument.Options['PageWidth']) | WriteLog;
-
-    } #end process
-} #end function DocumentOption
+    }
+}

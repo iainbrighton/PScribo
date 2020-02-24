@@ -230,7 +230,7 @@ InModuleScope 'PScribo' {
                 ($borderStyle.Split(':').Trim())[1] | Should BeExactly 'solid';
             }
 
-             It 'creates custom table border width style of 3pt' {
+            It 'creates custom table border width style of 3pt' {
                 Style -Name Default -Font Helvetica -Default;
                 TableStyle -Name TestTableStyle -BorderWidth 3;
 

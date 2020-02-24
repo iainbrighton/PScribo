@@ -4,13 +4,15 @@
         <#
             .SYNOPSIS
                 Initializes a new PScribo paragraph object.
+
             .NOTES
                 This is an internal function and should not be called directly.
         #>
             [CmdletBinding()]
             [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
             [OutputType([System.Management.Automation.PSCustomObject])]
-            param (
+            param
+            (
                 ## Paragraph Id (and Xml) element name
                 [Parameter(Mandatory, ValueFromPipelineByPropertyName, Position = 0)]
                 [ValidateNotNullOrEmpty()]
@@ -68,18 +70,19 @@
                 [ValidateRange(0,10)]
                 [System.Int32] $Tabs = 0
             )
-            begin {
-
-                if (-not ([string]::IsNullOrEmpty($Text))) {
+            begin
+            {
+                if (-not ([string]::IsNullOrEmpty($Text)))
+                {
                     $Name = $Name.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper();
                 }
-                if ($Color) {
+                if ($Color)
+                {
                     $Color = Resolve-PScriboStyleColor -Color $Color;
                 }
-
-            } #end begin
-            process {
-
+            }
+            process
+            {
                 $typeName = 'PScribo.Paragraph';
                 $pscriboDocument.Properties['Paragraphs']++;
                 $pscriboParagraph = [PSCustomObject] @{
@@ -100,8 +103,7 @@
                     IsSectionBreakEnd = $false;
                 }
                 return $pscriboParagraph;
-
-            } #end process
-        } #end function New-PScriboParagraph
+            }
+        }
 
         #endregion Paragraph Private Functions

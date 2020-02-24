@@ -1,17 +1,19 @@
 function OutWord {
-    <#
-      .SYNOPSIS
-      Microsoft Word output plugin for PScribo.
-      .DESCRIPTION
-      Outputs a Word document representation of a PScribo document object.
+<#
+    .SYNOPSIS
+        Microsoft Word output plugin for PScribo.
+
+    .DESCRIPTION
+        Outputs a Word document representation of a PScribo document object.
   #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'pluginName')]
     [OutputType([System.IO.FileInfo])]
-    param (
+    param
+    (
         ## ThePScribo document object to convert to a text document
         [Parameter(Mandatory, ValueFromPipeline)]
-        [System.Object] $Document,
+        [System.Management.Automation.PSObject] $Document,
 
         ## Output directory path for the .txt file
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
@@ -23,15 +25,14 @@ function OutWord {
         [AllowNull()]
         [System.Collections.Hashtable] $Options
     )
-    begin {
-
+    begin
+    {
         $pluginName = 'Word'
 
         <#! OutWord.Internal.ps1 !#>
-
     }
-    process {
-
+    process
+    {
         $stopwatch = [Diagnostics.Stopwatch]::StartNew()
         $Images = @()
         WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name)
@@ -54,19 +55,24 @@ function OutWord {
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:a14', $xmlnsofficeword14)
         $body = $documentXml.AppendChild($xmlDocument.CreateElement('w', 'body', $xmlnsMain))
 
-        foreach ($s in $Document.Sections.GetEnumerator()) {
-            if ($s.Id.Length -gt 40) {
+        foreach ($s in $Document.Sections.GetEnumerator())
+        {
+            if ($s.Id.Length -gt 40)
+            {
                 $sectionId = '{0}[..]' -f $s.Id.Substring(0, 36)
             }
-            else {
+            else
+            {
                 $sectionId = $s.Id
             }
             $currentIndentationLevel = 1
-            if ($null -ne $s.PSObject.Properties['Level']) {
+            if ($null -ne $s.PSObject.Properties['Level'])
+            {
                 $currentIndentationLevel = $s.Level + 1
             }
             WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent $currentIndentationLevel
-            switch ($s.Type) {
+            switch ($s.Type)
+            {
                 'PScribo.Section' {
                     $s | OutWordSection -RootElement $body -XmlDocument $xmlDocument
                 }
@@ -95,8 +101,8 @@ function OutWord {
                 Default {
                     WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning
                 }
-            } #end switch
-        } #end foreach
+            }
+        }
 
         ## Last section's properties are a child element of body element
         $lastSectionOrientation = $Document.Sections |
@@ -118,24 +124,29 @@ function OutWord {
         ## Generate the Word 'styles.xml' document part
         $stylesXml = OutWordStylesDocument -Styles $Document.Styles -TableStyles $Document.TableStyles
         ## Generate the Word 'settings.xml' document part
-        if (($Document.Properties['TOCs']) -and ($Document.Properties['TOCs'] -gt 0)) {
+        if (($Document.Properties['TOCs']) -and ($Document.Properties['TOCs'] -gt 0))
+        {
             ## We have a TOC so flag to update the document when opened
             $settingsXml = OutWordSettingsDocument -UpdateFields
         }
-        else {
+        else
+        {
             $settingsXml = OutWordSettingsDocument
         }
         #Convert relative or PSDrive based path to the absolute filesystem path
         $AbsolutePath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
         $destinationPath = Join-Path -Path $AbsolutePath ('{0}.docx' -f $Document.Name);
-        if ((-not $PSVersionTable.ContainsKey('PSEdition')) -or ($PSVersionTable.PSEdition -ne 'Core')) {
+        if ((-not $PSVersionTable.ContainsKey('PSEdition')) -or ($PSVersionTable.PSEdition -ne 'Core'))
+        {
             ## WindowsBase.dll is not included in Core PowerShell
             Add-Type -AssemblyName WindowsBase
         }
-        try {
+        try
+        {
             $package = [System.IO.Packaging.Package]::Open($destinationPath, [System.IO.FileMode]::Create, [System.IO.FileAccess]::ReadWrite)
         }
-        catch {
+        catch
+        {
             WriteLog -Message ($localized.OpenPackageError -f $destinationPath) -IsWarning
             throw $_
         }
@@ -179,10 +190,10 @@ function OutWord {
         [ref] $null = $documentPart.CreateRelationship($settingsUri, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings', 'rId2')
 
         ## Process images
-        foreach ($image in (GetPScriboImage -Section $Document.Sections)) {
-
-            try {
-
+        foreach ($image in (GetPScriboImage -Section $Document.Sections))
+        {
+            try
+            {
                 $uri = ('/word/media/{0}' -f $image.Name)
                 $partName = New-Object -TypeName 'System.Uri' -ArgumentList ($uri, [System.UriKind]'Relative')
                 $part = $package.CreatePart($partName, $image.MimeType)
@@ -191,24 +202,22 @@ function OutWord {
                 $stream.Close()
                 [ref] $null = $documentPart.CreateRelationship($partName, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image', $image.Name)
             }
-            catch {
-
+            catch
+            {
                 throw $_
             }
-            finally {
-
+            finally
+            {
                 if ($null -ne $stream) { $stream.Close() }
             }
         }
 
         $package.Flush()
         $package.Close()
-
         $stopwatch.Stop()
         WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
         WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds)
         ## Return the file reference to the pipeline
         Write-Output -InputObject (Get-Item -Path $destinationPath)
-
-    } #end process
-} #end function OutWord
+    }
+}

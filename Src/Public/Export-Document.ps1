@@ -6,10 +6,11 @@ function Export-Document {
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingEmptyCatchBlock','')]
     [OutputType([System.IO.FileInfo])]
-    param (
+    param
+    (
         ## PScribo document object
         [Parameter(Mandatory, ValueFromPipeline)]
-        [System.Object] $Document,
+        [System.Management.Automation.PSObject] $Document,
 
         ## Output formats
         [Parameter(Mandatory)]
@@ -29,25 +30,26 @@ function Export-Document {
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.Management.Automation.SwitchParameter] $PassThru
     )
-    begin {
-
+    begin
+    {
         try { $Path = Resolve-Path $Path -ErrorAction SilentlyContinue; }
         catch { }
 
-        if ( $(Test-CharsInPath -Path $Path -SkipCheckCharsInFileNamePart -Verbose:$false) -eq 2 ) {
+        if ( $(Test-CharsInPath -Path $Path -SkipCheckCharsInFileNamePart -Verbose:$false) -eq 2 )
+        {
             throw $localized.IncorrectCharsInPathError;
         }
 
-        if (-not (Test-Path $Path -PathType Container)) {
+        if (-not (Test-Path $Path -PathType Container))
+        {
             ## Check $Path is a directory
             throw ($localized.InvalidDirectoryPathError -f $Path);
         }
-
     }
-    process {
-
-        foreach ($f in $Format) {
-
+    process
+    {
+        foreach ($f in $Format)
+        {
             WriteLog -Message ($localized.DocumentInvokePlugin -f $f) -Plugin 'Export';
 
             ## Dynamically generate the output format function name
@@ -56,20 +58,18 @@ function Export-Document {
                 Document = $Document;
                 Path = $Path;
             }
-            if ($PSBoundParameters.ContainsKey('Options')) {
-
+            if ($PSBoundParameters.ContainsKey('Options'))
+            {
                 $outputParams['Options'] = $Options;
             }
 
             $fileInfo = & $outputFormat @outputParams;
             WriteLog -Message ($localized.DocumentExportPluginComplete -f $f) -Plugin 'Export';
 
-            if ($PassThru) {
-
+            if ($PassThru)
+            {
                 Write-Output -InputObject $fileInfo;
             }
-
-        } # end foreach
-
-    } #end process
-} #end function Export-Document
+        }
+    }
+}
