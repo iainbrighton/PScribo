@@ -468,7 +468,7 @@
 
                             $propertyName = $properties[$i].Name
                             ## Ignore __Style properties
-                            if (-not $propertyName.EndsWith('__Style')) {
+                            if (-not $propertyName.EndsWith('__Style', 'CurrentCultureIgnoreCase')) {
 
                                 $tr = $tbl.AppendChild($XmlDocument.CreateElement('w', 'tr', $xmlnsMain))
                                 $tc1 = $tr.AppendChild($XmlDocument.CreateElement('w', 'tc', $xmlnsMain))

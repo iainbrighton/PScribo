@@ -32,15 +32,15 @@
                 [Parameter(ValueFromPipelineByPropertyName, Position = 3)]
                 [AllowNull()]
                 [Alias('AlternatingRowStyle')]
-                [System.String] $AlternateRowStyle = $RowStyle,
+                [System.String] $AlternateRowStyle = 'Normal',
 
                 ## Table border size/width (pt)
-                [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Border')]
+                [Parameter(ValueFromPipelineByPropertyName)]
                 [AllowNull()]
                 [System.Single] $BorderWidth = 0,
 
                 ## Table border colour
-                [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Border')]
+                [Parameter(ValueFromPipelineByPropertyName)]
                 [ValidateNotNullOrEmpty()]
                 [Alias('BorderColour')]
                 [System.String] $BorderColor = '000',

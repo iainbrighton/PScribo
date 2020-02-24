@@ -6,6 +6,7 @@
 
 * Fixes bug in Html table header CSS style output
 * Fixes unit tests on PowerShell Core
+* Adds `TableStyle -Padding` shortcut
 
 ### 0.7.25 ###
 
