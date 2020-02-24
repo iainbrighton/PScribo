@@ -1,4 +1,5 @@
-function TableStyle {
+function TableStyle
+{
 <#
     .SYNOPSIS
         Defines a new PScribo table formatting style.
@@ -10,7 +11,8 @@ function TableStyle {
         Not all plugins support all options.
 #>
     [CmdletBinding(DefaultParameterSetName = 'Default')]
-    param (
+    param
+    (
         ## Table Style name/id
         [Parameter(Mandatory, ValueFromPipelineByPropertyName, Position = 0, ParameterSetName = 'Padding')]
         [Parameter(Mandatory, ValueFromPipelineByPropertyName, Position = 0, ParameterSetName = 'Default')]
@@ -30,12 +32,12 @@ function TableStyle {
         [ValidateNotNullOrEmpty()]
         [System.String] $RowStyle = 'Default',
 
-        ## Header Row Style Id
+        ## Alternating Row Style Id
         [Parameter(ValueFromPipelineByPropertyName, Position = 3, ParameterSetName = 'Padding')]
         [Parameter(ValueFromPipelineByPropertyName, Position = 3, ParameterSetName = 'Default')]
         [AllowNull()]
         [Alias('AlternatingRowStyle')]
-        [System.String] $AlternateRowStyle = 'Default',
+        [System.String] $AlternateRowStyle = $RowStyle,
 
         ## Table border size/width (pt)
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Padding')]
@@ -86,14 +88,16 @@ function TableStyle {
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]
         [System.Management.Automation.SwitchParameter] $Default
     ) #end param
-    begin {
+    begin
+    {
 
         <#! TableStyle.Internal.ps1 !#>
 
     }
-    process {
-
-        if ($PSBoundParameters.ContainsKey('Padding')) {
+    process
+    {
+        if ($PSBoundParameters.ContainsKey('Padding'))
+        {
             $PSBoundParameters['PaddingTop'] = $Padding
             $PSBoundParameters['PaddingLeft'] = $Padding
             $PSBoundParameters['PaddingBottom'] = $Padding

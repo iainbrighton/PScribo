@@ -1,5 +1,6 @@
         #region TableStyle Private Functions
-        function Add-PScriboTableStyle {
+        function Add-PScriboTableStyle
+        {
         <#
             .SYNOPSIS
                 Defines a new PScribo table formatting style.
@@ -11,7 +12,8 @@
                 Not all plugins support all options.
         #>
             [CmdletBinding()]
-            param (
+            param
+            (
                 ## Table Style name/id
                 [Parameter(Mandatory, ValueFromPipelineByPropertyName, Position = 0)]
                 [ValidateNotNullOrEmpty()]
@@ -28,11 +30,11 @@
                 [ValidateNotNullOrEmpty()]
                 [System.String] $RowStyle = 'Normal',
 
-                ## Alternate Row Style Id
+                ## Alternating Row Style Id
                 [Parameter(ValueFromPipelineByPropertyName, Position = 3)]
                 [AllowNull()]
                 [Alias('AlternatingRowStyle')]
-                [System.String] $AlternateRowStyle = 'Normal',
+                [System.String] $AlternateRowStyle = $RowStyle,
 
                 ## Table border size/width (pt)
                 [Parameter(ValueFromPipelineByPropertyName)]
@@ -74,8 +76,8 @@
                 [Parameter(ValueFromPipelineByPropertyName)]
                 [System.Management.Automation.SwitchParameter] $Default
             ) #end param
-            begin {
-
+            begin
+            {
                 if ($BorderWidth -gt 0) { $borderStyle = 'Solid'; } else {$borderStyle = 'None'; }
                 if (-not ($pscriboDocument.Styles.ContainsKey($HeaderStyle))) {
                     throw ($localized.UndefinedTableHeaderStyleError -f $HeaderStyle);
@@ -89,10 +91,9 @@
                 if (-not (Test-PScriboStyleColor -Color $BorderColor)) {
                     throw ($localized.InvalidTableBorderColorError -f $BorderColor);
                 }
-
             } #end begin
-            process {
-
+            process
+            {
                 $pscriboDocument.Properties['TableStyles']++;
                 $tableStyle = [PSCustomObject] @{
                     Id                = $Id.Replace(' ', $pscriboDocument.Options['SpaceSeparator']);
@@ -110,7 +111,10 @@
                     BorderColor       = Resolve-PScriboStyleColor -Color $BorderColor;
                 }
                 $pscriboDocument.TableStyles[$Id] = $tableStyle;
-                if ($Default) { $pscriboDocument.DefaultTableStyle = $tableStyle.Id; }
+                if ($Default)
+                {
+                    $pscriboDocument.DefaultTableStyle = $tableStyle.Id;
+                }
 
             } #end process
         } #end function Add-PScriboTableStyle
