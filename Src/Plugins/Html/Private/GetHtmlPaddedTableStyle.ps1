@@ -13,7 +13,7 @@ function GetHtmlPaddedTableStyle
     )
     process
     {
-        $styleBuilder = New-Object -TypeName System.Text.StringBuilder;
+        $styleBuilder = New-Object -TypeName System.Text.StringBuilder
 
         [ref] $null = $styleBuilder.AppendFormat(' padding: {0}rem {1}rem {2}rem {3}rem;',
             (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingTop)),
@@ -21,6 +21,6 @@ function GetHtmlPaddedTableStyle
                     (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingBottom)),
                         (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingLeft)))
 
-        return $styleBuilder.ToString();
+        return $styleBuilder.ToString()
     }
 }

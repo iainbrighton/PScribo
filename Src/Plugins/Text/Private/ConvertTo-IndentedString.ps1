@@ -1,4 +1,4 @@
-function IndentString
+function ConvertTo-IndentedString
 {
 <#
     .SYNOPSIS
@@ -19,15 +19,15 @@ function IndentString
     )
     process
     {
-        $padding = ''.PadRight(($Tabs * 4), ' ');
+        $padding = ''.PadRight(($Tabs * 4), ' ')
         ## Use a StringBuilder to write the table line by line (to indent it)
-        [System.Text.StringBuilder] $builder = New-Object System.Text.StringBuilder;
+        [System.Text.StringBuilder] $builder = New-Object System.Text.StringBuilder
 
         foreach ($line in ($InputObject -split '\r\n?|\n'))
         {
-            [ref] $null = $builder.Append($padding);
-            [ref] $null = $builder.AppendLine($line.TrimEnd()); ## Trim trailing space (#67)
+            [ref] $null = $builder.Append($padding)
+            [ref] $null = $builder.AppendLine($line.TrimEnd()) ## Trim trailing space (#67)
         }
-        return $builder.ToString();
+        return $builder.ToString()
     }
 }

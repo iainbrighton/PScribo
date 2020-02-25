@@ -14,37 +14,37 @@ function GetHtmlTableDiv
     )
     process
     {
-        $divBuilder = New-Object -TypeName 'System.Text.StringBuilder';
+        $divBuilder = New-Object -TypeName 'System.Text.StringBuilder'
         if ($Table.Tabs -gt 0)
         {
-            $invariantMarginLeft = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter (12.7 * $Table.Tabs));
-            [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}rem;">' -f $invariantMarginLeft);
+            $invariantMarginLeft = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter (12.7 * $Table.Tabs))
+            [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}rem;">' -f $invariantMarginLeft)
         }
         else
         {
-            [ref] $null = $divBuilder.Append('<div>');
+            [ref] $null = $divBuilder.Append('<div>')
         }
 
-        [ref] $null = $divBuilder.AppendFormat('<table class="{0}"', $Table.Style.ToLower());
+        [ref] $null = $divBuilder.AppendFormat('<table class="{0}"', $Table.Style.ToLower())
 
-        $styleElements = @();
+        $styleElements = @()
         if ($Table.Width -gt 0)
         {
-            $styleElements += 'width:{0}%;' -f $Table.Width;
+            $styleElements += 'width:{0}%;' -f $Table.Width
         }
         if ($Table.ColumnWidths)
         {
-            $styleElements += 'table-layout: fixed;';
+            $styleElements += 'table-layout: fixed;'
             $styleElements += 'word-break: break-word;'
         }
         if ($styleElements.Count -gt 0)
         {
-            [ref] $null = $divBuilder.AppendFormat(' style="{0}">', [System.String]::Join(' ', $styleElements));
+            [ref] $null = $divBuilder.AppendFormat(' style="{0}">', [System.String]::Join(' ', $styleElements))
         }
         else
         {
-            [ref] $null = $divBuilder.Append('>');
+            [ref] $null = $divBuilder.Append('>')
         }
-        return $divBuilder.ToString();
+        return $divBuilder.ToString()
     }
 }

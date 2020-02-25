@@ -18,7 +18,8 @@ Describe 'Linting\FileEncoding' {
                         'TestResults.xml',
                         'Tests',
                         'Docs',
-                        'PScriboExample.*'
+                        'PScriboExample.*',
+                        'Lib'
                     );
 
     function TestEncodingPath {

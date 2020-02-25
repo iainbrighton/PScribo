@@ -17,7 +17,7 @@ function OutTextimage
         ## Fix Set-StrictMode
         if (-not (Test-Path -Path Variable:\Options))
         {
-            $options = New-PScriboTextOption;
+            $options = New-PScriboTextOption
         }
     }
     process

@@ -29,6 +29,7 @@ function OutWord
     begin
     {
         $pluginName = 'Word'
+        Import-Module -FullyQualifiedName "$pscriboRoot\Lib\XmlEx\XmlEx.psd1" -Verbose:$false
     }
     process
     {

@@ -13,11 +13,11 @@ function OutTextBlankLine
     )
     process
     {
-        $blankLineBuilder = New-Object -TypeName System.Text.StringBuilder;
+        $blankLineBuilder = New-Object -TypeName System.Text.StringBuilder
         for ($i = 0; $i -lt $BlankLine.LineCount; $i++)
         {
-            [ref] $null = $blankLineBuilder.AppendLine();
+            [ref] $null = $blankLineBuilder.AppendLine()
         }
-        return $blankLineBuilder.ToString();
+        return $blankLineBuilder.ToString()
     }
 }

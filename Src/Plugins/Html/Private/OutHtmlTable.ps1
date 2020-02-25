@@ -16,25 +16,31 @@ function OutHtmlTable
     )
     process
     {
-        [System.Text.StringBuilder] $tableBuilder = New-Object -TypeName 'System.Text.StringBuilder';
-        if ($Table.IsList)
+
+        [System.Text.StringBuilder] $tableBuilder = New-Object -TypeName 'System.Text.StringBuilder'
+        if ($Table.IsKeyedList)
         {
-            ## Create a table for each row
+            $formattedTable = GetHtmlFormattedTable -Table $Table
+            [ref] $null = $tableBuilder.Append($formattedTable)
+        }
+        elseif ($Table.IsList)
+        {
             for ($r = 0; $r -lt $Table.Rows.Count; $r++)
             {
-                $row = $Table.Rows[$r];
-                if ($r -gt 0)
-                {
-                    ## Add a space between each table to mirror Word output rendering
-                    [ref] $null = $tableBuilder.AppendLine('<p />');
-                }
-                [ref] $null = $tableBuilder.Append((GetHtmlTableList -Table $Table -Row $row));
+                $row = $Table.Rows[$r]
+                $cloneTable = Copy-Object -InputObject $Table
+                $cloneTable.Rows = @($row)
+                $formattedTable = GetHtmlFormattedTable -Table $cloneTable
+                [ref] $null = $tableBuilder.Append($formattedTable)
+                ## Add a space between each table to mirror Word output rendering
+                [ref] $null = $tableBuilder.AppendLine('<p />');
             } #end foreach row
         }
         else
         {
-            [ref] $null = $tableBuilder.Append((GetHtmlTable -Table $Table));
+            $formattedTable = GetHtmlFormattedTable -Table $Table
+            [ref] $null = $tableBuilder.Append($formattedTable)
         }
-        return $tableBuilder.ToString();
+        return $tableBuilder.ToString()
     }
 }

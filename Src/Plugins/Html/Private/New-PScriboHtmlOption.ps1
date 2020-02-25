@@ -18,7 +18,7 @@ function New-PScriboHtmlOption
     process
     {
         return @{
-            NoPageLayoutStyle = $NoPageLayoutStyle;
+            NoPageLayoutStyle = $NoPageLayoutStyle
         }
     }
 }

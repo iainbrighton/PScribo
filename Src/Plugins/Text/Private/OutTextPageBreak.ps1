@@ -9,6 +9,6 @@ function OutTextPageBreak
     param ( )
     process
     {
-        return "$(OutTextLineBreak)`r`n";
+        return "$(OutTextLineBreak)`r`n"
     }
 }

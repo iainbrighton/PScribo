@@ -9,6 +9,6 @@ function OutHtmlLineBreak
     param ( )
     process
     {
-        return '<hr />';
+        return '<hr />'
     }
 }

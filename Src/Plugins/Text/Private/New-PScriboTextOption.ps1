@@ -45,12 +45,12 @@ function New-PScriboTextOption
     process
     {
         return @{
-            TextWidth = $TextWidth;
-            HeaderSeparator = $HeaderSeparator;
-            SectionSeparator = $SectionSeparator;
-            LineBreakSeparator = $LineBreakSeparator;
-            SeparatorWidth = $SeparatorWidth;
-            Encoding = $Encoding;
+            TextWidth = $TextWidth
+            HeaderSeparator = $HeaderSeparator
+            SectionSeparator = $SectionSeparator
+            LineBreakSeparator = $LineBreakSeparator
+            SeparatorWidth = $SeparatorWidth
+            Encoding = $Encoding
         }
     }
 }
