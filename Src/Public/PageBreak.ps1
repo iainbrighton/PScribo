@@ -11,13 +11,9 @@ function PageBreak {
         [ValidateNotNullOrEmpty()]
         [System.String] $Id = [System.Guid]::NewGuid().ToString()
     )
-    begin
-    {
-        <#! PageBreak.Internal.ps1 !#>
-    }
     process
     {
-        WriteLog -Message $localized.ProcessingPageBreak;
-        return (New-PScriboPageBreak -Id $Id);
+        WriteLog -Message $localized.ProcessingPageBreak
+        return (New-PScriboPageBreak -Id $Id)
     }
 }

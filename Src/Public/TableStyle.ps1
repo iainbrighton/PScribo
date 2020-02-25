@@ -90,10 +90,6 @@ function TableStyle
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]
         [System.Management.Automation.SwitchParameter] $Default
     )
-    begin
-    {
-        <#! TableStyle.Internal.ps1 !#>
-    }
     process
     {
         if ($PSBoundParameters.ContainsKey('Padding'))
@@ -104,7 +100,7 @@ function TableStyle
             $PSBoundParameters['PaddingRight'] = $Padding
             $null = $PSBoundParameters.Remove('Padding')
         }
-        WriteLog -Message ($localized.ProcessingTableStyle -f $Id);
-        Add-PScriboTableStyle @PSBoundParameters;
+        WriteLog -Message ($localized.ProcessingTableStyle -f $Id)
+        Add-PScriboTableStyle @PSBoundParameters
     }
 }

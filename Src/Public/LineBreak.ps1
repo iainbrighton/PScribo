@@ -11,13 +11,9 @@ function LineBreak {
         [ValidateNotNullOrEmpty()]
         [System.String] $Id = [System.Guid]::NewGuid().ToString()
     )
-    begin
-    {
-        <#! LineBreak.Internal.ps1 !#>
-    }
     process
     {
-        WriteLog -Message $localized.ProcessingLineBreak;
-        return (New-PScriboLineBreak @PSBoundParameters);
+        WriteLog -Message $localized.ProcessingLineBreak
+        return (New-PScriboLineBreak @PSBoundParameters)
     }
 }

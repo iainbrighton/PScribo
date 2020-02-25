@@ -57,82 +57,82 @@ function DocumentOption {
     )
     process
     {
-        $localized.DocumentOptions | WriteLog;
+        $localized.DocumentOptions | WriteLog
         if ($SpaceSeparator)
         {
-            WriteLog -Message ($localized.DocumentOptionSpaceSeparator -f $SpaceSeparator);
-            $pscriboDocument.Options['SpaceSeparator'] = $SpaceSeparator;
+            WriteLog -Message ($localized.DocumentOptionSpaceSeparator -f $SpaceSeparator)
+            $pscriboDocument.Options['SpaceSeparator'] = $SpaceSeparator
         }
 
         if ($ForceUppercaseHeader)
         {
-            $localized.DocumentOptionUppercaseHeadings | WriteLog;
-            $pscriboDocument.Options['ForceUppercaseHeader'] = $true;
-            $pscriboDocument.Name = $pscriboDocument.Name.ToUpper();
+            $localized.DocumentOptionUppercaseHeadings | WriteLog
+            $pscriboDocument.Options['ForceUppercaseHeader'] = $true
+            $pscriboDocument.Name = $pscriboDocument.Name.ToUpper()
         }
 
         if ($ForceUppercaseSection)
         {
-            $localized.DocumentOptionUppercaseSections | WriteLog;
-            $pscriboDocument.Options['ForceUppercaseSection'] = $true;
+            $localized.DocumentOptionUppercaseSections | WriteLog
+            $pscriboDocument.Options['ForceUppercaseSection'] = $true
         }
 
         if ($EnableSectionNumbering)
         {
-            $localized.DocumentOptionSectionNumbering | WriteLog;
-            $pscriboDocument.Options['EnableSectionNumbering'] = $true;
+            $localized.DocumentOptionSectionNumbering | WriteLog
+            $pscriboDocument.Options['EnableSectionNumbering'] = $true
         }
 
         if ($DefaultFont)
         {
-            WriteLog -Message ($localized.DocumentOptionDefaultFont -f ([System.String]::Join(', ', $DefaultFont)));
-            $pscriboDocument.Options['DefaultFont'] = $DefaultFont;
+            WriteLog -Message ($localized.DocumentOptionDefaultFont -f ([System.String]::Join(', ', $DefaultFont)))
+            $pscriboDocument.Options['DefaultFont'] = $DefaultFont
         }
 
         if ($PSCmdlet.ParameterSetName -eq 'CustomMargin')
         {
-            if ($MarginTopAndBottom -eq 0) { $MarginTopAndBottom = 72; }
-            if ($MarginLeftAndRight -eq 0) { $MarginTopAndBottom = 72; }
-            $pscriboDocument.Options['MarginTop'] = ConvertTo-Mm -Point $MarginTopAndBottom;
-            $pscriboDocument.Options['MarginBottom'] = $pscriboDocument.Options['MarginTop'];
-            $pscriboDocument.Options['MarginLeft'] = ConvertTo-Mm -Point $MarginLeftAndRight;
-            $pscriboDocument.Options['MarginRight'] = $pscriboDocument.Options['MarginLeft'];
+            if ($MarginTopAndBottom -eq 0) { $MarginTopAndBottom = 72 }
+            if ($MarginLeftAndRight -eq 0) { $MarginTopAndBottom = 72 }
+            $pscriboDocument.Options['MarginTop'] = ConvertTo-Mm -Point $MarginTopAndBottom
+            $pscriboDocument.Options['MarginBottom'] = $pscriboDocument.Options['MarginTop']
+            $pscriboDocument.Options['MarginLeft'] = ConvertTo-Mm -Point $MarginLeftAndRight
+            $pscriboDocument.Options['MarginRight'] = $pscriboDocument.Options['MarginLeft']
         }
         else
         {
-            $pscriboDocument.Options['MarginTop'] = ConvertTo-Mm -Point $Margin;
-            $pscriboDocument.Options['MarginBottom'] = $pscriboDocument.Options['MarginTop'];
-            $pscriboDocument.Options['MarginLeft'] = $pscriboDocument.Options['MarginTop'];
-            $pscriboDocument.Options['MarginRight'] = $pscriboDocument.Options['MarginTop'];
+            $pscriboDocument.Options['MarginTop'] = ConvertTo-Mm -Point $Margin
+            $pscriboDocument.Options['MarginBottom'] = $pscriboDocument.Options['MarginTop']
+            $pscriboDocument.Options['MarginLeft'] = $pscriboDocument.Options['MarginTop']
+            $pscriboDocument.Options['MarginRight'] = $pscriboDocument.Options['MarginTop']
         }
-        WriteLog -Message ($localized.DocumentOptionPageTopMargin -f $pscriboDocument.Options['MarginTop']);
-        WriteLog -Message ($localized.DocumentOptionPageRightMargin -f $pscriboDocument.Options['MarginRight']);
-        WriteLog -Message ($localized.DocumentOptionPageBottomMargin -f $pscriboDocument.Options['MarginBottom']);
-        WriteLog -Message ($localized.DocumentOptionPageLeftMargin -f $pscriboDocument.Options['MarginLeft']);
+        WriteLog -Message ($localized.DocumentOptionPageTopMargin -f $pscriboDocument.Options['MarginTop'])
+        WriteLog -Message ($localized.DocumentOptionPageRightMargin -f $pscriboDocument.Options['MarginRight'])
+        WriteLog -Message ($localized.DocumentOptionPageBottomMargin -f $pscriboDocument.Options['MarginBottom'])
+        WriteLog -Message ($localized.DocumentOptionPageLeftMargin -f $pscriboDocument.Options['MarginLeft'])
 
         ## Convert page size
-        ($localized.DocumentOptionPageSize -f $PageSize) | WriteLog;
+        ($localized.DocumentOptionPageSize -f $PageSize) | WriteLog
         switch ($PageSize)
         {
             'A4' {
-                $pscriboDocument.Options['PageWidth'] = 210.0;
-                $pscriboDocument.Options['PageHeight'] = 297.0;
+                $pscriboDocument.Options['PageWidth'] = 210.0
+                $pscriboDocument.Options['PageHeight'] = 297.0
             }
             'Legal' {
-                $pscriboDocument.Options['PageWidth'] = 215.9;
-                $pscriboDocument.Options['PageHeight'] = 355.6;
+                $pscriboDocument.Options['PageWidth'] = 215.9
+                $pscriboDocument.Options['PageHeight'] = 355.6
             }
             'Letter' {
-                $pscriboDocument.Options['PageWidth'] = 215.9;
-                $pscriboDocument.Options['PageHeight'] = 279.4;
+                $pscriboDocument.Options['PageWidth'] = 215.9
+                $pscriboDocument.Options['PageHeight'] = 279.4
             }
         }
 
         ## Convert page size
-        ($localized.DocumentOptionPageOrientation -f $Orientation) | WriteLog;
-        $pscriboDocument.Options['PageOrientation'] = $Orientation;
-        $script:currentOrientation = $Orientation;
-        ($localized.DocumentOptionPageHeight -f $pscriboDocument.Options['PageHeight']) | WriteLog;
-        ($localized.DocumentOptionPageWidth -f $pscriboDocument.Options['PageWidth']) | WriteLog;
+        ($localized.DocumentOptionPageOrientation -f $Orientation) | WriteLog
+        $pscriboDocument.Options['PageOrientation'] = $Orientation
+        $script:currentOrientation = $Orientation
+        ($localized.DocumentOptionPageHeight -f $pscriboDocument.Options['PageHeight']) | WriteLog
+        ($localized.DocumentOptionPageWidth -f $pscriboDocument.Options['PageWidth']) | WriteLog
     }
 }

@@ -20,17 +20,12 @@ function Document {
         [Parameter()]
         [System.String] $Id = $Name.Replace(' ','')
     )
-    begin
-    {
-        $pluginName = 'Document';
-
-        <#! Document.Internal.ps1 !#>
-    }
     process
     {
-        $stopwatch = [Diagnostics.Stopwatch]::StartNew();
-        $pscriboDocument = New-PScriboDocument -Name $Name -Id $Id;
-        $script:currentOrientation = $pscriboDocument.Options['PageOrientation'];
+        $pluginName = 'Document'
+        $stopwatch = [Diagnostics.Stopwatch]::StartNew()
+        $pscriboDocument = New-PScriboDocument -Name $Name -Id $Id
+        $script:currentOrientation = $pscriboDocument.Options['PageOrientation']
 
         ## Call the Document script block
         foreach ($result in & $ScriptBlock)
@@ -42,28 +37,28 @@ function Document {
                     ('Type' -in $result.PSObject.Properties.Name) -and
                     ($result.Type -match '^PScribo.'))
                     {
-                        [ref] $null = $pscriboDocument.Sections.Add($result);
+                        [ref] $null = $pscriboDocument.Sections.Add($result)
                     }
                 else
                 {
-                    WriteLog -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning;
+                    WriteLog -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning
                 }
             }
             else
             {
-                WriteLog -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning;
+                WriteLog -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning
             }
         }
 
-        Invoke-PScriboSection;
+        Invoke-PScriboSection
 
         ## Process IsSectionBreakEnd (for Word plugin)
         if ($pscriboDocument.Sections.Count -gt 0)
         {
-            $previousPScriboSection = $pscriboDocument.Sections[0];
+            $previousPScriboSection = $pscriboDocument.Sections[0]
             for ($i = 0; $i -lt $pscriboDocument.Sections.Count; $i++)
             {
-                $pscriboSection = $pscriboDocument.Sections[$i];
+                $pscriboSection = $pscriboDocument.Sections[$i]
                 if ($pscriboSection.Type -in 'PScribo.Section','PScribo.Paragraph')
                 {
                     if (($null -ne $pscriboSection.PSObject.Properties['IsSectionBreak']) -and ($pscriboSection.IsSectionBreak))
@@ -79,14 +74,14 @@ function Document {
                             Set-PScriboSectionBreakEnd -Section $previousPScriboSection
                         }
                     }
-                    $previousPScriboSection = $pscriboSection;
+                    $previousPScriboSection = $pscriboSection
                 }
             }
         }
 
-        WriteLog -Message ($localized.DocumentProcessingCompleted -f $pscriboDocument.Name);
-        $stopwatch.Stop();
-        WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds);
-        return $pscriboDocument;
+        WriteLog -Message ($localized.DocumentProcessingCompleted -f $pscriboDocument.Name)
+        $stopwatch.Stop()
+        WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds)
+        return $pscriboDocument
     }
 }

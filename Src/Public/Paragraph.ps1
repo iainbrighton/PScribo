@@ -63,15 +63,17 @@ function Paragraph {
         [ValidateRange(0,10)]
         [System.Int32] $Tabs = 0
     )
-    begin
-    {
-        <#! Paragraph.Internal.ps1 !#>
-    }
     process
     {
-        if ($Name.Length -gt 40) { $paragraphDisplayName = '{0}[..]' -f $Name.Substring(0,36); }
-        else { $paragraphDisplayName = $Name; }
-        WriteLog -Message ($localized.ProcessingParagraph -f $paragraphDisplayName);
-        return (New-PScriboParagraph @PSBoundParameters);
+        if ($Name.Length -gt 40)
+        {
+            $paragraphDisplayName = '{0}[..]' -f $Name.Substring(0,36)
+        }
+        else
+        {
+            $paragraphDisplayName = $Name
+        }
+        WriteLog -Message ($localized.ProcessingParagraph -f $paragraphDisplayName)
+        return (New-PScriboParagraph @PSBoundParameters)
     }
 }

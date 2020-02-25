@@ -15,13 +15,9 @@ function TOC {
         [ValidateNotNullOrEmpty()]
         [System.String] $ClassId = 'TOC'
     )
-    begin
-    {
-        <#! TOC.Internal.ps1 !#>
-    }
     process
     {
-        WriteLog -Message ($localized.ProcessingTOC -f $Name);
-        return (New-PScriboTOC @PSBoundParameters);
+        WriteLog -Message ($localized.ProcessingTOC -f $Name)
+        return (New-PScriboTOC @PSBoundParameters)
     }
 }

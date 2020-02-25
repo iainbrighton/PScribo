@@ -9,13 +9,9 @@ function BlankLine {
         [Parameter(ValueFromPipeline, Position = 0)]
         [System.UInt32] $Count = 1
     )
-    begin
-    {
-        <#! BlankLine.Internal.ps1 !#>
-    }
     process
     {
-        WriteLog -Message $localized.ProcessingBlankLine;
-        return (New-PScriboBlankLine @PSBoundParameters);
+        WriteLog -Message $localized.ProcessingBlankLine
+        return (New-PScriboBlankLine @PSBoundParameters)
     }
 }

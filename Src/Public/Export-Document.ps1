@@ -37,13 +37,13 @@ function Export-Document {
 
         if ( $(Test-CharsInPath -Path $Path -SkipCheckCharsInFileNamePart -Verbose:$false) -eq 2 )
         {
-            throw $localized.IncorrectCharsInPathError;
+            throw $localized.IncorrectCharsInPathError
         }
 
         if (-not (Test-Path $Path -PathType Container))
         {
             ## Check $Path is a directory
-            throw ($localized.InvalidDirectoryPathError -f $Path);
+            throw ($localized.InvalidDirectoryPathError -f $Path)
         }
     }
     process
@@ -53,22 +53,22 @@ function Export-Document {
             WriteLog -Message ($localized.DocumentInvokePlugin -f $f) -Plugin 'Export';
 
             ## Dynamically generate the output format function name
-            $outputFormat = 'Out{0}' -f $f;
+            $outputFormat = 'Out{0}' -f $f
             $outputParams = @{
-                Document = $Document;
-                Path = $Path;
+                Document = $Document
+                Path = $Path
             }
             if ($PSBoundParameters.ContainsKey('Options'))
             {
-                $outputParams['Options'] = $Options;
+                $outputParams['Options'] = $Options
             }
 
-            $fileInfo = & $outputFormat @outputParams;
-            WriteLog -Message ($localized.DocumentExportPluginComplete -f $f) -Plugin 'Export';
+            $fileInfo = & $outputFormat @outputParams
+            WriteLog -Message ($localized.DocumentExportPluginComplete -f $f) -Plugin 'Export'
 
             if ($PassThru)
             {
-                Write-Output -InputObject $fileInfo;
+                Write-Output -InputObject $fileInfo
             }
         }
     }

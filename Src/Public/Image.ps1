@@ -59,25 +59,21 @@ function Image {
         [ValidateNotNullOrEmpty()]
         [System.String] $Id = [System.Guid]::NewGuid().ToString()
     )
-    begin
-    {
-        <#! Image.Internal.ps1 !#>
-    }
     process
     {
         if ($PSBoundParameters.ContainsKey('Path'))
         {
-            $Uri = Resolve-ImageUri -Path $Path;
+            $Uri = Resolve-ImageUri -Path $Path
             $null = $PSBoundParameters.Remove('Path')
             $PSBoundParameters['Uri'] = $Uri
         }
         elseif ($PSBoundParameters.ContainsKey('Uri'))
         {
-            $Uri = Resolve-ImageUri -Path $Uri;
+            $Uri = Resolve-ImageUri -Path $Uri
         }
         elseif ($PSBoundParameters.ContainsKey('Base64'))
         {
-            $Uri = Resolve-ImageUri -Path 'about:blank';
+            $Uri = Resolve-ImageUri -Path 'about:blank'
         }
 
         if (-not ($PSBoundParameters.ContainsKey('Text')))
@@ -85,7 +81,7 @@ function Image {
             $Text = $Uri
         }
 
-        $imageDisplayName = $Text;
+        $imageDisplayName = $Text
         if ($Text.Length -gt 40)
         {
             $imageDisplayName = '{0}[..]' -f $Text.Substring(0, 36)

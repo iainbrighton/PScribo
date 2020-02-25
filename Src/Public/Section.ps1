@@ -35,26 +35,21 @@ function Section {
         [ValidateSet('Portrait','Landscape')]
         [System.String] $Orientation
     )
-    begin
-    {
-        <#! Section.Internal.ps1 !#>
-    }
     process
     {
-        WriteLog -Message ($localized.ProcessingSectionStarted -f $Name);
+        WriteLog -Message ($localized.ProcessingSectionStarted -f $Name)
 
         $newPScriboSectionParams = @{
-            Name        = $Name;
-            Style       = $Style;
-            IsExcluded  = $ExcludeFromTOC;
-            Tabs        = $Tabs;
-            #Orientation = if ($PSBoundParameters.ContainsKey('Orientation')) { $Orientation } else { $script:currentOrientation }
+            Name        = $Name
+            Style       = $Style
+            IsExcluded  = $ExcludeFromTOC
+            Tabs        = $Tabs
         }
         if ($PSBoundParameters.ContainsKey('Orientation'))
         {
             $newPScriboSectionParams['Orientation'] = $Orientation
         }
-        $pscriboSection = New-PScriboSection @newPScriboSectionParams;
+        $pscriboSection = New-PScriboSection @newPScriboSectionParams
         foreach ($result in & $ScriptBlock)
         {
             ## Ensure we don't have something errant passed down the pipeline (#29)
@@ -64,19 +59,19 @@ function Section {
                     ('Type' -in $result.PSObject.Properties.Name) -and
                     ($result.Type -match '^PScribo.'))
                     {
-                        [ref] $null = $pscriboSection.Sections.Add($result);
+                        [ref] $null = $pscriboSection.Sections.Add($result)
                     }
                 else
                 {
-                    WriteLog -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning;
+                    WriteLog -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning
                 }
             }
             else
             {
-                WriteLog -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning;
+                WriteLog -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning
             }
         }
-        WriteLog -Message ($localized.ProcessingSectionCompleted -f $Name);
+        WriteLog -Message ($localized.ProcessingSectionCompleted -f $Name)
         return $pscriboSection;
     }
 }

@@ -116,52 +116,50 @@ function Table {
     )
     begin
     {
-        <#! Table.Internal.ps1 !#>
-
-        Write-Debug ('Using parameter set "{0}".' -f $PSCmdlet.ParameterSetName);
-        [System.Collections.ArrayList] $rows = New-Object -TypeName System.Collections.ArrayList;
-        WriteLog -Message ($localized.ProcessingTable -f $Name);
+        Write-Debug ('Using parameter set "{0}".' -f $PSCmdlet.ParameterSetName)
+        [System.Collections.ArrayList] $rows = New-Object -TypeName System.Collections.ArrayList
+        WriteLog -Message ($localized.ProcessingTable -f $Name)
 
         if ($Headers -and (-not $Columns))
         {
-            WriteLog -Message $localized.TableHeadersWithNoColumnsWarning -IsWarning;
-            $Headers = $Columns;
+            WriteLog -Message $localized.TableHeadersWithNoColumnsWarning -IsWarning
+            $Headers = $Columns
         }
         elseif (($null -ne $Columns) -and ($null -ne $Headers))
         {
             ## Check the number of -Headers matches the number of -Properties
             if ($Headers.Count -ne $Columns.Count)
             {
-                WriteLog -Message $localized.TableHeadersCountMismatchWarning -IsWarning;
-                $Headers = $Columns;
+                WriteLog -Message $localized.TableHeadersCountMismatchWarning -IsWarning
+                $Headers = $Columns
             }
         }
 
         if ($ColumnWidths)
         {
-            $columnWidthsSum = $ColumnWidths | Measure-Object -Sum | Select-Object -ExpandProperty Sum;
+            $columnWidthsSum = $ColumnWidths | Measure-Object -Sum | Select-Object -ExpandProperty Sum
             if ($columnWidthsSum -ne 100)
             {
-                WriteLog -Message ($localized.TableColumnWidthSumWarning -f $columnWidthsSum) -IsWarning;
-                $ColumnWidths = $null;
+                WriteLog -Message ($localized.TableColumnWidthSumWarning -f $columnWidthsSum) -IsWarning
+                $ColumnWidths = $null
             }
             elseif ($List -and (-not $Key) -and ($ColumnWidths.Count -ne 2))
             {
-                WriteLog -Message $localized.ListTableColumnCountWarning -IsWarning;
-                $ColumnWidths = $null;
+                WriteLog -Message $localized.ListTableColumnCountWarning -IsWarning
+                $ColumnWidths = $null
             }
             elseif (($PSCmdlet.ParameterSetName -eq 'Hashtable') -and (-not $List) -and ($Hashtable[0].Keys.Count -ne $ColumnWidths.Count))
             {
-                WriteLog -Message $localized.TableColumnWidthMismatchWarning -IsWarning;
-                $ColumnWidths = $null;
+                WriteLog -Message $localized.TableColumnWidthMismatchWarning -IsWarning
+                $ColumnWidths = $null
             }
             elseif (($PSCmdlet.ParameterSetName -eq 'InputObject') -and (-not $List))
             {
                 ## Columns might not have been passed and there is no object in the pipeline here, so check $Columns is an array.
                 if (($Columns -is [System.Object[]]) -and ($Columns.Count -ne $ColumnWidths.Count))
                 {
-                    WriteLog -Message $localized.TableColumnWidthMismatchWarning -IsWarning;
-                    $ColumnWidths = $null;
+                    WriteLog -Message $localized.TableColumnWidthMismatchWarning -IsWarning
+                    $ColumnWidths = $null
                 }
             }
         }
@@ -172,15 +170,15 @@ function Table {
             ## Use all available properties
             if ($PSCmdlet.ParameterSetName -in 'Hashtable','HashtableList','HashtableListKey')
             {
-                $Columns = $Hashtable | Select-Object -First 1 -ExpandProperty Keys | Where-Object { $_ -notlike '*__Style' };
+                $Columns = $Hashtable | Select-Object -First 1 -ExpandProperty Keys | Where-Object { $_ -notlike '*__Style' }
             }
             elseif ($PSCmdlet.ParameterSetName -in 'InputObject','InputObjectList','InputObjectListKey')
             {
                 ## Pipeline objects are not available in the begin scriptblock
-                $object = $InputObject | Select-Object -First 1;
+                $object = $InputObject | Select-Object -First 1
                 if ($object -is [System.Management.Automation.PSCustomObject])
                 {
-                    $Columns = $object.PSObject.Properties | Where-Object Name -notlike '*__Style' | Select-Object -ExpandProperty Name;
+                    $Columns = $object.PSObject.Properties | Where-Object Name -notlike '*__Style' | Select-Object -ExpandProperty Name
                 }
                 elseif ($object -is [System.Collections.Specialized.OrderedDictionary])
                 {
@@ -188,7 +186,7 @@ function Table {
                 }
                 else
                 {
-                    $Columns = Get-Member -InputObject $object -MemberType Properties | Where-Object Name -notlike '*__Style' | Select-Object -ExpandProperty Name;
+                    $Columns = Get-Member -InputObject $object -MemberType Properties | Where-Object Name -notlike '*__Style' | Select-Object -ExpandProperty Name
                 }
             }
         }
@@ -197,8 +195,8 @@ function Table {
         {
             foreach ($nestedHashtable in $Hashtable)
             {
-                $customObject = New-PScriboTableRow -Hashtable $nestedHashtable;
-                [ref] $null = $rows.Add($customObject);
+                $customObject = New-PScriboTableRow -Hashtable $nestedHashtable
+                [ref] $null = $rows.Add($customObject)
             } #end foreach nested hashtable entry
         }
         elseif ($PSCmdlet.ParameterSetName -in 'InputObject','InputObjectList','InputObjectListKey')
@@ -211,9 +209,9 @@ function Table {
                 }
                 else
                 {
-                    $customObject = New-PScriboTableRow -InputObject $object -Properties $Columns -Headers $Headers;
+                    $customObject = New-PScriboTableRow -InputObject $object -Properties $Columns -Headers $Headers
                 }
-                [ref] $null = $rows.Add($customObject);
+                [ref] $null = $rows.Add($customObject)
             }
         }
     }
@@ -228,18 +226,18 @@ function Table {
         ## Update the column names as the objects have been have been rewritten with their display names (Headers)
         if ($Headers)
         {
-            $Columns = $Headers;
+            $Columns = $Headers
         }
 
         $newPScriboTableParams = @{
-            Name         = $Name;
-            Columns      = $Columns;
-            ColumnWidths = $ColumnWidths;
-            Rows         = $rows;
-            List         = $List;
-            Style        = $Style;
-            Width        = $Width;
-            Tabs         = $Tabs;
+            Name         = $Name
+            Columns      = $Columns
+            ColumnWidths = $ColumnWidths
+            Rows         = $rows
+            List         = $List
+            Style        = $Style
+            Width        = $Width
+            Tabs         = $Tabs
         }
 
         if ($PSBoundParameters.ContainsKey('Key'))
@@ -252,6 +250,6 @@ function Table {
             $newPScriboTableParams['CaptionTop'] = $CaptionTop
         }
 
-        return (New-PScriboTable @newPScriboTableParams);
+        return (New-PScriboTable @newPScriboTableParams)
     }
 }
