@@ -12,68 +12,79 @@ function GetHtmlTable
         [ValidateNotNull()]
         [System.Management.Automation.PSObject] $Table
     )
+    begin
+    {
+        $formattedTable = ConvertTo-PScriboPreformattedTable -Table $Table
+    }
     process
     {
-        $standardTableBuilder = New-Object -TypeName System.Text.StringBuilder
-        [ref] $null = $standardTableBuilder.Append((GetHtmlTableDiv -Table $Table))
-        [ref] $null = $standardTableBuilder.Append((GetHtmlTableColGroup -Table $Table))
+        $tableBuilder = New-Object -TypeName System.Text.StringBuilder
+        [ref] $null = $tableBuilder.Append((GetHtmlTableDiv -Table $Table))
+        [ref] $null = $tableBuilder.Append((GetHtmlTableColGroup -Table $Table))
 
         ## Table headers
-        [ref] $null = $standardTableBuilder.Append('<thead><tr>')
-        for ($i = 0; $i -lt $Table.Columns.Count; $i++)
+        $startRow = 0
+        if ($formattedTable.HasHeaderRow)
         {
-            [ref] $null = $standardTableBuilder.AppendFormat('<th>{0}</th>', $Table.Columns[$i])
-        }
-        [ref] $null = $standardTableBuilder.Append('</tr></thead>')
-
-        ## Table body
-        [ref] $null = $standardTableBuilder.AppendLine('<tbody>')
-        foreach ($row in $Table.Rows)
-        {
-            [ref] $null = $standardTableBuilder.Append('<tr>')
-            foreach ($propertyName in $Table.Columns)
+            [ref] $null = $tableBuilder.Append('<thead><tr>')
+            foreach ($cell in $formattedTable.Rows[0].Cells)
             {
-                $propertyStyle = '{0}__Style' -f $propertyName
+                [ref] $null = $tableBuilder.AppendFormat('<th>{0}</th>', $cell.Content)
+            }
+            [ref] $null = $tableBuilder.Append('</tr></thead>')
+            $startRow += 1
+        }
 
-                $rowPropertyName = $row.$propertyName; ## Core
-                if ([System.String]::IsNullOrEmpty($rowPropertyName))
+        ## Table rows
+        [ref] $null = $tableBuilder.AppendLine('<tbody>')
+        for ($r = $startRow; $r -lt $formattedTable.Rows.Count; $r++)
+        {
+            $row = $formattedTable.Rows[$r]
+
+            if ($row.IsStyleInherited)
+            {
+                [ref] $null = $tableBuilder.Append('<tr>')
+            }
+            else
+            {
+                [ref] $null = $tableBuilder.AppendFormat('<tr style="{0}">', $row.Style)
+            }
+
+            for ($c = 0; $c -lt $row.Cells.Count; $c++)
+            {
+                $cell = $row.Cells[$c]
+
+                if ([System.String]::IsNullOrEmpty($cell.Content))
                 {
                     $encodedHtmlContent = '&nbsp;' # &nbsp; is already encoded (#72)
                 }
                 else
                 {
-                    $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($rowPropertyName.ToString())
+                    $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($cell.Content)
+                    $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />')
                 }
-                $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />')
 
-                if ($row.PSObject.Properties[$propertyStyle])
+                if ($formattedTable.HasHeaderColumn -and ($c -eq 0))
                 {
-                    ## Cell styles override row styles
-                    $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.$propertyStyle]).Trim()
-                    [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $propertyStyleHtml, $encodedHtmlContent)
-                }
-                elseif (($row.PSObject.Properties['__Style']) -and (-not [System.String]::IsNullOrEmpty($row.__Style)))
-                {
-                    ## We have a row style
-                    $rowStyleHtml = (GetHtmlStyle -Style $Document.Styles[$row.__Style]).Trim()
-                    [ref] $null = $standardTableBuilder.AppendFormat('<td style="{0}">{1}</td>', $rowStyleHtml, $encodedHtmlContent)
+                    ## Display first column with header styling
+                    [ref] $null = $tableBuilder.AppendFormat('<th>{0}</th>', $encodedHtmlContent)
                 }
                 else
                 {
-                    if ($null -ne $row.$propertyName)
+                    if ($cell.IsStyleInherited)
                     {
-                        ## Check that the property has a value
-                        [ref] $null = $standardTableBuilder.AppendFormat('<td>{0}</td>', $encodedHtmlContent)
+                        [ref] $null = $tableBuilder.AppendFormat('<td>{0}</td>', $encodedHtmlContent)
                     }
                     else
                     {
-                        [ref] $null = $standardTableBuilder.Append('<td>&nbsp;</td>')
+                        $propertyStyleHtml = (GetHtmlStyle -Style $Document.Styles[$cell.Style]).Trim()
+                        [ref] $null = $tableBuilder.AppendFormat('<td style="{0}">{1}</td>', $propertyStyleHtml, $encodedHtmlContent)
                     }
-                } #end if $row.PropertyStyle
-            } #end foreach property
-            [ref] $null = $standardTableBuilder.AppendLine('</tr>')
-        } #end foreach row
-        [ref] $null = $standardTableBuilder.AppendLine('</tbody></table></div>')
-        return $standardTableBuilder.ToString()
+                }
+            }
+            [ref] $null = $tableBuilder.AppendLine('</tr>')
+        }
+        [ref] $null = $tableBuilder.AppendLine('</tbody></table></div>')
+        return $tableBuilder.ToString()
     }
 }

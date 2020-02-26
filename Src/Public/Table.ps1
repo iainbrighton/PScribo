@@ -100,6 +100,11 @@ function Table {
         [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'HashtableListKey')]
         [System.String] $Key,
 
+        ## Hide the key name in the table output. Note: Key name will always be displayed in text output.
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObjectListKey')]
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'HashtableListKey')]
+        [System.Management.Automation.SwitchParameter] $HideKey,
+
         ## Table caption
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObject')]
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Hashtable')]
@@ -243,6 +248,7 @@ function Table {
         if ($PSBoundParameters.ContainsKey('Key'))
         {
             $newPScriboTableParams['ListKey'] = $Key
+            $newPScriboTableParams['DisplayListKey'] = -not $HideKey
         }
         if ($PSBoundParameters.ContainsKey('Caption'))
         {

@@ -67,6 +67,10 @@ function New-PScriboTable
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'List')]
         [System.String] $ListKey = $null,
 
+        ## Display the key name in the table output
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'List')]
+        [System.Management.Automation.SwitchParameter] $DisplayListKey,
+
         ## Table width (%), 0 = Autofit
         [Parameter(ValueFromPipelineByPropertyName)]
         [ValidateRange(0, 100)]
@@ -93,7 +97,6 @@ function New-PScriboTable
             Name            = $Name;
             Number          = $pscriboDocument.Properties['Tables']
             Type            = $typeName;
-            # Headers        = $Headers; ## Headers are stored as they may be required when formatting output, i.e. Word tables
             Columns         = $Columns;
             ColumnWidths    = $ColumnWidths;
             Rows            = $Rows;
@@ -106,6 +109,7 @@ function New-PScriboTable
             IsList          = $List;
             IsKeyedList     = $PSBoundParameters.ContainsKey('ListKey')
             ListKey         = $ListKey
+            DisplayListKey  = $DisplayListKey.ToBool()
         }
         return $pscriboTable;
     }

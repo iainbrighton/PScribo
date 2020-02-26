@@ -20,7 +20,7 @@ function OutHtmlTable
         [System.Text.StringBuilder] $tableBuilder = New-Object -TypeName 'System.Text.StringBuilder'
         if ($Table.IsKeyedList)
         {
-            $formattedTable = GetHtmlFormattedTable -Table $Table
+            $formattedTable = GetHtmlTable -Table $Table
             [ref] $null = $tableBuilder.Append($formattedTable)
         }
         elseif ($Table.IsList)
@@ -30,7 +30,7 @@ function OutHtmlTable
                 $row = $Table.Rows[$r]
                 $cloneTable = Copy-Object -InputObject $Table
                 $cloneTable.Rows = @($row)
-                $formattedTable = GetHtmlFormattedTable -Table $cloneTable
+                $formattedTable = GetHtmlTable -Table $cloneTable
                 [ref] $null = $tableBuilder.Append($formattedTable)
                 ## Add a space between each table to mirror Word output rendering
                 [ref] $null = $tableBuilder.AppendLine('<p />');
@@ -38,7 +38,7 @@ function OutHtmlTable
         }
         else
         {
-            $formattedTable = GetHtmlFormattedTable -Table $Table
+            $formattedTable = GetHtmlTable -Table $Table
             [ref] $null = $tableBuilder.Append($formattedTable)
         }
         return $tableBuilder.ToString()

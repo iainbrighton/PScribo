@@ -26,12 +26,20 @@ function ConvertTo-PScriboFormattedKeyedListTable
         ## Output the header cells
         $headerRow = New-PScriboFormattedTableRow -TableStyle $Table.Style -IsHeaderRow
 
-        ## The top-left cell is always empty
-        $newPScriboFormattedTableRowHeaderCellParams = @{
-            Content = ' '
+        if ($Table.DisplayListKey)
+        {
+            $newPScriboFormattedTableRowHeaderCellParams = @{
+                Content = $Table.ListKey
+            }
         }
-        $blankHeaderCell = New-PScriboFormattedTableRowCell @newPScriboFormattedTableRowHeaderCellParams
-        $null = $headerRow.Cells.Add($blankHeaderCell)
+        else
+        {
+            $newPScriboFormattedTableRowHeaderCellParams = @{
+                Content = ' '
+            }
+        }
+        $listKeyHeaderCell = New-PScriboFormattedTableRowCell @newPScriboFormattedTableRowHeaderCellParams
+        $null = $headerRow.Cells.Add($listKeyHeaderCell)
 
         ## Add all the object key values
         for ($o = 0; $o -lt $Table.Rows.Count; $o++)
