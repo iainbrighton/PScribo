@@ -352,8 +352,9 @@ InModuleScope 'PScribo' {
             }
 
             It 'creates paragraph with embedded new line' {
+                $paragraphText = 'Embedded{0}New Line' -f [System.Environment]::NewLine
                 $expected = '<div>Embedded<br />New Line</div>';
-                $result = Paragraph "Embedded`r`nNew Line" | OutHtmlParagraph;
+                $result = Paragraph $paragraphText | OutHtmlParagraph;
                 $result | Should BeExactly $expected;
             }
 
@@ -553,7 +554,7 @@ InModuleScope 'PScribo' {
 
             It 'creates a tabular table cell with an embedded new line' {
 
-                $licenses = "Standard`r`nProfessional`r`nEnterprise"
+                $licenses = 'Standard{0}Professional{0}Enterprise' -f [System.Environment]::NewLine
                 $expected = '<td>Standard<br />Professional<br />Enterprise</td>';
                 $newLineTable = [PSCustomObject] @{ 'Licenses' = $licenses; }
 
@@ -565,7 +566,7 @@ InModuleScope 'PScribo' {
 
             It 'creates a list table cell with an embedded new line' {
 
-                $licenses = "Standard`r`nProfessional`r`nEnterprise"
+                $licenses = 'Standard{0}Professional{0}Enterprise' -f [System.Environment]::NewLine
                 $expected = '<td>Standard<br />Professional<br />Enterprise</td>';
                 $newLineTable = [PSCustomObject] @{ 'Licenses' = $licenses; }
 

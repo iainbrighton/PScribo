@@ -30,7 +30,7 @@ function OutStringWrap
         foreach ($object in $InputObject)
         {
             $textBuilder = New-Object -TypeName System.Text.StringBuilder
-            $text = (Out-String -InputObject $object).TrimEnd("`r`n")
+            $text = (Out-String -InputObject $object).TrimEnd([System.Environment]::NewLine)
             for ($i = 0; $i -le $text.Length; $i += $Width)
             {
                 if (($i + $Width) -ge ($text.Length -1))

@@ -9,6 +9,8 @@ function OutTextPageBreak
     param ( )
     process
     {
-        return "$(OutTextLineBreak)`r`n"
+        $lineBreak = OutTextLineBreak
+        $pageBreak = '{0}{1}' -f $lineBreak, [System.Environment]::NewLine
+        return $pageBreak
     }
 }

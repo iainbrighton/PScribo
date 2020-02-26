@@ -435,7 +435,7 @@ InModuleScope 'PScribo' {
             ## Ignore the space preservation namespace
             $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
             $testDocument = NewTestDocument;
-            $testParagraphText = "Test`r`nParagraph";
+            $testParagraphText = 'Test{0}Paragraph' -f [System.Environment]::NewLine
             $testParagraph = Paragraph -Name 'Test' -Text $testParagraphText;
 
             $testDocument.DocumentElement.AppendChild((OutWordParagraph -Paragraph $testParagraph -XmlDocument $testDocument));
@@ -655,7 +655,8 @@ InModuleScope 'PScribo' {
             ##}
 
             It 'outputs table cell with embedded new line' {
-                $testTable = [Ordered] @{ Licenses = "Standard`r`nProfessional`r`nEnterprise"; }
+                $licenseText = 'Standard{0}Professional{0}Enterprise' -f [System.Environment]::NewLine
+                $testTable = [Ordered] @{ Licenses = $licenseText; }
 
                 OutWordTable (Table 'TestTable' -Hashtable $testTable -List) -XmlDocument $testDocument -Element $testDocument.DocumentElement;
 
@@ -810,7 +811,7 @@ InModuleScope 'PScribo' {
             }
 
             It 'outputs table cell with embedded new line' {
-                $licenses = "Standard`r`nProfessional`r`nEnterprise"
+                $licenses = 'Standard{0}Professional{0}Enterprise' -f [System.Environment]::NewLine
                 $testTable = [Ordered] @{ Licenses = $licenses; }
 
                 OutWordTable (Table 'TestTable' -Hashtable $testTable) -XmlDocument $testDocument -Element $testDocument.DocumentElement;

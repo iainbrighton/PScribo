@@ -5,6 +5,12 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
+    $isNix = $false
+    if (($PSVersionTable['PSEdition'] -eq 'Core') -and (-not $IsWindows))
+    {
+        $isNix = $true
+    }
+
     Describe 'OutText\OutText' {
         $path = (Get-PSDrive -Name TestDrive).Root;
 
@@ -77,15 +83,19 @@ InModuleScope 'PScribo' {
         $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
 
         It 'Defaults to a single blank line.' {
+            $expected = [System.Environment]::NewLine
+
             $l = BlankLine | OutTextBlankLine;
 
-            $l | Should Be "`r`n";
+            $l | Should Be $expected
         }
 
         It 'Creates 3 blank lines.' {
+            $expected = '{0}{0}{0}' -f [System.Environment]::NewLine
+
             $l = BlankLine -Count 3 | OutTextBlankLine;
 
-            $l | Should Be "`r`n`r`n`r`n";
+            $l | Should Be $expected
         }
 
     }
@@ -96,25 +106,32 @@ InModuleScope 'PScribo' {
         $Options = New-PScriboTextOption;
 
         It 'Defaults to 120 and includes new line.' {
-            $l = OutTextLineBreak;
+            $expected = 122
+            if ($isNix) { $expected -= 1 }
 
-            $l.Length | Should Be 122;
+            $l = OutTextLineBreak
+
+            $l.Length | Should Be $expected
         }
 
         It 'Truncates to 40 and includes new line.' {
-            $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 40;
+            $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 40
+            $expected = 42
+            if ($isNix) { $expected -= 1 }
 
             $l = OutTextLineBreak;
 
-            $l.Length | Should Be 42;
+            $l.Length | Should Be $expected;
         }
 
         It 'Wraps lines and includes new line' {
             $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 80;
+            $expected = 84
+            if ($isNix) { $expected -= 2 }
 
             $l = OutTextLineBreak
 
-            $l.Length | Should Be 84;
+            $l.Length | Should Be $expected;
         }
 
     } #end describe OutTextLineBreak
@@ -124,21 +141,33 @@ InModuleScope 'PScribo' {
         $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {};
         $Options = New-PScriboTextOption;
 
-        It 'Defaults to 120 and includes new line.' {
-            $l = OutTextPageBreak;
-            $l.Length | Should Be 124;
+        It 'Defaults to 120 and includes new line .' {
+            $expected = 124
+            if ($isNix) { $expected -= 2 }
+
+            $l = OutTextPageBreak
+
+            $l.Length | Should Be $expected
         }
 
         It 'Truncates to 40 and includes new line.' {
-            $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 40;
-            $l = OutTextPageBreak;
-            $l.Length | Should Be 44;
+            $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 40
+            $expected = 44
+            if ($isNix) { $expected -= 2 }
+
+            $l = OutTextPageBreak
+
+            $l.Length | Should Be $expected
         }
 
         It 'Wraps lines and includes new line.' {
-            $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 80;
+            $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 80
+            $expected = 86
+            if ($isNix) { $expected -= 3 }
+
             $l = OutTextPageBreak
-            $l.Length | Should Be 86;
+
+            $l.Length | Should Be $expected
         }
 
     } #end describe OutTextLineBreak
@@ -152,10 +181,11 @@ InModuleScope 'PScribo' {
 
             It 'Paragraph with new line.' {
                 $testParagraph = 'Test paragraph.';
+                $expected = 'Test paragraph.{0}' -f [System.Environment]::NewLine
 
                 $p = Paragraph $testParagraph | OutTextParagraph;
 
-                $p | Should BeExactly "Test paragraph.`r`n";
+                $p | Should BeExactly $expected;
             }
 
             It 'Paragraph with no new line.' {
@@ -167,21 +197,23 @@ InModuleScope 'PScribo' {
             }
 
             It 'Paragraph wraps at 10 characters with new line.' {
-                $testParagraph = 'Test paragraph.';
-                $Options = New-PScriboTextOption -TextWidth 10;
+                $Options = New-PScriboTextOption -TextWidth 10
+                $testParagraph = 'Test paragraph.'
+                $expected = 'Test parag{0}raph.{0}' -f [System.Environment]::NewLine
 
-                $p = Paragraph $testParagraph | OutTextParagraph;
+                $p = Paragraph $testParagraph | OutTextParagraph
 
-                $p | Should BeExactly "Test parag`r`nraph.`r`n";
+                $p | Should BeExactly $expected
             }
 
              It 'Paragraph wraps at 10 characters with no new line.' {
-                $testParagraph = 'Test paragraph.';
-                $Options = New-PScriboTextOption -TextWidth 10;
+                $testParagraph = 'Test paragraph.'
+                $Options = New-PScriboTextOption -TextWidth 10
+                $expected = 'Test parag{0}raph.' -f [System.Environment]::NewLine
 
                 $p = Paragraph $testParagraph -NoNewLine | OutTextParagraph;
 
-                $p | Should BeExactly "Test parag`r`nraph.";
+                $p | Should BeExactly $expected;
             }
 
         } #end context by pipeline
@@ -190,10 +222,11 @@ InModuleScope 'PScribo' {
 
             It 'By named -Paragraph parameter with new line.' {
                 $testParagraph = 'Test paragraph.';
+                $expected = '{0}{1}' -f $testParagraph, [System.Environment]::NewLine
 
-                $p = OutTextParagraph -Paragraph (Paragraph $testParagraph);
+                $p = OutTextParagraph -Paragraph (Paragraph $testParagraph)
 
-                $p | Should BeExactly "$testParagraph`r`n";
+                $p | Should BeExactly $expected
             }
 
             It 'By named -Paragraph parameter with no new line.' {
@@ -297,17 +330,22 @@ InModuleScope 'PScribo' {
             )
 
             It 'Default width of 120.' {
+                $expected = 208
+                if ($isNix) { $expected -= 6 }
+
                 $table = Table -Hashtable $services -Name 'Test Table' | OutTextTable;
 
-                $table.Length | Should Be 208;  # Trailing spaces are removed (#67)
+                $table.Length | Should Be $expected;  # Trailing spaces are removed (#67)
             }
 
             It 'Set width with of 35.' {
                 $Options = New-PScriboTextOption -TextWidth 35;
+                $expected = 313
+                if ($isNix) { $expected -= 10 }
 
                 $table = Table -Hashtable $services -Name 'Test Table' | OutTextTable;
 
-                $table.Length | Should Be 313; ## Text tables are now set to wrap.. Trailing spaces are removed (#67)
+                $table.Length | Should Be $expected; ## Text tables are now set to wrap.. Trailing spaces are removed (#67)
             }
 
         } #end context table
@@ -321,17 +359,22 @@ InModuleScope 'PScribo' {
             )
 
             It 'Default width of 120.' {
+                $expected = 255
+                if ($isNix) { $expected -= 12 }
+
                 $table = Table -Hashtable $services 'Test Table' -List | OutTextTable;
 
-                $table.Length | Should Be 255;
+                $table.Length | Should Be $expected;
             }
 
             It 'Default width of 25.' {
                 $Options = New-PScriboTextOption -TextWidth 25;
+                $expected = 354
+                if ($isNix) { $expected -= 18 }
 
                 $table = Table -Hashtable $services 'Test Table' -List | OutTextTable;
 
-                $table.Length | Should Be 354; # Trailing spaces are removed (#67)
+                $table.Length | Should Be $expected; # Trailing spaces are removed (#67)
             }
 
         } #end context table
@@ -352,7 +395,7 @@ InModuleScope 'PScribo' {
                     Section $heading2 -Style Heading2 { }
                 }
             }
-            $expected = '^{0}\r\n-+' -f $tocName;
+            $expected = '^{0}{1}-+' -f $tocName, [System.Environment]::NewLine;
 
             $result = OutTextTOC -TOC $Document.Sections[0];
 
@@ -371,7 +414,7 @@ InModuleScope 'PScribo' {
                     Section $heading2 -Style Heading2 { }
                 }
             }
-            $expected = '^{0}\r\n-+\r\n1\s+{1}\r\n1.1\s+{2}\r\n$' -f $tocName, $heading1, $heading2;
+            $expected = '^{0}{3}-+{3}1\s+{1}{3}1.1\s+{2}{3}$' -f $tocName, $heading1, $heading2, [System.Environment]::NewLine
 
             $options = Merge-PScriboPluginOption -DocumentOptions $Document.Options -PluginOptions (New-PScriboTextOption)
             $result = OutTextTOC -TOC $Document.Sections[0] -Verbose;
@@ -390,7 +433,7 @@ InModuleScope 'PScribo' {
                     Section $heading2 -Style Heading2 { }
                 }
             }
-            $expected = '^{0}\r\n-+\r\n{1}\r\n {2}\r\n$' -f $tocName, $heading1, $heading2;
+            $expected = '^{0}{3}-+{3}{1}{3} {2}{3}$' -f $tocName, $heading1, $heading2, [System.Environment]::NewLine
 
             $result = OutTextTOC -TOC $Document.Sections[0] -Verbose;
 

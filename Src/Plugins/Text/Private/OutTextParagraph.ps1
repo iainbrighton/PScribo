@@ -34,11 +34,8 @@ function OutTextParagraph
         $formattedText = OutStringWrap -InputObject $text -Width $Options.TextWidth
         if ($Paragraph.NewLine)
         {
-            return "$formattedText`r`n"
+            $formattedText = '{0}{1}' -f $formattedText, [System.Environment]::NewLine
         }
-        else
-        {
-            return $formattedText
-        }
+        return $formattedText
     }
 }

@@ -2,6 +2,10 @@
 
 ## Versions ##
 
+### Unreleased
+
+* Fixes text line ending output and tests on Linux and MacOS
+
 ### 0.7.26 ###
 
 * Fixes bug in Html table header CSS style output

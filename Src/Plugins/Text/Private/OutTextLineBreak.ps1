@@ -22,7 +22,8 @@ function OutTextLineBreak
         {
             $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1
         }
-        $lb = ''.PadRight($options.SeparatorWidth, $options.LineBreakSeparator)
-        return "$(OutStringWrap -InputObject $lb -Width $options.TextWidth)`r`n"
+        $padding = ''.PadRight($options.SeparatorWidth, $options.LineBreakSeparator)
+        $lineBreak = '{0}{1}' -f (OutStringWrap -InputObject $padding -Width $options.TextWidth), [System.Environment]::NewLine
+        return $lineBreak
     }
 }

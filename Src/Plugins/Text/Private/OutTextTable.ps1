@@ -27,7 +27,15 @@ function OutTextTable
             $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1
         }
         $tableWidth = $options.TextWidth - ($Table.Tabs * 4)
-        if ($Table.IsList)
+
+        if ($Table.IsKeyedList)
+        {
+            ## Create new objects with headings as properties
+            $tableText = (ConvertTo-PSObjectKeyedListTable -Table $Table |
+                            Format-Table -Wrap -AutoSize |
+                                Out-String -Width $tableWidth).Trim([System.Environment]::NewLine)
+        }
+        elseif ($Table.IsList)
         {
             $tableText = ($Table.Rows |
                 Select-Object -Property * -ExcludeProperty '*__Style' |
@@ -40,7 +48,7 @@ function OutTextTable
             $tableText = ($Table.Rows |
                             Select-Object -Property * -ExcludeProperty '*__Style' |
                                 Format-Table -Wrap -AutoSize |
-                                    Out-String -Width $tableWidth).Trim("`r`n")
+                                    Out-String -Width $tableWidth).Trim([System.Environment]::NewLine)
         }
         $tableText = ConvertTo-IndentedString -InputObject $tableText -Tabs $Table.Tabs
         return ('{0}{1}' -f [System.Environment]::NewLine, $tableText)
