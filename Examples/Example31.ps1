@@ -1,10 +1,11 @@
+[CmdletBinding()]
 param (
     [System.String[]] $Format = 'Word',
     [System.String] $Path = '~\Desktop',
     [System.Management.Automation.SwitchParameter] $PassThru
 )
 
-Import-Module PScribo -Force;
+Import-Module PScribo -Force -Verbose:$false
 
 $example31 = Document -Name 'PScribo Example 31' {
 

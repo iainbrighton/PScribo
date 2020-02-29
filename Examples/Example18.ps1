@@ -1,10 +1,11 @@
+[CmdletBinding()]
 param (
     [System.String[]] $Format = 'Html',
     [System.String] $Path = '~\Desktop',
     [System.Management.Automation.SwitchParameter] $PassThru
 )
 
-Import-Module PScribo -Force;
+Import-Module PScribo -Force -Verbose:$false
 
 $example18 = Document -Name 'PScribo Example 18' {
     <#
@@ -20,6 +21,6 @@ $example18 = Document -Name 'PScribo Example 18' {
         The following example will create a list table, detailing every property,
         for every service regiestered on the local machine.
     #>
-    Get-Service | Table -List
+    Get-Service | Select-Object -First 10 | Table -List
 }
 $example18 | Export-Document -Path $Path -Format $Format -PassThru:$PassThru

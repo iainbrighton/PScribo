@@ -1,4 +1,9 @@
-param ([System.Management.Automation.SwitchParameter] $PassThru)
+[CmdletBinding()]
+param (
+    [System.String[]] $Format = @('Html','Word'),
+    [System.String] $Path = '~\Desktop',
+    [System.Management.Automation.SwitchParameter] $PassThru
+)
 
 Import-Module PScribo -Force;
 
@@ -48,7 +53,7 @@ $document = Document 'PScribo Demo 1' -Verbose {
             Paragraph "Services ($($services.Count) Services found):"
             <# Highlight individual cells with "StoppedService" style where state = stopped and startup = auto #>
             $stoppedAutoServicesCell = $services.Clone()
-            $stoppedAutoServicesCell | Where { $_.State -eq 'Stopped' -and $_.StartMode -eq 'Auto'} | Set-Style -Property State -Style StoppedService
+            $stoppedAutoServicesCell | Where-Object { $_.State -eq 'Stopped' -and $_.StartMode -eq 'Auto'} | Set-Style -Property State -Style StoppedService
             $stoppedAutoServicesCell | Table -Columns DisplayName,State,StartMode -Headers 'Display Name','Status','Startup Type' -Tabs 1
         }
 
@@ -58,13 +63,13 @@ $document = Document 'PScribo Demo 1' -Verbose {
             Paragraph "Services ($($services.Count) Services found)"
             <# Highlight an entire row with the "StoppedService" style where state = stopped and startup = auto #>
             $stoppedAutoServicesRow = $services.Clone()
-            $stoppedAutoServicesRow | Where { $_.State -eq 'Stopped' -and $_.StartMode -eq 'Auto' } | Set-Style -Style StoppedService
+            $stoppedAutoServicesRow | Where-Object { $_.State -eq 'Stopped' -and $_.StartMode -eq 'Auto' } | Set-Style -Style StoppedService
             $stoppedAutoServicesRow | Table -Columns DisplayName,State,StartMode -ColumnWidths 70,15,15 -Headers 'Display Name','Status','Startup Type'
         }
     }
 
     PageBreak
-    $listServices = Get-Service | Select -Property Name,CanPauseAndContinue,CanShutdown,CanStop,DisplayName,ServiceName,ServiceType,Status -First 2
+    $listServices = Get-Service | Select-Object -Property Name,CanPauseAndContinue,CanShutdown,CanStop,DisplayName,ServiceName,ServiceType,Status -First 2
     $listServices | Set-Style -Style StoppedService -Property ServiceType -Verbose
 
     Section -Style Heading1 'List-Style Tables' {
@@ -94,4 +99,4 @@ $document = Document 'PScribo Demo 1' -Verbose {
     }
 }
 <#  Generate 'PScribo Demo 1.docx' and 'PScribo Demo 1.html' files. Other supported formats include 'Text' and 'Xml' #>
-$document | Export-Document -Path ~\Desktop -Format Text -PassThru:$PassThru -Verbose -Options @{ TextWidth = 80 };
+$document | Export-Document -Path $Path -Format:$Format -PassThru:$PassThru

@@ -1,3 +1,4 @@
+[CmdletBinding()]
 param (
     [System.String] $Path = '~\Desktop\Example1.CliXml',
     [System.Management.Automation.SwitchParameter] $PassThru
@@ -7,7 +8,7 @@ param (
     From Powershell v3 onwards, the module should not need to be explicitly imported. It is included
     here to avoid any ambiguity.
 #>
-Import-Module PScribo -Force;
+Import-Module PScribo -Force -Verbose:$false
 
 <#
     We create a PScribo document with the 'Document' cmdlet. Inside the supplied script block, you can include any

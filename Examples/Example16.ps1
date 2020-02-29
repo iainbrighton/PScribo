@@ -1,10 +1,11 @@
+[CmdletBinding()]
 param (
     [System.String[]] $Format = 'Html',
     [System.String] $Path = '~\Desktop',
     [System.Management.Automation.SwitchParameter] $PassThru
 )
 
-Import-Module PScribo -Force;
+Import-Module PScribo -Force -Verbose:$false
 
 $example16 = Document -Name 'PScribo Example 16' {
     <#
@@ -28,9 +29,9 @@ $example16 = Document -Name 'PScribo Example 16' {
         used as the header values and the corresponding values as the first table row.
     #>
     $hashtable = [Ordered] @{
-        'Column 1' = 'Some random text';
-        'Column2' = 345;
-        'Custom Property' = $true;
+        'Column 1' = 'Some random text'
+        'Column2' = 345
+        'Custom Property' = $true
     }
     Table -Hashtable $hashtable
 }

@@ -1,8 +1,9 @@
+[CmdletBinding()]
 param (
     [System.Management.Automation.SwitchParameter] $PassThru
 )
 
-Import-Module PScribo -Force;
+Import-Module PScribo -Force -Verbose:$false
 
 $example2 = Document -Name 'PScribo Example 2' {
     Paragraph 'This is an example that adds a single paragraph to the document that will be styled with the default style.'
