@@ -35,7 +35,7 @@ InModuleScope -ModuleName 'PScribo' -ScriptBlock {
 
         It -name 'creates image number' {
             $p = Image -Path $testJpgFile
-            $p.Name | Should -match '^Img\d+$'
+            $p.Name | Should -match '^Image\d+$'
         }
 
         It -name 'sets Emu width' -test {

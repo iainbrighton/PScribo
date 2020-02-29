@@ -55,9 +55,9 @@ function OutHtmlStyle
             ## Generate table style
             [ref] $null = $stylesBuilder.AppendFormat(' table.{0} {{{1} }}', $tableStyleId, $htmlTableStyle).AppendLine()
             [ref] $null = $stylesBuilder.AppendFormat(' table.{0} th {{{1}{2} }}', $tableStyleId, $htmlHeaderStyle, $htmlTableStyle).AppendLine()
+            [ref] $null = $stylesBuilder.AppendFormat(' table.{0} td {{{1} }}', $tableStyleId,  $htmlTableStyle).AppendLine()
             [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(odd) {{{1}{2} }}', $tableStyleId, $htmlRowStyle, $htmlTableStyle).AppendLine()
             [ref] $null = $stylesBuilder.AppendFormat(' table.{0} tr:nth-child(even) {{{1}{2} }}', $tableStyleId, $htmlAlternateRowStyle, $htmlTableStyle).AppendLine()
-            [ref] $null = $stylesBuilder.AppendFormat(' table.{0} td {{{1} }}', $tableStyleId, (GetHtmlTablePaddingStyle -TableStyle $tStyle)).AppendLine()
         }
 
         [ref] $null = $stylesBuilder.AppendLine('</style>')

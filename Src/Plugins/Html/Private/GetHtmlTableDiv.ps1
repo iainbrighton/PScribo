@@ -15,17 +15,14 @@ function GetHtmlTableDiv
     process
     {
         $divBuilder = New-Object -TypeName 'System.Text.StringBuilder'
+        [ref] $null = $divBuilder.Append('<div style="word-break: break-word; overflow-wrap: anywhere; ')
         if ($Table.Tabs -gt 0)
         {
             $invariantMarginLeft = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter (12.7 * $Table.Tabs))
-            [ref] $null = $divBuilder.AppendFormat('<div style="margin-left: {0}rem;">' -f $invariantMarginLeft)
+            [ref] $null = $divBuilder.AppendFormat('margin-left: {0}rem; ' -f $invariantMarginLeft)
         }
-        else
-        {
-            [ref] $null = $divBuilder.Append('<div>')
-        }
-
-        [ref] $null = $divBuilder.AppendFormat('<table class="{0}"', $Table.Style.ToLower())
+        ## Ensure we close the <div style=" "> tag
+        [ref] $null = $divBuilder.AppendFormat('"><table class="{0}"', $Table.Style.ToLower())
 
         $styleElements = @()
         if ($Table.Width -gt 0)
@@ -35,7 +32,7 @@ function GetHtmlTableDiv
         if ($Table.ColumnWidths)
         {
             $styleElements += 'table-layout: fixed;'
-            $styleElements += 'word-break: break-word;'
+            #$styleElements += 'word-break: break-word;' # 'word-wrap: break-word;' or 'overflow-wrap: break-word;'?
         }
         if ($styleElements.Count -gt 0)
         {
