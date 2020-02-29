@@ -79,7 +79,7 @@ function New-PScriboImage
             Type        = 'PScribo.Image';
             Bytes       = $imageBytes;
             Uri         = $Uri;
-            Name        = 'Img{0}' -f $imageNumber;
+            Name        = 'Image{0}' -f $imageNumber;
             Align       = $Align;
             MIMEType    = Get-ImageMimeType -Image $image
             WidthEm     = ConvertTo-Em -Pixel $Width;

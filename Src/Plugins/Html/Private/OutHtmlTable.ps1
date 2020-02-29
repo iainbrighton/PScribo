@@ -18,29 +18,8 @@ function OutHtmlTable
     {
 
         [System.Text.StringBuilder] $tableBuilder = New-Object -TypeName 'System.Text.StringBuilder'
-        if ($Table.IsKeyedList)
-        {
-            $formattedTable = GetHtmlTable -Table $Table
-            [ref] $null = $tableBuilder.Append($formattedTable)
-        }
-        elseif ($Table.IsList)
-        {
-            for ($r = 0; $r -lt $Table.Rows.Count; $r++)
-            {
-                $row = $Table.Rows[$r]
-                $cloneTable = Copy-Object -InputObject $Table
-                $cloneTable.Rows = @($row)
-                $formattedTable = GetHtmlTable -Table $cloneTable
-                [ref] $null = $tableBuilder.Append($formattedTable)
-                ## Add a space between each table to mirror Word output rendering
-                [ref] $null = $tableBuilder.AppendLine('<p />');
-            } #end foreach row
-        }
-        else
-        {
-            $formattedTable = GetHtmlTable -Table $Table
-            [ref] $null = $tableBuilder.Append($formattedTable)
-        }
+        $formattedTable = GetHtmlTable -Table $Table
+        [ref] $null = $tableBuilder.Append($formattedTable)
         return $tableBuilder.ToString()
     }
 }

@@ -19,7 +19,7 @@ if (-not (Test-Path -Path 'Variable:\localized'))
 $pscriboRoot = Split-Path -Parent $PSCommandPath
 Get-ChildItem -Path "$pscriboRoot\Src\" -Include '*.ps1' -Recurse |
     ForEach-Object {
-        Write-Verbose ($localized.ImportingFile -f $_.FullName)
+        Write-Debug ($localized.ImportingFile -f $_.FullName)
         ## https://becomelotr.wordpress.com/2017/02/13/expensive-dot-sourcing/
         . ([System.Management.Automation.ScriptBlock]::Create(
                 [System.IO.File]::ReadAllText($_.FullName)
@@ -49,4 +49,4 @@ $exportedAliases = @(
 )
 
 Add-Type -AssemblyName 'System.Drawing'
-Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases
+Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases -Verbose:$false

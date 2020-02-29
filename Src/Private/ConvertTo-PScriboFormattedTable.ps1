@@ -58,6 +58,7 @@ function ConvertTo-PScriboFormattedTable
                 $hasStyleProperty = $objectProperties.Name.Contains($propertyStyleName)
 
                 $propertyValue = $objectProperties[$propertyName].Value
+
                 $newPScriboFormattedTableRowCellParams = @{
                     Content = $propertyValue
                 }

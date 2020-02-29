@@ -68,7 +68,6 @@ function New-PScriboDocument
         Style -Name TableDefaultHeading -Size 11 -Color 'fff' -BackgroundColor '4472c4' -Bold -Verbose:$false;
         Style -Name TableDefaultRow -Size 11 -Verbose:$false;
         Style -Name TableDefaultAltRow -Size 11 -BackgroundColor 'd0ddee' -Verbose:$false;
-        Style -Name TableDefaultColumn -Size 11 -Color 'fff' -BackgroundColor '4472c4' -Bold -Verbose:$false;
         Style -Name Footer -Size 8 -Color 0072af -Hide -Verbose:$false;
         $tableDefaultStyleParams = @{
             Id                = 'TableDefault'

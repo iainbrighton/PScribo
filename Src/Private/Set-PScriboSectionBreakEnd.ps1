@@ -2,7 +2,7 @@ function Set-PScriboSectionBreakEnd
 {
 <#
     .SYNOPSIS
-        Sets the IsSectionBreak end on the last (nested) paragraph/subsection (required by Word plugin)
+        Sets the IsSectionBreakEnd on the last (nested) paragraph/subsection (required by Word plugin)
 #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
@@ -15,7 +15,7 @@ function Set-PScriboSectionBreakEnd
     {
         $Section.Sections |
             Where-Object { $_.Type -in 'PScribo.Section','PScribo.Paragraph' } |
-                Select-Object -Last 1 | ForEach-Object {
+            Select-Object -Last 1 | ForEach-Object {
                     if ($PSItem.Type -eq 'PScribo.Paragraph')
                     {
                         $PSItem.IsSectionBreakEnd = $true

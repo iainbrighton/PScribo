@@ -15,11 +15,7 @@ function GetHtmlTableStyle
     process
     {
         $tableStyleBuilder = New-Object -TypeName 'System.Text.StringBuilder'
-        [ref] $null = $tableStyleBuilder.AppendFormat(' padding: {0}rem {1}rem {2}rem {3}rem;',
-            (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingTop)),
-                (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingRight)),
-                    (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingBottom)),
-                        (ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.PaddingLeft)))
+        [ref] $null = $tableStyleBuilder.AppendFormat((GetHtmlTablePaddingStyle -TableStyle $TableStyle))
         [ref] $null = $tableStyleBuilder.AppendFormat(' border-style: {0};', $TableStyle.BorderStyle.ToLower())
 
         if ($TableStyle.BorderWidth -gt 0)

@@ -39,7 +39,7 @@ function OutTextTable
         {
             $tableText = ($Table.Rows |
                 Select-Object -Property * -ExcludeProperty '*__Style' |
-                    Format-List | Out-String -Width $tableWidth).Trim()
+                    Format-List | Out-String -Width $tableWidth).Trim([System.Environment]::NewLine)
         }
         else
         {

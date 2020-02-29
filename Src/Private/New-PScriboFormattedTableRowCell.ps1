@@ -11,7 +11,7 @@ function New-PScriboFormattedTableRowCell
     (
         [Parameter(ValueFromPipeline)]
         [AllowNull()]
-        [System.String] $Content,
+        [System.String[]] $Content,
 
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.Uint16] $Width,
@@ -26,6 +26,12 @@ function New-PScriboFormattedTableRowCell
     process
     {
         $isStyleInherited = $true
+        $combinedContent = $Content
+
+        if ($Content -is [System.Array])
+        {
+            $combinedContent = [System.String]::Join([System.Environment]::NewLine, $Content)
+        }
 
         if (-not ([System.String]::IsNullOrEmpty($Style)))
         {
@@ -34,10 +40,10 @@ function New-PScriboFormattedTableRowCell
         }
 
         return [PSCustomObject] @{
-            Content          = $Content;
-            Width            = $Width;
-            Style            = $Style;
-            IsStyleInherited = $isStyleInherited;
+            Content          = $combinedContent
+            Width            = $Width
+            Style            = $Style
+            IsStyleInherited = $isStyleInherited
         }
     }
 }
