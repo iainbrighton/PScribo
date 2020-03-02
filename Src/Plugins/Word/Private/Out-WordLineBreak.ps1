@@ -1,4 +1,4 @@
-function OutWordLineBreak
+function Out-WordLineBreak
 {
 <#
     .SYNOPSIS

@@ -5,6 +5,7 @@
 ### Unreleased
 
 * Fixes text line ending output and tests on Linux and MacOS
+* Adds keyed list support (#87) - see Example33.ps1
 
 ### 0.7.26 ###
 

@@ -1,4 +1,4 @@
-function OutWordImage
+function Out-WordImage
 {
 <#
     .SYNOPSIS
@@ -21,13 +21,16 @@ function OutWordImage
         $xmlnsDrawingMain = 'http://schemas.openxmlformats.org/drawingml/2006/main'
         $xmlnsDrawingPicture = 'http://schemas.openxmlformats.org/drawingml/2006/picture'
         $xmlnsRelationships = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+
         $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain)
         $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
         $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain))
         [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, 0)
         [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, 0)
+
         $jc = $pPr.AppendChild($XmlDocument.CreateElement('w', 'jc', $xmlnsMain))
         [ref] $null = $jc.SetAttribute('val', $xmlnsMain, $Image.Align.ToLower())
+
         $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
         $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain))
         $drawing = $rPr.AppendChild($XmlDocument.CreateElement('w', 'drawing', $xmlnsMain))
@@ -96,10 +99,10 @@ function OutWordImage
         [ref] $null = $prstGeom.SetAttribute('prst', 'rect')
         [ref] $null = $prstGeom.AppendChild($XmlDocument.CreateElement('a', 'avLst', $xmlnsDrawingMain))
 
-        $null = $spPr.AppendChild($XmlDocument.CreateElement('a', 'noFill', $xmlnsDrawingMain))
+        [ref] $null = $spPr.AppendChild($XmlDocument.CreateElement('a', 'noFill', $xmlnsDrawingMain))
 
         $ln = $spPr.AppendChild($XmlDocument.CreateElement('a', 'ln', $xmlnsDrawingMain))
-        $null = $ln.AppendChild($XmlDocument.CreateElement('a', 'noFill', $xmlnsDrawingMain))
+        [ref] $null = $ln.AppendChild($XmlDocument.CreateElement('a', 'noFill', $xmlnsDrawingMain))
 
         return $p
     }

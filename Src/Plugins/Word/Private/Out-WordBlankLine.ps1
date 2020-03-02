@@ -1,4 +1,4 @@
-function OutWordBlankLine
+function Out-WordBlankLine
 {
 <#
     .SYNOPSIS

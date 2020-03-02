@@ -1,4 +1,4 @@
-function OutWordPageBreak
+function Out-WordPageBreak
 {
 <#
     .SYNOPSIS

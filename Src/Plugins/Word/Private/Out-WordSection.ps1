@@ -1,4 +1,4 @@
-function OutWordSection
+function Out-WordSection
 {
 <#
     .SYNOPSIS
@@ -11,7 +11,7 @@ function OutWordSection
         [System.Management.Automation.PSObject] $Section,
 
         [Parameter(Mandatory)]
-        [System.Xml.XmlElement] $RootElement,
+        [System.Xml.XmlElement] $Element,
 
         [Parameter(Mandatory)]
         [System.Xml.XmlDocument] $XmlDocument
@@ -20,16 +20,13 @@ function OutWordSection
     {
         $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 
-        $p = $RootElement.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain));
+        $p = $Element.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain));
         $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
 
         if (-not [System.String]::IsNullOrEmpty($Section.Style))
         {
-            #if (-not $Section.IsExcluded) {
-            ## If it's excluded we need a non-Heading style :( Could explicitly set the style on the run?
             $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain))
             [ref] $null = $pStyle.SetAttribute('val', $xmlnsMain, $Section.Style)
-            #}
         }
 
         if ($Section.Tabs -gt 0)
@@ -43,6 +40,22 @@ function OutWordSection
         $spacingPt = (($Section.Level * 2) + 8) * 20
         [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, $spacingPt)
         [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, $spacingPt)
+
+        if ($Section.IsSectionBreakEnd)
+        {
+            $sectionPrParams = @{
+                PageHeight       = $Document.Options['PageHeight']
+                PageWidth        = $Document.Options['PageWidth']
+                PageMarginTop    = $Document.Options['MarginTop']
+                PageMarginBottom = $Document.Options['MarginBottom']
+                PageMarginLeft   = $Document.Options['MarginLeft']
+                PageMarginRight  = $Document.Options['MarginRight']
+                Orientation      = $Section.Orientation;
+            }
+            [ref] $null = $pPr.AppendChild((Get-WordSectionPr @sectionPrParams -XmlDocument $xmlDocument))
+        }
+
+
         $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
         $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
 
@@ -54,66 +67,53 @@ function OutWordSection
         {
             [System.String] $sectionName = '{0}' -f $Section.Name
         }
-
         [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($sectionName))
 
-        foreach ($s in $Section.Sections.GetEnumerator())
+        foreach ($subSection in $Section.Sections.GetEnumerator())
         {
-            if ($s.Id.Length -gt 40)
+            if ($subSection.Id.Length -gt 40)
             {
-                $sectionId = '{0}[..]' -f $s.Id.Substring(0, 36)
+                $sectionId = '{0}[..]' -f $subSection.Id.Substring(0, 36)
             }
             else
             {
-                $sectionId = $s.Id
+                $sectionId = $subSection.Id
             }
+
             $currentIndentationLevel = 1
-            if ($null -ne $s.PSObject.Properties['Level'])
+            if ($null -ne $subSection.PSObject.Properties['Level'])
             {
-                $currentIndentationLevel = $s.Level + 1
+                $currentIndentationLevel = $subSection.Level + 1
             }
-            WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent $currentIndentationLevel
-            switch ($s.Type)
+            WriteLog -Message ($localized.PluginProcessingSection -f $subSection.Type, $sectionId) -Indent $currentIndentationLevel
+
+            switch ($subSection.Type)
             {
                 'PScribo.Section' {
-                    $s | OutWordSection -RootElement $RootElement -XmlDocument $XmlDocument
+                    Out-WordSection -Section $subSection -Element $Element -XmlDocument $XmlDocument
                 }
                 'PScribo.Paragraph' {
-                    [ref] $null = $RootElement.AppendChild((OutWordParagraph -Paragraph $s -XmlDocument $XmlDocument))
+                    [ref] $null = $Element.AppendChild((Out-WordParagraph -Paragraph $subSection -XmlDocument $XmlDocument))
                 }
                 'PScribo.PageBreak' {
-                    [ref] $null = $RootElement.AppendChild((OutWordPageBreak -PageBreak $s -XmlDocument $XmlDocument))
+                    [ref] $null = $Element.AppendChild((Out-WordPageBreak -PageBreak $subSection -XmlDocument $XmlDocument))
                 }
                 'PScribo.LineBreak' {
-                    [ref] $null = $RootElement.AppendChild((OutWordLineBreak -LineBreak $s -XmlDocument $XmlDocument))
+                    [ref] $null = $Element.AppendChild((Out-WordLineBreak -LineBreak $subSection -XmlDocument $XmlDocument))
                 }
                 'PScribo.Table' {
-                    OutWordTable -Table $s -XmlDocument $XmlDocument -Element $RootElement
+                    Out-WordTable -Table $subSection -XmlDocument $XmlDocument -Element $Element
                 }
                 'PScribo.BlankLine' {
-                    OutWordBlankLine -BlankLine $s -XmlDocument $XmlDocument -Element $RootElement
+                    Out-WordBlankLine -BlankLine $subSection -XmlDocument $XmlDocument -Element $Element
                 }
                 'PScribo.Image' {
-                    [ref] $null = $RootElement.AppendChild((OutWordImage -Image $s -XmlDocument $XmlDocument))
+                    [ref] $null = $Element.AppendChild((Out-WordImage -Image $subSection -XmlDocument $XmlDocument))
                 }
                 Default {
-                    WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning
+                    WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
                 }
             }
-        }
-
-        if ($Section.IsSectionBreakEnd)
-        {
-            $sectionPrParams = @{
-                PageHeight       = if ($Section.Orientation -eq 'Portrait') { $Document.Options['PageHeight'] } else { $Document.Options['PageWidth'] }
-                PageWidth        = if ($Section.Orientation -eq 'Portrait') { $Document.Options['PageWidth'] } else { $Document.Options['PageHeight'] }
-                PageMarginTop    = $Document.Options['MarginTop'];
-                PageMarginBottom = $Document.Options['MarginBottom'];
-                PageMarginLeft   = $Document.Options['MarginLeft'];
-                PageMarginRight  = $Document.Options['MarginRight'];
-                Orientation      = $Section.Orientation;
-            }
-            [ref] $null = $pPr.AppendChild((GetWordSectionPr @sectionPrParams -XmlDocument $xmlDocument));
         }
     }
 }

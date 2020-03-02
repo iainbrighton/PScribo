@@ -1,4 +1,4 @@
-function ConvertToWordColor
+function ConvertTo-WordColor
 {
 <#
     .SYNOPSIS
