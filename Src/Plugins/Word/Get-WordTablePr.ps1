@@ -24,40 +24,35 @@ function Get-WordTablePr
         $tblStyle = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblStyle', $xmlns))
         [ref] $null = $tblStyle.SetAttribute('val', $xmlns, $tableStyle.Id)
 
+        $tableWidthRenderPct = $Table.Width
         if ($Table.Tabs -gt 0)
         {
             $tblInd = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblInd', $xmlns))
             [ref] $null = $tblInd.SetAttribute('w', $xmlns, (720 * $Table.Tabs))
+
+            ## We now need to deal with tables being pushed outside the page margin
+            $pageWidthMm = $Document.Options['PageWidth'] - ($Document.Options['PageMarginLeft'] + $Document.Options['PageMarginRight'])
+            $indentWidthMm = ConvertTo-Mm -Point ($Table.Tabs * 36)
+            $tableRenderMm = (($pageWidthMm / 100) * $Table.Width) + $indentWidthMm
+            if ($tableRenderMm -gt $pageWidthMm)
+            {
+                ## We've over-flowed so need to work out the maximum percentage
+                $maxTableWidthMm = $pageWidthMm - $indentWidthMm
+                $tableWidthRenderPct = [System.Math]::Round(($maxTableWidthMm / $pageWidthMm) * 100, 2)
+                WriteLog -Message ($localized.TableWidthOverflowWarning -f $tableWidthRenderPct) -IsWarning
+            }
         }
 
-        $tblLayout = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblLayout', $xmlns))
-        $tblLayoutType = 'fixed'
-        if ($Table.Width -eq 0)
+        if ($Table.ColumnWidths -or ($Table.Width -gt 0 -and $Table.Width -lt 100))
         {
-            $tblLayoutType = 'autofit'
+            $tblLayout = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblLayout', $xmlns))
+            [ref] $null = $tblLayout.SetAttribute('type', $xmlns, 'fixed')
         }
-        [ref] $null = $tblLayout.SetAttribute('type', $xmlns, $tblLayoutType)
 
         if ($Table.Width -gt 0)
         {
             $tblW = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblW', $xmlns))
-
-            $tableWidthRenderPct = $Table.Width
-            if ($Table.Tabs -gt 0)
-            {
-                ## We now need to deal with tables being pushed outside the page margin
-                $pageWidthMm = $Document.Options['PageWidth'] - ($Document.Options['PageMarginLeft'] + $Document.Options['PageMarginRight'])
-                $indentWidthMm = ConvertTo-Mm -Point ($Table.Tabs * 36)
-                $tableRenderMm = (($pageWidthMm / 100) * $Table.Width) + $indentWidthMm
-                if ($tableRenderMm -gt $pageWidthMm)
-                {
-                    ## We've over-flowed so need to work out the maximum percentage
-                    $maxTableWidthMm = $pageWidthMm - $indentWidthMm
-                    $tableWidthRenderPct = [System.Math]::Round(($maxTableWidthMm / $pageWidthMm) * 100, 2)
-                    WriteLog -Message ($localized.TableWidthOverflowWarning -f $tableWidthRenderPct) -IsWarning
-                }
-            }
-            [ref] $null = $tblW.SetAttribute('w', $xmlns, $tableWidthRenderPct * 50)
+            [ref] $null = $tblW.SetAttribute('w', $xmlns, ($tableWidthRenderPct * 50))
             [ref] $null = $tblW.SetAttribute('type', $xmlns, 'pct')
         }
 
