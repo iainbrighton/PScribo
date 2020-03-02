@@ -6,31 +6,30 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    Describe '\Word\ConvertTo-WordColor' {
+    Describe 'Plugins\Word\ConvertTo-WordColor' {
 
         It 'converts to "abcdef" to "ABCDEF"' {
-            $result = ConvertTo-WordColor 'abcdef';
+            $result = ConvertTo-WordColor 'abcdef'
 
-            $result | Should BeExactly 'ABCDEF';
+            $result | Should BeExactly 'ABCDEF'
         }
 
         It 'converts "#abcdef" to "ABCDEF"' {
-            $result = ConvertTo-WordColor '#abcdef';
+            $result = ConvertTo-WordColor '#abcdef'
 
-            $result | Should BeExactly 'ABCDEF';
+            $result | Should BeExactly 'ABCDEF'
         }
 
         It 'converts "abc" to "AABBCC"' {
-            $result = ConvertTo-WordColor 'abc';
+            $result = ConvertTo-WordColor 'abc'
 
-            $result | Should BeExactly 'AABBCC';
+            $result | Should BeExactly 'AABBCC'
         }
 
         It 'converts "#abc" to "AABBCC"' {
-            $result = ConvertTo-WordColor '#abc';
+            $result = ConvertTo-WordColor '#abc'
 
-            $result | Should BeExactly 'AABBCC';
+            $result | Should BeExactly 'AABBCC'
         }
     }
-
 }

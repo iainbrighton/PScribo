@@ -6,34 +6,37 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    function GetMatch {
+    function GetMatch
+    {
         [CmdletBinding()]
-        param (
+        param
+        (
             [System.String] $String,
-
             [System.Management.Automation.SwitchParameter] $Complete
         )
-        Write-Verbose "Pre Match : '$String'";
-        $matchString = $String.Replace('/','\/');
-        if (-not $String.StartsWith('^')) {
-            $matchString = $matchString.Replace('[..]','[\s\S]+');
-            $matchString = $matchString.Replace('[??]','([\s\S]+)?');
-            if ($Complete) {
-                $matchString = '^<w:test xmlns:w="http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main">{0}<\/w:test>$' -f $matchString;
+        Write-Verbose "Pre Match : '$String'"
+        $matchString = $String.Replace('/','\/')
+        if (-not $String.StartsWith('^'))
+        {
+            $matchString = $matchString.Replace('[..]','[\s\S]+')
+            $matchString = $matchString.Replace('[??]','([\s\S]+)?')
+            if ($Complete)
+            {
+                $matchString = '^<w:test xmlns:w="http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main">{0}<\/w:test>$' -f $matchString
             }
         }
-        Write-Verbose "Post Match: '$matchString'";
-        return $matchString;
-    } #end function GetMatch
+        Write-Verbose "Post Match: '$matchString'"
+        return $matchString
+    }
 
-    Describe '\Plugins\Word\Out-WordParagraph' {
+    Describe 'Plugins\Word\Out-WordParagraph' {
 
         It 'outputs paragraph "<w:p>[..]></w:p>"' {
             $document = Document -Name 'TestDocument' {
                 Paragraph 'Test paragraph'
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '<w:p>[..]></w:p>'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -44,7 +47,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph'
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '<w:p><w:pPr>[..]></w:pPr[..]></w:p>'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -55,7 +58,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph' -Tabs 2
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '<w:p><w:pPr><w:ind w:left="1440" />[..]</w:p>'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -66,7 +69,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph' -Style Heading3
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '<w:p><w:pPr><w:pStyle w:val="Heading3" />[..]</w:p>'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -77,7 +80,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph' -Style Heading3
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:r>[..]></w:r>[..]'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -88,7 +91,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph' -Style Heading3
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:r><w:rPr />[..]></w:r>[..]'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -99,7 +102,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph' -Font Ariel
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:rPr><w:rFonts w:ascii="Ariel" w:hAnsi="Ariel" /></w:rPr>[..]'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -110,7 +113,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph' -Size 10
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:rPr><w:sz w:val="20" /></w:rPr>[..]'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -121,7 +124,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph' -Bold
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:rPr><w:b /></w:rPr>[..]'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -132,7 +135,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph' -Italic
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:rPr><w:i /></w:rPr>[..]'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -143,7 +146,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph' -Underline
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:rPr><w:u w:val="single" /></w:rPr>[..]'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -154,7 +157,7 @@ InModuleScope 'PScribo' {
                 Paragraph 'Test paragraph' -Color 123
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:rPr><w:color w:val="112233" /></w:rPr>[..]'
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -166,7 +169,7 @@ InModuleScope 'PScribo' {
                 Paragraph $testParagraphText -Font Ariel
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch ('[..]<w:r>[..]<w:t [..]>{0}</w:t>[..]' -f $testParagraphText);
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -179,7 +182,7 @@ InModuleScope 'PScribo' {
                 Paragraph -Name 'Test' -Text $testParagraphText
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch ('[..]<w:r>[..]<w:t [..]>{0}</w:t>[..]' -f $testParagraphText);
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
@@ -191,7 +194,7 @@ InModuleScope 'PScribo' {
                 Paragraph -Name 'Test' -Text ('Test{0}Paragraph' -f [System.Environment]::NewLine)
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch ('<w:t [..]>Test</w:t><w:br /><w:t [..]>Paragraph</w:t></w:r>');
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;

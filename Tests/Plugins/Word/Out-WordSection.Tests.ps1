@@ -6,34 +6,37 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    function GetMatch {
+    function GetMatch
+    {
         [CmdletBinding()]
-        param (
+        param
+        (
             [System.String] $String,
-
             [System.Management.Automation.SwitchParameter] $Complete
         )
-        Write-Verbose "Pre Match : '$String'";
-        $matchString = $String.Replace('/','\/');
-        if (-not $String.StartsWith('^')) {
-            $matchString = $matchString.Replace('[..]','[\s\S]+');
-            $matchString = $matchString.Replace('[??]','([\s\S]+)?');
-            if ($Complete) {
-                $matchString = '^<w:test xmlns:w="http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main">{0}<\/w:test>$' -f $matchString;
+        Write-Verbose "Pre Match : '$String'"
+        $matchString = $String.Replace('/','\/')
+        if (-not $String.StartsWith('^'))
+        {
+            $matchString = $matchString.Replace('[..]','[\s\S]+')
+            $matchString = $matchString.Replace('[??]','([\s\S]+)?')
+            if ($Complete)
+            {
+                $matchString = '^<w:test xmlns:w="http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main">{0}<\/w:test>$' -f $matchString
             }
         }
-        Write-Verbose "Post Match: '$matchString'";
-        return $matchString;
-    } #end function GetMatch
+        Write-Verbose "Post Match: '$matchString'"
+        return $matchString
+    }
 
-    Describe '\Plugins\Word\Out-WordSection' {
+    Describe 'Plugins\Word\Out-WordSection' {
 
         It 'appends section "<w:p>[..]</w:p>"' {
             $document = Document -Name 'TestDocument' {
                 Section -Name TestSection { }
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '<w:p>[..]</w:p>';
             $testDocument.DocumentElement.OuterXml | Should Match $expected;
@@ -44,7 +47,7 @@ InModuleScope 'PScribo' {
                 Section -Name TestSection { }
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:pPr><w:spacing w:before="160" w:after="160" /></w:pPr>[..]';
             $testDocument.DocumentElement.OuterXml | Should Match $expected;
@@ -56,7 +59,7 @@ InModuleScope 'PScribo' {
                 Section -Name TestSection -Style 'CustomStyle' { }
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:pStyle w:val="CustomStyle" />[..]';
             $testDocument.DocumentElement.OuterXml | Should Match $expected;
@@ -67,7 +70,7 @@ InModuleScope 'PScribo' {
                 Section -Name TestSection -Tabs 2 { }
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:pPr>[??]<w:ind w:left="1440" />[..]</w:pPr>[..]';
             $testDocument.DocumentElement.OuterXml | Should Match $expected;
@@ -82,7 +85,7 @@ InModuleScope 'PScribo' {
                 }
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:pPr><w:spacing w:before="240" w:after="240" /></w:pPr>[..]';
             $testDocument.DocumentElement.OuterXml | Should Match $expected;
@@ -93,7 +96,7 @@ InModuleScope 'PScribo' {
                 Section -Name 'Section Run' { }
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:r><w:t>Section Run</w:t></w:r></w:p>';
             $testDocument.DocumentElement.OuterXml | Should Match $expected;
@@ -106,7 +109,7 @@ InModuleScope 'PScribo' {
                 Section -Name 'Numbered Section' { }
             }
 
-            $testDocument = Out-WordDocument -Document $document
+            $testDocument = Get-WordDocument -Document $document
 
             $expected = GetMatch '[..]<w:r><w:t>2 Numbered Section</w:t></w:r></w:p>';
             $testDocument.DocumentElement.OuterXml | Should Match $expected;

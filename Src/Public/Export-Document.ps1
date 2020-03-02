@@ -53,7 +53,7 @@ function Export-Document {
             WriteLog -Message ($localized.DocumentInvokePlugin -f $f) -Plugin 'Export';
 
             ## Dynamically generate the output format function name
-            $outputFormat = 'Out{0}' -f $f
+            $outputFormat = 'Out-{0}Document' -f $f
             $outputParams = @{
                 Document = $Document
                 Path = $Path

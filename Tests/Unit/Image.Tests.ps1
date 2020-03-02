@@ -5,9 +5,9 @@ Import-Module -Name "$moduleRoot\PScribo.psm1" -Force
 
 InModuleScope -ModuleName 'PScribo' -ScriptBlock {
 
-    $testRoot = Split-Path -Path $PSScriptRoot -Parent;
+    $testRoot = Split-Path -Path $PSScriptRoot -Parent
 
-    Describe -Name 'Image\Image' -Fixture {
+    Describe -Name 'Image' -Fixture {
 
         $pscriboDocument = Document -Name 'ScaffoldDocument' -ScriptBlock { }
         $testJpgFile = Join-Path -Path $testRoot -ChildPath 'TestImage.jpg'
@@ -47,75 +47,5 @@ InModuleScope -ModuleName 'PScribo' -ScriptBlock {
             $p = Image -Path $testJpgFile -Height 61 -Width 250
             $p.HeightEm | Should -eq 581025
         }
-    } #end describe Image\Image
-
-    Describe -Name 'Image\Resolve-ImageUri' -Fixture {
-
-        It "returns 'System.Uri' type" {
-
-            $testPath = 'about:Blank'
-
-            $result = Resolve-ImageUri -Path $testPath
-
-            $result -is [System.Uri] | Should Be $true
-        }
-
-    } #end describe Image\Resolve-ImageUri
-
-    Describe -Name 'Image\Get-UriBytes' -Fixture {
-
-        It "returns 'System.Byte[]' type" {
-
-            $testPath = Join-Path -Path $testRoot -ChildPath 'TestImage.jpg'
-            $testUri = Resolve-ImageUri -Path $testPath
-
-            $result = Get-UriBytes -Uri $testUri
-
-            $result -is [System.Object[]] | Should Be $true
-            $result[0] -is [System.Byte] | Should Be $true
-        }
-
-    } #end describe Image\Get-UriBytes
-
-    Describe -Name 'Image\ConvertTo-Image' -Fixture {
-
-        It "returns 'System.Drawing.Image' type" {
-
-            $testPath = Join-Path -Path $testRoot -ChildPath 'TestImage.jpg'
-            $testUri = Resolve-ImageUri -Path $testPath
-            $testBytes = Get-UriBytes -Uri $testUri
-
-            $result = ConvertTo-Image -Bytes $testBytes
-
-            $result -is [System.Drawing.Image] | Should Be $true
-        }
-
-    } #end describe Image\ConvertTo-Image
-
-    Describe -Name 'Image\Get-PScriboImage' -Fixture {
-
-
-        $pscriboDocument = Document -Name 'ScaffoldDocument' -ScriptBlock {
-            Image -Path (Join-Path -Path $testRoot -ChildPath 'TestImage.jpg') -Id 1
-            Section Nested {
-                Image -Path (Join-Path -Path $testRoot -ChildPath 'TestImage.png') -Id 2
-            }
-        }
-
-        It 'finds all Images' {
-
-            $result = Get-PScriboImage -Section $pscriboDocument.Sections
-
-            $result.Count | Should Be 2
-        }
-
-        It 'finds Image by Id' {
-
-            $result = @(Get-PScriboImage -Section $pscriboDocument.Sections -Id 2)
-
-            $result.Count | Should Be 1
-        }
-
-    } #end describe Image\Get-PScriboImage
-
+    }
 }
