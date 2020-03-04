@@ -49,6 +49,10 @@ function Get-WordTablePr
             [ref] $null = $tblLayout.SetAttribute('type', $xmlns, 'fixed')
         }
 
+        $tableAlignment = @{ Left = 'start'; Center = 'center'; Right = 'end'; }
+        $jc =  $tblPr.AppendChild($XmlDocument.CreateElement('w', 'jc', $xmlns))
+        [ref] $null = $jc.SetAttribute('val', $xmlns, $tableAlignment[$tableStyle.Align])
+
         if ($Table.Width -gt 0)
         {
             $tblW = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblW', $xmlns))

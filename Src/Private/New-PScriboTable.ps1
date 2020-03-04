@@ -82,35 +82,30 @@ function New-PScriboTable
         [System.UInt16] $Tabs,
 
         [Parameter(ValueFromPipelineByPropertyName)]
-        [System.String] $Caption,
-
-        # Display caption above table.
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $CaptionTop
+        [System.String] $Caption
     )
     process
     {
-        $typeName = 'PScribo.Table';
-        $pscriboDocument.Properties['Tables']++;
+        $typeName = 'PScribo.Table'
+        $pscriboDocument.Properties['Tables']++
         $pscriboTable = [PSCustomObject] @{
-            Id              = $Name.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper();
-            Name            = $Name;
+            Id              = $Name.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper()
+            Name            = $Name
             Number          = $pscriboDocument.Properties['Tables']
-            Type            = $typeName;
-            Columns         = $Columns;
-            ColumnWidths    = $ColumnWidths;
-            Rows            = $Rows;
-            Style           = $Style;
-            Width           = $Width;
-            Tabs            = $Tabs;
+            Type            = $typeName
+            Columns         = $Columns
+            ColumnWidths    = $ColumnWidths
+            Rows            = $Rows
+            Style           = $Style
+            Width           = $Width
+            Tabs            = $Tabs
             HasCaption      = $PSBoundParameters.ContainsKey('Caption')
-            IsCaptionBottom = (-not $CaptionTop)
             Caption         = $Caption
-            IsList          = $List;
+            IsList          = $List
             IsKeyedList     = $PSBoundParameters.ContainsKey('ListKey')
             ListKey         = $ListKey
             DisplayListKey  = $DisplayListKey.ToBool()
         }
-        return $pscriboTable;
+        return $pscriboTable
     }
 }

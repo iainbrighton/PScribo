@@ -33,8 +33,18 @@ InModuleScope 'PScribo' {
 
             It 'Paragraph wraps at 10 characters with new line' {
                 $Options = New-PScriboTextOption -TextWidth 10
+                $testParagraph = 'Testparagraph.'
+                $expected = 'Testparagr{0}aph.{0}' -f [System.Environment]::NewLine
+
+                $p = Paragraph $testParagraph | Out-TextParagraph
+
+                $p | Should BeExactly $expected
+            }
+
+            It 'Paragraph breaks on space with new line' {
+                $Options = New-PScriboTextOption -TextWidth 10
                 $testParagraph = 'Test paragraph.'
-                $expected = 'Test parag{0}raph.{0}' -f [System.Environment]::NewLine
+                $expected = 'Test{0}paragraph.{0}' -f [System.Environment]::NewLine
 
                 $p = Paragraph $testParagraph | Out-TextParagraph
 
@@ -42,9 +52,19 @@ InModuleScope 'PScribo' {
             }
 
             It 'Paragraph wraps at 10 characters with no new line' {
+                $Options = New-PScriboTextOption -TextWidth 10
+                $testParagraph = 'Testparagraph.'
+                $expected = 'Testparagr{0}aph.' -f [System.Environment]::NewLine
+
+                $p = Paragraph $testParagraph -NoNewLine | Out-TextParagraph
+
+                $p | Should BeExactly $expected
+            }
+
+            It 'Paragraph breaks on empty space with no new line' {
                 $testParagraph = 'Test paragraph.'
                 $Options = New-PScriboTextOption -TextWidth 10
-                $expected = 'Test parag{0}raph.' -f [System.Environment]::NewLine
+                $expected = 'Test{0}paragraph.' -f [System.Environment]::NewLine
 
                 $p = Paragraph $testParagraph -NoNewLine | Out-TextParagraph
 

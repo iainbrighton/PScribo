@@ -22,20 +22,28 @@ function Out-TextParagraph
     }
     process
     {
-        $padding = ''.PadRight(($Paragraph.Tabs * 4), ' ')
+        $convertToAlignedStringParams = @{
+            Width       = $options.TextWidth
+            Tabs        = $Paragraph.Tabs
+            Align       = 'Left'
+            NoNewLine   = -not $Paragraph.NewLine
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($Paragraph.Style))
+        {
+            $paragraphStyle = Get-PScriboDocumentStyle -Style $Paragraph.Style
+            $convertToAlignedStringParams['Align'] = $paragraphStyle.Align
+        }
+
         if ([string]::IsNullOrEmpty($Paragraph.Text))
         {
-            $text = "$padding$($Paragraph.Id)"
+            $convertToAlignedStringParams['InputObject'] = $Paragraph.Id
         }
         else
         {
-            $text = "$padding$($Paragraph.Text)"
+            $convertToAlignedStringParams['InputObject'] = $Paragraph.Text
         }
-        $formattedText = Out-StringWrap -InputObject $text -Width $Options.TextWidth
-        if ($Paragraph.NewLine)
-        {
-            $formattedText = '{0}{1}' -f $formattedText, [System.Environment]::NewLine
-        }
-        return $formattedText
+
+        return (ConvertTo-AlignedString @convertToAlignedStringParams)
     }
 }

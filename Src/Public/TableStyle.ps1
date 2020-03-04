@@ -85,6 +85,22 @@ function TableStyle
         [ValidateSet('Left','Center','Right')]
         [System.String] $Align = 'Left',
 
+        ## Table caption prefix
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Padding')]
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]
+        [System.String] $CaptionPrefix = 'Table',
+
+        ## Table caption prefix
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Padding')]
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]
+        [System.String] $CaptionStyle = 'Caption',
+
+        ## Table caption display location.
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Padding')]
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]
+        [ValidateSet('Above', 'Below')]
+        [System.String] $CaptionLocation = 'Below',
+
         ## Set as default table style
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Padding')]
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]

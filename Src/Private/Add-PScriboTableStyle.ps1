@@ -37,6 +37,11 @@ function Add-PScriboTableStyle
         [Alias('AlternatingRowStyle')]
         [System.String] $AlternateRowStyle = $RowStyle,
 
+        ## Caption Style Id
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [System.String] $CaptionStyle = 'Normal',
+
         ## Table border size/width (pt)
         [Parameter(ValueFromPipelineByPropertyName)]
         [AllowNull()]
@@ -73,6 +78,14 @@ function Add-PScriboTableStyle
         [ValidateSet('Left','Center','Right')]
         [System.String] $Align = 'Left',
 
+        ## Caption prefix
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.String] $CaptionPrefix = 'Table',
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateSet('Above', 'Below')]
+        [System.String] $CaptionLocation = 'Below',
+
         ## Set as default table style
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.Management.Automation.SwitchParameter] $Default
@@ -81,50 +94,54 @@ function Add-PScriboTableStyle
     {
         if ($BorderWidth -gt 0)
         {
-            $borderStyle = 'Solid';
+            $borderStyle = 'Solid'
         }
-        else {
-            $borderStyle = 'None';
+        else
+        {
+            $borderStyle = 'None'
         }
         if (-not ($pscriboDocument.Styles.ContainsKey($HeaderStyle)))
         {
-            throw ($localized.UndefinedTableHeaderStyleError -f $HeaderStyle);
+            throw ($localized.UndefinedTableHeaderStyleError -f $HeaderStyle)
         }
         if (-not ($pscriboDocument.Styles.ContainsKey($RowStyle)))
         {
-            throw ($localized.UndefinedTableRowStyleError -f $RowStyle);
+            throw ($localized.UndefinedTableRowStyleError -f $RowStyle)
         }
         if (-not ($pscriboDocument.Styles.ContainsKey($AlternateRowStyle)))
         {
-            throw ($localized.UndefinedAltTableRowStyleError -f $AlternateRowStyle);
+            throw ($localized.UndefinedAltTableRowStyleError -f $AlternateRowStyle)
         }
         if (-not (Test-PScriboStyleColor -Color $BorderColor))
         {
-            throw ($localized.InvalidTableBorderColorError -f $BorderColor);
+            throw ($localized.InvalidTableBorderColorError -f $BorderColor)
         }
     }
     process
     {
         $pscriboDocument.Properties['TableStyles']++;
         $tableStyle = [PSCustomObject] @{
-            Id                = $Id.Replace(' ', $pscriboDocument.Options['SpaceSeparator']);
-            Name              = $Id;
-            HeaderStyle       = $HeaderStyle;
-            RowStyle          = $RowStyle;
-            AlternateRowStyle = $AlternateRowStyle;
-            PaddingTop        = ConvertTo-Mm -Point $PaddingTop;
-            PaddingLeft       = ConvertTo-Mm -Point $PaddingLeft;
-            PaddingBottom     = ConvertTo-Mm -Point $PaddingBottom;
-            PaddingRight      = ConvertTo-Mm -Point $PaddingRight;
-            Align             = $Align;
-            BorderWidth       = ConvertTo-Mm -Point $BorderWidth;
-            BorderStyle       = $borderStyle;
-            BorderColor       = Resolve-PScriboStyleColor -Color $BorderColor;
+            Id                = $Id.Replace(' ', $pscriboDocument.Options['SpaceSeparator'])
+            Name              = $Id
+            HeaderStyle       = $HeaderStyle
+            RowStyle          = $RowStyle
+            AlternateRowStyle = $AlternateRowStyle
+            CaptionStyle      = $CaptionStyle
+            PaddingTop        = ConvertTo-Mm -Point $PaddingTop
+            PaddingLeft       = ConvertTo-Mm -Point $PaddingLeft
+            PaddingBottom     = ConvertTo-Mm -Point $PaddingBottom
+            PaddingRight      = ConvertTo-Mm -Point $PaddingRight
+            Align             = $Align
+            BorderWidth       = ConvertTo-Mm -Point $BorderWidth
+            BorderStyle       = $borderStyle
+            BorderColor       = Resolve-PScriboStyleColor -Color $BorderColor
+            CaptionPrefix     = $CaptionPrefix
+            CaptionLocation   = $CaptionLocation
         }
-        $pscriboDocument.TableStyles[$Id] = $tableStyle;
+        $pscriboDocument.TableStyles[$Id] = $tableStyle
         if ($Default)
         {
-            $pscriboDocument.DefaultTableStyle = $tableStyle.Id;
+            $pscriboDocument.DefaultTableStyle = $tableStyle.Id
         }
     }
 }

@@ -1,4 +1,5 @@
-function Table {
+function Table
+{
 <#
     .SYNOPSIS
         Defines a new PScribo document table.
@@ -110,14 +111,7 @@ function Table {
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Hashtable')]
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObjectListKey')]
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'HashtableListKey')]
-        [System.String] $Caption,
-
-        ## Display caption above table.
-        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObject')]
-        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Hashtable')]
-        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObjectListKey')]
-        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'HashtableListKey')]
-        [System.Management.Automation.SwitchParameter] $CaptionTop
+        [System.String] $Caption
     )
     begin
     {
@@ -253,7 +247,6 @@ function Table {
         if ($PSBoundParameters.ContainsKey('Caption'))
         {
             $newPScriboTableParams['Caption'] = $Caption
-            $newPScriboTableParams['CaptionTop'] = $CaptionTop
         }
 
         return (New-PScriboTable @newPScriboTableParams)

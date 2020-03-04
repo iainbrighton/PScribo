@@ -1,4 +1,5 @@
-function Out-XmlDocument {
+function Out-XmlDocument
+{
 <#
     .SYNOPSIS
         Xml output plugin for PScribo.
@@ -26,48 +27,51 @@ function Out-XmlDocument {
     )
     process
     {
-        $pluginName = 'Xml';
-        $stopwatch = [System.Diagnostics.Stopwatch]::StartNew();
-        WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name);
-        $documentName = $Document.Name;
+        $pluginName = 'Xml'
+        $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+        WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name)
+        $documentName = $Document.Name
 
-        $xmlDocument = New-Object -TypeName System.Xml.XmlDocument;
-        [ref] $null = $xmlDocument.AppendChild($xmlDocument.CreateXmlDeclaration('1.0', 'utf-8', 'yes'));
-        $documentId = ($Document.Id -replace '[^a-z0-9-_\.]','').ToLower();
-        $element = $xmlDocument.AppendChild($xmlDocument.CreateElement($documentId));
-        [ref] $null = $element.SetAttribute("name", $documentName);
-        foreach ($s in $Document.Sections.GetEnumerator())
+        $xmlDocument = New-Object -TypeName System.Xml.XmlDocument
+        [ref] $null = $xmlDocument.AppendChild($xmlDocument.CreateXmlDeclaration('1.0', 'utf-8', 'yes'))
+        $documentId = ($Document.Id -replace '[^a-z0-9-_\.]','').ToLower()
+        $element = $xmlDocument.AppendChild($xmlDocument.CreateElement($documentId))
+        [ref] $null = $element.SetAttribute("name", $documentName)
+        foreach ($subSection in $Document.Sections.GetEnumerator())
         {
-            if ($s.Id.Length -gt 40) { $sectionId = '{0}[..]' -f $s.Id.Substring(0,36); }
-            else { $sectionId = $s.Id; }
-            $currentIndentationLevel = 1;
-            if ($null -ne $s.PSObject.Properties['Level']) { $currentIndentationLevel = $s.Level +1; }
-            WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent $currentIndentationLevel;
-            switch ($s.Type)
+            $sectionId = ($subSection.Id -replace '[^a-z0-9-_\.]','').ToLower();
+            $currentIndentationLevel = 1
+            if ($null -ne $subSection.PSObject.Properties['Level'])
             {
-                'PScribo.Section' { [ref] $null = $element.AppendChild((Out-XmlSection -Section $s)); }
-                'PScribo.Paragraph' { [ref] $null = $element.AppendChild((Out-XmlParagraph -Paragraph $s)); }
-                'PScribo.Table' { [ref] $null = $element.AppendChild((Out-XmlTable -Table $s)); }
+                $currentIndentationLevel = $subSection.Level +1
+            }
+            Write-PScriboProcessSectionId -SectionId $sectionId -SectionType $subSection.Type -Indent $currentIndentationLevel
+
+            switch ($subSection.Type)
+            {
+                'PScribo.Section' { [ref] $null = $element.AppendChild((Out-XmlSection -Section $subSection)) }
+                'PScribo.Paragraph' { [ref] $null = $element.AppendChild((Out-XmlParagraph -Paragraph $subSection)) }
+                'PScribo.Table' { [ref] $null = $element.AppendChild((Out-XmlTable -Table $subSection)) }
                 'PScribo.PageBreak'{ } ## Page breaks are not implemented for Xml output
                 'PScribo.LineBreak' { } ## Line breaks are not implemented for Xml output
                 'PScribo.BlankLine' { } ## Blank lines are not implemented for Xml output
                 'PScribo.TOC' { } ## TOC is not implemented for Xml output
-                'PScribo.Image' { [ref] $null = $element.AppendChild((Out-XmlImage -Image $s)); }
+                'PScribo.Image' { [ref] $null = $element.AppendChild((Out-XmlImage -Image $subSection)) }
                 Default {
-                    WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning;
+                    WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
                 }
             }
         }
-        $stopwatch.Stop();
-        WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name);
-        $destinationPath = Join-Path $Path ('{0}.xml' -f $Document.Name);
-        WriteLog -Message ($localized.SavingFile -f $destinationPath);
+        $stopwatch.Stop()
+        WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
+        $destinationPath = Join-Path $Path ('{0}.xml' -f $Document.Name)
+        WriteLog -Message ($localized.SavingFile -f $destinationPath)
         ## Core PowerShell XmlDocument requires a stream
-        $streamWriter = New-Object System.IO.StreamWriter($destinationPath, $false);
-        $xmlDocument.Save($streamWriter);
-        $streamWriter.Close();
-        WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds);
+        $streamWriter = New-Object System.IO.StreamWriter($destinationPath, $false)
+        $xmlDocument.Save($streamWriter)
+        $streamWriter.Close()
+        WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds)
         ## Return the file reference to the pipeline
-        Write-Output (Get-Item -Path $destinationPath);
+        Write-Output (Get-Item -Path $destinationPath)
     }
 }

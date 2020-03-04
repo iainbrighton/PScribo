@@ -16,6 +16,7 @@ function Get-HtmlTableDiv
     {
         $divBuilder = New-Object -TypeName 'System.Text.StringBuilder'
         [ref] $null = $divBuilder.Append('<div style="word-break: break-word; overflow-wrap: anywhere; ')
+
         if ($Table.Tabs -gt 0)
         {
             $invariantMarginLeft = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter (12.7 * $Table.Tabs))

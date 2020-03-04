@@ -38,36 +38,30 @@ function Out-TextDocument {
         }
         $Options = Merge-PScriboPluginOption @mergePScriboPluginOptionParams
 
-        [System.Text.StringBuilder] $textBuilder = New-Object System.Text.StringBuilder
-        foreach ($s in $Document.Sections.GetEnumerator())
+        [System.Text.StringBuilder] $textBuilder = New-Object -Type 'System.Text.StringBuilder'
+        foreach ($subSection in $Document.Sections.GetEnumerator())
         {
-            if ($s.Id.Length -gt 40)
-            {
-                $sectionId = '{0}[..]' -f $s.Id.Substring(0,36)
-            }
-            else
-            {
-                $sectionId = $s.Id
-            }
             $currentIndentationLevel = 1
-            if ($null -ne $s.PSObject.Properties['Level'])
+            if ($null -ne $subSection.PSObject.Properties['Level'])
             {
-                $currentIndentationLevel = $s.Level +1
+                $currentIndentationLevel = $subSection.Level +1
             }
-            WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent $currentIndentationLevel
-            switch ($s.Type)
+            Write-PScriboProcessSectionId -SectionId $subSection.Id -SectionType $subSection.Type -Indent $currentIndentationLevel
+
+            switch ($subSection.Type)
             {
-                'PScribo.Section' { [ref] $null = $textBuilder.Append((Out-TextSection -Section $s)) }
-                'PScribo.Paragraph' { [ref] $null = $textBuilder.Append(($s | Out-TextParagraph)) }
-                'PScribo.PageBreak' { [ref] $null = $textBuilder.AppendLine((Out-TextPageBreak)) }
-                'PScribo.LineBreak' { [ref] $null = $textBuilder.AppendLine((Out-TextLineBreak)) }
-                'PScribo.Table' { [ref] $null = $textBuilder.AppendLine(($s | Out-TextTable)) }
-                'PScribo.TOC' { [ref] $null = $textBuilder.AppendLine(($s | Out-TextTOC)) }
-                'PScribo.BlankLine' { [ref] $null = $textBuilder.AppendLine(($s | Out-TextBlankLine)) }
-                'PScribo.Image' { [ref] $null = $textBuilder.AppendLine(($s | Out-TextImage)) }
-                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning }
+                'PScribo.Section' { [ref] $null = $textBuilder.Append((Out-TextSection -Section $subSection)) }
+                'PScribo.Paragraph' { [ref] $null = $textBuilder.Append((Out-TextParagraph -Paragraph $subSection)) }
+                'PScribo.PageBreak' { [ref] $null = $textBuilder.Append((Out-TextPageBreak)) }
+                'PScribo.LineBreak' { [ref] $null = $textBuilder.Append((Out-TextLineBreak)) }
+                'PScribo.Table' { [ref] $null = $textBuilder.Append((Out-TextTable -Table $subSection)) }
+                'PScribo.TOC' { [ref] $null = $textBuilder.Append((Out-TextTOC -TOC $subSection)) }
+                'PScribo.BlankLine' { [ref] $null = $textBuilder.Append((Out-TextBlankLine -BlankLine $subSection)) }
+                'PScribo.Image' { [ref] $null = $textBuilder.Append((Out-TextImage -Image $subSection)) }
+                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
             }
         }
+
         $stopwatch.Stop()
         WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
         $destinationPath = Join-Path -Path $Path ('{0}.txt' -f $Document.Name)

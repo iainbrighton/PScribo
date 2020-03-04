@@ -21,25 +21,25 @@ function Out-TextTable
     }
     process
     {
-        ## Use the current output buffer width
-        if ($options.TextWidth -eq 0)
-        {
-            $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1
-        }
-        $tableWidth = $options.TextWidth - ($Table.Tabs * 4)
+        $tableStyle = Get-PScriboDocumentStyle -TableStyle $Table.Style
+        $tableBuilder = New-Object -TypeName System.Text.StringBuilder
+        $tableRenderWidth = $options.TextWidth - ($Table.Tabs * 4)
 
+        ## We've got to render the table first to determine how wide it is
+        ## before we can justify it
         if ($Table.IsKeyedList)
         {
             ## Create new objects with headings as properties
             $tableText = (ConvertTo-PSObjectKeyedListTable -Table $Table |
+                            Select-Object -Property * -ExcludeProperty '*__Style' |
                             Format-Table -Wrap -AutoSize |
-                                Out-String -Width $tableWidth).Trim([System.Environment]::NewLine)
+                                Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)
         }
         elseif ($Table.IsList)
         {
             $tableText = ($Table.Rows |
                 Select-Object -Property * -ExcludeProperty '*__Style' |
-                    Format-List | Out-String -Width $tableWidth).Trim([System.Environment]::NewLine)
+                    Format-List | Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)
         }
         else
         {
@@ -48,9 +48,38 @@ function Out-TextTable
             $tableText = ($Table.Rows |
                             Select-Object -Property * -ExcludeProperty '*__Style' |
                                 Format-Table -Wrap -AutoSize |
-                                    Out-String -Width $tableWidth).Trim([System.Environment]::NewLine)
+                                    Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)
         }
-        $tableText = ConvertTo-IndentedString -InputObject $tableText -Tabs $Table.Tabs
-        return ('{0}{1}' -f [System.Environment]::NewLine, $tableText)
+
+        if ($Table.HasCaption -and ($tableStyle.CaptionLocation -eq 'Above'))
+        {
+            $justifiedCaption = Get-TextTableCaption -Table $Table
+            [ref] $null = $tableBuilder.AppendLine($justifiedCaption)
+            [ref] $null = $tableBuilder.AppendLine()
+        }
+
+        ## We don't want to wrap table contents so just justify it
+        $convertToJustifiedStringParams = @{
+            InputObject = $tableText
+            Width = $tableRenderWidth
+            Align = $tableStyle.Align
+        }
+        $justifiedTableText = ConvertTo-JustifiedString @convertToJustifiedStringParams
+
+        [ref] $null = $tableBuilder.Append($justifiedTableText)
+
+        if ($Table.HasCaption -and ($tableStyle.CaptionLocation -eq 'Below'))
+        {
+            $justifiedCaption = Get-TextTableCaption -Table $Table
+            [ref] $null = $tableBuilder.AppendLine()
+            [ref] $null = $tableBuilder.AppendLine()
+            [ref] $null = $tableBuilder.Append($justifiedCaption)
+        }
+
+        $convertToIndentedStringParams = @{
+            InputObject = $tableBuilder.ToString()
+            Tabs        = $Table.Tabs
+        }
+        return (ConvertTo-IndentedString @convertToIndentedStringParams)
     }
 }

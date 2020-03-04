@@ -1,8 +1,8 @@
-function Out-TextImage
+function Get-TextTableCaption
 {
 <#
     .SYNOPSIS
-        Output formatted image text.
+        Generates html <p> caption from a PScribo.Table object.
 #>
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -10,21 +10,24 @@ function Out-TextImage
     (
         [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateNotNull()]
-        [System.Management.Automation.PSObject] $Image
+        [System.Management.Automation.PSObject] $Table
     )
     begin
     {
         ## Fix Set-StrictMode
         if (-not (Test-Path -Path Variable:\Options))
         {
-            $options = New-PScriboTextOption
+            $options = New-PScriboTextOption;
         }
     }
     process
     {
+        $tableStyle = Get-PScriboDocumentStyle -TableStyle $Table.Style
         $convertToAlignedStringParams = @{
-            InputObject = '[Image Text="{0}"]' -f $Image.Text
+            InputObject = '{0} {1} {2}' -f $tableStyle.CaptionPrefix, $Table.Number, $Table.Caption
             Width       = $options.TextWidth
+            Tabs        = $Table.Tabs
+            Align       = $tableStyle.Align
         }
         return (ConvertTo-AlignedString @convertToAlignedStringParams)
     }

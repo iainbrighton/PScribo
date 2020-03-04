@@ -57,33 +57,25 @@ function Out-HtmlSection
             [ref] $null = $sectionBuilder.Append('</div>')
         }
 
-        foreach ($s in $Section.Sections.GetEnumerator())
+        foreach ($subSection in $Section.Sections.GetEnumerator())
         {
-            if ($s.Id.Length -gt 40)
-            {
-                $sectionId = '{0}[..]' -f $s.Id.Substring(0,36)
-            }
-            else
-            {
-                $sectionId = $s.Id
-            }
-
             $currentIndentationLevel = 1
-            if ($null -ne $s.PSObject.Properties['Level'])
+            if ($null -ne $subSection.PSObject.Properties['Level'])
             {
-                $currentIndentationLevel = $s.Level +1
+                $currentIndentationLevel = $subSection.Level +1
             }
-            WriteLog -Message ($localized.PluginProcessingSection -f $s.Type, $sectionId) -Indent $currentIndentationLevel
-            switch ($s.Type)
+            Write-PScriboProcessSectionId -SectionId $subSection.Id -SectionType $subSection.Type -Indent $currentIndentationLevel
+
+            switch ($subSection.Type)
             {
-                'PScribo.Section' { [ref] $null = $sectionBuilder.Append((Out-HtmlSection -Section $s)) }
-                'PScribo.Paragraph' { [ref] $null = $sectionBuilder.Append((Out-HtmlParagraph -Paragraph $s)) }
+                'PScribo.Section' { [ref] $null = $sectionBuilder.Append((Out-HtmlSection -Section $subSection)) }
+                'PScribo.Paragraph' { [ref] $null = $sectionBuilder.Append((Out-HtmlParagraph -Paragraph $subSection)) }
                 'PScribo.LineBreak' { [ref] $null = $sectionBuilder.Append((Out-HtmlLineBreak)) }
                 'PScribo.PageBreak' { [ref] $null = $sectionBuilder.Append((Out-HtmlPageBreak -Orientation $Section.Orientation)) }
-                'PScribo.Table' { [ref] $null = $sectionBuilder.Append((Out-HtmlTable -Table $s)) }
-                'PScribo.BlankLine' { [ref] $null = $sectionBuilder.Append((Out-HtmlBlankLine -BlankLine $s)) }
-                'PScribo.Image' { [ref] $null = $sectionBuilder.Append((Out-HtmlImage -Image $s)) }
-                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $s.Type) -IsWarning }
+                'PScribo.Table' { [ref] $null = $sectionBuilder.Append((Out-HtmlTable -Table $subSection)) }
+                'PScribo.BlankLine' { [ref] $null = $sectionBuilder.Append((Out-HtmlBlankLine -BlankLine $subSection)) }
+                'PScribo.Image' { [ref] $null = $sectionBuilder.Append((Out-HtmlImage -Image $subSection)) }
+                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
             }
         }
         return $sectionBuilder.ToString()

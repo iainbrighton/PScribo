@@ -19,7 +19,7 @@ InModuleScope 'PScribo' {
         $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {}
         $Options = New-PScriboTextOption
 
-        It 'Defaults to 120 and includes new line' {
+        It 'Defaults to 120 and includes 2 new lines' {
             $expected = 124
             if ($isNix) { $expected -= 2 }
 
@@ -28,7 +28,7 @@ InModuleScope 'PScribo' {
             $l.Length | Should Be $expected
         }
 
-        It 'Truncates to 40 and includes new line' {
+        It 'Truncates to 40 and includes 2 new lines' {
             $Options = New-PScriboTextOption -TextWidth 40 -SeparatorWidth 40
             $expected = 44
             if ($isNix) { $expected -= 2 }

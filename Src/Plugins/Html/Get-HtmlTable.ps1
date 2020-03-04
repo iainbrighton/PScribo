@@ -18,9 +18,15 @@ function Get-HtmlTable
     }
     process
     {
+        $tableStyle = Get-PScriboDocumentStyle -TableStyle $Table.Style
         $tableBuilder = New-Object -TypeName System.Text.StringBuilder
         foreach ($formattedTable in $formattedTables)
         {
+            if ($Table.HasCaption -and ($tableStyle.CaptionLocation -eq 'Above'))
+            {
+                [ref] $null = $tableBuilder.Append((Get-HtmlTableCaption -Table $Table))
+            }
+
             [ref] $null = $tableBuilder.Append((Get-HtmlTableDiv -Table $Table))
             [ref] $null = $tableBuilder.Append((Get-HtmlTableColGroup -Table $Table))
 
@@ -85,8 +91,16 @@ function Get-HtmlTable
                 }
                 [ref] $null = $tableBuilder.AppendLine('</tr>')
             }
+
+            [ref] $null = $tableBuilder.AppendLine('</tbody></table>')
+
+            if ($Table.HasCaption -and ($tableStyle.CaptionLocation -eq 'Below'))
+            {
+                [ref] $null = $tableBuilder.Append((Get-HtmlTableCaption -Table $Table))
+            }
+
             ## Add a space between each table to mirror Word output rendering
-            [ref] $null = $tableBuilder.AppendLine('</tbody></table><br /></div>')
+            [ref] $null = $tableBuilder.AppendLine('<br /></div>')
         }
         return $tableBuilder.ToString()
     }

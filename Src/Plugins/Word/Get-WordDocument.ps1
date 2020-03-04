@@ -35,20 +35,13 @@ function Get-WordDocument
 
         foreach ($subSection in $Document.Sections.GetEnumerator())
         {
-            if ($subSection.Id.Length -gt 40)
-            {
-                $sectionId = '{0}[..]' -f $subSection.Id.Substring(0, 36)
-            }
-            else
-            {
-                $sectionId = $subSection.Id
-            }
             $currentIndentationLevel = 1
             if ($null -ne $subSection.PSObject.Properties['Level'])
             {
                 $currentIndentationLevel = $subSection.Level + 1
             }
-            WriteLog -Message ($localized.PluginProcessingSection -f $subSection.Type, $sectionId) -Indent $currentIndentationLevel
+            Write-PScriboProcessSectionId -SectionId $subSection.Id -SectionType $subSection.Type -Indent $currentIndentationLevel
+
             switch ($subSection.Type)
             {
                 'PScribo.Section' {

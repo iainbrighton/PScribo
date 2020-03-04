@@ -15,19 +15,20 @@ InModuleScope 'PScribo' {
     Describe 'Plugins\Text\Out-TextTable' {
 
         ## Scaffold document options
-        $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {}
+        $Document = Document -Name 'TestDocument' -ScriptBlock {}
+        $pscriboDocument = $Document
 
         Context 'As Table' {
 
             $services = @(
-                [ordered] @{ Name = 'TestService1'; 'Service Name' = 'Test 1'; 'Display Name' = 'Test Service 1'; }
-                [ordered] @{ Name = 'TestService3'; 'Service Name' = 'Test 3'; 'Display Name' = 'Test Service 3'; }
-                [ordered] @{ Name = 'TestService2'; 'Service Name' = 'Test 2'; 'Display Name' = 'Test Service 2'; }
+                [Ordered] @{ Name = 'TestService1'; 'Service Name' = 'Test 1'; 'Display Name' = 'Test Service 1'; }
+                [Ordered] @{ Name = 'TestService3'; 'Service Name' = 'Test 3'; 'Display Name' = 'Test Service 3'; }
+                [Ordered] @{ Name = 'TestService2'; 'Service Name' = 'Test 2'; 'Display Name' = 'Test Service 2'; }
             )
 
             It 'Default width of 120' {
-                $expected = 208
-                if ($isNix) { $expected -= 6 }
+                $expected = 206
+                if ($isNix) { $expected -= 5 }
 
                 $table = Table -Hashtable $services -Name 'Test Table' | Out-TextTable
 
@@ -36,8 +37,8 @@ InModuleScope 'PScribo' {
 
             It 'Set width with of 35' {
                 $Options = New-PScriboTextOption -TextWidth 35
-                $expected = 313
-                if ($isNix) { $expected -= 10 }
+                $expected = 311
+                if ($isNix) { $expected -= 9 }
 
                 $table = Table -Hashtable $services -Name 'Test Table' | Out-TextTable
 
@@ -48,14 +49,14 @@ InModuleScope 'PScribo' {
         Context 'As List' {
 
             $services = @(
-                [ordered] @{ Name = 'TestService1'; 'Service Name' = 'Test 1'; 'Display Name' = 'Test Service 1'; }
-                [ordered] @{ Name = 'TestService3'; 'Service Name' = 'Test 3'; 'Display Name' = 'Test Service 3'; }
-                [ordered] @{ Name = 'TestService2'; 'Service Name' = 'Test 2'; 'Display Name' = 'Test Service 2'; }
+                [Ordered] @{ Name = 'TestService1'; 'Service Name' = 'Test 1'; 'Display Name' = 'Test Service 1'; }
+                [Ordered] @{ Name = 'TestService3'; 'Service Name' = 'Test 3'; 'Display Name' = 'Test Service 3'; }
+                [Ordered] @{ Name = 'TestService2'; 'Service Name' = 'Test 2'; 'Display Name' = 'Test Service 2'; }
             )
 
             It 'Default width of 120' {
-                $expected = 255
-                if ($isNix) { $expected -= 12 }
+                $expected = 253
+                if ($isNix) { $expected -= 11 }
 
                 $table = Table -Hashtable $services 'Test Table' -List | Out-TextTable
 
@@ -64,8 +65,8 @@ InModuleScope 'PScribo' {
 
             It 'Default width of 25' {
                 $Options = New-PScriboTextOption -TextWidth 25
-                $expected = 354
-                if ($isNix) { $expected -= 18 }
+                $expected = 352
+                if ($isNix) { $expected -= 17 }
 
                 $table = Table -Hashtable $services 'Test Table' -List | Out-TextTable
 

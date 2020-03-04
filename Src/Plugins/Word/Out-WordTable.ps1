@@ -29,9 +29,16 @@ function Out-WordTable
     process
     {
         $xmlns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        $tableStyle = Get-PScriboDocumentStyle -TableStyle $Table.Style
 
         foreach ($formattedTable in $formattedTables)
         {
+            if ($Table.HasCaption -and ($tableStyle.CaptionLocation -eq 'Above'))
+            {
+                $tableCaption = (Get-WordTableCaption -Table $Table -XmlDocument $XmlDocument)
+                [ref] $null = $Element.AppendChild($tableCaption)
+            }
+
             $tbl = $Element.AppendChild($XmlDocument.CreateElement('w', 'tbl', $xmlns))
             [ref] $null = $tbl.AppendChild((Get-WordTablePr -Table $Table -XmlDocument $XmlDocument))
 
@@ -170,6 +177,13 @@ function Out-WordTable
                     }
                 }
             }
+
+            if ($Table.HasCaption -and ($tableStyle.CaptionLocation -eq 'Below'))
+            {
+                $tableCaption = Get-WordTableCaption -Table $Table -XmlDocument $XmlDocument
+                [ref] $null = $Element.AppendChild($tableCaption)
+            }
+
             ## Output empty line after (each) table
             [ref] $null = $Element.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlns))
         }

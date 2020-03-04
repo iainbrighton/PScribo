@@ -17,13 +17,10 @@ function Out-TextLineBreak
     }
     process
     {
-        ## Use the specified output width
-        if ($options.TextWidth -eq 0)
-        {
-            $options.TextWidth = $Host.UI.RawUI.BufferSize.Width -1
+        $convertToAlignedStringParams = @{
+            InputObject = ''.PadRight($options.SeparatorWidth, $options.LineBreakSeparator)
+            Width       = $options.TextWidth
         }
-        $padding = ''.PadRight($options.SeparatorWidth, $options.LineBreakSeparator)
-        $lineBreak = '{0}{1}' -f (Out-StringWrap -InputObject $padding -Width $options.TextWidth), [System.Environment]::NewLine
-        return $lineBreak
+        return (ConvertTo-AlignedString @convertToAlignedStringParams)
     }
 }

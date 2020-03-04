@@ -23,7 +23,7 @@ function Get-PScriboDocumentStyle
         }
         elseif ($PSCmdlet.ParameterSetName -eq 'TableStyle')
         {
-            return $Document.TableStyles[$Style]
+            return $Document.TableStyles[$TableStyle]
         }
     }
 }

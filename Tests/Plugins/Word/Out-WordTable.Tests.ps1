@@ -31,14 +31,18 @@ InModuleScope 'PScribo' {
 
     Describe 'Plugins\Word\Out-WordTable' {
 
+        BeforeEach {
+            $testRows = Get-Process |
+                Select-Object -Property 'ProcessName','SI','Id' -First 3
+        }
+
         foreach ($tableStyle in @($false, $true)) {
 
             $tableType = if ($tableStyle) { 'Tabular' } else { 'List' }
 
             It "outputs $tableType table border `"<w:tblBorders>[..]</w:tblBorders>`"" {
                 $document = Document -Name 'TestDocument' {
-                    Get-Process |
-                        Select-Object -Property 'ProcessName','SI','Id' -First 3 |
+                    $testRows |
                             Table -Name 'Test Table' -List:$tableStyle
                 }
 
@@ -51,8 +55,7 @@ InModuleScope 'PScribo' {
             It "outputs $tableType table border color" {
                 $defaulBorderColor = '2A70BE'
                 $document = Document -Name 'TestDocument' {
-                    Get-Process |
-                        Select-Object -Property 'ProcessName','SI','Id' -First 3 |
+                    $testRows |
                             Table -Name 'Test Table' -List:$tableStyle
                 }
 
@@ -72,8 +75,7 @@ InModuleScope 'PScribo' {
                 $defaultPaddingBottom = ConvertTo-InvariantCultureString -Object 0
                 $defaultPaddingRight = ConvertTo-InvariantCultureString -Object 86.4
                 $document = Document -Name 'TestDocument' {
-                    Get-Process |
-                        Select-Object -Property 'ProcessName','SI','Id' -First 3 |
+                    $testRows |
                             Table -Name 'Test Table' -List:$tableStyle
                 }
 
@@ -88,8 +90,7 @@ InModuleScope 'PScribo' {
 
             It "outputs $tableType table spacing `"<w:spacing w:before=`"72`" w:after=`"72`" />`"" {
                 $document = Document -Name 'TestDocument' {
-                    Get-Process |
-                        Select-Object -Property 'ProcessName','SI','Id' -First 3 |
+                    $testRows |
                             Table -Name 'Test Table' -List:$tableStyle
                 }
 
@@ -97,6 +98,41 @@ InModuleScope 'PScribo' {
 
                 $expected = GetMatch ('<w:spacing w:before="72" w:after="72" />')
                 $testDocument.DocumentElement.OuterXml | Should Match $expected
+            }
+
+            It "outputs $tableType table with default left alignment `"<w:jc W:val=`"start`" />`"" {
+                $document = Document -Name 'TestDocument' {
+                    $testRows | Table
+                }
+
+                $testDocument = Get-WordDocument -Document $document
+
+                $expected = GetMatch '<w:jc w:val="start" />'
+                $testDocument.OuterXml | Should Match $expected
+            }
+
+            It "outputs $tableType table with center alignment `"<w:jc W:val=`"center`" />`"" {
+                $document = Document -Name 'TestDocument' {
+                    TableStyle 'Center' -Align Center
+                    $testRows | Table -Style 'Center'
+                }
+
+                $testDocument = Get-WordDocument -Document $document
+
+                $expected = GetMatch '<w:jc w:val="center" />'
+                $testDocument.OuterXml | Should Match $expected
+            }
+
+            It "outputs $tableType table with right alignment `"<w:jc W:val=`"end`" />`"" {
+                $document = Document -Name 'TestDocument' {
+                    TableStyle 'Right' -Align Right
+                    $testRows | Table -Style 'Right'
+                }
+
+                $testDocument = Get-WordDocument -Document $document
+
+                $expected = GetMatch '<w:jc w:val="end" />'
+                $testDocument.OuterXml | Should Match $expected
             }
 
         }
@@ -391,6 +427,8 @@ InModuleScope 'PScribo' {
                 $expected = GetMatch "<w:t xml:space=`"preserve`">$licenses</w:t>"
                 $testDocument.OuterXml | Should Match $expected
             }
+
+
         }
     }
 }
