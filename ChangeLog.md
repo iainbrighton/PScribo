@@ -8,6 +8,7 @@
 * Adds keyed list support (#87) - see Example33.ps1
 * Improves text alignment/justification output
 * Adds table caption support (#88) -see Example34.ps1
+* Improves Html page rendering - now displays a minimum page size
 
 ### 0.7.26 ###
 
