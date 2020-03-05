@@ -82,7 +82,16 @@ function Out-HtmlDocument{
         WriteLog -Message ($localized.SavingFile -f $destinationPath)
         $htmlBuilder.ToString().TrimEnd() | Out-File -FilePath $destinationPath -Force -Encoding utf8
         [ref] $null = $htmlBuilder
-        WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds)
+
+        if ($stopwatch.Elapsed.TotalSeconds -gt 90)
+        {
+            WriteLog -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
+        }
+        else
+        {
+            WriteLog -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
+        }
+
         Write-Output (Get-Item -Path $destinationPath)
     }
 }

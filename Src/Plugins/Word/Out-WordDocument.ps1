@@ -133,8 +133,16 @@ function Out-WordDocument
         $package.Close()
         $stopwatch.Stop()
         WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
-        WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds)
-        ## Return the file reference to the pipeline
+
+        if ($stopwatch.Elapsed.TotalSeconds -gt 90)
+        {
+            WriteLog -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
+        }
+        else
+        {
+            WriteLog -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
+        }
+
         Write-Output -InputObject (Get-Item -Path $destinationPath)
     }
 }

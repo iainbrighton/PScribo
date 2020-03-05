@@ -24,6 +24,8 @@ function Out-HtmlStyle
     {
         $stylesBuilder = New-Object -TypeName 'System.Text.StringBuilder'
         [ref] $null = $stylesBuilder.AppendLine('<style type="text/css">')
+        $pageWidth = $Document.Options['PageWidth']
+        $pageHeight = $Document.Options['PageHeight']
         if (-not $NoPageLayoutStyle)
         {
             ## Add HTML page layout styling options, e.g. when emailing HTML documents
@@ -32,9 +34,9 @@ function Out-HtmlStyle
             [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }')
             [ref] $null = $stylesBuilder.AppendLine('@media print { body, page { margin: 0; box-shadow: 0; } }')
             [ref] $null = $stylesBuilder.AppendLine('hr { margin-top: 1.0rem; }')
-            [ref] $null = $stylesBuilder.Append(" .portrait { background: white; width: $($Document.Options['PageWidth'])mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ")
+            [ref] $null = $stylesBuilder.Append(" .portrait { background: white; width: $($pageWidth)mm; min-height: $($pageHeight)mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ")
             [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }')
-            [ref] $null = $stylesBuilder.Append(" .landscape { background: white; width: $($Document.Options['PageHeight'])mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ")
+            [ref] $null = $stylesBuilder.Append(" .landscape { background: white; width: $($pageHeight)mm; min-height: $($pageWidth)mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ")
             [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }')
         }
 

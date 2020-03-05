@@ -68,7 +68,16 @@ function Out-TextDocument {
         WriteLog -Message ($localized.SavingFile -f $destinationPath)
         Set-Content -Value ($textBuilder.ToString()) -Path $destinationPath -Encoding $Options.Encoding
         [ref] $null = $textBuilder
-        WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds)
+
+        if ($stopwatch.Elapsed.TotalSeconds -gt 90)
+        {
+            WriteLog -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
+        }
+        else
+        {
+            WriteLog -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
+        }
+
         ## Return the file reference to the pipeline
         Write-Output (Get-Item -Path $destinationPath)
     }

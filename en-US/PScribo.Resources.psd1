@@ -61,6 +61,7 @@ WritingDocumentPart              = Writing document part '{0}'.
 GeneratingPackageRelationships   = Generating package relationships.
 PluginUnsupportedSection         = Unsupported section '{0}'.
 DocumentProcessingCompleted      = Document '{0}' processing completed.
-TotalProcessingTime              = Total processing time '{0:N2}' seconds.
+TotalProcessingTimeSeconds       = Total processing time '{0:N2}' seconds.
+TotalProcessingTimeMinutes       = Total processing time '{0:N2}' minutes.
 SavingFile                       = Saving file '{0}'.
 '@;

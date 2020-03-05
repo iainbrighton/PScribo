@@ -7,7 +7,7 @@ InModuleScope -ModuleName 'PScribo' -ScriptBlock {
 
     $testRoot = Split-Path -Path $PSScriptRoot -Parent
 
-    Describe -Name 'Image\Get-PScriboImage' -Fixture {
+    Describe -Name 'Get-PScriboImage' -Fixture {
 
         $pscriboDocument = Document -Name 'ScaffoldDocument' -ScriptBlock {
             Image -Path (Join-Path -Path $testRoot -ChildPath 'TestImage.jpg') -Id 1

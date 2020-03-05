@@ -34,9 +34,12 @@ function Get-PScriboImage
             }
             elseif ($subSection.Type -eq 'PScribo.Section')
             {
-                ## Recursively search subsections
-                $PSBoundParameters['Section'] = $subSection.Sections
-                Get-PScriboImage @PSBoundParameters
+                if ($subSection.Sections.Count -gt 0)
+                {
+                    ## Recursively search subsections
+                    $PSBoundParameters['Section'] = $subSection.Sections
+                    Get-PScriboImage @PSBoundParameters
+                }
             }
         }
     }
