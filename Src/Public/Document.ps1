@@ -31,7 +31,7 @@ function Document {
         foreach ($result in & $ScriptBlock)
         {
             ## Ensure we don't have something errant passed down the pipeline (#29)
-            if ($result -is [System.Management.Automation.PSCustomObject])
+            if ($result -is [System.Management.Automation.PSObject])
             {
                 if (('Id' -in $result.PSObject.Properties.Name) -and
                     ('Type' -in $result.PSObject.Properties.Name) -and
@@ -81,7 +81,16 @@ function Document {
 
         WriteLog -Message ($localized.DocumentProcessingCompleted -f $pscriboDocument.Name)
         $stopwatch.Stop()
-        WriteLog -Message ($localized.TotalProcessingTime -f $stopwatch.Elapsed.TotalSeconds)
+
+        if ($stopwatch.Elapsed.TotalSeconds -gt 90)
+        {
+            WriteLog -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
+        }
+        else
+        {
+            WriteLog -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
+        }
+
         return $pscriboDocument
     }
 }
