@@ -106,6 +106,17 @@ function New-PScriboTable
             ListKey         = $ListKey
             DisplayListKey  = $DisplayListKey.ToBool()
         }
+
+        ## Remove captions from List tables where there is more than one row
+        if (($pscriboTable.HasCaption) -and ($pscriboTable.IsList) -and (-not $pscriboTable.IsKeyedList))
+        {
+            if ($pscriboTable.Rows.Count -gt 1)
+            {
+                WriteLog -Message ($localized.ListTableCaptionRemovedWarning -f $Name) -IsWarning
+                $pscriboTable.HasCaption = $false
+                $pscriboTable.Caption = $null
+            }
+        }
         return $pscriboTable
     }
 }

@@ -107,10 +107,7 @@ function Table
         [System.Management.Automation.SwitchParameter] $HideKey,
 
         ## Table caption
-        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObject')]
-        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Hashtable')]
-        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'InputObjectListKey')]
-        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'HashtableListKey')]
+        [Parameter(ValueFromPipelineByPropertyName)]
         [System.String] $Caption
     )
     begin
@@ -244,6 +241,7 @@ function Table
             $newPScriboTableParams['ListKey'] = $Key
             $newPScriboTableParams['DisplayListKey'] = -not $HideKey
         }
+
         if ($PSBoundParameters.ContainsKey('Caption'))
         {
             $newPScriboTableParams['Caption'] = $Caption

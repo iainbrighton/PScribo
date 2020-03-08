@@ -18,9 +18,9 @@ function Out-WordBlankLine
     )
     process
     {
-        $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        $xmlns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
         for ($i = 0; $i -lt $BlankLine.LineCount; $i++) {
-            [ref] $null = $Element.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain))
+            [ref] $null = $Element.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlns))
         }
     }
 }

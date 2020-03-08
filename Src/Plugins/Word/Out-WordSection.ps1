@@ -18,28 +18,28 @@ function Out-WordSection
     )
     process
     {
-        $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        $xmlns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 
-        $p = $Element.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlnsMain));
-        $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
+        $p = $Element.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlns));
+        $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlns));
 
         if (-not [System.String]::IsNullOrEmpty($Section.Style))
         {
-            $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain))
-            [ref] $null = $pStyle.SetAttribute('val', $xmlnsMain, $Section.Style)
+            $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlns))
+            [ref] $null = $pStyle.SetAttribute('val', $xmlns, $Section.Style)
         }
 
         if ($Section.Tabs -gt 0)
         {
-            $ind = $pPr.AppendChild($XmlDocument.CreateElement('w', 'ind', $xmlnsMain));
-            [ref] $null = $ind.SetAttribute('left', $xmlnsMain, (720 * $Section.Tabs));
+            $ind = $pPr.AppendChild($XmlDocument.CreateElement('w', 'ind', $xmlns));
+            [ref] $null = $ind.SetAttribute('left', $xmlns, (720 * $Section.Tabs));
         }
 
-        $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain));
+        $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlns));
         ## Increment heading spacing by 2pt for each section level, starting at 8pt for level 0, 10pt for level 1 etc
         $spacingPt = (($Section.Level * 2) + 8) * 20
-        [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, $spacingPt)
-        [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, $spacingPt)
+        [ref] $null = $spacing.SetAttribute('before', $xmlns, $spacingPt)
+        [ref] $null = $spacing.SetAttribute('after', $xmlns, $spacingPt)
 
         if ($Section.IsSectionBreakEnd)
         {
@@ -56,8 +56,8 @@ function Out-WordSection
         }
 
 
-        $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
-        $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
+        $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+        $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
 
         if ($Document.Options['EnableSectionNumbering'])
         {

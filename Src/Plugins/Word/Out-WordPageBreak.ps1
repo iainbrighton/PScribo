@@ -16,11 +16,11 @@ function Out-WordPageBreak
     )
     process
     {
-        $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
-        $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain)
-        $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
-        $br = $r.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlnsMain))
-        [ref] $null = $br.SetAttribute('type', $xmlnsMain, 'page')
+        $xmlns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        $p = $XmlDocument.CreateElement('w', 'p', $xmlns)
+        $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+        $br = $r.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlns))
+        [ref] $null = $br.SetAttribute('type', $xmlns, 'page')
         return $p
     }
 }

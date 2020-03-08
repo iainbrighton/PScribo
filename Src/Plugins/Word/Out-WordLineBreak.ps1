@@ -16,15 +16,15 @@ function Out-WordLineBreak
     )
     process
     {
-        $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
-        $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain)
-        $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain))
-        $pBdr = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pBdr', $xmlnsMain))
-        $bottom = $pBdr.AppendChild($XmlDocument.CreateElement('w', 'bottom', $xmlnsMain))
-        [ref] $null = $bottom.SetAttribute('val', $xmlnsMain, 'single')
-        [ref] $null = $bottom.SetAttribute('sz', $xmlnsMain, 6)
-        [ref] $null = $bottom.SetAttribute('space', $xmlnsMain, 1)
-        [ref] $null = $bottom.SetAttribute('color', $xmlnsMain, 'auto')
+        $xmlns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        $p = $XmlDocument.CreateElement('w', 'p', $xmlns)
+        $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlns))
+        $pBdr = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pBdr', $xmlns))
+        $bottom = $pBdr.AppendChild($XmlDocument.CreateElement('w', 'bottom', $xmlns))
+        [ref] $null = $bottom.SetAttribute('val', $xmlns, 'single')
+        [ref] $null = $bottom.SetAttribute('sz', $xmlns, 6)
+        [ref] $null = $bottom.SetAttribute('space', $xmlns, 1)
+        [ref] $null = $bottom.SetAttribute('color', $xmlns, 'auto')
         return $p
     }
 }

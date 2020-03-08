@@ -19,21 +19,33 @@ function Get-WordStylesDocument
     process
     {
         ## Create the Style.xml document
-        $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        $xmlns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
         $xmlDocument = New-Object -TypeName 'System.Xml.XmlDocument'
         [ref] $null = $xmlDocument.AppendChild($XmlDocument.CreateXmlDeclaration('1.0', 'utf-8', 'yes'))
-        $documentStyles = $xmlDocument.AppendChild($xmlDocument.CreateElement('w', 'styles', $xmlnsMain))
+        $documentStyles = $xmlDocument.AppendChild($xmlDocument.CreateElement('w', 'styles', $xmlns))
 
-        ## Create default style
-        $defaultStyle = $documentStyles.AppendChild($xmlDocument.CreateElement('w', 'style', $xmlnsMain))
-        [ref] $null = $defaultStyle.SetAttribute('type', $xmlnsMain, 'paragraph')
-        [ref] $null = $defaultStyle.SetAttribute('default', $xmlnsMain, '1')
-        [ref] $null = $defaultStyle.SetAttribute('styleId', $xmlnsMain, 'Normal')
-        $defaultStyleName = $defaultStyle.AppendChild($xmlDocument.CreateElement('w', 'name', $xmlnsMain))
-        [ref] $null = $defaultStyleName.SetAttribute('val', $xmlnsMain, 'Normal')
-        [ref] $null = $defaultStyle.AppendChild($xmlDocument.CreateElement('w', 'qFormat', $xmlnsMain))
+        ## Create the document default style
+        $defaultStyle = $Styles[$Document.DefaultStyle]
+        $docDefaults = $documentStyles.AppendChild($xmlDocument.CreateElement('w', 'docDefaults', $xmlns))
+        $rPrDefault = $docDefaults.AppendChild($xmlDocument.CreateElement('w', 'rPrDefault', $xmlns))
+        $rPr = Get-WordStyleRunPr -Style $defaultStyle -XmlDocument $XmlDocument
+        [ref] $null = $rPrDefault.AppendChild($rPr)
+        $pPrDefault = $docDefaults.AppendChild($xmlDocument.CreateElement('w', 'pPrDefault', $xmlns))
+        $pPr = $pPrDefault.AppendChild($xmlDocument.CreateElement('w', 'pPr', $xmlns))
+        $spacing = $pPr.AppendChild($xmlDocument.CreateElement('w', 'spacing', $xmlns))
+        [ref] $null = $spacing.SetAttribute('after', $xmlns, '0')
 
-        foreach ($Style in $Styles.Values)
+        ## Create default style (will inherit from the document default style)
+        $documentStyle = $documentStyles.AppendChild($xmlDocument.CreateElement('w', 'style', $xmlns))
+        [ref] $null = $documentStyle.SetAttribute('type', $xmlns, 'paragraph')
+        [ref] $null = $documentStyle.SetAttribute('default', $xmlns, '1')
+        [ref] $null = $documentStyle.SetAttribute('styleId', $xmlns, $defaultStyle.Id)
+        $documentStyleName = $documentStyle.AppendChild($xmlDocument.CreateElement('w', 'name', $xmlns))
+        [ref] $null = $documentStyleName.SetAttribute('val', $xmlns, $defaultStyle.Id)
+        [ref] $null = $documentStyle.AppendChild($xmlDocument.CreateElement('w', 'qFormat', $xmlns))
+
+        $nonDefaultStyles = $Styles.Values | Where-Object { $_.Id -ne $defaultStyle.Id }
+        foreach ($Style in $nonDefaultStyles)
         {
             $documentParagraphStyle = Get-WordStyle -Style $Style -XmlDocument $xmlDocument -Type Paragraph
             [ref] $null = $documentStyles.AppendChild($documentParagraphStyle)

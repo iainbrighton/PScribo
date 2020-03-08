@@ -27,25 +27,25 @@ function Out-WordParagraph
     }
     process
     {
-        $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        $xmlns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 
-        $p = $XmlDocument.CreateElement('w', 'p', $xmlnsMain);
-        $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlnsMain));
+        $p = $XmlDocument.CreateElement('w', 'p', $xmlns);
+        $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlns));
 
         if ($Paragraph.Tabs -gt 0)
         {
-            $ind = $pPr.AppendChild($XmlDocument.CreateElement('w', 'ind', $xmlnsMain))
-            [ref] $null = $ind.SetAttribute('left', $xmlnsMain, (720 * $Paragraph.Tabs))
+            $ind = $pPr.AppendChild($XmlDocument.CreateElement('w', 'ind', $xmlns))
+            [ref] $null = $ind.SetAttribute('left', $xmlns, (720 * $Paragraph.Tabs))
         }
         if (-not [System.String]::IsNullOrEmpty($Paragraph.Style))
         {
-            $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlnsMain))
-            [ref] $null = $pStyle.SetAttribute('val', $xmlnsMain, $Paragraph.Style)
+            $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlns))
+            [ref] $null = $pStyle.SetAttribute('val', $xmlns, $Paragraph.Style)
         }
 
-        $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlnsMain))
-        [ref] $null = $spacing.SetAttribute('before', $xmlnsMain, 0)
-        [ref] $null = $spacing.SetAttribute('after', $xmlnsMain, 0)
+        $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlns))
+        [ref] $null = $spacing.SetAttribute('before', $xmlns, 0)
+        [ref] $null = $spacing.SetAttribute('after', $xmlns, 0)
 
         if ($Paragraph.IsSectionBreakEnd)
         {
@@ -61,48 +61,48 @@ function Out-WordParagraph
             [ref] $null = $pPr.AppendChild((Get-WordSectionPr @paragraphPrParams -XmlDocument $xmlDocument))
         }
 
-        $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
-        $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain))
+        $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+        $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlns))
 
         if ($Paragraph.Font)
         {
-            $rFonts = $rPr.AppendChild($XmlDocument.CreateElement('w', 'rFonts', $xmlnsMain))
-            [ref] $null = $rFonts.SetAttribute('ascii', $xmlnsMain, $Paragraph.Font[0])
-            [ref] $null = $rFonts.SetAttribute('hAnsi', $xmlnsMain, $Paragraph.Font[0])
+            $rFonts = $rPr.AppendChild($XmlDocument.CreateElement('w', 'rFonts', $xmlns))
+            [ref] $null = $rFonts.SetAttribute('ascii', $xmlns, $Paragraph.Font[0])
+            [ref] $null = $rFonts.SetAttribute('hAnsi', $xmlns, $Paragraph.Font[0])
         }
 
         if ($Paragraph.Size -gt 0)
         {
-            $sz = $rPr.AppendChild($XmlDocument.CreateElement('w', 'sz', $xmlnsMain))
-            [ref] $null = $sz.SetAttribute('val', $xmlnsMain, $Paragraph.Size * 2)
+            $sz = $rPr.AppendChild($XmlDocument.CreateElement('w', 'sz', $xmlns))
+            [ref] $null = $sz.SetAttribute('val', $xmlns, $Paragraph.Size * 2)
         }
 
         if ($Paragraph.Bold -eq $true)
         {
-            [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'b', $xmlnsMain))
+            [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'b', $xmlns))
         }
 
         if ($Paragraph.Italic -eq $true)
         {
-            [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'i', $xmlnsMain))
+            [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'i', $xmlns))
         }
 
         if ($Paragraph.Underline -eq $true)
         {
-            $u = $rPr.AppendChild($XmlDocument.CreateElement('w', 'u', $xmlnsMain))
-            [ref] $null = $u.SetAttribute('val', $xmlnsMain, 'single')
+            $u = $rPr.AppendChild($XmlDocument.CreateElement('w', 'u', $xmlns))
+            [ref] $null = $u.SetAttribute('val', $xmlns, 'single')
         }
 
         if (-not [System.String]::IsNullOrEmpty($Paragraph.Color))
         {
-            $Color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlnsMain))
-            [ref] $null = $Color.SetAttribute('val', $xmlnsMain, (ConvertTo-WordColor -Color $Paragraph.Color))
+            $Color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlns))
+            [ref] $null = $Color.SetAttribute('val', $xmlns, (ConvertTo-WordColor -Color $Paragraph.Color))
         }
 
         ## Create a separate run for each line/break
         for ($l = 0; $l -lt $lines.Count; $l++)
         {
-            $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlnsMain))
+            $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
             ## needs to be xml:space="preserve" NOT w:space...
             [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
             [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($lines[$l]))
@@ -110,7 +110,7 @@ function Out-WordParagraph
             if ($l -lt ($lines.Count - 1))
             {
                 ## Don't add a line break to the last line/break
-                [ref] $null = $r.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlnsMain))
+                [ref] $null = $r.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlns))
             }
         }
 
