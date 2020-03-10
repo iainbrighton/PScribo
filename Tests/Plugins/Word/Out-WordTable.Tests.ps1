@@ -212,7 +212,7 @@ InModuleScope 'PScribo' {
                 $testDocument.OuterXml | Should Match $expected
             }
 
-            It 'outputs custom cell style "(<w:pPr>[..]<w:pStyle w:val="{0}" /></w:pPr>)"' {
+            It 'outputs custom cell style "(<w:pPr><w:pStyle w:val="{0}" /></w:pPr>)"' {
                 $testStyleName = 'Custom'
                 $document = Document -Name 'TestDocument' {
                     Style -Name $testStyleName -Bold
@@ -225,7 +225,7 @@ InModuleScope 'PScribo' {
 
                 $testDocument = Get-WordDocument -Document $document
 
-                $expected = GetMatch ('(<w:pPr>[..]<w:pStyle w:val="{0}" /></w:pPr>){{1}}' -f $testStyleName)
+                $expected = GetMatch ('(<w:pPr><w:pStyle w:val="{0}" /></w:pPr>){{1}}' -f $testStyleName)
                 $testDocument.OuterXml | Should Match $expected
             }
         }
@@ -314,7 +314,7 @@ InModuleScope 'PScribo' {
                 $testDocument.OuterXml | Should Match $expected
             }
 
-            It 'outputs custom cell style "(<w:pPr>[..]<w:pStyle w:val="{0}" /></w:pPr>){1}"' {
+            It 'outputs custom cell style "(<w:pPr><w:pStyle w:val="{0}" /></w:pPr>){1}"' {
                 $testStyleName = 'Custom'
                 $document = Document -Name 'TestDocument' {
                     Style -Name $testStyleName -Bold
@@ -327,11 +327,11 @@ InModuleScope 'PScribo' {
 
                 $testDocument = Get-WordDocument -Document $document
 
-                $expected = GetMatch ('(<w:pPr>[..]<w:pStyle w:val="{0}" /></w:pPr>){{1}}' -f $testStyleName)
+                $expected = GetMatch ('(<w:pPr><w:pStyle w:val="{0}" /></w:pPr>){{1}}' -f $testStyleName)
                 $testDocument.OuterXml | Should Match $expected
             }
 
-            It 'outputs custom row style "(<w:pPr>[..]<w:pStyle w:val="{0}" /></w:pPr>.*){2}"' {
+            It 'outputs custom row style "(<w:pPr><w:pStyle w:val="{0}" /></w:pPr>.*){2}"' {
                 $testStyleName = 'Custom'
                 $document = Document -Name 'TestDocument' {
                     Style -Name $testStyleName -Bold
@@ -344,7 +344,7 @@ InModuleScope 'PScribo' {
 
                 $testDocument = Get-WordDocument -Document $document
 
-                $expected = GetMatch ('(<w:pPr>[..]<w:pStyle w:val="{0}" /></w:pPr>.*){{2}}' -f $testStyleName)
+                $expected = GetMatch ('(<w:pPr><w:pStyle w:val="{0}" /></w:pPr>.*){{2}}' -f $testStyleName)
                 $testDocument.OuterXml | Should Match $expected
             }
 
