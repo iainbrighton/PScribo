@@ -47,6 +47,13 @@ function Out-WordDocument
         $destinationPath = Join-Path -Path $absolutePath ('{0}.docx' -f $Document.Name)
         if ($PSVersionTable['PSEdition'] -ne 'Core')
         {
+            ## "Unable to determine the identity of the domain" fix (https://github.com/AsBuiltReport/AsBuiltReport.Core/issues/17)
+            $currentAppDomain = [System.Threading.Thread]::GetDomain()
+            $securityIdentityField = $currentAppDomain.GetType().GetField("_SecurityIdentity", ([System.Reflection.BindingFlags]::Instance -bOr [System.Reflection.BindingFlags]::NonPublic))
+            $replacementEvidence = New-Object -TypeName 'System.Security.Policy.Evidence'
+            $securityZoneMyComputer = New-Object -TypeName 'System.Security.Policy.Zone' -ArgumentList @([System.Security.SecurityZone]::MyComputer)
+            $replacementEvidence.AddHost($securityZoneMyComputer)
+            $securityIdentityField.SetValue($currentAppDomain, $replacementEvidence)
             ## WindowsBase.dll is not included in Core PowerShell
             Add-Type -AssemblyName WindowsBase
         }
