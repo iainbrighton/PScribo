@@ -10,6 +10,7 @@
 * Adds table caption support (#88) -see Example34.ps1
 * Improves Html page rendering - now displays a minimum page size
 * Fixes .NET "Unable to determine the identity of the domain" error (https://github.com/AsBuiltReport/AsBuiltReport.Core/issues/17)
+* Fixes Word table style header alignment
 
 ### 0.7.26 ###
 

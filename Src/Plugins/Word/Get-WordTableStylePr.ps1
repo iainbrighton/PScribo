@@ -41,29 +41,8 @@ function Get-WordTableStylePr
         $tblStylePr = $XmlDocument.CreateElement('w', 'tblStylePr', $xmlns)
         [ref] $null = $tblStylePr.SetAttribute('type', $xmlns, $tblStylePrType)
 
-        $rPr = $tblStylePr.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlns))
-        $rFonts = $rPr.AppendChild($XmlDocument.CreateElement('w', 'rFonts', $xmlns))
-        [ref] $null = $rFonts.SetAttribute('ascii', $xmlns, $Style.Font[0])
-        [ref] $null = $rFonts.SetAttribute('hAnsi', $xmlns, $Style.Font[0])
-
-        if ($Style.Bold)
-        {
-            [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'b', $xmlns))
-        }
-        if ($Style.Underline)
-        {
-            [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'u', $xmlns))
-        }
-        if ($Style.Italic)
-        {
-            [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'i', $xmlns))
-        }
-
-        $color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlns))
-        [ref] $null = $color.SetAttribute('val', $xmlns, (ConvertTo-WordColor -Color $Style.Color))
-
-        $sz = $rPr.AppendChild($XmlDocument.CreateElement('w', 'sz', $xmlns))
-        [ref] $null = $sz.SetAttribute('val', $xmlns, ($Style.Size * 2))
+        $rPr = Get-WordStyleRunPr -Style $Style -XmlDocument $XmlDocument
+        [ref] $null = $tblStylePr.AppendChild($rPr)
 
         $tblPr = $tblStylePr.AppendChild($XmlDocument.CreateElement('w', 'tblPr', $xmlns))
         if (-not [System.String]::IsNullOrEmpty($Style.BackgroundColor))
@@ -74,6 +53,17 @@ function Get-WordTableStylePr
             [ref] $null = $shd.SetAttribute('color', $xmlns, 'auto')
             $backgroundColor = ConvertTo-WordColor -Color $Style.BackgroundColor
             [ref] $null = $shd.SetAttribute('fill', $xmlns, $backgroundColor)
+        }
+
+        $pPr = $tblStylePr.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlns))
+        $jc = $pPr.AppendChild($XmlDocument.CreateElement('w', 'jc', $xmlns))
+        if ($Style.Align.ToLower() -eq 'justify')
+        {
+            [ref] $null = $jc.SetAttribute('val', $xmlns, 'distribute')
+        }
+        else
+        {
+            [ref] $null = $jc.SetAttribute('val', $xmlns, $Style.Align.ToLower())
         }
 
         return $tblStylePr

@@ -39,7 +39,6 @@ function Get-WordStyleRunPr
             [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'i', $xmlns))
         }
 
-        ## Leave black colours set to 'automatic' otherwise this overrides table styles
         $wordColor = ConvertTo-WordColor -Color $Style.Color
         $color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlns))
         [ref] $null = $color.SetAttribute('val', $xmlns, $wordColor)
