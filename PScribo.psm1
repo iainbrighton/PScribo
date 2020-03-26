@@ -26,27 +26,5 @@ Get-ChildItem -Path "$pscriboRoot\Src\" -Include '*.ps1' -Recurse |
             ))
     }
 
-$exportedFunctions = @(
-    'BlankLine',
-    'Document',
-    'DocumentOption',
-    'Export-Document',
-    'Image',
-    'LineBreak',
-    'PageBreak',
-    'Paragraph',
-    'Section',
-    'Set-Style',
-    'Style',
-    'Table',
-    'TableStyle',
-    'TOC',
-    'Write-PScriboMessage'
-)
-
-$exportedAliases = @(
-    'GlobalOption'
-)
-
 Add-Type -AssemblyName 'System.Drawing'
-Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases -Verbose:$false
+#Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases -Verbose:$false
