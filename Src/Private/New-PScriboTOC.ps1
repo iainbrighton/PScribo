@@ -6,7 +6,6 @@ function New-PScriboTOC
 
     .NOTES
         This is an internal function and should not be called directly.
-
 #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]

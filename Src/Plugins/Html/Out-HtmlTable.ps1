@@ -3,6 +3,7 @@ function Out-HtmlTable
 <#
     .SYNOPSIS
         Output formatted Html <table> from PScribo.Table object.
+
     .NOTES
         One table is output per table row with the -List parameter.
 #>
@@ -12,13 +13,16 @@ function Out-HtmlTable
     (
         [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateNotNull()]
-        [System.Management.Automation.PSObject] $Table
+        [System.Management.Automation.PSObject] $Table,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $ParseToken
     )
     process
     {
 
         [System.Text.StringBuilder] $tableBuilder = New-Object -TypeName 'System.Text.StringBuilder'
-        $formattedTable = Get-HtmlTable -Table $Table
+        $formattedTable = Get-HtmlTable -Table $Table -ParseToken:$ParseToken
         [ref] $null = $tableBuilder.Append($formattedTable)
         return $tableBuilder.ToString()
     }

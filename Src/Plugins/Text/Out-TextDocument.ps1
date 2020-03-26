@@ -1,4 +1,5 @@
-function Out-TextDocument {
+function Out-TextDocument
+{
 <#
     .SYNOPSIS
         Text output plugin for PScribo.
@@ -28,7 +29,7 @@ function Out-TextDocument {
     {
         $pluginName = 'Text'
         $stopwatch = [Diagnostics.Stopwatch]::StartNew()
-        WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name)
+        Write-PScriboMessage -Message ($localized.DocumentProcessingStarted -f $Document.Name)
 
         ## Merge the document, text default and specified text options
         $mergePScriboPluginOptionParams = @{
@@ -37,8 +38,12 @@ function Out-TextDocument {
             PluginOptions = $Options
         }
         $Options = Merge-PScriboPluginOption @mergePScriboPluginOptionParams
+        $script:currentPageNumber = 1
 
         [System.Text.StringBuilder] $textBuilder = New-Object -Type 'System.Text.StringBuilder'
+        $firstPageHeader = Out-TextHeaderFooter -Header -FirstPage
+        [ref] $null = $textBuilder.Append($firstPageHeader)
+
         foreach ($subSection in $Document.Sections.GetEnumerator())
         {
             $currentIndentationLevel = 1
@@ -62,20 +67,23 @@ function Out-TextDocument {
             }
         }
 
+        $pageFooter =Out-TextHeaderFooter -Footer
+        [ref] $null = $textBuilder.Append($pageFooter)
+
         $stopwatch.Stop()
-        WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
+        Write-PScriboMessage -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
         $destinationPath = Join-Path -Path $Path ('{0}.txt' -f $Document.Name)
-        WriteLog -Message ($localized.SavingFile -f $destinationPath)
+        Write-PScriboMessage -Message ($localized.SavingFile -f $destinationPath)
         Set-Content -Value ($textBuilder.ToString()) -Path $destinationPath -Encoding $Options.Encoding
         [ref] $null = $textBuilder
 
         if ($stopwatch.Elapsed.TotalSeconds -gt 90)
         {
-            WriteLog -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
+            Write-PScriboMessage -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
         }
         else
         {
-            WriteLog -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
+            Write-PScriboMessage -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
         }
 
         ## Return the file reference to the pipeline

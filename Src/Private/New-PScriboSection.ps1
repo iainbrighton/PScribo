@@ -67,6 +67,7 @@ function New-PScriboSection
         if ($PSBoundParameters.ContainsKey('Orientation') -and ($Orientation -ne $script:currentOrientation))
         {
             $pscriboSection.IsSectionBreak = $true;
+            $pscriboDocument.Properties['Pages']++;
             $script:currentOrientation = $Orientation;
         }
         return $pscriboSection;

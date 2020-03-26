@@ -1,4 +1,5 @@
-function Section {
+function Section
+{
 <#
     .SYNOPSIS
         Initializes a new PScribo section object.
@@ -37,7 +38,7 @@ function Section {
     )
     process
     {
-        WriteLog -Message ($localized.ProcessingSectionStarted -f $Name)
+        Write-PScriboMessage -Message ($localized.ProcessingSectionStarted -f $Name)
 
         $newPScriboSectionParams = @{
             Name        = $Name
@@ -50,28 +51,29 @@ function Section {
             $newPScriboSectionParams['Orientation'] = $Orientation
         }
         $pscriboSection = New-PScriboSection @newPScriboSectionParams
+
         foreach ($result in & $ScriptBlock)
         {
             ## Ensure we don't have something errant passed down the pipeline (#29)
-            if ($result -is [System.Management.Automation.PSCustomObject])
+            if ($result -is [System.Management.Automation.PSObject])
             {
                 if (('Id' -in $result.PSObject.Properties.Name) -and
                     ('Type' -in $result.PSObject.Properties.Name) -and
                     ($result.Type -match '^PScribo.'))
-                    {
-                        [ref] $null = $pscriboSection.Sections.Add($result)
-                    }
+                {
+                    [ref] $null = $pscriboSection.Sections.Add($result)
+                }
                 else
                 {
-                    WriteLog -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning
+                    Write-PScriboMessage -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning
                 }
             }
             else
             {
-                WriteLog -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning
+                Write-PScriboMessage -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning
             }
         }
-        WriteLog -Message ($localized.ProcessingSectionCompleted -f $Name)
+        Write-PScriboMessage -Message ($localized.ProcessingSectionCompleted -f $Name)
         return $pscriboSection;
     }
 }

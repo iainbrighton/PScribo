@@ -14,7 +14,7 @@ function Get-WordDocument
     )
     process
     {
-        $xmlnsMain = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        $xmlns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
         $xmlnswpdrawing = 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'
         $xmlnsdrawing = 'http://schemas.openxmlformats.org/drawingml/2006/main'
         $xmlnspicture = 'http://schemas.openxmlformats.org/drawingml/2006/picture'
@@ -23,7 +23,7 @@ function Get-WordDocument
         $xmlnsmath = 'http://schemas.openxmlformats.org/officeDocument/2006/math'
         $xmlDocument = New-Object -TypeName 'System.Xml.XmlDocument'
         [ref] $null = $xmlDocument.AppendChild($xmlDocument.CreateXmlDeclaration('1.0', 'utf-8', 'yes'))
-        $documentXml = $xmlDocument.AppendChild($xmlDocument.CreateElement('w', 'document', $xmlnsMain))
+        $documentXml = $xmlDocument.AppendChild($xmlDocument.CreateElement('w', 'document', $xmlns))
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:xml', 'http://www.w3.org/XML/1998/namespace')
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:pic', $xmlnspicture)
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:wp', $xmlnswpdrawing)
@@ -31,7 +31,8 @@ function Get-WordDocument
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:r', $xmlnsrelationships)
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:m', $xmlnsmath)
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:a14', $xmlnsofficeword14)
-        $body = $documentXml.AppendChild($xmlDocument.CreateElement('w', 'body', $xmlnsMain))
+        $body = $documentXml.AppendChild($xmlDocument.CreateElement('w', 'body', $xmlns))
+        $script:pscriboIsFirstSection = $false
 
         foreach ($subSection in $Document.Sections.GetEnumerator())
         {
@@ -44,33 +45,42 @@ function Get-WordDocument
 
             switch ($subSection.Type)
             {
-                'PScribo.Section' {
+                'PScribo.Section'
+                {
                     Out-WordSection -Section $subSection -Element $body -XmlDocument $xmlDocument
                 }
-                'PScribo.Paragraph' {
+                'PScribo.Paragraph'
+                {
                     [ref] $null = $body.AppendChild((Out-WordParagraph -Paragraph $subSection -XmlDocument $xmlDocument))
                 }
-                'PScribo.Image' {
+                'PScribo.Image'
+                {
                     $Images += @($subSection)
                     [ref] $null = $body.AppendChild((Out-WordImage -Image $subSection -XmlDocument $xmlDocument))
                 }
-                'PScribo.PageBreak' {
+                'PScribo.PageBreak'
+                {
                     [ref] $null = $body.AppendChild((Out-WordPageBreak -PageBreak $subSection -XmlDocument $xmlDocument))
                 }
-                'PScribo.LineBreak' {
+                'PScribo.LineBreak'
+                {
                     [ref] $null = $body.AppendChild((Out-WordLineBreak -LineBreak $subSection -XmlDocument $xmlDocument))
                 }
-                'PScribo.Table' {
+                'PScribo.Table'
+                {
                     Out-WordTable -Table $subSection -XmlDocument $xmlDocument -Element $body
                 }
-                'PScribo.TOC' {
+                'PScribo.TOC'
+                {
                     [ref] $null = $body.AppendChild((Out-WordTOC -TOC $subSection -XmlDocument $xmlDocument))
                 }
-                'PScribo.BlankLine' {
+                'PScribo.BlankLine'
+                {
                     Out-WordBlankLine -BlankLine $subSection -XmlDocument $xmlDocument -Element $body
                 }
-                Default {
-                    WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
+                Default
+                {
+                    Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
                 }
             }
         }
@@ -87,14 +97,15 @@ function Get-WordDocument
         $sectionPrParams = @{
             PageHeight       = $Document.Options['PageHeight']
             PageWidth        = $Document.Options['PageWidth']
-            PageMarginTop    = $Document.Options['MarginTop'];
-            PageMarginBottom = $Document.Options['MarginBottom'];
-            PageMarginLeft   = $Document.Options['MarginLeft'];
-            PageMarginRight  = $Document.Options['MarginRight'];
+            PageMarginTop    = $Document.Options['MarginTop']
+            PageMarginBottom = $Document.Options['MarginBottom']
+            PageMarginLeft   = $Document.Options['MarginLeft']
+            PageMarginRight  = $Document.Options['MarginRight']
             Orientation      = $lastSectionOrientation
         }
-        [ref] $null = $body.AppendChild((Get-WordSectionPr @sectionPrParams -XmlDocument $xmlDocument))
 
+        $wordSectionPr = Get-WordSectionPr @sectionPrParams -XmlDocument $xmlDocument
+        [ref] $null = $body.AppendChild($wordSectionPr)
         return $xmlDocument
     }
 }

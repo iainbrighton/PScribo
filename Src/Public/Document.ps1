@@ -1,4 +1,5 @@
-function Document {
+function Document
+{
 <#
     .SYNOPSIS
         Initializes a new PScribo document object.
@@ -25,6 +26,7 @@ function Document {
         $pluginName = 'Document'
         $stopwatch = [Diagnostics.Stopwatch]::StartNew()
         $pscriboDocument = New-PScriboDocument -Name $Name -Id $Id
+        $pscriboDocument.Properties['Pages']++
         $script:currentOrientation = $pscriboDocument.Options['PageOrientation']
 
         ## Call the Document script block
@@ -41,12 +43,12 @@ function Document {
                     }
                 else
                 {
-                    WriteLog -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning
+                    Write-PScriboMessage -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning
                 }
             }
             else
             {
-                WriteLog -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning
+                Write-PScriboMessage -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning
             }
         }
 
@@ -79,16 +81,16 @@ function Document {
             }
         }
 
-        WriteLog -Message ($localized.DocumentProcessingCompleted -f $pscriboDocument.Name)
+        Write-PScriboMessage -Message ($localized.DocumentProcessingCompleted -f $pscriboDocument.Name)
         $stopwatch.Stop()
 
         if ($stopwatch.Elapsed.TotalSeconds -gt 90)
         {
-            WriteLog -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
+            Write-PScriboMessage -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
         }
         else
         {
-            WriteLog -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
+            Write-PScriboMessage -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
         }
 
         return $pscriboDocument

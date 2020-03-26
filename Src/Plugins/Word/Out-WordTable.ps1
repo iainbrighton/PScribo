@@ -20,7 +20,10 @@ function Out-WordTable
         [System.Xml.XmlElement] $Element,
 
         [Parameter(Mandatory)]
-        [System.Xml.XmlDocument] $XmlDocument
+        [System.Xml.XmlDocument] $XmlDocument,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $ParseToken
     )
     begin
     {
@@ -65,17 +68,6 @@ function Out-WordTable
                     [ref] $null = $trPr.AppendChild($XmlDocument.CreateElement('w', 'tblHeader', $xmlns))
                     $cnfStyle = $trPr.AppendChild($XmlDocument.CreateElement('w', 'cnfStyle', $xmlns))
                     [ref] $null = $cnfStyle.SetAttribute('firstRow', $xmlns, 1)
-                    #[ref] $null = $cnfStyle.SetAttribute('lastRow', $xmlns, 0)
-                    #[ref] $null = $cnfStyle.SetAttribute('firstColumn', $xmlns, 0)
-                    #[ref] $null = $cnfStyle.SetAttribute('lastColumn', $xmlns, 0)
-                    #[ref] $null = $cnfStyle.SetAttribute('oddVBand', $xmlns, 0)
-                    #[ref] $null = $cnfStyle.SetAttribute('evenVBand', $xmlns, 0)
-                    #[ref] $null = $cnfStyle.SetAttribute('oddHBand', $xmlns, 0)
-                    #[ref] $null = $cnfStyle.SetAttribute('evenHBand', $xmlns, 0)
-                    #[ref] $null = $cnfStyle.SetAttribute('firstRowFirstColumn', $xmlns, 0)
-                    #[ref] $null = $cnfStyle.SetAttribute('firstRowLastColumn', $xmlns, 0)
-                    #[ref] $null = $cnfStyle.SetAttribute('lastRowFirstColumn', $xmlns, 0)
-                    #[ref] $null = $cnfStyle.SetAttribute('lastRowLastColumn', $xmlns, 0)
                 }
 
                 for ($c = 0; $c -lt $row.Cells.Count; $c++)
@@ -111,18 +103,7 @@ function Out-WordTable
                     if (($c -eq 0) -and ($r -ne 0))
                     {
                         $cnfStyle = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'cnfStyle', $xmlns))
-                        #[ref] $null = $cnfStyle.SetAttribute('firstRow', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('lastRow', $xmlns, 0)
                         [ref] $null = $cnfStyle.SetAttribute('firstColumn', $xmlns, 1)
-                        #[ref] $null = $cnfStyle.SetAttribute('lastColumn', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('oddVBand', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('evenVBand', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('oddHBand', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('evenHBand', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('firstRowFirstColumn', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('firstRowLastColumn', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('lastRowFirstColumn', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('lastRowLastColumn', $xmlns, 0)
                     }
 
                     $tcW = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'tcW', $xmlns))
@@ -140,22 +121,6 @@ function Out-WordTable
 
                     $p = $tc.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlns))
                     $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlns))
-                    #if ($c -ne 0)
-                    #{
-                        #$cnfStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'cnfStyle', $xmlns))
-                        #[ref] $null = $cnfStyle.SetAttribute('firstRow', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('lastRow', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('firstColumn', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('lastColumn', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('oddVBand', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('evenVBand', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('oddHBand', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('evenHBand', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('firstRowFirstColumn', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('firstRowLastColumn', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('lastRowFirstColumn', $xmlns, 0)
-                        #[ref] $null = $cnfStyle.SetAttribute('lastRowLastColumn', $xmlns, 0)
-                    #}
 
                     if (-not $isCellStyleInherited)
                     {
@@ -168,13 +133,21 @@ function Out-WordTable
                         [ref] $null = $pStyle.SetAttribute('val', $xmlns, $rowStyle.Id)
                     }
 
-                    $rn = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
-                    $t = $rn.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
-                    if (-not [System.String]::IsNullOrEmpty($cell.Content))
+                    if ($ParseToken)
                     {
-                        [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
-                        [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($cell.Content))
+                        Get-PSCriboParagraphRun -Text $cell.Content -XmlDocument $XmlDocument -XmlElement $p
                     }
+                    else
+                    {
+                        $rn = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+                        $t = $rn.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
+                        if (-not [System.String]::IsNullOrEmpty($cell.Content))
+                        {
+                            [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
+                            [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($cell.Content))
+                        }
+                    }
+
                 }
             }
 

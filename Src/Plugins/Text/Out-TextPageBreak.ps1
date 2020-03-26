@@ -9,8 +9,18 @@ function Out-TextPageBreak
     param ( )
     process
     {
-        $lineBreak = Out-TextLineBreak
-        $pageBreak = '{0}{1}' -f $lineBreak, [System.Environment]::NewLine
-        return $pageBreak
+        $pagebreakBuilder = New-Object -TypeName System.Text.StringBuilder
+
+        $isFirstPage = $currentPageNumber -eq 1
+        $pageFooter = Out-TextHeaderFooter -Footer -FirstPage:$isFirstPage
+        [ref] $null = $pageBreakBuilder.Append($pageFooter)
+
+        $script:currentPageNumber++
+        [ref] $null = $pagebreakBuilder.Append((Out-TextLineBreak)).AppendLine()
+
+        $pageHeader = Out-TextHeaderFooter -Header
+        [ref] $null = $pageBreakBuilder.Append($pageHeader)
+
+        return $pageBreakBuilder.ToString()
     }
 }

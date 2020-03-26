@@ -10,7 +10,10 @@ function Get-HtmlTable
     (
         [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateNotNull()]
-        [System.Management.Automation.PSObject] $Table
+        [System.Management.Automation.PSObject] $Table,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $ParseToken
     )
     begin
     {
@@ -67,7 +70,12 @@ function Get-HtmlTable
                     }
                     else
                     {
-                        $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($cell.Content)
+                        $cellContent = $cell.Content
+                        if ($ParseToken)
+                        {
+                            $cellContent = Resolve-PScriboToken -InputObject $cellContent
+                        }
+                        $encodedHtmlContent = [System.Net.WebUtility]::HtmlEncode($cellContent)
                         $encodedHtmlContent = $encodedHtmlContent.Replace([System.Environment]::NewLine, '<br />')
                     }
 

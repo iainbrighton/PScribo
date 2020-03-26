@@ -12,6 +12,8 @@
                             'Document',
                             'DocumentOption',
                             'Export-Document',
+                            'Footer',
+                            'Header',
                             'Image',
                             'LineBreak',
                             'PageBreak',

@@ -10,16 +10,27 @@ function Out-HtmlParagraph
     (
         [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateNotNull()]
-        [System.Management.Automation.PSObject] $Paragraph
+        [System.Management.Automation.PSObject] $Paragraph,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $ParseToken
     )
     process
     {
         [System.Text.StringBuilder] $paragraphBuilder = New-Object -TypeName 'System.Text.StringBuilder'
-        $encodedText = [System.Net.WebUtility]::HtmlEncode($Paragraph.Text)
-        if ([System.String]::IsNullOrEmpty($encodedText))
+
+        $text = $Paragraph.Text
+        if ([System.String]::IsNullOrEmpty($text))
         {
-            $encodedText = [System.Net.WebUtility]::HtmlEncode($Paragraph.Id)
+            $text = $Paragraph.Id
         }
+
+        if ($ParseToken)
+        {
+            $text = Resolve-PScriboToken -InputObject $text
+        }
+
+        $encodedText = [System.Net.WebUtility]::HtmlEncode($text)
         $encodedText = $encodedText.Replace([System.Environment]::NewLine, '<br />')
         $customStyle = Get-HtmlParagraphStyle -Paragraph $Paragraph
         if ([System.String]::IsNullOrEmpty($Paragraph.Style) -and [System.String]::IsNullOrEmpty($customStyle))

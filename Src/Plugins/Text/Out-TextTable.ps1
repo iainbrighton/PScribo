@@ -9,7 +9,10 @@ function Out-TextTable
     param
     (
         [Parameter(Mandatory, ValueFromPipeline)]
-        [System.Management.Automation.PSObject] $Table
+        [System.Management.Automation.PSObject] $Table,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $ParseToken
     )
     begin
     {
@@ -24,6 +27,18 @@ function Out-TextTable
         $tableStyle = Get-PScriboDocumentStyle -TableStyle $Table.Style
         $tableBuilder = New-Object -TypeName System.Text.StringBuilder
         $tableRenderWidth = $options.TextWidth - ($Table.Tabs * 4)
+
+        ## We need to replace page numbers before outputting the table
+        if ($ParseToken)
+        {
+            foreach ($row in $Table.Rows)
+            {
+                foreach ($property in $row.PSObject.Properties)
+                {
+                    $property.Value = Resolve-PScriboToken -InputObject $property.Value
+                }
+            }
+        }
 
         ## We've got to render the table first to determine how wide it is
         ## before we can justify it

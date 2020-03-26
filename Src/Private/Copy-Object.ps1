@@ -1,9 +1,9 @@
+function Copy-Object
+{
 <#
     .SYNOPSIS
         Clones a .NET object by serializing and deserializing it.
 #>
-function Copy-Object
-{
     [CmdletBinding()]
     param
     (

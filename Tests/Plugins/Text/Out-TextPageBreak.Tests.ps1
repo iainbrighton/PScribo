@@ -16,7 +16,8 @@ InModuleScope 'PScribo' {
     Describe 'Plugins\Text\Out-TextPageBreak' {
 
         ## Scaffold document options
-        $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {}
+        $Document = Document -Name 'TestDocument' -ScriptBlock {}
+        $script:currentPageNumber = 1
         $Options = New-PScriboTextOption
 
         It 'Defaults to 120 and includes 2 new lines' {

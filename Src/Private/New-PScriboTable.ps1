@@ -4,28 +4,6 @@ function New-PScriboTable
     .SYNOPSIS
         Initializes a new PScribo table object.
 
-    .PARAMETER Name
-
-    .PARAMETER Columns
-
-    .PARAMETER ColumnWidths
-
-    .PARAMETER Rows
-
-    .PARAMETER Style
-
-    .PARAMETER Width
-
-    .PARAMETER List
-
-    .PARAMETER Width
-
-    .PARAMETER Tabs
-
-    .PARAMETER Caption
-
-    .PARAMETER CaptionTop
-
     .NOTES
         This is an internal function and should not be called directly.
 #>
@@ -112,7 +90,7 @@ function New-PScriboTable
         {
             if ($pscriboTable.Rows.Count -gt 1)
             {
-                WriteLog -Message ($localized.ListTableCaptionRemovedWarning -f $Name) -IsWarning
+                Write-PScriboMessage -Message ($localized.ListTableCaptionRemovedWarning -f $Name) -IsWarning
                 $pscriboTable.HasCaption = $false
                 $pscriboTable.Caption = $null
             }

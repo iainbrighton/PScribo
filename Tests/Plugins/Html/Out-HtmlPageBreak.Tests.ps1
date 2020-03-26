@@ -10,6 +10,7 @@ InModuleScope 'PScribo' {
 
         ## Scaffold new document to initialise options/styles
         $Document = Document -Name 'Test' -ScriptBlock { }
+        $script:currentPageNumber = 1
         $text = Out-HtmlPageBreak -Orientation Portrait
 
         It 'closes previous </div> tags' {

@@ -4,14 +4,6 @@ function New-PScriboTableRow
     .SYNOPSIS
         Defines a new PScribo document table row from an object or hashtable.
 
-    .PARAMETER InputObject
-
-    .PARAMETER Properties
-
-    .PARAMETER Headers
-
-    .PARAMETER Hashtable
-
     .NOTES
         This is an internal function and should not be called directly.
 #>
@@ -40,67 +32,70 @@ function New-PScriboTableRow
     )
     begin
     {
-        Write-Debug ('Using parameter set "{0}.' -f $PSCmdlet.ParameterSetName);
+        Write-Debug ('Using parameter set "{0}.' -f $PSCmdlet.ParameterSetName)
     }
     process
     {
         switch ($PSCmdlet.ParameterSetName)
         {
-            'Hashtable' {
-
+            'Hashtable'
+            {
                 if (-not $Hashtable.Contains('__Style'))
                 {
-                    $Hashtable['__Style'] = $null;
+                    $Hashtable['__Style'] = $null
                 }
                 ## Create and return custom object from hashtable
                 $psCustomObject = [PSCustomObject] $Hashtable
-                return $psCustomObject;
-            } #end Hashtable
+                return $psCustomObject
+            }
+            Default
+            {
+                $objectProperties = [Ordered] @{ }
+                if ($Properties -notcontains '__Style')
+                {
+                    $Properties += '__Style'
+                }
 
-            Default {
-
-                $objectProperties = [Ordered] @{ };
-                if ($Properties -notcontains '__Style') { $Properties += '__Style'; }
                 ## Build up hashtable of required property names
                 for ($i = 0; $i -lt $Properties.Count; $i++)
                 {
-                    $propertyName = $Properties[$i];
-                    $propertyStyleName = '{0}__Style' -f $propertyName;
+                    $propertyName = $Properties[$i]
+                    $propertyStyleName = '{0}__Style' -f $propertyName
                     if ($InputObject.PSObject.Properties[$propertyStyleName])
                     {
                         if ($Headers)
                         {
                             ## Rename the style property to match the header
-                            $headerStyleName = '{0}__Style' -f $Headers[$i];
-                            $objectProperties[$headerStyleName] = $InputObject.$propertyStyleName;
+                            $headerStyleName = '{0}__Style' -f $Headers[$i]
+                            $objectProperties[$headerStyleName] = $InputObject.$propertyStyleName
                         }
                         else
                         {
-                            $objectProperties[$propertyStyleName] = $InputObject.$propertyStyleName;
+                            $objectProperties[$propertyStyleName] = $InputObject.$propertyStyleName
                         }
                     }
                     if ($Headers -and $PropertyName -notlike '*__Style')
                     {
                         if ($InputObject.PSObject.Properties[$propertyName])
                         {
-                            $objectProperties[$Headers[$i]] = $InputObject.$propertyName;
+                            $objectProperties[$Headers[$i]] = $InputObject.$propertyName
                         }
                     }
                     else
                     {
                         if ($InputObject.PSObject.Properties[$propertyName])
                         {
-                            $objectProperties[$propertyName] = $InputObject.$propertyName;
+                            $objectProperties[$propertyName] = $InputObject.$propertyName
                         }
                         else
                         {
-                            $objectProperties[$propertyName] = $null;
+                            $objectProperties[$propertyName] = $null
                         }
                     }
-                } #end foreach property
+                }
 
                 ## Create and return custom object
-                return ([PSCustomObject] $objectProperties);
+                return ([PSCustomObject] $objectProperties)
             }
         }
     }

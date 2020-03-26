@@ -8,7 +8,8 @@ function Get-PScriboDocumentStyle
         Enables testing without having to generate a mock document object!
 #>
     [CmdletBinding()]
-    param (
+    param
+    (
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, ParameterSetName = 'Style')]
         [System.String] $Style,
 

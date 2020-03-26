@@ -30,13 +30,13 @@ function Out-HtmlStyle
         {
             ## Add HTML page layout styling options, e.g. when emailing HTML documents
             [ref] $null = $stylesBuilder.AppendLine('html { height: 100%; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; background: #e6e6e6; }')
-            [ref] $null = $stylesBuilder.Append("page { background: white; width: $($Document.Options['PageWidth'])mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ")
+            [ref] $null = $stylesBuilder.Append("page { background: white; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ")
             [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }')
             [ref] $null = $stylesBuilder.AppendLine('@media print { body, page { margin: 0; box-shadow: 0; } }')
             [ref] $null = $stylesBuilder.AppendLine('hr { margin-top: 1.0rem; }')
-            [ref] $null = $stylesBuilder.Append(" .portrait { background: white; width: $($pageWidth)mm; min-height: $($pageHeight)mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ")
+            [ref] $null = $stylesBuilder.Append(" .portrait { background: white; width: $($pageWidth)mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; position: relative; ")
             [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }')
-            [ref] $null = $stylesBuilder.Append(" .landscape { background: white; width: $($pageHeight)mm; min-height: $($pageWidth)mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; ")
+            [ref] $null = $stylesBuilder.Append(" .landscape { background: white; width: $($pageHeight)mm; display: block; margin-top: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1rem; position: relative; ")
             [ref] $null = $stylesBuilder.AppendLine('border-style: solid; border-width: 1px; border-color: #c6c6c6; }')
         }
 
@@ -46,6 +46,7 @@ function Out-HtmlStyle
             $htmlStyle = Get-HtmlStyle -Style $Styles[$style]
             [ref] $null = $stylesBuilder.AppendFormat(' .{0} {{{1} }}', $Styles[$style].Id, $htmlStyle).AppendLine()
         }
+
         foreach ($tableStyle in $TableStyles.Keys)
         {
             $tStyle = $TableStyles[$tableStyle]

@@ -12,7 +12,10 @@ function Out-WordParagraph
         [System.Management.Automation.PSObject] $Paragraph,
 
         [Parameter(Mandatory)]
-        [System.Xml.XmlDocument] $XmlDocument
+        [System.Xml.XmlDocument] $XmlDocument,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $ParseToken
     )
     begin
     {
@@ -61,56 +64,70 @@ function Out-WordParagraph
             [ref] $null = $pPr.AppendChild((Get-WordSectionPr @paragraphPrParams -XmlDocument $xmlDocument))
         }
 
-        $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
-        $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlns))
-
-        if ($Paragraph.Font)
+        if ($ParseToken)
         {
-            $rFonts = $rPr.AppendChild($XmlDocument.CreateElement('w', 'rFonts', $xmlns))
-            [ref] $null = $rFonts.SetAttribute('ascii', $xmlns, $Paragraph.Font[0])
-            [ref] $null = $rFonts.SetAttribute('hAnsi', $xmlns, $Paragraph.Font[0])
-        }
-
-        if ($Paragraph.Size -gt 0)
-        {
-            $sz = $rPr.AppendChild($XmlDocument.CreateElement('w', 'sz', $xmlns))
-            [ref] $null = $sz.SetAttribute('val', $xmlns, $Paragraph.Size * 2)
-        }
-
-        if ($Paragraph.Bold -eq $true)
-        {
-            [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'b', $xmlns))
-        }
-
-        if ($Paragraph.Italic -eq $true)
-        {
-            [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'i', $xmlns))
-        }
-
-        if ($Paragraph.Underline -eq $true)
-        {
-            $u = $rPr.AppendChild($XmlDocument.CreateElement('w', 'u', $xmlns))
-            [ref] $null = $u.SetAttribute('val', $xmlns, 'single')
-        }
-
-        if (-not [System.String]::IsNullOrEmpty($Paragraph.Color))
-        {
-            $Color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlns))
-            [ref] $null = $Color.SetAttribute('val', $xmlns, (ConvertTo-WordColor -Color $Paragraph.Color))
-        }
-
-        ## Create a separate run for each line/break
-        for ($l = 0; $l -lt $lines.Count; $l++)
-        {
-            $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
-            ## needs to be xml:space="preserve" NOT w:space...
-            [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
-            [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($lines[$l]))
-
-            if ($l -lt ($lines.Count - 1))
+            if ([System.String]::IsNullOrEmpty($Paragraph.Text))
             {
-                ## Don't add a line break to the last line/break
-                [ref] $null = $r.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlns))
+                Get-PSCriboParagraphRun -Text $Paragraph.Id -XmlDocument $XmlDocument -XmlElement $p
+            }
+            else
+            {
+                Get-PSCriboParagraphRun -Text $Paragraph.Text -XmlDocument $XmlDocument -XmlElement $p
+            }
+        }
+        else
+        {
+            $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+            $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlns))
+
+            if ($Paragraph.Font)
+            {
+                $rFonts = $rPr.AppendChild($XmlDocument.CreateElement('w', 'rFonts', $xmlns))
+                [ref] $null = $rFonts.SetAttribute('ascii', $xmlns, $Paragraph.Font[0])
+                [ref] $null = $rFonts.SetAttribute('hAnsi', $xmlns, $Paragraph.Font[0])
+            }
+
+            if ($Paragraph.Size -gt 0)
+            {
+                $sz = $rPr.AppendChild($XmlDocument.CreateElement('w', 'sz', $xmlns))
+                [ref] $null = $sz.SetAttribute('val', $xmlns, $Paragraph.Size * 2)
+            }
+
+            if ($Paragraph.Bold -eq $true)
+            {
+                [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'b', $xmlns))
+            }
+
+            if ($Paragraph.Italic -eq $true)
+            {
+                [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'i', $xmlns))
+            }
+
+            if ($Paragraph.Underline -eq $true)
+            {
+                $u = $rPr.AppendChild($XmlDocument.CreateElement('w', 'u', $xmlns))
+                [ref] $null = $u.SetAttribute('val', $xmlns, 'single')
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Paragraph.Color))
+            {
+                $Color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlns))
+                [ref] $null = $Color.SetAttribute('val', $xmlns, (ConvertTo-WordColor -Color $Paragraph.Color))
+            }
+
+            ## Create a separate run for each line/break
+            for ($l = 0; $l -lt $lines.Count; $l++)
+            {
+                $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
+                ## needs to be xml:space="preserve" NOT w:space...
+                [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
+                [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($lines[$l]))
+
+                if ($l -lt ($lines.Count - 1))
+                {
+                    ## Don't add a line break to the last line/break
+                    [ref] $null = $r.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlns))
+                }
             }
         }
 

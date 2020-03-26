@@ -32,7 +32,7 @@ function New-PScriboDocument
     }
     process
     {
-        WriteLog -Message ($localized.DocumentProcessingStarted -f $Name)
+        Write-PScriboMessage -Message ($localized.DocumentProcessingStarted -f $Name)
         $typeName = 'PScribo.Document'
         $pscriboDocument = [PSCustomObject] @{
             Id                = $Id.ToUpper()
@@ -45,6 +45,18 @@ function New-PScriboDocument
             TableStyles       = New-Object -TypeName System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
             DefaultStyle      = $null
             DefaultTableStyle = $null
+            Header            = [PSCustomObject] @{
+                                    HasFirstPageHeader = $false
+                                    HasDefaultHeader   = $false
+                                    FirstPageHeader    = $null
+                                    DefaultHeader      = $null
+                                }
+            Footer            = [PSCustomObject] @{
+                                    HasFirstPageFooter = $false
+                                    HasDefaultFooter   = $false
+                                    FirstPageFooter    = $null
+                                    DefaultFooter      = $null
+                                }
             TOC               = New-Object -TypeName System.Collections.ArrayList
         }
         $defaultDocumentOptionParams = @{
@@ -70,7 +82,6 @@ function New-PScriboDocument
         Style -Name TableDefaultRow -Size 11 -Verbose:$false
         Style -Name TableDefaultAltRow -Size 11 -BackgroundColor 'd0ddee' -Verbose:$false
         Style -Name Caption -Size 11 -Italic -Verbose:$false
-        Style -Name Footer -Size 8 -Color 0072af -Hide -Verbose:$false
         $tableDefaultStyleParams = @{
             Id                = 'TableDefault'
             BorderWidth       = 1

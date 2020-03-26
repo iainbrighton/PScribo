@@ -56,9 +56,41 @@ function Get-WordSectionPr
 
         $pgMar = $sectPr.AppendChild($XmlDocument.CreateElement('w', 'pgMar', $xmlns))
         [ref] $null = $pgMar.SetAttribute('top', $xmlns, (ConvertTo-Twips -Millimeter $PageMarginTop))
+        [ref] $null = $pgMar.SetAttribute('header', $xmlns, (ConvertTo-Twips -Millimeter $PageMarginTop))
         [ref] $null = $pgMar.SetAttribute('bottom', $xmlns, (ConvertTo-Twips -Millimeter $PageMarginBottom))
+        [ref] $null = $pgMar.SetAttribute('footer', $xmlns, (ConvertTo-Twips -Millimeter $PageMarginBottom))
         [ref] $null = $pgMar.SetAttribute('left', $xmlns, (ConvertTo-Twips -Millimeter $PageMarginLeft))
         [ref] $null = $pgMar.SetAttribute('right', $xmlns, (ConvertTo-Twips -Millimeter $PageMarginRight))
+
+        if ($Document.Header.HasFirstPageHeader)
+        {
+            $headerReference = $sectPr.AppendChild($xmlDocument.CreateElement('w', 'headerReference', $xmlns))
+            [ref] $null = $headerReference.SetAttribute('type', $xmlns, 'first')
+            [ref] $null = $headerReference.SetAttribute('id', $xmlnsrelationships, 'rId3')
+        }
+        if ($Document.Header.HasDefaultHeader)
+        {
+            $headerReference = $sectPr.AppendChild($xmlDocument.CreateElement('w', 'headerReference', $xmlns))
+            [ref] $null = $headerReference.SetAttribute('type', $xmlns, 'default')
+            [ref] $null = $headerReference.SetAttribute('id', $xmlnsrelationships, 'rId4')
+        }
+        if ($Document.Footer.HasFirstPageFooter)
+        {
+            $footerReference = $sectPr.AppendChild($xmlDocument.CreateElement('w', 'footerReference', $xmlns))
+            [ref] $null = $footerReference.SetAttribute('type', $xmlns, 'first')
+            [ref] $null = $footerReference.SetAttribute('id', $xmlnsrelationships, 'rId5')
+        }
+        if ($Document.Footer.HasDefaultFooter)
+        {
+            $footerReference = $sectPr.AppendChild($xmlDocument.CreateElement('w', 'footerReference', $xmlns))
+            [ref] $null = $footerReference.SetAttribute('type', $xmlns, 'default')
+            [ref] $null = $footerReference.SetAttribute('id', $xmlnsrelationships, 'rId6')
+        }
+        if (-not $script:pscriboIsFirstSection)
+        {
+            [ref] $null = $sectPr.AppendChild($xmlDocument.CreateElement('w', 'titlePg', $xmlns))
+            $script:pscriboIsFirstSection = $true
+        }
 
         return $sectPr
     }

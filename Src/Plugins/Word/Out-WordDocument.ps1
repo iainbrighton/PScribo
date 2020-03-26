@@ -30,7 +30,7 @@ function Out-WordDocument
     {
         $pluginName = 'Word'
         $stopwatch = [Diagnostics.Stopwatch]::StartNew()
-        WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name)
+        Write-PScriboMessage -Message ($localized.DocumentProcessingStarted -f $Document.Name)
 
         ## Generate the Word 'document.xml' document part
         $documentXml = Get-WordDocument -Document $Document
@@ -63,51 +63,78 @@ function Out-WordDocument
         }
         catch
         {
-            WriteLog -Message ($localized.OpenPackageError -f $destinationPath) -IsWarning
+            Write-PScriboMessage -Message ($localized.OpenPackageError -f $destinationPath) -IsWarning
             throw $_
         }
 
         ## Create document.xml part
         $documentUri = New-Object -TypeName System.Uri -ArgumentList ('/word/document.xml', [System.UriKind]::Relative)
-        WriteLog -Message ($localized.ProcessingDocumentPart -f $documentUri)
+        Write-PScriboMessage -Message ($localized.ProcessingDocumentPart -f $documentUri)
         $documentPart = $package.CreatePart($documentUri, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml')
         $streamWriter = New-Object -TypeName System.IO.StreamWriter -ArgumentList ($documentPart.GetStream([System.IO.FileMode]::Create, [System.IO.FileAccess]::ReadWrite))
         $xmlWriter = [System.Xml.XmlWriter]::Create($streamWriter)
-        WriteLog -Message ($localized.WritingDocumentPart -f $documentUri)
+        Write-PScriboMessage -Message ($localized.WritingDocumentPart -f $documentUri)
         $documentXml.Save($xmlWriter)
         $xmlWriter.Dispose()
         $streamWriter.Close()
 
         ## Create styles.xml part
         $stylesUri = New-Object -TypeName System.Uri -ArgumentList ('/word/styles.xml', [System.UriKind]::Relative)
-        WriteLog -Message ($localized.ProcessingDocumentPart -f $stylesUri)
+        Write-PScriboMessage -Message ($localized.ProcessingDocumentPart -f $stylesUri)
         $stylesPart = $package.CreatePart($stylesUri, 'application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml')
         $streamWriter = New-Object -TypeName System.IO.StreamWriter -ArgumentList ($stylesPart.GetStream([System.IO.FileMode]::Create, [System.IO.FileAccess]::ReadWrite))
         $xmlWriter = [System.Xml.XmlWriter]::Create($streamWriter)
-        WriteLog -Message ($localized.WritingDocumentPart -f $stylesUri)
+        Write-PScriboMessage -Message ($localized.WritingDocumentPart -f $stylesUri)
         $stylesXml.Save($xmlWriter)
         $xmlWriter.Dispose()
         $streamWriter.Close()
 
         ## Create settings.xml part
         $settingsUri = New-Object -TypeName System.Uri -ArgumentList ('/word/settings.xml', [System.UriKind]::Relative)
-        WriteLog -Message ($localized.ProcessingDocumentPart -f $settingsUri)
+        Write-PScriboMessage -Message ($localized.ProcessingDocumentPart -f $settingsUri)
         $settingsPart = $package.CreatePart($settingsUri, 'application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml')
         $streamWriter = New-Object -TypeName System.IO.StreamWriter -ArgumentList ($settingsPart.GetStream([System.IO.FileMode]::Create, [System.IO.FileAccess]::ReadWrite))
         $xmlWriter = [System.Xml.XmlWriter]::Create($streamWriter)
-        WriteLog -Message ($localized.WritingDocumentPart -f $settingsUri)
+        Write-PScriboMessage -Message ($localized.WritingDocumentPart -f $settingsUri)
         $settingsXml.Save($xmlWriter)
         $xmlWriter.Dispose()
         $streamWriter.Close()
+
+        Out-WordHeaderFooterDocument -Document $Document -Package $package
 
         ## Create the Package relationships
         WriteLog -Message $localized.GeneratingPackageRelationships
         $officeDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument'
         $stylesDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles'
         $settingsDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings'
+
         [ref] $null = $package.CreateRelationship($documentUri, [System.IO.Packaging.TargetMode]::Internal, $officeDocumentUri, 'rId1')
         [ref] $null = $documentPart.CreateRelationship($stylesUri, [System.IO.Packaging.TargetMode]::Internal, $stylesDocumentUri, 'rId1')
         [ref] $null = $documentPart.CreateRelationship($settingsUri, [System.IO.Packaging.TargetMode]::Internal, $settingsDocumentUri, 'rId2')
+
+        $headerDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/header'
+        if ($Document.Header.HasFirstPageHeader)
+        {
+            $firstPageHeaderUri = New-Object -TypeName System.Uri -ArgumentList ('/word/firstPageHeader.xml', [System.UriKind]::Relative)
+            [ref] $null = $documentPart.CreateRelationship($firstPageHeaderUri, [System.IO.Packaging.TargetMode]::Internal, $headerDocumentUri, 'rId3')
+        }
+        if ($Document.Header.HasDefaultHeader)
+        {
+            $defaultHeaderUri = New-Object -TypeName System.Uri -ArgumentList ('/word/defaultHeader.xml', [System.UriKind]::Relative)
+            [ref] $null = $documentPart.CreateRelationship($defaultHeaderUri, [System.IO.Packaging.TargetMode]::Internal, $headerDocumentUri, 'rId4')
+        }
+
+        $footerDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer'
+        if ($Document.Footer.HasFirstPageFooter)
+        {
+            $firstPageFooterUri = New-Object -TypeName System.Uri -ArgumentList ('/word/firstPageFooter.xml', [System.UriKind]::Relative)
+            [ref] $null = $documentPart.CreateRelationship($firstPageFooterUri, [System.IO.Packaging.TargetMode]::Internal, $footerDocumentUri, 'rId5')
+        }
+        if ($Document.Footer.HasDefaultFooter)
+        {
+            $defaultFooterUri = New-Object -TypeName System.Uri -ArgumentList ('/word/defaultFooter.xml', [System.UriKind]::Relative)
+            [ref] $null = $documentPart.CreateRelationship($defaultFooterUri, [System.IO.Packaging.TargetMode]::Internal, $footerDocumentUri, 'rId6')
+        }
 
         ## Process images (assuming we have a section, e.g. example03.ps1)
         if ($Document.Sections.Count -gt 0)
@@ -139,15 +166,15 @@ function Out-WordDocument
         $package.Flush()
         $package.Close()
         $stopwatch.Stop()
-        WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
+        Write-PScriboMessage -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
 
         if ($stopwatch.Elapsed.TotalSeconds -gt 90)
         {
-            WriteLog -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
+            Write-PScriboMessage -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
         }
         else
         {
-            WriteLog -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
+            Write-PScriboMessage -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
         }
 
         Write-Output -InputObject (Get-Item -Path $destinationPath)

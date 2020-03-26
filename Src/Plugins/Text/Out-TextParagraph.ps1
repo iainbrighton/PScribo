@@ -10,7 +10,10 @@ function Out-TextParagraph
     (
         [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateNotNull()]
-        [System.Management.Automation.PSObject] $Paragraph
+        [System.Management.Automation.PSObject] $Paragraph,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $ParseToken
     )
     begin
     {
@@ -35,14 +38,18 @@ function Out-TextParagraph
             $convertToAlignedStringParams['Align'] = $paragraphStyle.Align
         }
 
-        if ([string]::IsNullOrEmpty($Paragraph.Text))
+        $text = $Paragraph.Text
+        if ([string]::IsNullOrEmpty($text))
         {
-            $convertToAlignedStringParams['InputObject'] = $Paragraph.Id
+            $text = $Paragraph.Id
         }
-        else
+
+        if ($ParseToken)
         {
-            $convertToAlignedStringParams['InputObject'] = $Paragraph.Text
+            $text = Resolve-PScriboToken -InputObject $text
         }
+
+        $convertToAlignedStringParams['InputObject'] = $text
 
         return (ConvertTo-AlignedString @convertToAlignedStringParams)
     }
