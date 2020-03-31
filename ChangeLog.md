@@ -2,7 +2,7 @@
 
 ## Versions ##
 
-### Unreleased
+### 0.8.0 ###
 
 * Fixes text line ending output and tests on Linux and MacOS
 * Adds keyed list support (#87) - see Example33.ps1
