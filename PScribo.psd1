@@ -33,6 +33,6 @@
             LicenseUri = 'https://raw.githubusercontent.com/iainbrighton/PScribo/master/LICENSE'
             ProjectUri = 'http://github.com/iainbrighton/PScribo'
             # IconUri = '';
-        } # End of PSData hashtable
-    } # End of PrivateData hashtable
+        }
+    }
 }
