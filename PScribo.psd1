@@ -1,6 +1,6 @@
 @{
     RootModule = 'PScribo.psm1'
-    ModuleVersion = '0.7.26'
+    ModuleVersion = '0.8.0'
     GUID = '058eab05-b7bc-4f8b-a2d1-737cc664b12b'
     Author = 'Iain Brighton'
     CompanyName = 'Virtual Engine'
@@ -35,6 +35,6 @@
             LicenseUri = 'https://raw.githubusercontent.com/iainbrighton/PScribo/master/LICENSE'
             ProjectUri = 'http://github.com/iainbrighton/PScribo'
             # IconUri = '';
-        } # End of PSData hashtable
-    } # End of PrivateData hashtable
+        }
+    }
 }
