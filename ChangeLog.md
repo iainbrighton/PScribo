@@ -2,6 +2,10 @@
 
 ## Versions ##
 
+### Unreleased ###
+
+* Adds Header and Footer support (#80)
+
 ### 0.8.0 ###
 
 * Fixes text line ending output and tests on Linux and MacOS
