@@ -20,7 +20,9 @@ function New-PScriboHeaderFooter
     )
     begin
     {
-        if ((Get-PSCallStack)[3].FunctionName -ne 'Document<Process>')
+        ## Ignores dot-sourced script blocks, i.e. style scripts
+        $psCallStack = Get-PSCallStack | Where-Object { $_.FunctionName -ne '<ScriptBlock>' }
+        if ($psCallStack[2].FunctionName -ne 'Document<Process>')
         {
             throw $localized.HeaderFooterDocumentRootError
         }
