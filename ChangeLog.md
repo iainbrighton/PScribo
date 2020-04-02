@@ -5,6 +5,7 @@
 ### Unreleased ###
 
 * Adds Header and Footer support (#80)
+* Corrects table caption numbering (#96)
 
 ### 0.8.0 ###
 

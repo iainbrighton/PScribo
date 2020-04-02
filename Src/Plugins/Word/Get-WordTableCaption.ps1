@@ -24,7 +24,8 @@ function Get-WordTableCaption
         $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
         $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
         [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
-        [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($tableStyle.CaptionPrefix))
+        $paddedTableCaption = '{0} ' -f $tableStyle.CaptionPrefix
+        [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($paddedTableCaption))
 
         $fldSimple = $p.AppendChild($XmlDocument.CreateElement('w', 'fldSimple', $xmlns))
         [ref] $null = $fldSimple.SetAttribute('instr', $xmlns, ' SEQ Table \* ARABIC ')
@@ -32,7 +33,7 @@ function Get-WordTableCaption
         $rPr2 = $r2.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlns))
         [ref] $null = $rPr2.AppendChild($XmlDocument.CreateElement('w', 'noProof', $xmlns))
         $t2 = $r2.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
-        [ref] $null = $t2.AppendChild($XmlDocument.CreateTextNode($Table.Number))
+        [ref] $null = $t2.AppendChild($XmlDocument.CreateTextNode($Table.CaptionNumber))
 
         $r3 = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
         $rPr3 = $r3.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlns))

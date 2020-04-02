@@ -79,6 +79,7 @@ function New-PScriboTable
             Tabs            = $Tabs
             HasCaption      = $PSBoundParameters.ContainsKey('Caption')
             Caption         = $Caption
+            CaptionNumber   = 0
             IsList          = $List
             IsKeyedList     = $PSBoundParameters.ContainsKey('ListKey')
             ListKey         = $ListKey
@@ -86,15 +87,26 @@ function New-PScriboTable
         }
 
         ## Remove captions from List tables where there is more than one row
-        if (($pscriboTable.HasCaption) -and ($pscriboTable.IsList) -and (-not $pscriboTable.IsKeyedList))
+        if ($pscriboTable.HasCaption)
         {
-            if ($pscriboTable.Rows.Count -gt 1)
+            if (($pscriboTable.IsList) -and (-not $pscriboTable.IsKeyedList))
             {
-                Write-PScriboMessage -Message ($localized.ListTableCaptionRemovedWarning -f $Name) -IsWarning
-                $pscriboTable.HasCaption = $false
-                $pscriboTable.Caption = $null
+                if ($pscriboTable.Rows.Count -gt 1)
+                {
+                    Write-PScriboMessage -Message ($localized.ListTableCaptionRemovedWarning -f $Name) -IsWarning
+                    $pscriboTable.HasCaption = $false
+                    $pscriboTable.Caption = $null
+                }
+            }
+
+            ## Do we still have a caption?!
+            if ($pscriboTable.HasCaption)
+            {
+                $pscriboDocument.Properties['TableCaptions']++
+                $pscriboTable.CaptionNumber = $pscriboDocument.Properties['TableCaptions']
             }
         }
+
         return $pscriboTable
     }
 }

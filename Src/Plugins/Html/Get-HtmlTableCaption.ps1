@@ -17,7 +17,7 @@ function Get-HtmlTableCaption
         $tableStyle = Get-PScriboDocumentStyle -TableStyle $Table.Style
         $pscriboParagraph = [PSCustomObject] @{
             Id                = '{0}{1}' -f $tableStyle.CaptionPrefix, $Table.Number
-            Text              = '{0} {1} {2}' -f $tableStyle.CaptionPrefix, $Table.Number, $Table.Caption
+            Text              = '{0} {1} {2}' -f $tableStyle.CaptionPrefix, $Table.CaptionNumber, $Table.Caption
             Type              = 'PScribo.Paragraph'
             Style             = $tableStyle.CaptionStyle
             Value             = $null

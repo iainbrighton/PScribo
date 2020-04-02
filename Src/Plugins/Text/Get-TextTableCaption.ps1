@@ -24,7 +24,7 @@ function Get-TextTableCaption
     {
         $tableStyle = Get-PScriboDocumentStyle -TableStyle $Table.Style
         $convertToAlignedStringParams = @{
-            InputObject = '{0} {1} {2}' -f $tableStyle.CaptionPrefix, $Table.Number, $Table.Caption
+            InputObject = '{0} {1} {2}' -f $tableStyle.CaptionPrefix, $Table.CaptionNumber, $Table.Caption
             Width       = $options.TextWidth
             Tabs        = $Table.Tabs
             Align       = $tableStyle.Align
