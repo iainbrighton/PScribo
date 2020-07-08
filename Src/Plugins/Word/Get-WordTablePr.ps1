@@ -2,7 +2,7 @@ function Get-WordTablePr
 {
 <#
     .SYNOPSIS
-    Creates a scaffold Word <w:tblPr> element
+        Creates a scaffold Word <w:tblPr> element
 #>
     [CmdletBinding()]
     [OutputType([System.Xml.XmlElement])]
@@ -24,29 +24,21 @@ function Get-WordTablePr
         $tblStyle = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblStyle', $xmlns))
         [ref] $null = $tblStyle.SetAttribute('val', $xmlns, $tableStyle.Id)
 
-        $tableWidthRenderPct = $Table.Width
-        if ($Table.Tabs -gt 0)
-        {
-            $tblInd = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblInd', $xmlns))
-            [ref] $null = $tblInd.SetAttribute('w', $xmlns, (720 * $Table.Tabs))
+        $tblInd = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblInd', $xmlns))
+        [ref] $null = $tblInd.SetAttribute('w', $xmlns, (720 * $Table.Tabs))
+        [ref] $null = $tblInd.SetAttribute('type', $xmlns, 'dxa')
 
-            ## We now need to deal with tables being pushed outside the page margin
-            $pageWidthMm = $Document.Options['PageWidth'] - ($Document.Options['PageMarginLeft'] + $Document.Options['PageMarginRight'])
-            $indentWidthMm = ConvertTo-Mm -Point ($Table.Tabs * 36)
-            $tableRenderMm = (($pageWidthMm / 100) * $Table.Width) + $indentWidthMm
-            if ($tableRenderMm -gt $pageWidthMm)
-            {
-                ## We've over-flowed so need to work out the maximum percentage
-                $maxTableWidthMm = $pageWidthMm - $indentWidthMm
-                $tableWidthRenderPct = [System.Math]::Round(($maxTableWidthMm / $pageWidthMm) * 100, 2)
-                WriteLog -Message ($localized.TableWidthOverflowWarning -f $tableWidthRenderPct) -IsWarning
-            }
-        }
+        $tableRenderWidthMm = Get-WordTableRenderWidthMm -TableWidth $Table.Width -Tabs $Table.Tabs
+        $tableRenderWidthTwips = ConvertTo-Twips -Millimeter $tableRenderWidthMm
 
-        if ($Table.ColumnWidths -or ($Table.Width -gt 0 -and $Table.Width -lt 100))
+        $tblLayout = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblLayout', $xmlns))
+        if ($Table.ColumnWidths -or ($Table.Width -gt 0 -and $Table.Width -le 100))
         {
-            $tblLayout = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblLayout', $xmlns))
             [ref] $null = $tblLayout.SetAttribute('type', $xmlns, 'fixed')
+        }
+        else
+        {
+            [ref] $null = $tblLayout.SetAttribute('type', $xmlns, 'autofit')
         }
 
         $tableAlignment = @{ Left = 'start'; Center = 'center'; Right = 'end'; }
@@ -56,19 +48,22 @@ function Get-WordTablePr
         if ($Table.Width -gt 0)
         {
             $tblW = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblW', $xmlns))
-            [ref] $null = $tblW.SetAttribute('w', $xmlns, ($tableWidthRenderPct * 50))
-            [ref] $null = $tblW.SetAttribute('type', $xmlns, 'pct')
+            [ref] $null = $tblW.SetAttribute('w', $xmlns, $tableRenderWidthTwips)
+            [ref] $null = $tblW.SetAttribute('type', $xmlns, 'dxa')
         }
 
         $tblLook = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblLook', $xmlns))
-        $isFirstRow = ($Table.IsKeyedList -eq $true -or $Table.IsList -eq $false) -as [System.Int32]
-        $isFirstColumn = ($Table.IsKeyedList -eq $true -or $Table.IsList -eq $true) -as [System.Int32]
-        [ref] $null = $tblLook.SetAttribute('firstRow', $xmlns, $isFirstRow)
-        [ref] $null = $tblLook.SetAttribute('lastRow', $xmlns, 0)
-        [ref] $null = $tblLook.SetAttribute('firstColumn', $xmlns, $isFirstColumn)
-        [ref] $null = $tblLook.SetAttribute('lastColumn', $xmlns, 0)
-        [ref] $null = $tblLook.SetAttribute('noHBand', $xmlns, 0)
-        [ref] $null = $tblLook.SetAttribute('noVBand', $xmlns, 1)
+        $isFirstRow = ($Table.IsKeyedList -eq $true -or $Table.IsList -eq $false)
+        $isFirstColumn = ($Table.IsKeyedList -eq $true -or $Table.IsList -eq $true)
+        ## LibreOffice requires legacy conditional formatting value (#99)
+        $val = Get-WordTableConditionalFormattingValue -HasFirstRow:$isFirstRow -HasFirstColumn:$isFirstColumn -NoVerticalBand
+        [ref] $null = $tblLook.SetAttribute('val', $xmlns, ('{0:x4}' -f $val))
+        [ref] $null = $tblLook.SetAttribute('firstRow', $xmlns, ($isFirstRow -as [System.Int32]))
+        [ref] $null = $tblLook.SetAttribute('lastRow', $xmlns, '0')
+        [ref] $null = $tblLook.SetAttribute('firstColumn', $xmlns, ($isFirstColumn -as [System.Int32]))
+        [ref] $null = $tblLook.SetAttribute('lastColumn', $xmlns, '0')
+        [ref] $null = $tblLook.SetAttribute('noHBand', $xmlns, '0')
+        [ref] $null = $tblLook.SetAttribute('noVBand', $xmlns, '1')
 
         if ($tableStyle.BorderWidth -gt 0)
         {

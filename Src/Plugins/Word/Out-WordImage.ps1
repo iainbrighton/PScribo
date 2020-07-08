@@ -32,8 +32,8 @@ function Out-WordImage
         [ref] $null = $jc.SetAttribute('val', $xmlnsMain, $Image.Align.ToLower())
 
         $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlnsMain))
-        $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain))
-        $drawing = $rPr.AppendChild($XmlDocument.CreateElement('w', 'drawing', $xmlnsMain))
+        [ref] $null = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlnsMain))
+        $drawing = $r.AppendChild($XmlDocument.CreateElement('w', 'drawing', $xmlnsMain))
         $inline = $drawing.AppendChild($XmlDocument.CreateElement('wp', 'inline', $xmlnswpDrawingWordProcessing))
         [ref] $null = $inline.SetAttribute('distT', '0')
         [ref] $null = $inline.SetAttribute('distB', '0')
