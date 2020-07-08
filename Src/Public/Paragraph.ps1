@@ -73,7 +73,7 @@ function Paragraph {
         {
             $paragraphDisplayName = $Name
         }
-        WriteLog -Message ($localized.ProcessingParagraph -f $paragraphDisplayName)
+        Write-PScriboMessage -Message ($localized.ProcessingParagraph -f $paragraphDisplayName)
         return (New-PScriboParagraph @PSBoundParameters)
     }
 }

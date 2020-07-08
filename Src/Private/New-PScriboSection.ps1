@@ -41,7 +41,7 @@ function New-PScriboSection
         $psCallStack = Get-PSCallStack | Where-Object { $_.FunctionName -ne '<ScriptBlock>' }
         if ($PSBoundParameters.ContainsKey('Orientation') -and ($psCallStack[2].FunctionName -ne 'Document<Process>'))
         {
-            WriteLog -Message $localized.CannotSetOrientationWarning -IsWarning;
+            Write-PScriboMessage -Message $localized.CannotSetOrientationWarning -IsWarning;
             $null = $PSBoundParameters.Remove('Orientation')
         }
     }

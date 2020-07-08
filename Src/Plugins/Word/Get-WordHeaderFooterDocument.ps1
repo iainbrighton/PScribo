@@ -24,11 +24,11 @@ function Get-WordHeaderFooterDocument
         $headerFooterDocument = New-Object -TypeName 'System.Xml.XmlDocument'
         [ref] $null = $headerFooterDocument.AppendChild($headerFooterDocument.CreateXmlDeclaration('1.0', 'utf-8', 'yes'))
 
-        if ($PSCmdlet.ParameterSetName -eq 'Header')
+        if ($IsHeader -eq $true)
         {
             $elementName = 'hdr'
         }
-        elseif ($PSCmdlet.ParameterSetName -eq 'Footer')
+        elseif ($IsFooter -eq $true)
         {
             $elementName = 'ftr'
         }

@@ -9,6 +9,7 @@ function Out-WordDocument
   #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'pluginName')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter','Options')]
     [OutputType([System.IO.FileInfo])]
     param
     (
@@ -103,7 +104,7 @@ function Out-WordDocument
         Out-WordHeaderFooterDocument -Document $Document -Package $package
 
         ## Create the Package relationships
-        WriteLog -Message $localized.GeneratingPackageRelationships
+        Write-PScriboMessage -Message $localized.GeneratingPackageRelationships
         $officeDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument'
         $stylesDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles'
         $settingsDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings'

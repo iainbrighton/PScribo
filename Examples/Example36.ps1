@@ -29,7 +29,7 @@ $example36 = Document -Name 'PScribo Example 36' {
         It is also possible to define a custom style and assign it to a
         header and/or footer.
     #>
-    Style -Name 'Footer' -Size 11 -Color 0072af -Align Center -Italic
+    Style -Name 'CustomFooter' -Size 11 -Color 0072af -Align Center -Italic
     Footer -Default {
         Paragraph -Style 'CustomFooter' 'Page <!# PageNumber #!> of <!# TotalPages #!>'
     }

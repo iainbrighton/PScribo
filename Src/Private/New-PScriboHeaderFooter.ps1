@@ -9,6 +9,7 @@ function New-PScriboHeaderFooter
 #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter','Footer')]
     [OutputType([System.Management.Automation.PSCustomObject])]
     param
     (

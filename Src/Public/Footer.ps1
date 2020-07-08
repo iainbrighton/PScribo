@@ -34,7 +34,7 @@ function Footer
     )
     process
     {
-        WriteLog -Message $localized.ProcessingFooterStarted
+        Write-PScriboMessage -Message $localized.ProcessingFooterStarted
 
         $pscriboFooter = New-PScriboHeaderFooter -Footer
 

@@ -55,7 +55,7 @@ function Out-TextSection
                 'PScribo.Table' { [ref] $null = $sectionBuilder.Append((Out-TextTable -Table $subSection)) }
                 'PScribo.BlankLine' { [ref] $null = $sectionBuilder.Append((Out-TextBlankLine -BlankLine $subSection)) }
                 'PScribo.Image' { [ref] $null = $sectionBuilder.Append((Out-TextImage -Image $subSection)) }
-                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
+                Default { Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
             }
         }
         return $sectionBuilder.ToString()

@@ -6,6 +6,7 @@
 
 * Adds Header and Footer support (#80)
 * Corrects table caption numbering (#96)
+* Fixes new PSScriptAnalyzer rule and style violations
 
 ### 0.8.0 ###
 

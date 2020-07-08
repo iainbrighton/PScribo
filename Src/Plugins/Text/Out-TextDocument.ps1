@@ -63,7 +63,7 @@ function Out-TextDocument
                 'PScribo.TOC' { [ref] $null = $textBuilder.Append((Out-TextTOC -TOC $subSection)) }
                 'PScribo.BlankLine' { [ref] $null = $textBuilder.Append((Out-TextBlankLine -BlankLine $subSection)) }
                 'PScribo.Image' { [ref] $null = $textBuilder.Append((Out-TextImage -Image $subSection)) }
-                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
+                Default { Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
             }
         }
 

@@ -21,7 +21,7 @@ function Get-WordTableStyle
 
         $style = $XmlDocument.CreateElement('w', 'style', $xmlns)
         [ref] $null = $style.SetAttribute('type', $xmlns, 'table')
-        [ref] $null = $style.SetAttribute('customStype', $xmlns, 1)
+        [ref] $null = $style.SetAttribute('customStyle', $xmlns, '1')
         [ref] $null = $style.SetAttribute('styleId', $xmlns, $tableStyle.Id)
 
         $name = $style.AppendChild($XmlDocument.CreateElement('w', 'name', $xmlns))
@@ -29,11 +29,6 @@ function Get-WordTableStyle
 
         $basedOn = $style.AppendChild($XmlDocument.CreateElement('w', 'basedOn', $xmlns))
         [ref] $null = $basedOn.SetAttribute('val', $xmlns, 'TableNormal')
-
-        #$rPr = $style.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlns))
-        #$rFonts = $rpr.AppendChild($XmlDocument.CreateElement('w', 'rfonts', $xmlns))
-        #[ref] $null = $rFonts.SetAttribute('ascii', $xmlns, $style.Font[0]) ## !! Where does $style come from?!
-        #[ref] $null = $rFonts.SetAttribute('hAnsi', $xmlns, $style.Font[0])
 
         $tblPr = $style.AppendChild($XmlDocument.CreateElement('w', 'tblPr', $xmlns))
         $tblStyleRowBandSize = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblStyleRowBandSize', $xmlns))

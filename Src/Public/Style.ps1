@@ -78,7 +78,7 @@ function Style
     )
     process
     {
-        WriteLog -Message ($localized.ProcessingStyle -f $Id)
+        Write-PScriboMessage -Message ($localized.ProcessingStyle -f $Id)
         Add-PScriboStyle @PSBoundParameters
     }
 }
