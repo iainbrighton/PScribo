@@ -17,6 +17,12 @@ function Get-WordTableRenderWidthMm
     )
     process
     {
+        if ($TableWidth -eq 0)
+        {
+            ## Word will autofit contents as necessary, but LibreOffice won't
+            ## so we just have assume that we're using all available width
+            $TableWidth = 100
+        }
         $pageWidthMm = $Document.Options['PageWidth'] - ($Document.Options['MarginLeft'] + $Document.Options['MarginRight'])
         $indentWidthMm = ConvertTo-Mm -Point ($Tabs * 36)
         $tableWidthRenderMm = (($pageWidthMm / 100) * $TableWidth) + $indentWidthMm
