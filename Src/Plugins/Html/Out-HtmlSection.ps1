@@ -33,7 +33,7 @@ function Out-HtmlSection
         ## Html <h5> is the maximum supported level
         if ($headerLevel -gt 6)
         {
-            WriteLog -Message $localized.MaxHeadingLevelWarning -IsWarning
+            Write-PScriboMessage -Message $localized.MaxHeadingLevelWarning -IsWarning
             $headerLevel = 6
         }
 
@@ -75,7 +75,7 @@ function Out-HtmlSection
                 'PScribo.Table' { [ref] $null = $sectionBuilder.Append((Out-HtmlTable -Table $subSection)) }
                 'PScribo.BlankLine' { [ref] $null = $sectionBuilder.Append((Out-HtmlBlankLine -BlankLine $subSection)) }
                 'PScribo.Image' { [ref] $null = $sectionBuilder.Append((Out-HtmlImage -Image $subSection)) }
-                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
+                Default { Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
             }
         }
         return $sectionBuilder.ToString()

@@ -9,6 +9,7 @@ function Out-XmlDocument
 #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments','pluginName')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter','Options')]
     param
     (
         ## ThePScribo document object to convert to a xml document
@@ -29,7 +30,7 @@ function Out-XmlDocument
     {
         $pluginName = 'Xml'
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-        WriteLog -Message ($localized.DocumentProcessingStarted -f $Document.Name)
+        Write-PScriboMessage -Message ($localized.DocumentProcessingStarted -f $Document.Name)
         $documentName = $Document.Name
 
         $xmlDocument = New-Object -TypeName System.Xml.XmlDocument
@@ -57,15 +58,13 @@ function Out-XmlDocument
                 'PScribo.BlankLine' { } ## Blank lines are not implemented for Xml output
                 'PScribo.TOC' { } ## TOC is not implemented for Xml output
                 'PScribo.Image' { [ref] $null = $element.AppendChild((Out-XmlImage -Image $subSection)) }
-                Default {
-                    WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
-                }
+                Default { Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
             }
         }
         $stopwatch.Stop()
-        WriteLog -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
+        Write-PScriboMessage -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
         $destinationPath = Join-Path $Path ('{0}.xml' -f $Document.Name)
-        WriteLog -Message ($localized.SavingFile -f $destinationPath)
+        Write-PScriboMessage -Message ($localized.SavingFile -f $destinationPath)
         ## Core PowerShell XmlDocument requires a stream
         $streamWriter = New-Object System.IO.StreamWriter($destinationPath, $false)
         $xmlDocument.Save($streamWriter)
@@ -73,11 +72,11 @@ function Out-XmlDocument
 
         if ($stopwatch.Elapsed.TotalSeconds -gt 90)
         {
-            WriteLog -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
+            Write-PScriboMessage -Message ($localized.TotalProcessingTimeMinutes -f $stopwatch.Elapsed.TotalMinutes)
         }
         else
         {
-            WriteLog -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
+            Write-PScriboMessage -Message ($localized.TotalProcessingTimeSeconds -f $stopwatch.Elapsed.TotalSeconds)
         }
 
         Write-Output (Get-Item -Path $destinationPath)

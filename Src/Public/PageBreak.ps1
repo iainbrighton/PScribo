@@ -13,7 +13,7 @@ function PageBreak {
     )
     process
     {
-        WriteLog -Message $localized.ProcessingPageBreak
+        Write-PScriboMessage -Message $localized.ProcessingPageBreak
         return (New-PScriboPageBreak -Id $Id)
     }
 }

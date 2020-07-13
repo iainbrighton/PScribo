@@ -87,7 +87,7 @@ function Image {
             $imageDisplayName = '{0}[..]' -f $Text.Substring(0, 36)
         }
 
-        WriteLog -Message ($localized.ProcessingImage -f $ImageDisplayName)
+        Write-PScriboMessage -Message ($localized.ProcessingImage -f $ImageDisplayName)
         return (New-PScriboImage @PSBoundParameters)
     }
 }

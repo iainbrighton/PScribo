@@ -6,6 +6,7 @@ function Out-WordPageBreak
 #>
     [CmdletBinding()]
     [OutputType([System.Xml.XmlElement])]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter','PageBreak')]
     param
     (
         [Parameter(Mandatory, ValueFromPipeline)]

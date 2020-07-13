@@ -31,7 +31,7 @@
                         )
     PrivateData = @{
         PSData = @{
-            Tags = @('Powershell','PScribo','Documentation','Framework','VirtualEngine','Windows','Linux','MacOS','PSEdition_Desktop','PSEdition_Core')
+            Tags = @('Powershell','PScribo','Documentation','Framework','VirtualEngine','Windows','Linux','MacOS','PSEdition_Desktop','PSEdition_Core','Word','Html')
             LicenseUri = 'https://raw.githubusercontent.com/iainbrighton/PScribo/master/LICENSE'
             ProjectUri = 'http://github.com/iainbrighton/PScribo'
             # IconUri = '';

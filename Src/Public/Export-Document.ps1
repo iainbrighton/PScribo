@@ -50,7 +50,7 @@ function Export-Document {
     {
         foreach ($f in $Format)
         {
-            WriteLog -Message ($localized.DocumentInvokePlugin -f $f) -Plugin 'Export';
+            Write-PScriboMessage -Message ($localized.DocumentInvokePlugin -f $f) -Plugin 'Export';
 
             ## Dynamically generate the output format function name
             $outputFormat = 'Out-{0}Document' -f $f
@@ -64,7 +64,7 @@ function Export-Document {
             }
 
             $fileInfo = & $outputFormat @outputParams
-            WriteLog -Message ($localized.DocumentExportPluginComplete -f $f) -Plugin 'Export'
+            Write-PScriboMessage -Message ($localized.DocumentExportPluginComplete -f $f) -Plugin 'Export'
 
             if ($PassThru)
             {

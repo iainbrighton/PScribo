@@ -23,7 +23,7 @@ function Out-StringWrap
         {
             $Width = 4096
         }
-        WriteLog -Message ('Wrapping text at "{0}" characters.' -f $Width) -IsDebug
+        Write-PScriboMessage -Message ('Wrapping text at "{0}" characters.' -f $Width) -IsDebug
     }
     process
     {

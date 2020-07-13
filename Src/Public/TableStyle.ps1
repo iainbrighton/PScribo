@@ -116,7 +116,7 @@ function TableStyle
             $PSBoundParameters['PaddingRight'] = $Padding
             $null = $PSBoundParameters.Remove('Padding')
         }
-        WriteLog -Message ($localized.ProcessingTableStyle -f $Id)
+        Write-PScriboMessage -Message ($localized.ProcessingTableStyle -f $Id)
         Add-PScriboTableStyle @PSBoundParameters
     }
 }

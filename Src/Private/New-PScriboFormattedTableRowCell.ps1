@@ -18,10 +18,7 @@ function New-PScriboFormattedTableRowCell
 
         [Parameter(ValueFromPipelineByPropertyName)]
         [AllowNull()]
-        [System.String] $Style = $null,
-
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Boolean] $IsAlternateRow
+        [System.String] $Style = $null
     )
     process
     {

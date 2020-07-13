@@ -292,14 +292,14 @@ InModuleScope 'PScribo' {
                 $testDocument.OuterXml | Should Match $expected
             }
 
-            It 'outputs grid per column "(<w:gridCol />){2}"' {
+            It 'outputs grid per column "(<w:gridCol w:w=`"\d+`" />){2}"' {
                 $document = Document -Name 'TestDocument' {
                     $testRows | Table -Name 'Test Table'
                 }
 
                 $testDocument = Get-WordDocument -Document $document
 
-                $expected = GetMatch '(<w:gridCol />){2}'
+                $expected = GetMatch '(<w:gridCol w:w="\d+" />){2}'
                 $testDocument.OuterXml | Should Match $expected
             }
 
@@ -381,14 +381,14 @@ InModuleScope 'PScribo' {
                 $testDocument.OuterXml | Should Match $expected
             }
 
-            It 'outputs text per cell "(<w:t xml:space="preserve">[..]</w:t>.*){8}"' {
+            It 'outputs text per cell "(<w:t>[..]</w:t>.*){8}"' {
                 $document = Document -Name 'TestDocument' {
                     $testRows | Table -Name 'Test Table' -Columns 'ProcessName','SI' -ColumnWidths 30,70
                 }
 
                 $testDocument = Get-WordDocument -Document $document
 
-                $expected = GetMatch '(<w:t xml:space="preserve">[..]</w:t>.*){8}'
+                $expected = GetMatch '(<w:t>[..]</w:t>.*){8}'
                 $testDocument.OuterXml | Should Match $expected
             }
 
@@ -424,7 +424,7 @@ InModuleScope 'PScribo' {
 
                 $testDocument = Get-WordDocument -Document $document
 
-                $expected = GetMatch "<w:t xml:space=`"preserve`">$licenses</w:t>"
+                $expected = GetMatch "<w:t>$licenses</w:t>"
                 $testDocument.OuterXml | Should Match $expected
             }
 

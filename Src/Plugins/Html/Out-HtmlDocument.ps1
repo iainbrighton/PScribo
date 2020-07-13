@@ -78,7 +78,7 @@ function Out-HtmlDocument
                 'PScribo.TOC' { [ref] $null = $htmlBuilder.Append((Out-HtmlTOC -TOC $subSection)) }
                 'PScribo.BlankLine' { [ref] $null = $htmlBuilder.Append((Out-HtmlBlankLine -BlankLine $subSection)) }
                 'PScribo.Image' { [ref] $null = $htmlBuilder.Append((Out-HtmlImage -Image $subSection)) }
-                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
+                Default { Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
             }
         } #end foreach section
 

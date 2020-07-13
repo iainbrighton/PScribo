@@ -17,7 +17,7 @@ function TOC {
     )
     process
     {
-        WriteLog -Message ($localized.ProcessingTOC -f $Name)
+        Write-PScriboMessage -Message ($localized.ProcessingTOC -f $Name)
         return (New-PScriboTOC @PSBoundParameters)
     }
 }
