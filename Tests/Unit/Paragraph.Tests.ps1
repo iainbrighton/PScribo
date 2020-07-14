@@ -37,7 +37,7 @@ InModuleScope 'PScribo' {
                 $p = Paragraph -Name Test -Text $text
 
                 $p.Id | Should Be 'Test'
-                $p.Text | Should Be $text
+                $p.Sections[0].Text | Should Be $text
             }
 
             It 'creates paragraph by named -Name, -Text and -Style parameters' {
@@ -47,103 +47,72 @@ InModuleScope 'PScribo' {
                 $p = Paragraph -Name Test -Text $text -Style $style
 
                 $p.Id | Should Be 'Test'
-                $p.Text | Should Be $text
-                $p.Style | Should Be $style
-            }
-
-            It 'creates paragraph by named -Name, -Text and -Value parameters' {
-                $text = 'Simple paragraph.'
-                $value = 'Test'
-
-                $p = Paragraph -Name Test -Text $text -Value $value
-
-                $p.Id | Should Be 'Test'
-                $p.Text | Should Be $text
-                $p.Value | Should Be $value
-            }
-
-            It 'creates paragraph by named -Name, -Text, -Value and -Style parameters' {
-                $text = 'Simple paragraph.'
-                $value = 'Test'
-                $style = 'Test'
-
-                $p = Paragraph -Name Test -Text $text -Value $value -Style $style
-
-                $p.Id | Should Be 'Test'
-                $p.Text | Should Be $text
-                $p.Value | Should Be $value
+                $p.Sections[0].Text | Should Be $text
                 $p.Style | Should Be $style
             }
 
             It 'creates a paragraph with custom Bold formatting' {
                 $text = 'Simple paragraph.'
-                $value = 'Test'
                 $style = 'Test'
 
-                $p = Paragraph -Name Test -Text $text -Value $value -Style $style -Bold
+                $p = Paragraph -Name Test -Text $text -Style $style -Bold
 
-                $p.Bold | Should Be $true
+                $p.Sections[0].Bold | Should Be $true
             }
 
             It 'creates a paragraph with custom Italic formatting' {
                 $text = 'Simple paragraph.'
-                $value = 'Test'
                 $style = 'Test'
 
-                $p = Paragraph -Name Test -Text $text -Value $value -Style $style -Italic
+                $p = Paragraph -Name Test -Text $text -Style $style -Italic
 
-                $p.Italic | Should Be $true
+                $p.Sections[0].Italic | Should Be $true
             }
 
             It 'creates a paragraph with custom Underline formatting' {
                 $text = 'Simple paragraph.'
-                $value = 'Test'
                 $style = 'Test'
 
-                $p = Paragraph -Name Test -Text $text -Value $value -Style $style -Underline
+                $p = Paragraph -Name Test -Text $text -Style $style -Underline
 
-                $p.Underline | Should Be $true
+                $p.Sections[0].Underline | Should Be $true
             }
 
             It 'creates a paragraph with custom Size formatting' {
                 $text = 'Simple paragraph.'
-                $value = 'Test'
                 $style = 'Test'
 
-                $p = Paragraph -Name Test -Text $text -Value $value -Style $style -Size 14
+                $p = Paragraph -Name Test -Text $text -Style $style -Size 14
 
-                $p.Size | Should Be 14
+                $p.Sections[0].Size | Should Be 14
             }
 
             It 'creates a paragraph with custom Color formatting' {
                 $text = 'Simple paragraph.'
-                $value = 'Test'
                 $style = 'Test'
 
-                $p = Paragraph -Name Test -Text $text -Value $value -Style $style -Color ff0
+                $p = Paragraph -Name Test -Text $text -Style $style -Color ff0
 
-                $p.Color | Should Be 'ff0'
+                $p.Sections[0].Color | Should Be 'ff0'
             }
 
             It 'creates a paragraph with custom Font formatting' {
                 $text = 'Simple paragraph.'
-                $value = 'Test'
                 $style = 'Test'
 
-                $p = Paragraph -Name Test -Text $text -Value $value -Style $style -Font 'Courier New'
+                $p = Paragraph -Name Test -Text $text -Style $style -Font 'Courier New'
 
-                $p.Font | Should Be 'Courier New'
+                $p.Sections[0].Font | Should Be 'Courier New'
             }
 
             It 'creates a paragraph with custom Font[] formatting' {
                 $text = 'Simple paragraph.'
-                $value = 'Test'
                 $style = 'Test'
 
-                $p = Paragraph -Name Test -Text $text -Value $value -Style $style -Font 'Courier New','Consolas'
+                $p = Paragraph -Name Test -Text $text -Style $style -Font 'Courier New','Consolas'
 
-                $p.Font -contains 'Courier New' | Should Be $true
-                $p.Font -contains 'Consolas' | Should Be $true
+                $p.Sections[0].Font -contains 'Courier New' | Should Be $true
+                $p.Sections[0].Font -contains 'Consolas' | Should Be $true
             }
         }
 
@@ -165,30 +134,17 @@ InModuleScope 'PScribo' {
                 $p = Paragraph Test $text
 
                 $p.Id | Should Be 'Test'
-                $p.Text | Should Be $text
+                $p.Sections[0].Text | Should Be $text
             }
 
-            It 'creates paragraph by positional -Name, -Text and -Value parameters' {
+            It 'creates paragraph by positional -Name, -Text and named -Style parameters' {
                 $text = 'Simple paragraph.'
-                $value = 'TestValue'
-
-                $p = Paragraph Test $text $value
-
-                $p.Id | Should Be 'Test'
-                $p.Text | Should Be $text
-                $p.Value | Should Be $value
-            }
-
-            It 'creates paragraph by positional -Name, -Text and -Value and named -Style parameters' {
-                $text = 'Simple paragraph.'
-                $value = 'TestValue'
                 $style = 'Test'
 
-                $p = Paragraph Test $text $value -Style $style
+                $p = Paragraph Test $text -Style $style
 
                 $p.Id | Should Be 'Test'
-                $p.Text | Should Be $text
-                $p.Value | Should Be $value
+                $p.Sections[0].Text | Should Be $text
                 $p.Style | Should Be $style
             }
         }

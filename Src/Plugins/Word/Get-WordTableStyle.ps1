@@ -47,7 +47,8 @@ function Get-WordTableStyle
                 $borderType = $tblBorders.AppendChild($XmlDocument.CreateElement('w', $border, $xmlns))
                 [ref] $null = $borderType.SetAttribute('sz', $xmlns, (ConvertTo-Octips $tableStyle.BorderWidth))
                 [ref] $null = $borderType.SetAttribute('val', $xmlns, 'single')
-                [ref] $null = $borderType.SetAttribute('color', $xmlns, (ConvertTo-WordColor -Color $tableStyle.BorderColor))
+                $borderColor = ConvertTo-WordColor -Color (Resolve-PScriboStyleColor -Color $tableStyle.BorderColor)
+                [ref] $null = $borderType.SetAttribute('color', $xmlns, (ConvertTo-WordColor -Color $borderColor))
             }
         }
 

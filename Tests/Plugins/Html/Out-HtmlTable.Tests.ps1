@@ -8,6 +8,8 @@ InModuleScope 'PScribo' {
 
     Describe 'Plugins\Html\Out-HtmlTable' {
 
+        $script:currentPageNumber = 1
+
         Context 'Table' {
 
             BeforeEach {

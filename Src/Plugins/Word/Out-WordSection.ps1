@@ -55,7 +55,6 @@ function Out-WordSection
             [ref] $null = $pPr.AppendChild((Get-WordSectionPr @sectionPrParams -XmlDocument $xmlDocument))
         }
 
-
         $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
         $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
 
@@ -80,28 +79,36 @@ function Out-WordSection
 
             switch ($subSection.Type)
             {
-                'PScribo.Section' {
+                'PScribo.Section'
+                {
                     Out-WordSection -Section $subSection -Element $Element -XmlDocument $XmlDocument
                 }
-                'PScribo.Paragraph' {
+                'PScribo.Paragraph'
+                {
                     [ref] $null = $Element.AppendChild((Out-WordParagraph -Paragraph $subSection -XmlDocument $XmlDocument))
                 }
-                'PScribo.PageBreak' {
+                'PScribo.PageBreak'
+                {
                     [ref] $null = $Element.AppendChild((Out-WordPageBreak -PageBreak $subSection -XmlDocument $XmlDocument))
                 }
-                'PScribo.LineBreak' {
+                'PScribo.LineBreak'
+                {
                     [ref] $null = $Element.AppendChild((Out-WordLineBreak -LineBreak $subSection -XmlDocument $XmlDocument))
                 }
-                'PScribo.Table' {
+                'PScribo.Table'
+                {
                     Out-WordTable -Table $subSection -XmlDocument $XmlDocument -Element $Element
                 }
-                'PScribo.BlankLine' {
+                'PScribo.BlankLine'
+                {
                     Out-WordBlankLine -BlankLine $subSection -XmlDocument $XmlDocument -Element $Element
                 }
-                'PScribo.Image' {
+                'PScribo.Image'
+                {
                     [ref] $null = $Element.AppendChild((Out-WordImage -Image $subSection -XmlDocument $XmlDocument))
                 }
-                Default {
+                Default
+                {
                     WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
                 }
             }

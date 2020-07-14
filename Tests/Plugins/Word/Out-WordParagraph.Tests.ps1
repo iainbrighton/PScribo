@@ -200,5 +200,35 @@ InModuleScope 'PScribo' {
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
         }
 
+        It 'outputs space between runs "<w:t [..]>abc </w:t>[..]<w:t [..]>def</w:t>" (by default)' {
+            ## Ignore the space preservation namespace
+            $document = Document -Name 'TestDocument' {
+                Paragraph {
+                    Text 'Test'
+                    Text 'paragraph'
+                }
+            }
+
+            $testDocument = Get-WordDocument -Document $document
+
+            $expected = GetMatch ('<w:t [..]>Test </w:t>[..]<w:t [..]>paragraph</w:t>');
+            $testDocument.DocumentElement.OuterXml  | Should Match $expected;
+        }
+
+        It 'does not output space between runs "<w:t [..]>abc</w:t>[..]<w:t [..]>def</w:t>" (when specified)' {
+            ## Ignore the space preservation namespace
+            $document = Document -Name 'TestDocument' {
+                Paragraph {
+                    Text 'Test' -NoSpace
+                    Text 'paragraph'
+                }
+            }
+
+            $testDocument = Get-WordDocument -Document $document
+
+            $expected = GetMatch ('<w:t [..]>Test</w:t>[..]<w:t [..]>paragraph</w:t>');
+            $testDocument.DocumentElement.OuterXml  | Should Match $expected;
+        }
+
     }
 }

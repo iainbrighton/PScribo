@@ -20,10 +20,7 @@ function Out-WordTable
         [System.Xml.XmlElement] $Element,
 
         [Parameter(Mandatory)]
-        [System.Xml.XmlDocument] $XmlDocument,
-
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $ParseToken
+        [System.Xml.XmlDocument] $XmlDocument
     )
     begin
     {
@@ -88,7 +85,7 @@ function Out-WordTable
                         $shd = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'shd', $xmlns))
                         [ref] $null = $shd.SetAttribute('val', $xmlns, 'clear')
                         [ref] $null = $shd.SetAttribute('color', $xmlns, 'auto')
-                        $backgroundColor = ConvertTo-WordColor -Color $cellStyle.BackgroundColor
+                        $backgroundColor = ConvertTo-WordColor -Color (Resolve-PScriboStyleColor -Color $cellStyle.BackgroundColor)
                         [ref] $null = $shd.SetAttribute('fill', $xmlns, $backgroundColor)
                     }
                     elseif ((-not $isRowStyleInherited) -and (-not [System.String]::IsNullOrEmpty($rowStyle.BackgroundColor)))
@@ -96,7 +93,7 @@ function Out-WordTable
                         $shd = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'shd', $xmlns))
                         [ref] $null = $shd.SetAttribute('val', $xmlns, 'clear')
                         [ref] $null = $shd.SetAttribute('color', $xmlns, 'auto')
-                        $backgroundColor = ConvertTo-WordColor -Color $rowStyle.BackgroundColor
+                        $backgroundColor = ConvertTo-WordColor -Color (Resolve-PScriboStyleColor -Color $rowStyle.BackgroundColor)
                         [ref] $null = $shd.SetAttribute('fill', $xmlns, $backgroundColor)
                     }
 
@@ -119,35 +116,27 @@ function Out-WordTable
 
                     }
 
-                    $p = $tc.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlns))
-                    $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlns))
-
+                    ## Scaffold paragraph and paragraph run for cell content
+                    $paragraph = [PSCustomObject] @{
+                        Id                = [System.Guid]::NewGuid().ToString()
+                        Type              = 'PScribo.Paragraph'
+                        Style             = $null
+                        Tabs              = 0
+                        Sections          = (New-Object -TypeName System.Collections.ArrayList)
+                        IsSectionBreakEnd = $false
+                    }
                     if (-not $isCellStyleInherited)
                     {
-                        $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlns))
-                        [ref] $null = $pStyle.SetAttribute('val', $xmlns, $cellStyle.Id)
+                        $paragraph.Style = $cellStyle.Id
                     }
                     elseif (-not $isRowStyleInherited)
                     {
-                        $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlns))
-                        [ref] $null = $pStyle.SetAttribute('val', $xmlns, $rowStyle.Id)
+                        $paragraph.Style = $rowStyle.Id
                     }
-
-                    if ($ParseToken)
-                    {
-                        Get-PSCriboParagraphRun -Text $cell.Content -XmlDocument $XmlDocument -XmlElement $p
-                    }
-                    else
-                    {
-                        $rn = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
-                        $t = $rn.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
-                        if (-not [System.String]::IsNullOrEmpty($cell.Content))
-                        {
-                            [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
-                            [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($cell.Content))
-                        }
-                    }
-
+                    $paragraphRun = New-PScriboParagraphRun -Text $cell.Content
+                    [ref] $null = $paragraph.Sections.Add($paragraphRun)
+                    $p = Out-WordParagraph -Paragraph $paragraph -XmlDocument $XmlDocument
+                    [ref] $null = $tc.AppendChild($p)
                 }
             }
 

@@ -12,69 +12,119 @@ InModuleScope 'PScribo' {
     $element = $xmlDocument.AppendChild($xmlDocument.CreateElement('testdocument'));
     [ref] $null = $element.SetAttribute('name', 'testdocument');
 
-    ## Scaffold document
-    $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {
-        Paragraph -Name 'TestParagraph';
-        Get-Process | Select-Object -First 3 | Table 'TestTable';
-        Section -Name 'TestSection' -ScriptBlock {
-            Section -Name 'TestSubSection' { }
-        }
-    }
-
     Describe 'Plugins\Xml\Out-XmlParagraph' {
+
+        ## Scaffold document
+        $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {
+            Paragraph -Name 'TestParagraph';
+            Get-Process | Select-Object -First 3 | Table 'TestTable';
+            Section -Name 'TestSection' -ScriptBlock {
+                Section -Name 'TestSubSection' { }
+            }
+        }
+        $Document = $pscriboDocument
+        $script:currentPageNumber = 1
 
         Context 'By Name Parameter.' {
 
-            It 'outputs a XmlComment with no Text' {
-                $text = 'Test paragraph.'
-                $p = Paragraph -Name $text | Out-XmlParagraph
-                $p.GetType() | Should Be 'System.Xml.XmlComment'
-                $p.Value.Trim() | Should BeExactly $text
+            It 'outputs a named "paragraph" XmlElement' {
+                $name = 'testid'
+
+                $p = Paragraph -Name $name | Out-XmlParagraph
+
+                $p.GetType() | Should Be 'System.Xml.XmlElement'
+                $p.Name | Should BeExactly 'paragraph'
             }
 
-            It 'outputs a XmlElement with a Name/Id' {
+            It 'outputs textnode with "Name" contents' {
                 $name = 'testid'
-                $text = 'Test paragraph.'
+
+                $p = Paragraph -Name $name | Out-XmlParagraph
+
+                $p.'#text' | Should BeExactly $name
+            }
+
+            It 'outputs textnode with "Text" contents' {
+                $name = 'testid'
+                $text = 'Test paragraph'
+
                 $p = Paragraph -Name $name -Text $text | Out-XmlParagraph
-                $p.Name | Should BeExactly $name
+
                 $p.'#text' | Should BeExactly $text
             }
 
-            It 'outputs a XmlElement with a Name/Id and Value' {
-                $name = 'testid'
-                $text = 'Test paragraph.'
-                $value = 'Customised test paragraph.'
-                $p = Paragraph -Name $name -Text $text -Value $value | Out-XmlParagraph
-                $p.Name | Should BeExactly $name
-                $p.'#text' | Should BeExactly $value
+            It 'outputs space between text runs (by default)' {
+                $paragraph = {
+                    Text 'Test'
+                    Text 'paragraph'
+                }
+
+                $result = Paragraph -ScriptBlock $paragraph | Out-XmlParagraph
+
+                $result.'#text' | Should BeExactly 'Test paragraph'
+            }
+
+            It 'does not output space between text runs (when specified)' {
+                $paragraph = {
+                    Text 'Test' -NoSpace
+                    Text 'paragraph'
+                }
+
+                $result = Paragraph -ScriptBlock $paragraph | Out-XmlParagraph
+
+                $result.'#text' | Should BeExactly 'Testparagraph'
             }
 
         } #end context By Name Parameter
 
         Context 'By Positional Parameter.' {
 
-            It 'outputs a XmlComment with no Text' {
-                $text = 'Test paragraph.'
-                $p = Paragraph $text | Out-XmlParagraph
-                $p.GetType() | Should Be 'System.Xml.XmlComment'
-                $p.Value.Trim() | Should BeExactly $text
+            It 'outputs a named "paragraph" XmlElement' {
+                $name = 'testid'
+
+                $p = Paragraph $name | Out-XmlParagraph
+
+                $p.GetType() | Should Be 'System.Xml.XmlElement'
+                $p.Name | Should BeExactly 'paragraph'
             }
 
-             It 'outputs a XmlElement with a Name/Id' {
+            It 'outputs textnode with "Name" contents' {
                 $name = 'testid'
-                $text = 'Test paragraph.'
+
+                $p = Paragraph $name | Out-XmlParagraph
+
+                $p.'#text' | Should BeExactly $name
+            }
+
+            It 'outputs textnode with "Text" contents' {
+                $name = 'testid'
+                $text = 'Test paragraph'
+
                 $p = Paragraph $name $text | Out-XmlParagraph
-                $p.Name | Should BeExactly $name
+
                 $p.'#text' | Should BeExactly $text
             }
 
-            It 'outputs a XmlElement with a Name/Id and Value' {
-                $name = 'testid'
-                $text = 'Test paragraph.'
-                $value = 'Customised test paragraph.'
-                $p = Paragraph $name $text $value | Out-XmlParagraph
-                $p.Name | Should BeExactly $name
-                $p.'#text' | Should BeExactly $value
+            It 'outputs space between text runs (by default)' {
+                $paragraph = {
+                    Text 'Test'
+                    Text 'paragraph'
+                }
+
+                $result = Paragraph $paragraph | Out-XmlParagraph
+
+                $result.'#text' | Should BeExactly 'Test paragraph'
+            }
+
+            It 'does not output space between text runs (when specified)' {
+                $paragraph = {
+                    Text 'Test' -NoSpace
+                    Text 'paragraph'
+                }
+
+                $result = Paragraph $paragraph | Out-XmlParagraph
+
+                $result.'#text' | Should BeExactly 'Testparagraph'
             }
         }
     }

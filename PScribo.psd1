@@ -23,6 +23,7 @@
                             'Style',
                             'Table',
                             'TableStyle',
+                            'Text',
                             'TOC',
                             'Write-PScriboMessage'
                         )

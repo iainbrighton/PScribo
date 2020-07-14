@@ -9,10 +9,7 @@ function Out-TextTable
     param
     (
         [Parameter(Mandatory, ValueFromPipeline)]
-        [System.Management.Automation.PSObject] $Table,
-
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $ParseToken
+        [System.Management.Automation.PSObject] $Table
     )
     begin
     {
@@ -29,14 +26,11 @@ function Out-TextTable
         $tableRenderWidth = $options.TextWidth - ($Table.Tabs * 4)
 
         ## We need to replace page numbers before outputting the table
-        if ($ParseToken)
+        foreach ($row in $Table.Rows)
         {
-            foreach ($row in $Table.Rows)
+            foreach ($property in $row.PSObject.Properties)
             {
-                foreach ($property in $row.PSObject.Properties)
-                {
-                    $property.Value = Resolve-PScriboToken -InputObject $property.Value
-                }
+                $property.Value = Resolve-PScriboToken -InputObject $property.Value
             }
         }
 
@@ -95,6 +89,7 @@ function Out-TextTable
             InputObject = $tableBuilder.ToString()
             Tabs        = $Table.Tabs
         }
+
         return (ConvertTo-IndentedString @convertToIndentedStringParams)
     }
 }

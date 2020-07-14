@@ -2,7 +2,7 @@ function Out-WordLineBreak
 {
 <#
     .SYNOPSIS
-    Output formatted Word line break.
+        Output formatted Word line break.
 #>
     [CmdletBinding()]
     [OutputType([System.Xml.XmlElement])]
@@ -25,6 +25,7 @@ function Out-WordLineBreak
         [ref] $null = $bottom.SetAttribute('sz', $xmlns, 6)
         [ref] $null = $bottom.SetAttribute('space', $xmlns, 1)
         [ref] $null = $bottom.SetAttribute('color', $xmlns, 'auto')
+
         return $p
     }
 }

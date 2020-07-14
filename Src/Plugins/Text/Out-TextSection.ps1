@@ -48,16 +48,41 @@ function Out-TextSection
 
             switch ($subSection.Type)
             {
-                'PScribo.Section' { [ref] $null = $sectionBuilder.Append((Out-TextSection -Section $subSection)) }
-                'PScribo.Paragraph' { [ref] $null = $sectionBuilder.Append((Out-TextParagraph -Paragraph $subSection)) }
-                'PScribo.PageBreak' { [ref] $null = $sectionBuilder.Append((Out-TextPageBreak)) }  ## Page breaks implemented as line break with extra padding
-                'PScribo.LineBreak' { [ref] $null = $sectionBuilder.Append((Out-TextLineBreak)) }
-                'PScribo.Table' { [ref] $null = $sectionBuilder.Append((Out-TextTable -Table $subSection)) }
-                'PScribo.BlankLine' { [ref] $null = $sectionBuilder.Append((Out-TextBlankLine -BlankLine $subSection)) }
-                'PScribo.Image' { [ref] $null = $sectionBuilder.Append((Out-TextImage -Image $subSection)) }
-                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
+                'PScribo.Section'
+                {
+                    [ref] $null = $sectionBuilder.Append((Out-TextSection -Section $subSection))
+                }
+                'PScribo.Paragraph'
+                {
+                    [ref] $null = $sectionBuilder.Append((Out-TextParagraph -Paragraph $subSection))
+                }
+                'PScribo.PageBreak'
+                {
+                    [ref] $null = $sectionBuilder.Append((Out-TextPageBreak)) ## Page breaks implemented as line break with extra padding
+                }
+                'PScribo.LineBreak'
+                {
+                    [ref] $null = $sectionBuilder.Append((Out-TextLineBreak))
+                }
+                'PScribo.Table'
+                {
+                    [ref] $null = $sectionBuilder.Append((Out-TextTable -Table $subSection))
+                }
+                'PScribo.BlankLine'
+                {
+                    [ref] $null = $sectionBuilder.Append((Out-TextBlankLine -BlankLine $subSection))
+                }
+                'PScribo.Image'
+                {
+                    [ref] $null = $sectionBuilder.Append((Out-TextImage -Image $subSection))
+                }
+                Default
+                {
+                    WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
+                }
             }
         }
+
         return $sectionBuilder.ToString()
     }
 }

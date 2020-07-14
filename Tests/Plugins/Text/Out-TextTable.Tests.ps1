@@ -16,6 +16,7 @@ InModuleScope 'PScribo' {
 
         ## Scaffold document options
         $Document = Document -Name 'TestDocument' -ScriptBlock {}
+        $script:currentPageNumber = 1
         $pscriboDocument = $Document
 
         Context 'As Table' {

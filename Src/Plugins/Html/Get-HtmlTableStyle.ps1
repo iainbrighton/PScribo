@@ -22,14 +22,9 @@ function Get-HtmlTableStyle
         {
             $invariantBorderWidth = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $TableStyle.BorderWidth)
             [ref] $null = $tableStyleBuilder.AppendFormat(' border-width: {0}rem;', $invariantBorderWidth)
-            if ($TableStyle.BorderColor.Contains('#'))
-            {
-                [ref] $null = $tableStyleBuilder.AppendFormat(' border-color: {0};', $TableStyle.BorderColor)
-            }
-            else
-            {
-                [ref] $null = $tableStyleBuilder.AppendFormat(' border-color: #{0};', $TableStyle.BorderColor)
-            }
+
+            $borderColor = Resolve-PScriboStyleColor -Color $TableStyle.BorderColor
+            [ref] $null = $tableStyleBuilder.AppendFormat(' border-color: #{0};', $borderColor.ToLower())
         }
 
         [ref] $null = $tableStyleBuilder.Append(' border-collapse: collapse;')
@@ -42,6 +37,7 @@ function Get-HtmlTableStyle
         {
             [ref] $null = $tableStyleBuilder.Append(' margin-left: auto; margin-right: 0;')
         }
+
         return $tableStyleBuilder.ToString()
     }
 }

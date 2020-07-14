@@ -2,7 +2,7 @@ function Out-TextParagraph
 {
 <#
     .SYNOPSIS
-        Output formatted paragraph text.
+        Output formatted paragraph run.
 #>
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -10,10 +10,7 @@ function Out-TextParagraph
     (
         [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateNotNull()]
-        [System.Management.Automation.PSObject] $Paragraph,
-
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $ParseToken
+        [System.Management.Automation.PSObject] $Paragraph
     )
     begin
     {
@@ -29,7 +26,6 @@ function Out-TextParagraph
             Width       = $options.TextWidth
             Tabs        = $Paragraph.Tabs
             Align       = 'Left'
-            NoNewLine   = -not $Paragraph.NewLine
         }
 
         if (-not [System.String]::IsNullOrEmpty($Paragraph.Style))
@@ -38,19 +34,20 @@ function Out-TextParagraph
             $convertToAlignedStringParams['Align'] = $paragraphStyle.Align
         }
 
-        $text = $Paragraph.Text
-        if ([string]::IsNullOrEmpty($text))
+        [System.Text.StringBuilder] $paragraphBuilder = New-Object -TypeName 'System.Text.StringBuilder'
+        foreach ($paragraphRun in $Paragraph.Sections)
         {
-            $text = $Paragraph.Id
+            $text = Resolve-PScriboToken -InputObject $paragraphRun.Text
+            [ref] $null = $paragraphBuilder.Append($text)
+
+            if (($paragraphRun.IsParagraphRunEnd -eq $false) -and
+                ($paragraphRun.NoSpace -eq $false))
+            {
+                [ref] $null = $paragraphBuilder.Append(' ')
+            }
         }
 
-        if ($ParseToken)
-        {
-            $text = Resolve-PScriboToken -InputObject $text
-        }
-
-        $convertToAlignedStringParams['InputObject'] = $text
-
+        $convertToAlignedStringParams['InputObject'] = $paragraphBuilder.ToString()
         return (ConvertTo-AlignedString @convertToAlignedStringParams)
     }
 }

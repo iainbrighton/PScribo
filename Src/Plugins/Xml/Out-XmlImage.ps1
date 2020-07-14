@@ -19,6 +19,7 @@ function Out-XmlImage
         [ref] $null = $imageElement.SetAttribute('mimeType', $Image.MimeType)
         $imageBase64 = [System.Convert]::ToBase64String($Image.Bytes)
         [ref] $null = $imageElement.AppendChild($xmlDocument.CreateTextNode($imageBase64))
+
         return $imageElement
     }
 }

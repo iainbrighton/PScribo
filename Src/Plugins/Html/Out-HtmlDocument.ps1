@@ -70,15 +70,42 @@ function Out-HtmlDocument
 
             switch ($subSection.Type)
             {
-                'PScribo.Section' { [ref] $null = $htmlBuilder.Append((Out-HtmlSection -Section $subSection)) }
-                'PScribo.Paragraph' { [ref] $null = $htmlBuilder.Append((Out-HtmlParagraph -Paragraph $subSection)) }
-                'PScribo.Table' { [ref] $null = $htmlBuilder.Append((Out-HtmlTable -Table $subSection)) }
-                'PScribo.LineBreak' { [ref] $null = $htmlBuilder.Append((Out-HtmlLineBreak)) }
-                'PScribo.PageBreak' { [ref] $null = $htmlBuilder.Append((Out-HtmlPageBreak -Orientation $options['PageOrientation'])) }
-                'PScribo.TOC' { [ref] $null = $htmlBuilder.Append((Out-HtmlTOC -TOC $subSection)) }
-                'PScribo.BlankLine' { [ref] $null = $htmlBuilder.Append((Out-HtmlBlankLine -BlankLine $subSection)) }
-                'PScribo.Image' { [ref] $null = $htmlBuilder.Append((Out-HtmlImage -Image $subSection)) }
-                Default { WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
+                'PScribo.Section'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlSection -Section $subSection))
+                }
+                'PScribo.Paragraph'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlParagraph -Paragraph $subSection))
+                }
+                'PScribo.Table'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlTable -Table $subSection))
+                }
+                'PScribo.LineBreak'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlLineBreak))
+                }
+                'PScribo.PageBreak'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlPageBreak -Orientation $options['PageOrientation']))
+                }
+                'PScribo.TOC'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlTOC -TOC $subSection))
+                }
+                'PScribo.BlankLine'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlBlankLine -BlankLine $subSection))
+                }
+                'PScribo.Image'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlImage -Image $subSection))
+                }
+                Default
+                {
+                    WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
+                }
             }
         } #end foreach section
 
