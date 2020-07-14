@@ -2,7 +2,7 @@
 #      environment configuration  #
 #---------------------------------#
 
-version: 0.7.{build}
+version: 0.9.{build}
 environment:
   gallery_api_key:
     secure: WeDp1yZJECZBjjW+22A8lA8+gmz+wiYostPKtU4pdLXORfK//eJCdR7f0k3oJ+2r

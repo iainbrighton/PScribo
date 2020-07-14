@@ -2,7 +2,7 @@
 
 ## Versions ##
 
-### Unreleased ###
+### 0.9.0 ###
 
 * Adds Header and Footer support (#80)
 * Corrects table caption numbering (#96)
