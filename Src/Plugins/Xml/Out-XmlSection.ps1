@@ -50,7 +50,7 @@ function Out-XmlSection
                 }
                 Default
                 {
-                    WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
+                    Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
                 }
             }
         }

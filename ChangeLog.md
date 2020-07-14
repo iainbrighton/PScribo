@@ -4,11 +4,16 @@
 
 ### Unreleased ###
 
-* Adds Header and Footer support (#80)
-* Corrects table caption numbering (#96)
 * Adds inline paragraph styling runs - see Example38.ps1 (#75, #97)
   * __BREAKING CHANGE__ - XML paragraph output formatting changed
 * __BREAKING CHANGE__ - XML output to be deprecated in a future release (#102)
+
+### 0.9.0 ###
+
+* Adds Header and Footer support (#80)
+* Corrects table caption numbering (#96)
+* Fixes new PSScriptAnalyzer rule and style violations
+* Adds LibreOffice compatibility (#99)
 
 ### 0.8.0 ###
 

@@ -104,7 +104,7 @@ function Out-HtmlDocument
                 }
                 Default
                 {
-                    WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
+                    Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
                 }
             }
         } #end foreach section

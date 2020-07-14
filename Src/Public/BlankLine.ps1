@@ -11,7 +11,7 @@ function BlankLine {
     )
     process
     {
-        WriteLog -Message $localized.ProcessingBlankLine
+        Write-PScriboMessage -Message $localized.ProcessingBlankLine
         return (New-PScriboBlankLine @PSBoundParameters)
     }
 }

@@ -114,11 +114,11 @@ function Table
     {
         Write-Debug ('Using parameter set "{0}".' -f $PSCmdlet.ParameterSetName)
         [System.Collections.ArrayList] $rows = New-Object -TypeName System.Collections.ArrayList
-        WriteLog -Message ($localized.ProcessingTable -f $Name)
+        Write-PScriboMessage -Message ($localized.ProcessingTable -f $Name)
 
         if ($Headers -and (-not $Columns))
         {
-            WriteLog -Message $localized.TableHeadersWithNoColumnsWarning -IsWarning
+            Write-PScriboMessage -Message $localized.TableHeadersWithNoColumnsWarning -IsWarning
             $Headers = $Columns
         }
         elseif (($null -ne $Columns) -and ($null -ne $Headers))
@@ -126,7 +126,7 @@ function Table
             ## Check the number of -Headers matches the number of -Properties
             if ($Headers.Count -ne $Columns.Count)
             {
-                WriteLog -Message $localized.TableHeadersCountMismatchWarning -IsWarning
+                Write-PScriboMessage -Message $localized.TableHeadersCountMismatchWarning -IsWarning
                 $Headers = $Columns
             }
         }
@@ -136,17 +136,17 @@ function Table
             $columnWidthsSum = $ColumnWidths | Measure-Object -Sum | Select-Object -ExpandProperty Sum
             if ($columnWidthsSum -ne 100)
             {
-                WriteLog -Message ($localized.TableColumnWidthSumWarning -f $columnWidthsSum) -IsWarning
+                Write-PScriboMessage -Message ($localized.TableColumnWidthSumWarning -f $columnWidthsSum) -IsWarning
                 $ColumnWidths = $null
             }
             elseif ($List -and (-not $Key) -and ($ColumnWidths.Count -ne 2))
             {
-                WriteLog -Message $localized.ListTableColumnCountWarning -IsWarning
+                Write-PScriboMessage -Message $localized.ListTableColumnCountWarning -IsWarning
                 $ColumnWidths = $null
             }
             elseif (($PSCmdlet.ParameterSetName -eq 'Hashtable') -and (-not $List) -and ($Hashtable[0].Keys.Count -ne $ColumnWidths.Count))
             {
-                WriteLog -Message $localized.TableColumnWidthMismatchWarning -IsWarning
+                Write-PScriboMessage -Message $localized.TableColumnWidthMismatchWarning -IsWarning
                 $ColumnWidths = $null
             }
             elseif (($PSCmdlet.ParameterSetName -eq 'InputObject') -and (-not $List))
@@ -154,7 +154,7 @@ function Table
                 ## Columns might not have been passed and there is no object in the pipeline here, so check $Columns is an array.
                 if (($Columns -is [System.Object[]]) -and ($Columns.Count -ne $ColumnWidths.Count))
                 {
-                    WriteLog -Message $localized.TableColumnWidthMismatchWarning -IsWarning
+                    Write-PScriboMessage -Message $localized.TableColumnWidthMismatchWarning -IsWarning
                     $ColumnWidths = $null
                 }
             }

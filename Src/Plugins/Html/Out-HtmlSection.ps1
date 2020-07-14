@@ -33,7 +33,7 @@ function Out-HtmlSection
         ## Html <h5> is the maximum supported level
         if ($headerLevel -gt 6)
         {
-            WriteLog -Message $localized.MaxHeadingLevelWarning -IsWarning
+            Write-PScriboMessage -Message $localized.MaxHeadingLevelWarning -IsWarning
             $headerLevel = 6
         }
 
@@ -97,7 +97,7 @@ function Out-HtmlSection
                 }
                 Default
                 {
-                    WriteLog -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
+                     Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
                 }
             }
         }

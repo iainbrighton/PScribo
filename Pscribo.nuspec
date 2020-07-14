@@ -9,9 +9,9 @@
     <summary>PScribo documentation Powershell module/framework.</summary>
     <description>PScribo is a documentation domain-specific language (DSL) for PowerShell, used to create a 'document' in a standardised format.</description>
     <projectUrl>http://github.com/iainbrighton/PScribo</projectUrl>
-    <copyright>(c) 2019 Virtual Engine Limited. All rights reserved.</copyright>
+    <copyright>(c) 2020 Iain Brighton. All rights reserved.</copyright>
     <license type="expression">MIT</license>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <tags>VirtualEngine PScribo Powershell Documentation Framework VirtualEngine</tags>
+    <tags>VirtualEngine PScribo Powershell Documentation Framework Virtual Engine Word Html</tags>
   </metadata>
 </package>

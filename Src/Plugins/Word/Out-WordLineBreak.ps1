@@ -6,6 +6,7 @@ function Out-WordLineBreak
 #>
     [CmdletBinding()]
     [OutputType([System.Xml.XmlElement])]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter','LineBreak')]
     param
     (
         [Parameter(Mandatory, ValueFromPipeline)]

@@ -13,7 +13,7 @@ function LineBreak {
     )
     process
     {
-        WriteLog -Message $localized.ProcessingLineBreak
+        Write-PScriboMessage -Message $localized.ProcessingLineBreak
         return (New-PScriboLineBreak @PSBoundParameters)
     }
 }

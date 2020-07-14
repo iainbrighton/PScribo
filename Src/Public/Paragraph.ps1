@@ -171,5 +171,8 @@ function Paragraph {
             Write-PScriboMessage -Message ($localized.ProcessingParagraphRunsCompleted)
             return $paragraph
         }
+        Write-PScriboMessage -Message ($localized.ProcessingParagraph -f $paragraphDisplayName)
+
+        return (New-PScriboParagraph @PSBoundParameters)
     }
 }

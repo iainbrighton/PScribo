@@ -44,10 +44,10 @@ function Get-WordTableStylePr
         $rPr = Get-WordStyleRunPr -Style $Style -XmlDocument $XmlDocument
         [ref] $null = $tblStylePr.AppendChild($rPr)
 
-        $tblPr = $tblStylePr.AppendChild($XmlDocument.CreateElement('w', 'tblPr', $xmlns))
+        $null = $tblStylePr.AppendChild($XmlDocument.CreateElement('w', 'tblPr', $xmlns))
+        $tcPr = $tblStylePr.AppendChild($XmlDocument.CreateElement('w', 'tcPr', $xmlns))
         if (-not [System.String]::IsNullOrEmpty($Style.BackgroundColor))
         {
-            $tcPr = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tcPr', $xmlns))
             $shd = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'shd', $xmlns))
             [ref] $null = $shd.SetAttribute('val', $xmlns, 'clear')
             [ref] $null = $shd.SetAttribute('color', $xmlns, 'auto')

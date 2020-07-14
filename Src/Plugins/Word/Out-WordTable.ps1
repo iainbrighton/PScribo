@@ -42,10 +42,26 @@ function Out-WordTable
             $tbl = $Element.AppendChild($XmlDocument.CreateElement('w', 'tbl', $xmlns))
             [ref] $null = $tbl.AppendChild((Get-WordTablePr -Table $Table -XmlDocument $XmlDocument))
 
+            ## LibreOffice requires column widths to be specified so we must calculate rough approximations (#99).
+            $tableRenderWidthMm = Get-WordTableRenderWidthMm -TableWidth $Table.Width -Tabs $Table.Tabs
+            $tableRenderWidthTwips = ConvertTo-Twips -Millimeter $tableRenderWidthMm
             $tblGrid = $tbl.AppendChild($XmlDocument.CreateElement('w', 'tblGrid', $xmlns))
-            for ($i = 0; $i -lt $Table.Columns.Count; $i++)
+
+            $tableColumnCount = $Table.Columns.Count
+            if ($Table.IsList)
             {
-                [ref] $null = $tblGrid.AppendChild($XmlDocument.CreateElement('w', 'gridCol', $xmlns))
+                $tableColumnCount = 2
+            }
+            for ($i = 0; $i -lt $tableColumnCount; $i++)
+            {
+                $gridCol = $tblGrid.AppendChild($XmlDocument.CreateElement('w', 'gridCol', $xmlns))
+                $gridColPct = (100 / $Table.Columns.Count) -as [System.Int32]
+                if (($null -ne $Table.ColumnWidths) -and ($null -ne $Table.ColumnWidths[$i]))
+                {
+                    $gridColPct = $Table.ColumnWidths[$i]
+                }
+                $gridColWidthTwips = (($tableRenderWidthTwips/100) * $gridColPct) -as [System.Int32]
+                [ref] $null = $gridCol.SetAttribute('w', $xmlns, $gridColWidthTwips)
             }
 
             for ($r = 0; $r -lt $formattedTable.Rows.Count; $r++)
@@ -64,7 +80,8 @@ function Out-WordTable
                     $trPr = $tr.AppendChild($XmlDocument.CreateElement('w', 'trPr', $xmlns))
                     [ref] $null = $trPr.AppendChild($XmlDocument.CreateElement('w', 'tblHeader', $xmlns))
                     $cnfStyle = $trPr.AppendChild($XmlDocument.CreateElement('w', 'cnfStyle', $xmlns))
-                    [ref] $null = $cnfStyle.SetAttribute('firstRow', $xmlns, 1)
+                    # [ref] $null = $cnfStyle.SetAttribute('val', $xmlns, '100000000000')
+                    [ref] $null = $cnfStyle.SetAttribute('firstRow', $xmlns, '1')
                 }
 
                 for ($c = 0; $c -lt $row.Cells.Count; $c++)
@@ -97,10 +114,10 @@ function Out-WordTable
                         [ref] $null = $shd.SetAttribute('fill', $xmlns, $backgroundColor)
                     }
 
-                    if (($c -eq 0) -and ($r -ne 0))
+                    if (($Table.IsList) -and ($c -eq 0) -and ($r -ne 0))
                     {
                         $cnfStyle = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'cnfStyle', $xmlns))
-                        [ref] $null = $cnfStyle.SetAttribute('firstColumn', $xmlns, 1)
+                        [ref] $null = $cnfStyle.SetAttribute('firstColumn', $xmlns, '1')
                     }
 
                     $tcW = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'tcW', $xmlns))
@@ -113,7 +130,6 @@ function Out-WordTable
                     {
                         [ref] $null = $tcW.SetAttribute('w', $xmlns, 0)
                         [ref] $null = $tcW.SetAttribute('type', $xmlns, 'auto')
-
                     }
 
                     ## Scaffold paragraph and paragraph run for cell content
