@@ -52,7 +52,7 @@ function Out-TextTable
         {
             $tableText = ($Table.Rows |
                 Select-Object -Property * -ExcludeProperty '*__Style' |
-                    Format-List - | Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)
+                    Format-List | Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)
         }
         else
         {
