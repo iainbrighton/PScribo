@@ -1,10 +1,11 @@
+[CmdletBinding()]
 param (
     [System.String[]] $Format = 'Word',
     [System.String] $Path = '~\Desktop',
     [System.Management.Automation.SwitchParameter] $PassThru
 )
 
-Import-Module PScribo -Force;
+Import-Module PScribo -Force -Verbose:$false
 
 $example32 = Document -Name 'PScribo Example 32' {
 
@@ -22,7 +23,7 @@ $example32 = Document -Name 'PScribo Example 32' {
             displayed in the document's "current" orientation. If no orientation has been explicitly set, then the
             document's default page orientation is used.
         #>
-        Paragraph 'This section will be displayed in "Portait" as no orientation has been set'
+        Paragraph 'This section will be displayed in "Portrait" as no orientation has been set'
     }
 
     Section -Style 'Heading1' -Name 'Landscape Section' -Orientation Landscape {

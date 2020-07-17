@@ -1,10 +1,11 @@
+[CmdletBinding()]
 param (
     [System.String[]] $Format = 'Html',
     [System.String] $Path = '~\Desktop',
     [System.Management.Automation.SwitchParameter] $PassThru
 )
 
-Import-Module PScribo -Force;
+Import-Module PScribo -Force -Verbose:$false
 
 $example10 = Document -Name 'PScribo Example 10' {
     <#
@@ -14,8 +15,8 @@ $example10 = Document -Name 'PScribo Example 10' {
        The following examples creates a table of all properties on all services.
 
        NOTE: Due to the number of properties, the table will not render in any
-       meaningful way and WILL overflow the containers!
+       meaningful way!
     #>
-    Table -InputObject (Get-Service)
+    Table -InputObject (Get-Service | Select-Object -First 100)
 }
 $example10 | Export-Document -Path $Path -Format $Format -PassThru:$PassThru

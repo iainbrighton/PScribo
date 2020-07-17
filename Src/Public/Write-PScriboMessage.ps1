@@ -5,8 +5,10 @@ function Write-PScriboMessage {
         prefixed with the time and PScribo plugin name.
 #>
     [CmdletBinding(DefaultParameterSetName = 'Verbose')]
-    [Alias('WriteLog')]
-    param (
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter','IsWarning')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter','IsDebug')]
+    param
+    (
         ## Message to send to the stream
         [Parameter(Position = 0, ValueFromPipeline, ParameterSetName = 'Verbose')]
         [Parameter(Position = 0, ValueFromPipeline, ParameterSetName = 'Warning')]
@@ -33,26 +35,33 @@ function Write-PScriboMessage {
         [ValidateNotNullOrEmpty()]
         [System.UInt16] $Indent
     )
-    process {
-
-        if ([System.String]::IsNullOrEmpty($Plugin)) {
+    process
+    {
+        if ([System.String]::IsNullOrEmpty($Plugin))
+        {
             ## Attempt to resolve the plugin name from the parent scope
-            if (Test-Path -Path Variable:\pluginName) { $Plugin = Get-Variable -Name pluginName -ValueOnly; }
-            else { $Plugin = 'Unknown'; }
+            if (Test-Path -Path Variable:\pluginName)
+            {
+                $Plugin = Get-Variable -Name pluginName -ValueOnly
+            }
+            else
+            {
+                $Plugin = 'Unknown'
+            }
         }
         ## Center plugin name
-        $pluginPaddingSize = [System.Math]::Floor((10 - $Plugin.Length) / 2);
-        $pluginPaddingString = ''.PadRight($pluginPaddingSize);
-        $Plugin = '{0}{1}' -f $pluginPaddingString, $Plugin;
+        $pluginPaddingSize = [System.Math]::Floor((10 - $Plugin.Length) / 2)
+        $pluginPaddingString = ''.PadRight($pluginPaddingSize)
+        $Plugin = '{0}{1}' -f $pluginPaddingString, $Plugin
         $Plugin = $Plugin.PadRight(10)
-        $date = Get-Date;
-        $sectionLevelPadding = ''.PadRight($Indent);
-        $formattedMessage = '[ {0} ] [{1}] - {2}{3}' -f $date.ToString('HH:mm:ss:fff'), $Plugin, $sectionLevelPadding, $Message;
-        switch ($PSCmdlet.ParameterSetName) {
-            'Warning' { Write-Warning -Message $formattedMessage; }
-            'Debug' { Write-Debug -Message $formattedMessage; }
-            Default { Write-Verbose -Message $formattedMessage; }
+        $date = Get-Date
+        $sectionLevelPadding = ''.PadRight($Indent)
+        $formattedMessage = '[ {0} ] [{1}] - {2}{3}' -f $date.ToString('HH:mm:ss:fff'), $Plugin, $sectionLevelPadding, $Message
+        switch ($PSCmdlet.ParameterSetName)
+        {
+            'Warning' { Write-Warning -Message $formattedMessage }
+            'Debug' { Write-Debug -Message $formattedMessage }
+            Default { Write-Verbose -Message $formattedMessage }
         }
-
-    } #end process
-} #end function Write-PScriboMessage
+    }
+}

@@ -5,20 +5,15 @@ function PageBreak {
 #>
     [CmdletBinding()]
     [OutputType([System.Management.Automation.PSCustomObject])]
-    param (
+    param
+    (
         [Parameter(Position = 0)]
         [ValidateNotNullOrEmpty()]
         [System.String] $Id = [System.Guid]::NewGuid().ToString()
     )
-    begin {
-
-        <#! PageBreak.Internal.ps1 !#>
-
-    } #end begin
-    process {
-
-        WriteLog -Message $localized.ProcessingPageBreak;
-        return (New-PScriboPageBreak -Id $Id);
-
+    process
+    {
+        Write-PScriboMessage -Message $localized.ProcessingPageBreak
+        return (New-PScriboPageBreak -Id $Id)
     }
-} #end function PageBreak
+}

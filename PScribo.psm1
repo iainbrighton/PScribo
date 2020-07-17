@@ -1,46 +1,30 @@
-Set-StrictMode -Version Latest;
+Set-StrictMode -Version Latest
 
 ## Import localisation strings based on UICulture
-Import-LocalizedData -BindingVariable localized -BaseDirectory $PSScriptRoot -FileName PScribo.Resources.psd1 -ErrorAction SilentlyContinue
+$importLocalizedDataParams = @{
+    BindingVariable = 'localized'
+    BaseDirectory   = $PSScriptRoot
+    FileName        = 'PScribo.Resources.psd1'
+}
+Import-LocalizedData @importLocalizedDataParams -ErrorAction SilentlyContinue
 
 #Fallback to en-US culture strings
-if (-not (Test-Path -Path 'Variable:\localized')) {
-    Import-LocalizedData -BaseDirectory $PSScriptRoot -BindingVariable localized -UICulture 'en-US' -FileName PScribo.Resources.psd1 -ErrorAction Stop
+if (-not (Test-Path -Path 'Variable:\localized'))
+{
+    $importLocalizedDataParams['UICulture'] = 'en-US'
+    Import-LocalizedData @importLocalizedDataParams -ErrorAction Stop
 }
 
 ## Dot source all the nested .ps1 files in the \Functions and \Plugin folders, excluding tests
-$pscriboRoot = Split-Path -Parent $PSCommandPath;
+$pscriboRoot = Split-Path -Parent $PSCommandPath
 Get-ChildItem -Path "$pscriboRoot\Src\" -Include '*.ps1' -Recurse |
     ForEach-Object {
-        Write-Verbose ($localized.ImportingFile -f $_.FullName);
+        Write-Debug ($localized.ImportingFile -f $_.FullName)
         ## https://becomelotr.wordpress.com/2017/02/13/expensive-dot-sourcing/
         . ([System.Management.Automation.ScriptBlock]::Create(
                 [System.IO.File]::ReadAllText($_.FullName)
-            ));
+            ))
     }
 
-$exportedFunctions = @(
-    'BlankLine',
-    'Document',
-    'DocumentOption',
-    'Export-Document',
-    'Image',
-    'LineBreak',
-    'PageBreak',
-    'Paragraph',
-    'Section',
-    'Set-Style',
-    'Style',
-    'Table',
-    'TableStyle',
-    'TOC',
-    'Write-PScriboMessage'
-);
-
-$exportedAliases = @(
-    'GlobalOption'
-);
-
 Add-Type -AssemblyName 'System.Drawing'
-
-Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases;
+#Export-ModuleMember -Function $exportedFunctions -Alias $exportedAliases -Verbose:$false

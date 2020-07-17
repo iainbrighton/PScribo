@@ -1,10 +1,11 @@
+[CmdletBinding()]
 param (
     [System.String[]] $Format = 'Html',
     [System.String] $Path = '~\Desktop',
     [System.Management.Automation.SwitchParameter] $PassThru
 )
 
-Import-Module PScribo -Force;
+Import-Module PScribo -Force -Verbose:$false
 
 $example5 = Document -Name 'PScribo Example 5' {
     <#
@@ -25,7 +26,7 @@ $example5 = Document -Name 'PScribo Example 5' {
         If no style is specified, the default is used. You can override the default style (called "Normal")
         by defining your own style with the same name:
     #>
-    Style -Name 'Normal' -Font Tahoma -Size 12 -Color 000;
+    Style -Name 'Normal' -Font Tahoma -Size 12 -Color 000
     Paragraph 'This paragraph will be styled with the custom "Normal" style defined earlier.'
 }
 $example5 | Export-Document -Path $Path -Format $Format -PassThru:$PassThru

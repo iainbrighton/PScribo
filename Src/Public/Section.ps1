@@ -1,11 +1,13 @@
-function Section {
+function Section
+{
 <#
     .SYNOPSIS
         Initializes a new PScribo section object.
 #>
     [CmdletBinding()]
     [OutputType([System.Management.Automation.PSCustomObject])]
-    param (
+    param
+    (
         ## PScribo section heading/name.
         [Parameter(Mandatory, Position = 0)]
         [System.String] $Name,
@@ -34,49 +36,44 @@ function Section {
         [ValidateSet('Portrait','Landscape')]
         [System.String] $Orientation
     )
-    begin {
-
-        <#! Section.Internal.ps1 !#>
-
-    } #end begin
-    process {
-
-        WriteLog -Message ($localized.ProcessingSectionStarted -f $Name);
+    process
+    {
+        Write-PScriboMessage -Message ($localized.ProcessingSectionStarted -f $Name)
 
         $newPScriboSectionParams = @{
-            Name        = $Name;
-            Style       = $Style;
-            IsExcluded  = $ExcludeFromTOC;
-            Tabs        = $Tabs;
-            #Orientation = if ($PSBoundParameters.ContainsKey('Orientation')) { $Orientation } else { $script:currentOrientation }
+            Name        = $Name
+            Style       = $Style
+            IsExcluded  = $ExcludeFromTOC
+            Tabs        = $Tabs
         }
-        if ($PSBoundParameters.ContainsKey('Orientation')) {
-
+        if ($PSBoundParameters.ContainsKey('Orientation'))
+        {
             $newPScriboSectionParams['Orientation'] = $Orientation
         }
-        $pscriboSection = New-PScriboSection @newPScriboSectionParams;
-        foreach ($result in & $ScriptBlock) {
+        $pscriboSection = New-PScriboSection @newPScriboSectionParams
 
+        foreach ($result in & $ScriptBlock)
+        {
             ## Ensure we don't have something errant passed down the pipeline (#29)
-            if ($result -is [System.Management.Automation.PSCustomObject]) {
+            if ($result -is [System.Management.Automation.PSObject])
+            {
                 if (('Id' -in $result.PSObject.Properties.Name) -and
                     ('Type' -in $result.PSObject.Properties.Name) -and
-                    ($result.Type -match '^PScribo.')) {
-
-                    [ref] $null = $pscriboSection.Sections.Add($result);
+                    ($result.Type -match '^PScribo.'))
+                {
+                    [ref] $null = $pscriboSection.Sections.Add($result)
                 }
-                else {
-
-                    WriteLog -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning;
+                else
+                {
+                    Write-PScriboMessage -Message ($localized.UnexpectedObjectWarning -f $Name) -IsWarning
                 }
             }
-            else {
-
-                WriteLog -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning;
+            else
+            {
+                Write-PScriboMessage -Message ($localized.UnexpectedObjectTypeWarning -f $result.GetType(), $Name) -IsWarning
             }
         }
-        WriteLog -Message ($localized.ProcessingSectionCompleted -f $Name);
+        Write-PScriboMessage -Message ($localized.ProcessingSectionCompleted -f $Name)
         return $pscriboSection;
-
-    } #end process
-} #end function Section
+    }
+}

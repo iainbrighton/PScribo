@@ -5,7 +5,8 @@ function Paragraph {
 #>
     [CmdletBinding()]
     [OutputType([System.Management.Automation.PSCustomObject])]
-    param (
+    param
+    (
         ## Paragraph Id and Xml element name
         [Parameter(Mandatory, ValueFromPipelineByPropertyName, Position = 0)]
         [ValidateNotNullOrEmpty()]
@@ -62,17 +63,17 @@ function Paragraph {
         [ValidateRange(0,10)]
         [System.Int32] $Tabs = 0
     )
-    begin {
-
-        <#! Paragraph.Internal.ps1 !#>
-
-    } #end begin
-    process {
-
-        if ($Name.Length -gt 40) { $paragraphDisplayName = '{0}[..]' -f $Name.Substring(0,36); }
-        else { $paragraphDisplayName = $Name; }
-        WriteLog -Message ($localized.ProcessingParagraph -f $paragraphDisplayName);
-        return (New-PScriboParagraph @PSBoundParameters);
-
-    } #end process
-} #end function Paragraph
+    process
+    {
+        if ($Name.Length -gt 40)
+        {
+            $paragraphDisplayName = '{0}[..]' -f $Name.Substring(0,36)
+        }
+        else
+        {
+            $paragraphDisplayName = $Name
+        }
+        Write-PScriboMessage -Message ($localized.ProcessingParagraph -f $paragraphDisplayName)
+        return (New-PScriboParagraph @PSBoundParameters)
+    }
+}

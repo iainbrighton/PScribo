@@ -38,4 +38,4 @@ Xml Output/Plugin
     Escape element names with [System.Xml.XmlConvert]::EncodeName()?
 
 Word Output/Plugin
-    Need to flag update if page numbers are used in headers/footers, e.g. OutWordSettingsDocument -UpdateFields
+    Need to flag update if page numbers are used in headers/footers, e.g. Get-WordSettingsDocument -UpdateFields

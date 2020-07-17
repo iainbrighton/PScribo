@@ -6,10 +6,11 @@ function Export-Document {
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingEmptyCatchBlock','')]
     [OutputType([System.IO.FileInfo])]
-    param (
+    param
+    (
         ## PScribo document object
         [Parameter(Mandatory, ValueFromPipeline)]
-        [System.Object] $Document,
+        [System.Management.Automation.PSObject] $Document,
 
         ## Output formats
         [Parameter(Mandatory)]
@@ -29,47 +30,46 @@ function Export-Document {
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.Management.Automation.SwitchParameter] $PassThru
     )
-    begin {
-
+    begin
+    {
         try { $Path = Resolve-Path $Path -ErrorAction SilentlyContinue; }
         catch { }
 
-        if ( $(Test-CharsInPath -Path $Path -SkipCheckCharsInFileNamePart -Verbose:$false) -eq 2 ) {
-            throw $localized.IncorrectCharsInPathError;
+        if ( $(Test-CharsInPath -Path $Path -SkipCheckCharsInFileNamePart -Verbose:$false) -eq 2 )
+        {
+            throw $localized.IncorrectCharsInPathError
         }
 
-        if (-not (Test-Path $Path -PathType Container)) {
+        if (-not (Test-Path $Path -PathType Container))
+        {
             ## Check $Path is a directory
-            throw ($localized.InvalidDirectoryPathError -f $Path);
+            throw ($localized.InvalidDirectoryPathError -f $Path)
         }
-
     }
-    process {
-
-        foreach ($f in $Format) {
-
-            WriteLog -Message ($localized.DocumentInvokePlugin -f $f) -Plugin 'Export';
+    process
+    {
+        foreach ($f in $Format)
+        {
+            Write-PScriboMessage -Message ($localized.DocumentInvokePlugin -f $f) -Plugin 'Export';
 
             ## Dynamically generate the output format function name
-            $outputFormat = 'Out{0}' -f $f;
+            $outputFormat = 'Out-{0}Document' -f $f
             $outputParams = @{
-                Document = $Document;
-                Path = $Path;
+                Document = $Document
+                Path = $Path
             }
-            if ($PSBoundParameters.ContainsKey('Options')) {
-
-                $outputParams['Options'] = $Options;
-            }
-
-            $fileInfo = & $outputFormat @outputParams;
-            WriteLog -Message ($localized.DocumentExportPluginComplete -f $f) -Plugin 'Export';
-
-            if ($PassThru) {
-
-                Write-Output -InputObject $fileInfo;
+            if ($PSBoundParameters.ContainsKey('Options'))
+            {
+                $outputParams['Options'] = $Options
             }
 
-        } # end foreach
+            $fileInfo = & $outputFormat @outputParams
+            Write-PScriboMessage -Message ($localized.DocumentExportPluginComplete -f $f) -Plugin 'Export'
 
-    } #end process
-} #end function Export-Document
+            if ($PassThru)
+            {
+                Write-Output -InputObject $fileInfo
+            }
+        }
+    }
+}

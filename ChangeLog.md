@@ -2,6 +2,23 @@
 
 ## Versions ##
 
+### 0.9.0 ###
+
+* Adds Header and Footer support (#80)
+* Corrects table caption numbering (#96)
+* Fixes new PSScriptAnalyzer rule and style violations
+* Adds LibreOffice compatibility (#99)
+
+### 0.8.0 ###
+
+* Fixes text line ending output and tests on Linux and MacOS
+* Adds keyed list support (#87) - see Example33.ps1
+* Improves text alignment/justification output
+* Adds table caption support (#88) -see Example34.ps1
+* Improves Html page rendering - now displays a minimum page size
+* Fixes .NET "Unable to determine the identity of the domain" error (https://github.com/AsBuiltReport/AsBuiltReport.Core/issues/17)
+* Fixes Word table style header alignment
+
 ### 0.7.26 ###
 
 * Fixes bug in Html table header CSS style output

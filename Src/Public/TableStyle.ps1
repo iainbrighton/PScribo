@@ -3,10 +3,12 @@ function TableStyle
 <#
     .SYNOPSIS
         Defines a new PScribo table formatting style.
+
     .DESCRIPTION
         Creates a standard table formatting style that can be applied
         to the PScribo table keyword, e.g. a combination of header and
         row styles and borders.
+
     .NOTES
         Not all plugins support all options.
 #>
@@ -83,17 +85,27 @@ function TableStyle
         [ValidateSet('Left','Center','Right')]
         [System.String] $Align = 'Left',
 
+        ## Table caption prefix
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Padding')]
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]
+        [System.String] $CaptionPrefix = 'Table',
+
+        ## Table caption prefix
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Padding')]
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]
+        [System.String] $CaptionStyle = 'Caption',
+
+        ## Table caption display location.
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Padding')]
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]
+        [ValidateSet('Above', 'Below')]
+        [System.String] $CaptionLocation = 'Below',
+
         ## Set as default table style
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Padding')]
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Default')]
         [System.Management.Automation.SwitchParameter] $Default
-    ) #end param
-    begin
-    {
-
-        <#! TableStyle.Internal.ps1 !#>
-
-    }
+    )
     process
     {
         if ($PSBoundParameters.ContainsKey('Padding'))
@@ -104,8 +116,7 @@ function TableStyle
             $PSBoundParameters['PaddingRight'] = $Padding
             $null = $PSBoundParameters.Remove('Padding')
         }
-        WriteLog -Message ($localized.ProcessingTableStyle -f $Id);
-        Add-PScriboTableStyle @PSBoundParameters;
-
+        Write-PScriboMessage -Message ($localized.ProcessingTableStyle -f $Id)
+        Add-PScriboTableStyle @PSBoundParameters
     }
-} #end function tablestyle
+}

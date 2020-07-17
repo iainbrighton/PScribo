@@ -1,4 +1,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/wxh7sa8llmgosdhe?svg=true)](https://ci.appveyor.com/project/iainbrighton/pscribo)
+![Platforms](https://img.shields.io/powershellgallery/p/PScribo.svg)
+![Version](https://img.shields.io/powershellgallery/v/PScribo.svg)
+![Downloads](https://img.shields.io/powershellgallery/dt/PScribo.svg)
 
 # PScribo (Preview) #
 

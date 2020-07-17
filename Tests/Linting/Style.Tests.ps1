@@ -17,7 +17,8 @@ Describe 'Linting\Style' -Tags "Style" {
                         'TestResults.xml',
                         'Tests',
                         'Docs',
-                        'PScriboExample.txt'
+                        'PScriboExample.txt',
+                        'Lib'
                     );
 
     function TestStylePath {
