@@ -9,11 +9,12 @@ function New-PScriboParagraph
 #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter','ScriptBlock')]
     [OutputType([System.Management.Automation.PSCustomObject])]
     param
     (
         ## PScribo paragraph run script block.
-        [Parameter(Mandatory, Position = 0)]
+        [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [ValidateNotNull()]
         [System.Management.Automation.ScriptBlock] $ScriptBlock,
 
@@ -30,11 +31,17 @@ function New-PScriboParagraph
         ## Tab indent
         [Parameter(ValueFromPipelineByPropertyName)]
         [ValidateRange(0,10)]
-        [System.Int32] $Tabs = 0
+        [System.Int32] $Tabs = 0,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Management.Automation.SwitchParameter] $NoIncrementCounter
     )
     process
     {
-        $pscriboDocument.Properties['Paragraphs']++
+        if (-not $NoIncrementCounter)
+        {
+            $pscriboDocument.Properties['Paragraphs']++
+        }
 
         $pscriboParagraph = [PSCustomObject] @{
             Id                = $Id

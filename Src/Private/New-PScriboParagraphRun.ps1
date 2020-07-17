@@ -13,6 +13,7 @@ function New-PScriboParagraphRun
     param
     (
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
+        [AllowEmptyString()]
         [System.String] $Text,
 
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Style')]

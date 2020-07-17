@@ -9,6 +9,7 @@ function Get-WordParagraphRun
     param
     (
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [AllowEmptyString()]
         [System.String] $Text,
 
         [Parameter(ValueFromPipelineByPropertyName)]

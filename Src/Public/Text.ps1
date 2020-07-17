@@ -4,7 +4,7 @@ function Text
     .SYNOPSIS
         Paragraphs can be made up of text "blocks" (runs) concatenated together to
         form a body of text. Separating the text into runs permits alteration
-        of styling element within a paragraph.
+        of styling element within a single paragraph.
 
     .NOTES
         The "Text" block command can only be used within a Paragraph -ScriptBlock { }
@@ -13,6 +13,7 @@ function Text
     param
     (
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
+        [AllowEmptyString()]
         [System.String] $Text,
 
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Style')]
@@ -64,7 +65,7 @@ function Text
         {
             $paragraphRunDisplayName = '{0}[..]' -f $Text.Substring(0,36)
         }
-        WriteLog -Message ($localized.ProcessingParagraphRun -f $paragraphRunDisplayName)
+        Write-PScriboMessage -Message ($localized.ProcessingParagraphRun -f $paragraphRunDisplayName)
         return (New-PScriboParagraphRun @PSBoundParameters)
     }
 }

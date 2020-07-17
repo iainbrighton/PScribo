@@ -81,7 +81,7 @@ function Paragraph {
                 $paragraphId = $Name.Substring(0,40)
                 $paragraphDisplayName = '{0}[..]' -f$Name.Substring(0,36)
             }
-            WriteLog -Message ($localized.ProcessingParagraph -f $paragraphDisplayName)
+            Write-PScriboMessage -Message ($localized.ProcessingParagraph -f $paragraphDisplayName)
 
             if ($NoNewLine -eq $true)
             {
