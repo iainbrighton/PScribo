@@ -40,10 +40,10 @@ function Out-HtmlDocument
         }
         $options = Merge-PScriboPluginOption @mergePScriboPluginOptionParams
         $noPageLayoutStyle = $Options['NoPageLayoutStyle']
-        $topMargin = ConvertTo-Em -Millimeter $options['MarginTop']
-        $leftMargin = ConvertTo-Em -Millimeter $options['MarginLeft']
-        $bottomMargin = ConvertTo-Em -Millimeter $options['MarginBottom']
-        $rightMargin = ConvertTo-Em -Millimeter $options['MarginRight']
+        $topMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $options['MarginTop']) -Format 'f2'
+        $leftMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $options['MarginLeft']) -Format 'f2'
+        $bottomMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $options['MarginBottom']) -Format 'f2'
+        $rightMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $options['MarginRight']) -Format 'f2'
         $script:currentPageNumber = 1
 
         [System.Text.StringBuilder] $htmlBuilder = New-Object System.Text.StringBuilder
