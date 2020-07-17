@@ -15,7 +15,7 @@ function Get-HtmlCanvasHeight
         if ($Orientation -eq 'Portrait')
         {
             $pageHeight = $Document.Options['PageHeight']
-            return ($pageHeight - $Document.Options['MarginTop'] - $Document.Options['MarginBottom'])
+            return ($pageHeight - $Document.Options['MarginTop'] - $Document.Options['MarginBottom']) -as [System.Int32]
         }
         else
         {

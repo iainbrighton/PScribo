@@ -13,16 +13,12 @@ function Out-HtmlTable
     (
         [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateNotNull()]
-        [System.Management.Automation.PSObject] $Table,
-
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $ParseToken
+        [System.Management.Automation.PSObject] $Table
     )
     process
     {
-
         [System.Text.StringBuilder] $tableBuilder = New-Object -TypeName 'System.Text.StringBuilder'
-        $formattedTable = Get-HtmlTable -Table $Table -ParseToken:$ParseToken
+        $formattedTable = Get-HtmlTable -Table $Table
         [ref] $null = $tableBuilder.Append($formattedTable)
         return $tableBuilder.ToString()
     }

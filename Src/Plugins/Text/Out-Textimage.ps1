@@ -26,6 +26,7 @@ function Out-TextImage
             InputObject = '[Image Text="{0}"]' -f $Image.Text
             Width       = $options.TextWidth
         }
+
         return (ConvertTo-AlignedString @convertToAlignedStringParams)
     }
 }

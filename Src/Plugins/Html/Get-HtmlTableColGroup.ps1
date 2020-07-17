@@ -15,6 +15,7 @@ function Get-HtmlTableColGroup
     process
     {
         $colGroupBuilder = New-Object -TypeName 'System.Text.StringBuilder'
+
         if ($Table.ColumnWidths)
         {
             [ref] $null = $colGroupBuilder.Append('<colgroup>')
@@ -31,6 +32,7 @@ function Get-HtmlTableColGroup
             }
             [ref] $null = $colGroupBuilder.AppendLine('</colgroup>')
         }
+
         return $colGroupBuilder.ToString()
     }
 }

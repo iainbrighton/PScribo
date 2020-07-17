@@ -39,7 +39,7 @@ function Get-WordStyleRunPr
             [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'i', $xmlns))
         }
 
-        $wordColor = ConvertTo-WordColor -Color $Style.Color
+        $wordColor = ConvertTo-WordColor -Color (Resolve-PScriboStyleColor -Color $Style.Color)
         $color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlns))
         [ref] $null = $color.SetAttribute('val', $xmlns, $wordColor)
 

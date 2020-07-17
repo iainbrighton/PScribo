@@ -40,10 +40,10 @@ function Out-HtmlDocument
         }
         $options = Merge-PScriboPluginOption @mergePScriboPluginOptionParams
         $noPageLayoutStyle = $Options['NoPageLayoutStyle']
-        $topMargin = ConvertTo-Em -Millimeter $options['MarginTop']
-        $leftMargin = ConvertTo-Em -Millimeter $options['MarginLeft']
-        $bottomMargin = ConvertTo-Em -Millimeter $options['MarginBottom']
-        $rightMargin = ConvertTo-Em -Millimeter $options['MarginRight']
+        $topMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $options['MarginTop']) -Format 'f2'
+        $leftMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $options['MarginLeft']) -Format 'f2'
+        $bottomMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $options['MarginBottom']) -Format 'f2'
+        $rightMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $options['MarginRight']) -Format 'f2'
         $script:currentPageNumber = 1
 
         [System.Text.StringBuilder] $htmlBuilder = New-Object System.Text.StringBuilder
@@ -70,15 +70,42 @@ function Out-HtmlDocument
 
             switch ($subSection.Type)
             {
-                'PScribo.Section' { [ref] $null = $htmlBuilder.Append((Out-HtmlSection -Section $subSection)) }
-                'PScribo.Paragraph' { [ref] $null = $htmlBuilder.Append((Out-HtmlParagraph -Paragraph $subSection)) }
-                'PScribo.Table' { [ref] $null = $htmlBuilder.Append((Out-HtmlTable -Table $subSection)) }
-                'PScribo.LineBreak' { [ref] $null = $htmlBuilder.Append((Out-HtmlLineBreak)) }
-                'PScribo.PageBreak' { [ref] $null = $htmlBuilder.Append((Out-HtmlPageBreak -Orientation $options['PageOrientation'])) }
-                'PScribo.TOC' { [ref] $null = $htmlBuilder.Append((Out-HtmlTOC -TOC $subSection)) }
-                'PScribo.BlankLine' { [ref] $null = $htmlBuilder.Append((Out-HtmlBlankLine -BlankLine $subSection)) }
-                'PScribo.Image' { [ref] $null = $htmlBuilder.Append((Out-HtmlImage -Image $subSection)) }
-                Default { Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning }
+                'PScribo.Section'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlSection -Section $subSection))
+                }
+                'PScribo.Paragraph'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlParagraph -Paragraph $subSection))
+                }
+                'PScribo.Table'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlTable -Table $subSection))
+                }
+                'PScribo.LineBreak'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlLineBreak))
+                }
+                'PScribo.PageBreak'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlPageBreak -Orientation $options['PageOrientation']))
+                }
+                'PScribo.TOC'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlTOC -TOC $subSection))
+                }
+                'PScribo.BlankLine'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlBlankLine -BlankLine $subSection))
+                }
+                'PScribo.Image'
+                {
+                    [ref] $null = $htmlBuilder.Append((Out-HtmlImage -Image $subSection))
+                }
+                Default
+                {
+                    Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
+                }
             }
         } #end foreach section
 
