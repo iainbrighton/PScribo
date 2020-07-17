@@ -424,7 +424,7 @@ InModuleScope 'PScribo' {
 
                 $testDocument = Get-WordDocument -Document $document
 
-                $expected = GetMatch "(<w:t xml:space=`"preserve`">[..]</w:t><w:br />){2}<w:t xml:space=`"preserve`">[..]</w:t>"
+                $expected = GetMatch "(<w:t>[..]</w:t><w:br />){2}<w:t>[..]</w:t>"
                 $testDocument.OuterXml | Should Match $expected
             }
         }

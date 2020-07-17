@@ -48,7 +48,7 @@ function Out-WordTable
             $tblGrid = $tbl.AppendChild($XmlDocument.CreateElement('w', 'tblGrid', $xmlns))
 
             $tableColumnCount = $Table.Columns.Count
-            if ($Table.IsList)
+            if ($Table.IsList -and (-not $Table.IsKeyedList))
             {
                 $tableColumnCount = 2
             }
@@ -133,23 +133,28 @@ function Out-WordTable
                     }
 
                     ## Scaffold paragraph and paragraph run for cell content
-                    $paragraph = [PSCustomObject] @{
-                        Id                = [System.Guid]::NewGuid().ToString()
-                        Type              = 'PScribo.Paragraph'
-                        Style             = $null
-                        Tabs              = 0
-                        Sections          = (New-Object -TypeName System.Collections.ArrayList)
-                        IsSectionBreakEnd = $false
+                    $newPScriboParagraphParams = @{
+                        NoIncrementCounter = $true
                     }
                     if (-not $isCellStyleInherited)
                     {
-                        $paragraph.Style = $cellStyle.Id
+                        $newPScriboParagraphParams['Style'] = $cellStyle.Id
                     }
                     elseif (-not $isRowStyleInherited)
                     {
-                        $paragraph.Style = $rowStyle.Id
+                        $newPScriboParagraphParams['Style'] = $rowStyle.Id
                     }
-                    $paragraphRun = New-PScriboParagraphRun -Text $cell.Content
+                    $paragraph = New-PScriboParagraph @newPScriboParagraphParams
+
+                    if (-not [System.String]::IsNullOrEmpty($cell.Content))
+                    {
+                        $paragraphRun = New-PScriboParagraphRun -Text $cell.Content
+                    }
+                    else
+                    {
+                        $paragraphRun = New-PScriboParagraphRun -Text ''
+                    }
+                    $paragraphRun.IsParagraphRunEnd = $true
                     [ref] $null = $paragraph.Sections.Add($paragraphRun)
                     $p = Out-WordParagraph -Paragraph $paragraph -XmlDocument $XmlDocument
                     [ref] $null = $tc.AppendChild($p)

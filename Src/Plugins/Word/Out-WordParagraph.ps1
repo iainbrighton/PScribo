@@ -101,10 +101,14 @@ function Out-WordParagraph
                         $lines = $run -split '\r\n?|\n'
                         for ($l = 0; $l -lt $lines.Count; $l++)
                         {
+                            $line = $lines[$l]
                             $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
-                            ## needs to be xml:space="preserve" NOT w:space...
-                            [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
-                            [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($lines[$l]))
+                            if ($line -ne $line.Trim())
+                            {
+                                ## Only preserve space if there is a preceeding or trailing space
+                                [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
+                            }
+                            [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($line))
 
                             if ($l -lt ($lines.Count - 1))
                             {
