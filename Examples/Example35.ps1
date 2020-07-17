@@ -15,8 +15,8 @@ $example35 = Document -Name 'PScribo Example 35' {
         Headers and footers can be added to a document. There are two headers
         (default and first page) and two footers (default and first page)
         that can be set. The first page header/footer is only displayed on
-        the first page, but only when defined. Default headers/footers are
-        displayed on all other pages.
+        the very first page, but only when defined. Default headers/footers
+        are displayed on ALL other pages.
 
         The only components that can be used within a Header or Footer
         element are 'Paragraph' and 'Table'. Any other components will be
@@ -24,15 +24,16 @@ $example35 = Document -Name 'PScribo Example 35' {
     #>
 
     Header -FirstPage {
+
         <#
             The first page header will only be shown on the first page. If no
             first page header is defined, nothing will be displayed.
-
         #>
         Paragraph 'PScribo'
     }
 
     Header -Default {
+
         <#
             The 'Default' header will be displayed on all subsequent pages. If
             no default header is defined, nothing will be displayed.

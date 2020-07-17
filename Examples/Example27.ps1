@@ -8,6 +8,7 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example27 = Document -Name 'PScribo Example 27' {
+
     <#
         Custom styling can also be applied to rows of one or more hashtables.
 
@@ -24,7 +25,7 @@ $example27 = Document -Name 'PScribo Example 27' {
         will be styled with the 'StoppedService' style.
 
         NOTE: How the '__Style' key is added to a hashtable is up to you. It could
-        be added programatically etc.
+              be added programatically etc.
     #>
     $hashtableArray = @(
         [Ordered] @{ 'Column 1' = 'Some random text'; 'Column2' = 345; 'Custom Property' = $true; '__Style' = 'StoppedService'; }

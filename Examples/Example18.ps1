@@ -8,6 +8,7 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example18 = Document -Name 'PScribo Example 18' {
+
     <#
         If you need to list an object's or hashtable's values in a list format, you
         can specify the -List parameter on the 'Table' cmdlet. Rather than creating
@@ -16,10 +17,11 @@ $example18 = Document -Name 'PScribo Example 18' {
 
         This is useful if not all properties will fit across as page (like Services).
         However, if multiple objects are encountered, PScribo will create a separate
-        two-column table for each object.
+        two-column table for each object (similar in functionality to the
+        'Format-List' cmdlet).
 
         The following example will create a list table, detailing every property,
-        for every service regiestered on the local machine.
+        for the first 10 services regiestered on the local machine.
     #>
     Get-Service | Select-Object -First 10 | Table -List
 }

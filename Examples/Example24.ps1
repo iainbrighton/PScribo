@@ -8,10 +8,11 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example24 = Document -Name 'PScribo Example 24' {
+
     <#
         The following example combines the creation of multiple custom styles with the
         definition of a custom table style. The custom "BlueZebra" table style is then
-        applied to a "standard" table layout.
+        applied to a table.
     #>
     Style -Name 'BlueZebraHeading' -Bold -Color 039 -Font 'Segoe UI' -Size 12
     Style -Name 'BlueZebraRow' -Color 669 -Font 'Lucida Sans Unicode' -BackgroundColor E8EDFF

@@ -8,6 +8,7 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example5 = Document -Name 'PScribo Example 5' {
+
     <#
         Rather than specifying styling options on individual paragraphs, PScribo supports defining (or
         overriding the default styles) with your own. Creating your own style is easy - just use the
@@ -23,7 +24,7 @@ $example5 = Document -Name 'PScribo Example 5' {
     Paragraph 'This paragraph is styled with the "Funky" style!' -Style Funky
 
     <#
-        If no style is specified, the default is used. You can override the default style (called "Normal")
+        If no style is specified, the default 'Normal' is used. You can override the default style
         by defining your own style with the same name:
     #>
     Style -Name 'Normal' -Font Tahoma -Size 12 -Color 000
