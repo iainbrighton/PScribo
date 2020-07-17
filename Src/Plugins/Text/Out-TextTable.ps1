@@ -30,6 +30,10 @@ function Out-TextTable
         {
             foreach ($property in $row.PSObject.Properties)
             {
+                if ($property.Value -is [System.Array])
+                {
+                    $property.Value = [System.String]::Join(' ', $property.Value)
+                }
                 $property.Value = Resolve-PScriboToken -InputObject $property.Value
             }
         }
@@ -48,7 +52,7 @@ function Out-TextTable
         {
             $tableText = ($Table.Rows |
                 Select-Object -Property * -ExcludeProperty '*__Style' |
-                    Format-List | Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)
+                    Format-List - | Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)
         }
         else
         {
