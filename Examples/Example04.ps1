@@ -9,9 +9,10 @@ Import-Module PScribo -Force -Verbose:$false
 
 $example4 = Document -Name 'PScribo Example 4' {
 
-    <#  NOTE: This example is the 'legacy' paragraph implementation. For
-        advanced paragraph styling options see Example38.ps1 #>
-
+    <#
+        NOTE: This example is the 'legacy' paragraph implementation. For
+              advanced paragraph styling options see Example38.ps1
+    #>
     Paragraph 'The default built-in style that is applied to paragraphs is named "Normal".'
     Paragraph 'You can apply an alternative color to a particular paragraph by specifying a html color code to the -Color parameter.' -Color f00
     Paragraph 'You can also supply Word constant colors to a paragraph!' -Color SteelBlue

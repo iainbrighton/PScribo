@@ -8,6 +8,7 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example5 = Document -Name 'PScribo Example 5' {
+
     <#
         Rather than specifying styling options on individual paragraphs, PScribo supports defining (or
         overriding the default styles) with your own. Creating your own style is easy - just use the

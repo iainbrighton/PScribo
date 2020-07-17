@@ -8,6 +8,7 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example6 = Document -Name 'PScribo Example 6' {
+
     <#
        You can create a document structure with the 'Section' cmdlet. This is the only PScribo
        cmdlet that supports nesting of script blocks.

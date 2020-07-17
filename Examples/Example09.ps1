@@ -16,8 +16,8 @@ $example9 = Document -Name 'PScribo Example 9' {
        breaks and blank lines. This can be used to segregate content within a document.
 
        NOTE: not all breaks are rendered by PScribo plugins in the same manner. For example,
-       only Word output truly supports page breaks as there is no concept of pagination in
-       html, xml or text output.
+             only Word output truly supports page breaks as there is no concept of pagination
+             in html, xml or text output.
 
        The 'PageBreak' cmdlet is used to insert a page break. The following page break
        inserts a break between the table of content and the first section.

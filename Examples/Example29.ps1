@@ -8,6 +8,7 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example29 = Document -Name 'PScribo Example 29' {
+
     <#
         Custom styling can also be applied to individual keys of one or more
         hashtables.

@@ -8,6 +8,7 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example20 = Document -Name 'PScribo Example 20' {
+
     <#
         Hashtables can also be used in -List view along with the -Width
         and -ColumnWidths parameters.

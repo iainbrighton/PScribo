@@ -12,8 +12,11 @@ Import-Module PScribo -Force -Verbose:$false
 
 <#
     We create a PScribo document with the 'Document' cmdlet. Inside the supplied script block, you can include any
-    standard Powershell code as well as addition PScribo content, such as paragraphs. The following code creates a
-    new blank document named 'PScribo Example 1', storing it in the $example1 variable
+    standard Powershell code as well as additional PScribo content, such as paragraphs. The following code creates a
+    new blank document named 'PScribo Example 1', storing it in the $example1 variable.
+
+    When documents are exported, they are exported using the name of the document appended with the extension of the
+    plugin. For example, exporting 'PScribo Example 1' to a Word document results in a 'PScribo Example 1.docx' file.
 #>
 
 $example1 = Document -Name 'PScribo Example 1' {
