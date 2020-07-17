@@ -6,16 +6,13 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    $isNix = $false
-    if (($PSVersionTable['PSEdition'] -eq 'Core') -and (-not $IsWindows))
-    {
-        $isNix = $true
-    }
-
     Describe 'Plugins\Text\Out-TextTable' {
+
+        $isNix = (($PSVersionTable['PSEdition'] -eq 'Core') -and (-not $IsWindows))
 
         ## Scaffold document options
         $Document = Document -Name 'TestDocument' -ScriptBlock {}
+        $script:currentPageNumber = 1
         $pscriboDocument = $Document
 
         Context 'As Table' {
@@ -28,21 +25,28 @@ InModuleScope 'PScribo' {
 
             It 'Default width of 120' {
                 $expected = 206
-                if ($isNix) { $expected -= 5 }
+                if ($isNix) { $expected -= 5 } # Account for line ending differences between Windows and *nix
 
                 $table = Table -Hashtable $services -Name 'Test Table' | Out-TextTable
 
-                $table.Length | Should Be $expected # Trailing spaces are removed (#67)
+                $table.Length | Should Be $expected
             }
 
             It 'Set width with of 35' {
-                $Options = New-PScriboTextOption -TextWidth 35
-                $expected = 311
-                if ($isNix) { $expected -= 9 }
 
-                $table = Table -Hashtable $services -Name 'Test Table' | Out-TextTable
+                if ($isNix)
+                {
+                    Set-ItResult -Inconclusive -Because "of inconsistent Window/*nix 'Format-Table' output text wrapping"
+                }
+                else
+                {
+                    $Options = New-PScriboTextOption -TextWidth 35
+                    $expected = 311
 
-                $table.Length | Should Be $expected ## Text tables are now set to wrap.. Trailing spaces are removed (#67)
+                    $table = Table -Hashtable $services -Name 'Test Table' | Out-TextTable
+
+                    $table.Length | Should Be $expected ## Text tables are now set to wrap.. Trailing spaces are removed (#67)
+                }
             }
         }
 
@@ -56,7 +60,7 @@ InModuleScope 'PScribo' {
 
             It 'Default width of 120' {
                 $expected = 253
-                if ($isNix) { $expected -= 11 }
+                if ($isNix) { $expected -= 11 } # Account for line ending differences between Windows and *nix
 
                 $table = Table -Hashtable $services 'Test Table' -List | Out-TextTable
 
@@ -64,13 +68,21 @@ InModuleScope 'PScribo' {
             }
 
             It 'Default width of 25' {
-                $Options = New-PScriboTextOption -TextWidth 25
-                $expected = 352
-                if ($isNix) { $expected -= 17 }
 
-                $table = Table -Hashtable $services 'Test Table' -List | Out-TextTable
+                if ($isNix)
+                {
+                    Set-ItResult -Inconclusive -Because "of inconsistent Window/*nix 'Format-List' output text wrapping"
+                }
+                else
+                {
+                    $Options = New-PScriboTextOption -TextWidth 25
+                    $expected = 352
 
-                $table.Length | Should Be $expected # Trailing spaces are removed (#67)
+                    $table = Table -Hashtable $services 'Test Table' -List | Out-TextTable
+
+                    $table.Length | Should Be $expected
+                }
+
             }
         }
     }

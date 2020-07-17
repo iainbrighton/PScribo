@@ -2,7 +2,7 @@ function Out-WordPageBreak
 {
 <#
     .SYNOPSIS
-    Output formatted Word page break.
+        Output formatted Word page break.
 #>
     [CmdletBinding()]
     [OutputType([System.Xml.XmlElement])]
@@ -22,6 +22,7 @@ function Out-WordPageBreak
         $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
         $br = $r.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlns))
         [ref] $null = $br.SetAttribute('type', $xmlns, 'page')
+
         return $p
     }
 }

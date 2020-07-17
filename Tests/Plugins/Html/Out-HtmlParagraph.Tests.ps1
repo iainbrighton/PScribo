@@ -10,6 +10,8 @@ InModuleScope 'PScribo' {
 
         ## Scaffold new document to initialise options/styles
         $pscriboDocument = Document -Name 'Test' -ScriptBlock { }
+        $Document = $pscriboDocument
+        $script:currentPageNumber = 1
 
         Context 'By Named Parameter' {
 
@@ -18,7 +20,7 @@ InModuleScope 'PScribo' {
             }
 
             It 'creates paragraph with custom name/id' {
-                Paragraph -Name 'Test' -Text 'Test paragraph.' -NoNewLine | Out-HtmlParagraph | Should BeExactly "<div>Test paragraph.</div>"
+                Paragraph -Name 'Test' -Text 'Test paragraph.' | Out-HtmlParagraph | Should BeExactly "<div>Test paragraph.</div>"
             }
 
             It 'creates paragraph with named -Style parameter' {
@@ -38,6 +40,30 @@ InModuleScope 'PScribo' {
                 $expected = '<div>Embedded<br />New Line</div>'
 
                 $result = Paragraph $paragraphText | Out-HtmlParagraph
+
+                $result | Should BeExactly $expected
+            }
+
+            It 'adds spaces between text runs (by default)' {
+                $paragraph = {
+                    Text 'Test'
+                    Text 'paragraph'
+                }
+                $expected = '<div>Test paragraph</div>'
+
+                $result = Paragraph $paragraph | Out-HtmlParagraph
+
+                $result | Should BeExactly $expected
+            }
+
+            It 'does not add spaces between text runs (when specified)' {
+                $paragraph = {
+                    Text 'Test' -NoSpace
+                    Text 'paragraph'
+                }
+                $expected = '<div>Testparagraph</div>'
+
+                $result = Paragraph $paragraph | Out-HtmlParagraph
 
                 $result | Should BeExactly $expected
             }

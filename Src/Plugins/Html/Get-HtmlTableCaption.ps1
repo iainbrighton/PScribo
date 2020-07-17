@@ -15,23 +15,15 @@ function Get-HtmlTableCaption
     process
     {
         $tableStyle = Get-PScriboDocumentStyle -TableStyle $Table.Style
-        $pscriboParagraph = [PSCustomObject] @{
-            Id                = '{0}{1}' -f $tableStyle.CaptionPrefix, $Table.Number
-            Text              = '{0} {1} {2}' -f $tableStyle.CaptionPrefix, $Table.CaptionNumber, $Table.Caption
-            Type              = 'PScribo.Paragraph'
-            Style             = $tableStyle.CaptionStyle
-            Value             = $null
-            NewLine           = $false
-            Tabs              = 0
-            Bold              = $false
-            Italic            = $false
-            Underline         = $false
-            Font              = $null
-            Size              = $null
-            Color             = $null
-            Orientation       = $script:currentOrientation
-            IsSectionBreakEnd = $false
-        }
-        return (Out-HtmlParagraph -Paragraph $pscriboParagraph)
+
+        ## Scaffold paragraph and paragraph run for table caption
+        $paragraphId = '{0}{1}' -f $tableStyle.CaptionPrefix, $Table.Number
+        $paragraph = New-PScriboParagraph -Id $paragraphId -Style $tableStyle.CaptionStyle -NoIncrementCounter
+        $paragraphRunText = '{0} {1} {2}' -f $tableStyle.CaptionPrefix, $Table.CaptionNumber, $Table.Caption
+        $paragraphRun = New-PScriboParagraphRun -Text $paragraphRunText
+        $paragraphRun.IsParagraphRunEnd = $true
+        [ref] $null = $paragraph.Sections.Add($paragraphRun)
+
+        return (Out-HtmlParagraph -Paragraph $paragraph)
     }
 }

@@ -31,6 +31,7 @@ function Get-WordSettingsDocument
             $wupdateFields = $settings.AppendChild($settingsDocument.CreateElement('w', 'updateFields', $xmlns))
             [ref] $null = $wupdateFields.SetAttribute('val', $xmlns, 'true')
         }
+
         return $settingsDocument
     }
 }

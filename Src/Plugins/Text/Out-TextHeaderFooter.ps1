@@ -34,7 +34,7 @@ function Out-TextHeaderFooter
                 {
                     'PScribo.Paragraph'
                     {
-                        $paragraph = Out-TextParagraph -Paragraph $cloneSubSection -ParseToken
+                        $paragraph = Out-TextParagraph -Paragraph $cloneSubSection
                         [ref] $null = $hfBuilder.Append($paragraph)
                     }
                     'PScribo.Table'
@@ -45,7 +45,7 @@ function Out-TextHeaderFooter
                             [ref] $null = $hfBuilder.AppendLine()
                         }
 
-                        $table = Out-TextTable -Table $cloneSubSection -ParseToken
+                        $table = Out-TextTable -Table $cloneSubSection
                         [ref] $null = $hfBuilder.Append($table)
 
                         if ($Header)

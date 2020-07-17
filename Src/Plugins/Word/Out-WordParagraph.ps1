@@ -2,7 +2,7 @@ function Out-WordParagraph
 {
 <#
     .SYNOPSIS
-        Output formatted Word paragraph.
+        Output formatted Word paragraph and run(s).
 #>
     [CmdletBinding()]
     [OutputType([System.Xml.XmlElement])]
@@ -12,26 +12,11 @@ function Out-WordParagraph
         [System.Management.Automation.PSObject] $Paragraph,
 
         [Parameter(Mandatory)]
-        [System.Xml.XmlDocument] $XmlDocument,
-
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $ParseToken
+        [System.Xml.XmlDocument] $XmlDocument
     )
-    begin
-    {
-        if ([System.String]::IsNullOrEmpty($Paragraph.Text))
-        {
-            $lines = $Paragraph.Id.Split([System.Environment]::NewLine)
-        }
-        else
-        {
-            $lines = $Paragraph.Text.Split([System.Environment]::NewLine)
-        }
-    }
     process
     {
         $xmlns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
-
         $p = $XmlDocument.CreateElement('w', 'p', $xmlns);
         $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlns));
 
@@ -64,73 +49,78 @@ function Out-WordParagraph
             [ref] $null = $pPr.AppendChild((Get-WordSectionPr @paragraphPrParams -XmlDocument $xmlDocument))
         }
 
-        if ($ParseToken)
+        foreach ($paragraphRun in $Paragraph.Sections)
         {
-            if ([System.String]::IsNullOrEmpty($Paragraph.Text))
-            {
-                Get-PSCriboParagraphRun -Text $Paragraph.Id -XmlDocument $XmlDocument -XmlElement $p
-            }
-            else
-            {
-                Get-PSCriboParagraphRun -Text $Paragraph.Text -XmlDocument $XmlDocument -XmlElement $p
-            }
-        }
-        else
-        {
-            $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
-            $rPr = $r.AppendChild($XmlDocument.CreateElement('w', 'rPr', $xmlns))
+            $rPr = Get-WordParagraphRunPr -ParagraphRun $paragraphRun -XmlDocument $XmlDocument
+            $noSpace = ($paragraphRun.IsParagraphRunEnd -eq $true) -or ($paragraphRun.NoSpace -eq $true)
+            $runs = Get-WordParagraphRun -Text $paragraphRun.Text -NoSpace:$noSpace
 
-            if ($Paragraph.Font)
+            foreach ($run in $runs)
             {
-                $rFonts = $rPr.AppendChild($XmlDocument.CreateElement('w', 'rFonts', $xmlns))
-                [ref] $null = $rFonts.SetAttribute('ascii', $xmlns, $Paragraph.Font[0])
-                [ref] $null = $rFonts.SetAttribute('hAnsi', $xmlns, $Paragraph.Font[0])
-            }
-
-            if ($Paragraph.Size -gt 0)
-            {
-                $sz = $rPr.AppendChild($XmlDocument.CreateElement('w', 'sz', $xmlns))
-                [ref] $null = $sz.SetAttribute('val', $xmlns, $Paragraph.Size * 2)
-            }
-
-            if ($Paragraph.Bold -eq $true)
-            {
-                [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'b', $xmlns))
-            }
-
-            if ($Paragraph.Italic -eq $true)
-            {
-                [ref] $null = $rPr.AppendChild($XmlDocument.CreateElement('w', 'i', $xmlns))
-            }
-
-            if ($Paragraph.Underline -eq $true)
-            {
-                $u = $rPr.AppendChild($XmlDocument.CreateElement('w', 'u', $xmlns))
-                [ref] $null = $u.SetAttribute('val', $xmlns, 'single')
-            }
-
-            if (-not [System.String]::IsNullOrEmpty($Paragraph.Color))
-            {
-                $Color = $rPr.AppendChild($XmlDocument.CreateElement('w', 'color', $xmlns))
-                [ref] $null = $Color.SetAttribute('val', $xmlns, (ConvertTo-WordColor -Color $Paragraph.Color))
-            }
-
-            ## Create a separate run for each line/break
-            for ($l = 0; $l -lt $lines.Count; $l++)
-            {
-                $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
-                ## needs to be xml:space="preserve" NOT w:space...
-                [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
-                [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($lines[$l]))
-
-                if ($l -lt ($lines.Count - 1))
+                if (-not [System.String]::IsNullOrEmpty($run))
                 {
-                    ## Don't add a line break to the last line/break
-                    [ref] $null = $r.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlns))
+                    if ($run -imatch '<!#(TOTALPAGES|PAGENUMBER)#!>')
+                    {
+                        $r1 = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+                        $fldChar1 = $r1.AppendChild($XmlDocument.CreateElement('w', 'fldChar', $xmlns))
+                        [ref] $null = $fldChar1.SetAttribute('fldCharType', $xmlns, 'begin')
+
+                        $r2 = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+                        [ref] $null = $r2.AppendChild($rPr)
+                        $instrText = $r2.AppendChild($XmlDocument.CreateElement('w', 'instrText', $xmlns))
+                        [ref] $null = $instrText.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
+
+                        if ($run -match '<!#PAGENUMBER#!>')
+                        {
+                            [ref] $null = $instrText.AppendChild($XmlDocument.CreateTextNode(' PAGE   \* MERGEFORMAT '))
+                        }
+                        elseif ($run -match '<!#TOTALPAGES#!>')
+                        {
+                            [ref] $null = $instrText.AppendChild($XmlDocument.CreateTextNode(' NUMPAGES   \* MERGEFORMAT '))
+                        }
+
+                        $r3 = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+                        $fldChar2 = $r3.AppendChild($XmlDocument.CreateElement('w', 'fldChar', $xmlns))
+                        [ref] $null = $fldChar2.SetAttribute('fldCharType', $xmlns, 'separate')
+
+                        $r4 = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+                        [ref] $null = $r4.AppendChild($rPr)
+                        $t2 = $r4.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
+                        [ref] $null = $t2.AppendChild($XmlDocument.CreateTextNode('1'))
+
+                        $r5 = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+                        $fldChar3 = $r5.AppendChild($XmlDocument.CreateElement('w', 'fldChar', $xmlns))
+                        [ref] $null = $fldChar3.SetAttribute('fldCharType', $xmlns, 'end')
+                    }
+                    else
+                    {
+                        $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
+                        [ref] $null = $r.AppendChild($rPr)
+
+                        ## Create a separate text block for each line/break
+                        $lines = $run -split '\r\n?|\n'
+                        for ($l = 0; $l -lt $lines.Count; $l++)
+                        {
+                            $line = $lines[$l]
+                            $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
+                            if ($line -ne $line.Trim())
+                            {
+                                ## Only preserve space if there is a preceeding or trailing space
+                                [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
+                            }
+                            [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($line))
+
+                            if ($l -lt ($lines.Count - 1))
+                            {
+                                ## Don't add a line break to the last line/break
+                                [ref] $null = $r.AppendChild($XmlDocument.CreateElement('w', 'br', $xmlns))
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        return $p;
+        return $p
     }
 }

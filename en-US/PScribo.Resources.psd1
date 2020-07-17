@@ -13,6 +13,7 @@ UndefinedStyleError              = Undefined style '{0}' specified.
 OpenPackageError                 = Error opening package '{0}'. Ensure the file in not in use by another process.
 IncorrectCharsInPathError        = The incorrect char found in the Path.
 HeaderFooterDocumentRootError    = The 'Header' and 'Footer' keywords can only be defined in the document root section.
+ParagraphRunRootError            = The 'Text' keyword can only be defined within a 'Paragraph' section.
 
 MaxHeadingLevelWarning           = Html5 supports a maximum of 6 heading levels. Reduce the number of nested Document sections to remove the unsupported tags in the resulting Html output.
 TableHeadersWithNoColumnsWarning = Table headers have been specified with no table columns/properties. Headers will be ignored.
@@ -25,12 +26,15 @@ ImageHeightPercentageError       = The image height with '-AsPercent' cannot be 
 ImageWidthPercentageError        = The image width with '-AsPercent' cannot be less-than or equal to 0% and/or greater than 100%.
 UnexpectedObjectWarning          = Unexpected/unsupported object in document/section '{0}'.
 UnexpectedObjectTypeWarning      = Unexpected '{0}' object in document/section '{1}'.
+UnsupportedPScriboTypeWarning    = PScribo type '{0}' is not supported in document/section '{1}'.
 CannotSetOrientationWarning      = Orientation can only be set on a document root 'Section'. Section orientation will be ignored.
 ListTableCaptionRemovedWarning   = List table captions are only supported on tables with a single row. Removing caption from table '{0}'.
 FirstPageHeaderOverwriteWarning  = Existing first page header definition overwritten.
 DefaultHeaderOverwriteWarning    = Existing default page header definition overwritten.
 FirstPageFooterOverwriteWarning  = Existing first page footer definition overwritten.
 DefaultFooterOverwriteWarning    = Existing default page footer definition overwritten.
+NoNewLineDeprecatedWarning       = The '-NoNewLine' functionality has been deprecated. Use Paragraph runs (Text) to implement this functionality for all output formats.
+ValueParameterRemovedWarning     = The 'Paragraph -Value' functionality has been removed and is no longer implemented.
 
 DocumentProcessingStarted        = Document '{0}' processing started.
 DocumentInvokePlugin             = Invoking '{0}' plugin.
@@ -74,4 +78,7 @@ ProcessingHeaderStarted          = Processing document header started.
 ProcessingHeaderCompleted        = Processing document header completed.
 ProcessingFooterStarted          = Processing document footer started.
 ProcessingFooterCompleted        = Processing document footer completed.
+ProcessingParagraphRunsStarted   = Processing paragraph run(s) started.
+ProcessingParagraphRunsCompleted = Processing paragraph run(s) completed.
+ProcessingParagraphRun           = Processing paragraph run '{0}'.
 '@;

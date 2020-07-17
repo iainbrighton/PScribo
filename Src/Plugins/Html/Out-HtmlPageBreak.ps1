@@ -21,10 +21,10 @@ function Out-HtmlPageBreak
 
         $script:currentPageNumber++
         [ref] $null = $pageBreakBuilder.Append('</div></div>')
-        $topMargin = ConvertTo-Em -Millimeter $Document.Options['MarginTop']
-        $leftMargin = ConvertTo-Em -Millimeter $Document.Options['MarginLeft']
-        $bottomMargin = ConvertTo-Em -Millimeter $Document.Options['MarginBottom']
-        $rightMargin = ConvertTo-Em -Millimeter $Document.Options['MarginRight']
+        $topMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $Document.Options['MarginTop']) -Format 'f2'
+        $leftMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $Document.Options['MarginLeft']) -Format 'f2'
+        $bottomMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $Document.Options['MarginBottom']) -Format 'f2'
+        $rightMargin = ConvertTo-InvariantCultureString -Object (ConvertTo-Em -Millimeter $Document.Options['MarginRight']) -Format 'f2'
         [ref] $null = $pageBreakBuilder.AppendFormat('<div class="{0}">', $Orientation.ToLower())
         [ref] $null = $pageBreakBuilder.AppendFormat('<div class="{0}" style="padding-top: {1}rem; padding-left: {2}rem; padding-bottom: {3}rem; padding-right: {4}rem;">', $Document.DefaultStyle, $topMargin, $leftMargin, $bottomMargin, $rightMargin).AppendLine()
 

@@ -20,41 +20,38 @@ function Get-HtmlStyle
         $invariantFontSize = ConvertTo-InvariantCultureString -Object ($Style.Size / 12) -Format 'f2'
         [ref] $null = $styleBuilder.AppendFormat(' font-size: {0}rem;', $invariantFontSize)
         [ref] $null = $styleBuilder.AppendFormat(' text-align: {0};', $Style.Align.ToLower())
-        if ($Style.Bold) {
 
+        if ($Style.Bold)
+        {
             [ref] $null = $styleBuilder.Append(' font-weight: bold;')
-        }
-        else {
-
-            [ref] $null = $styleBuilder.Append(' font-weight: normal;')
-        }
-        if ($Style.Italic) {
-
-            [ref] $null = $styleBuilder.Append(' font-style: italic;')
-        }
-        if ($Style.Underline) {
-
-            [ref] $null = $styleBuilder.Append(' text-decoration: underline;')
-        }
-        if ($Style.Color.StartsWith('#')) {
-
-            [ref] $null = $styleBuilder.AppendFormat(' color: {0};', $Style.Color.ToLower())
         }
         else
         {
-            [ref] $null = $styleBuilder.AppendFormat(' color: #{0};', $Style.Color)
+            [ref] $null = $styleBuilder.Append(' font-weight: normal;')
         }
+
+        if ($Style.Italic)
+        {
+            [ref] $null = $styleBuilder.Append(' font-style: italic;')
+        }
+
+        if ($Style.Underline)
+        {
+            [ref] $null = $styleBuilder.Append(' text-decoration: underline;')
+        }
+
+        if ($Style.Color)
+        {
+            $color = Resolve-PScriboStyleColor -Color $Style.Color
+            [ref] $null = $styleBuilder.AppendFormat(' color: #{0};', $color)
+        }
+
         if ($Style.BackgroundColor)
         {
-            if ($Style.BackgroundColor.StartsWith('#'))
-            {
-                [ref] $null = $styleBuilder.AppendFormat(' background-color: {0};', $Style.BackgroundColor.ToLower())
-            }
-            else
-            {
-                [ref] $null = $styleBuilder.AppendFormat(' background-color: #{0};', $Style.BackgroundColor.ToLower())
-            }
+            $backgroundColor = Resolve-PScriboStyleColor -Color $Style.BackgroundColor
+            [ref] $null = $styleBuilder.AppendFormat(' background-color: #{0};', $backgroundColor)
         }
+
         return $styleBuilder.ToString()
     }
 }

@@ -9,7 +9,9 @@ InModuleScope 'PScribo' {
     Describe 'Plugins\Text\Out-TextParagraph' {
 
         ## Scaffold document options
-        $pscriboDocument = Document -Name 'TestDocument' -ScriptBlock {}
+        $Document = Document -Name 'TestDocument' -ScriptBlock {}
+        $script:currentPageNumber = 1
+        $pscriboDocument = $Document
         $Options = New-PScriboTextOption
 
         Context 'By pipeline' {
@@ -21,14 +23,6 @@ InModuleScope 'PScribo' {
                 $p = Paragraph $testParagraph | Out-TextParagraph
 
                 $p | Should BeExactly $expected
-            }
-
-            It 'Paragraph with no new line' {
-                $testParagraph = 'Test paragraph.'
-
-                $p = Paragraph $testParagraph -NoNewLine | Out-TextParagraph
-
-                $p | Should BeExactly $testParagraph
             }
 
             It 'Paragraph wraps at 10 characters with new line' {
@@ -51,22 +45,26 @@ InModuleScope 'PScribo' {
                 $p | Should BeExactly $expected
             }
 
-            It 'Paragraph wraps at 10 characters with no new line' {
-                $Options = New-PScriboTextOption -TextWidth 10
-                $testParagraph = 'Testparagraph.'
-                $expected = 'Testparagr{0}aph.' -f [System.Environment]::NewLine
+            It 'adds spaces between text runs (by default)' {
+                $testParagraph = {
+                    Text 'Test'
+                    Text 'paragraph'
+                }
+                $expected = 'Test paragraph{0}' -f [System.Environment]::NewLine
 
-                $p = Paragraph $testParagraph -NoNewLine | Out-TextParagraph
+                $p = Paragraph $testParagraph | Out-TextParagraph
 
                 $p | Should BeExactly $expected
             }
 
-            It 'Paragraph breaks on empty space with no new line' {
-                $testParagraph = 'Test paragraph.'
-                $Options = New-PScriboTextOption -TextWidth 10
-                $expected = 'Test{0}paragraph.' -f [System.Environment]::NewLine
+            It 'does not add spaces between text runs (when specified)' {
+                $testParagraph = {
+                    Text 'Test' -NoSpace
+                    Text 'paragraph'
+                }
+                $expected = 'Testparagraph{0}' -f [System.Environment]::NewLine
 
-                $p = Paragraph $testParagraph -NoNewLine | Out-TextParagraph
+                $p = Paragraph $testParagraph | Out-TextParagraph
 
                 $p | Should BeExactly $expected
             }
@@ -83,13 +81,6 @@ InModuleScope 'PScribo' {
                 $p | Should BeExactly $expected
             }
 
-            It 'By named -Paragraph parameter with no new line' {
-                $testParagraph = 'Test paragraph.'
-
-                $p = Out-TextParagraph -Paragraph (Paragraph $testParagraph -NoNewLine)
-
-                $p | Should BeExactly $testParagraph
-            }
         }
     }
 }
