@@ -4,9 +4,10 @@
 
 ### Unreleased ###
 
+* __BREAKING CHANGE__ - XML output to be deprecated in a future release (#102)
 * Adds inline paragraph styling runs - see Example38.ps1 (#75, #97)
   * __BREAKING CHANGE__ - XML paragraph output formatting changed
-* __BREAKING CHANGE__ - XML output to be deprecated in a future release (#102)
+* Adds example index file `\Examples\Index.md` (#103)
 
 ### 0.9.0 ###
 

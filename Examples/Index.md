@@ -1,7 +1,7 @@
 # PScribo Example Index
 
-| File          | Example |
-| ------------- | ------- |
+| File          | Example
+| ------------- | -------
 | Example01.ps1 | `Document` and document backup
 | Example02.ps1 | `Export-Document` and output formats
 | Example03.ps1 | `DocumentOption` and page size with margins
