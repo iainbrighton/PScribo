@@ -1,0 +1,23 @@
+TOPIC
+    Markdown
+
+SYNOPSIS
+    PScribo supports outputting GitHub Flavored Markdown format documents.
+
+DESCRIPTION
+    GitHub Flavored Markdown (GFM) is a strict superset of CommonMark.
+    https://github.github.com/gfm/
+
+KNOWN LIMITATIONS
+    No indentation (tab) support (interpreted as code blocks)
+    Underlining not supported (only bold and italic)
+    Image resizing is not supported
+    Inline images - can bundle but not really how MD is intended to be used
+    Local file references, e.g. file:///C:/Users/Iain/Dropbox/PowerShell/Modules/PScribo/Examples/Example31.jpg
+    Table captions are not supported
+    Numbered lists only support one level of indentation
+    Headers/Footers?
+
+PLUGIN OPTIONS
+    RenderBlankLine
+    EmbedImage

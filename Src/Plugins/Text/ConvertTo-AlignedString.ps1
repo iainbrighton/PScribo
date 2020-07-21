@@ -30,8 +30,9 @@ function ConvertTo-AlignedString
         [Parameter(ValueFromPipelineByPropertyName)]
         [System.Int32] $Width = ($Host.UI.RawUI.BufferSize.Width -1),
 
+        ## Append an additional (double) new line and double spaces (for line breaks)
         [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $NoNewLine
+        [System.Management.Automation.SwitchParameter] $Markdown
     )
     begin
     {
@@ -93,11 +94,11 @@ function ConvertTo-AlignedString
                         $convertToJustifiedStringParams['InputObject'] = $lineBuilder.ToString()
                         $justifiedString = ConvertTo-JustifiedString @convertToJustifiedStringParams
                         [ref] $null = $textBuilder.Append($tabSpaces).Append($justifiedString)
-
-                        if (-not $NoNewLine)
+                        if ($Markdown)
                         {
-                            [ref] $null = $textBuilder.AppendLine()
+                            [ref] $null = $textBuilder.Append('  ')
                         }
+                        [ref] $null = $textBuilder.AppendLine()
                     }
 
                     $currentPosition = $newPosition
@@ -113,12 +114,9 @@ function ConvertTo-AlignedString
                     [ref] $null = $lineBuilder.Append($word)
                     [ref] $null = $textBuilder.Append($tabSpaces).Append($lineBuilder.ToString())
 
-                    if ($isLastWord -and (-not $NoNewLine))
+                    if (-not $isLastWord)
                     {
-                        [ref] $null = $textBuilder.AppendLine()
-                    }
-                    elseif (-not $isLastWord)
-                    {
+                        if ($Markdown) { [ref] $null = $textBuilder.Append('  ') }
                         [ref] $null = $textBuilder.AppendLine()
                     }
 
@@ -138,11 +136,8 @@ function ConvertTo-AlignedString
                         $convertToJustifiedStringParams['InputObject'] = $word
                         $justifiedString = ConvertTo-JustifiedString @convertToJustifiedStringParams
                         [ref] $null = $textBuilder.AppendLine().Append($tabSpaces).Append($justifiedString)
-
-                        if (-not $NoNewLine)
-                        {
-                            [ref] $null = $textBuilder.AppendLine()
-                        }
+                        if ($Markdown) { [ref] $null = $textBuilder.Append('  ') }
+                        [ref] $null = $textBuilder.AppendLine()
                     }
                     else
                     {
@@ -153,6 +148,10 @@ function ConvertTo-AlignedString
                     }
                 }
             }
+        }
+        if ($Markdown)
+        {
+            # [ref] $null = $textBuilder.AppendLine()
         }
         return $textBuilder.ToString()
     }
