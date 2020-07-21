@@ -14,9 +14,9 @@ function Set-PScriboSectionBreakEnd
     process
     {
         $Section.Sections |
-            Where-Object { $_.Type -in 'PScribo.Section','PScribo.Paragraph' } |
+            Where-Object { $_.Type -in 'PScribo.Section','PScribo.Paragraph','PScribo.Table' } |
             Select-Object -Last 1 | ForEach-Object {
-                    if ($PSItem.Type -eq 'PScribo.Paragraph')
+                    if ($PSItem.Type -in 'PScribo.Paragraph','PScribo.Table')
                     {
                         $PSItem.IsSectionBreakEnd = $true
                     }

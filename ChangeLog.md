@@ -9,6 +9,10 @@
   * __BREAKING CHANGE__ - XML paragraph output formatting changed
 * Adds example index file `\Examples\Index.md` (#103)
 
+### 0.9.1 ###
+
+* Fixes Word table width bug with landscape orientation
+
 ### 0.9.0 ###
 
 * Adds Header and Footer support (#80)
