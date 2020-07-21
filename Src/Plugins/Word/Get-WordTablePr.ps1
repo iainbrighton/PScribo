@@ -28,7 +28,12 @@ function Get-WordTablePr
         [ref] $null = $tblInd.SetAttribute('w', $xmlns, (720 * $Table.Tabs))
         [ref] $null = $tblInd.SetAttribute('type', $xmlns, 'dxa')
 
-        $tableRenderWidthMm = Get-WordTableRenderWidthMm -TableWidth $Table.Width -Tabs $Table.Tabs
+        $getWordTableRenderWidthMmParams = @{
+            TableWidth  = $Table.Width
+            Tabs        = $Table.Tabs
+            Orientation = $Table.Orientation
+        }
+        $tableRenderWidthMm = Get-WordTableRenderWidthMm @getWordTableRenderWidthMmParams
         $tableRenderWidthTwips = ConvertTo-Twips -Millimeter $tableRenderWidthMm
 
         $tblLayout = $tblPr.AppendChild($XmlDocument.CreateElement('w', 'tblLayout', $xmlns))

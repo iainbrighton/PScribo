@@ -61,13 +61,14 @@ function Document
             for ($i = 0; $i -lt $pscriboDocument.Sections.Count; $i++)
             {
                 $pscriboSection = $pscriboDocument.Sections[$i]
-                if ($pscriboSection.Type -in 'PScribo.Section','PScribo.Paragraph')
+                if ($pscriboSection.Type -in 'PScribo.Section','PScribo.Paragraph','PScriboTable')
                 {
                     if (($null -ne $pscriboSection.PSObject.Properties['IsSectionBreak']) -and ($pscriboSection.IsSectionBreak))
                     {
-                        if (($previousPScriboSection.Type -eq 'PScribo.Paragraph') -or ($previousPScriboSection.Sections.Count -eq 0))
+                        if (($previousPScriboSection.Type -in 'PScribo.Paragraph','PScribo.Table') -or
+                            ($previousPScriboSection.Sections.Count -eq 0))
                         {
-                            ## Set the last childless section or paragraph as the section end
+                            ## Set the last childless section, paragraph or table as the section end
                             $previousPScriboSection.IsSectionBreakEnd = $true
                         }
                         else
