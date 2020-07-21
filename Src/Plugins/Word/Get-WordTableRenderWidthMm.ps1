@@ -13,7 +13,10 @@ function Get-WordTableRenderWidthMm
 
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateRange(0, 10)]
-        [System.UInt16] $Tabs
+        [System.UInt16] $Tabs,
+
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [System.String] $Orientation
     )
     process
     {
@@ -23,7 +26,14 @@ function Get-WordTableRenderWidthMm
             ## so we just have assume that we're using all available width
             $TableWidth = 100
         }
-        $pageWidthMm = $Document.Options['PageWidth'] - ($Document.Options['MarginLeft'] + $Document.Options['MarginRight'])
+        if ($Orientation -eq 'Portrait')
+        {
+            $pageWidthMm = $Document.Options['PageWidth'] - ($Document.Options['MarginLeft'] + $Document.Options['MarginRight'])
+        }
+        elseif ($Orientation -eq 'Landscape')
+        {
+            $pageWidthMm = $Document.Options['PageHeight'] - ($Document.Options['MarginLeft'] + $Document.Options['MarginRight'])
+        }
         $indentWidthMm = ConvertTo-Mm -Point ($Tabs * 36)
         $tableWidthRenderMm = (($pageWidthMm / 100) * $TableWidth) + $indentWidthMm
         if ($tableWidthRenderMm -gt $pageWidthMm)

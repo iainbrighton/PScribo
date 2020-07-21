@@ -67,23 +67,25 @@ function New-PScriboTable
         $typeName = 'PScribo.Table'
         $pscriboDocument.Properties['Tables']++
         $pscriboTable = [PSCustomObject] @{
-            Id              = $Name.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper()
-            Name            = $Name
-            Number          = $pscriboDocument.Properties['Tables']
-            Type            = $typeName
-            Columns         = $Columns
-            ColumnWidths    = $ColumnWidths
-            Rows            = $Rows
-            Style           = $Style
-            Width           = $Width
-            Tabs            = $Tabs
-            HasCaption      = $PSBoundParameters.ContainsKey('Caption')
-            Caption         = $Caption
-            CaptionNumber   = 0
-            IsList          = $List
-            IsKeyedList     = $PSBoundParameters.ContainsKey('ListKey')
-            ListKey         = $ListKey
-            DisplayListKey  = $DisplayListKey.ToBool()
+            Id                = $Name.Replace(' ', $pscriboDocument.Options['SpaceSeparator']).ToUpper()
+            Name              = $Name
+            Number            = $pscriboDocument.Properties['Tables']
+            Type              = $typeName
+            Columns           = $Columns
+            ColumnWidths      = $ColumnWidths
+            Rows              = $Rows
+            Style             = $Style
+            Width             = $Width
+            Tabs              = $Tabs
+            HasCaption        = $PSBoundParameters.ContainsKey('Caption')
+            Caption           = $Caption
+            CaptionNumber     = 0
+            IsList            = $List
+            IsKeyedList       = $PSBoundParameters.ContainsKey('ListKey')
+            ListKey           = $ListKey
+            DisplayListKey    = $DisplayListKey.ToBool()
+            Orientation       = $script:currentOrientation
+            IsSectionBreakEnd = $false
         }
 
         ## Remove captions from List tables where there is more than one row

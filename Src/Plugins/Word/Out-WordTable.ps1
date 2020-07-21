@@ -27,15 +27,16 @@ function Out-WordTable
     )
     begin
     {
-        $formattedTables = ConvertTo-PScriboPreformattedTable -Table $Table
+        $formattedTables = @(ConvertTo-PScriboPreformattedTable -Table $Table)
     }
     process
     {
         $xmlns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
         $tableStyle = Get-PScriboDocumentStyle -TableStyle $Table.Style
 
-        foreach ($formattedTable in $formattedTables)
+        for ($tableNumber = 0; $tableNumber -lt $formattedTables.Count; $tableNumber++)
         {
+            $formattedTable = $formattedTables[$tableNumber]
             if ($Table.HasCaption -and ($tableStyle.CaptionLocation -eq 'Above'))
             {
                 $tableCaption = (Get-WordTableCaption -Table $Table -XmlDocument $XmlDocument)
@@ -46,7 +47,12 @@ function Out-WordTable
             [ref] $null = $tbl.AppendChild((Get-WordTablePr -Table $Table -XmlDocument $XmlDocument))
 
             ## LibreOffice requires column widths to be specified so we must calculate rough approximations (#99).
-            $tableRenderWidthMm = Get-WordTableRenderWidthMm -TableWidth $Table.Width -Tabs $Table.Tabs
+            $getWordTableRenderWidthMmParams = @{
+                TableWidth  = $Table.Width
+                Tabs        = $Table.Tabs
+                Orientation = $Table.Orientation
+            }
+            $tableRenderWidthMm = Get-WordTableRenderWidthMm @getWordTableRenderWidthMmParams
             $tableRenderWidthTwips = ConvertTo-Twips -Millimeter $tableRenderWidthMm
             $tblGrid = $tbl.AppendChild($XmlDocument.CreateElement('w', 'tblGrid', $xmlns))
 
@@ -177,7 +183,28 @@ function Out-WordTable
             }
 
             ## Output empty line after (each) table
-            [ref] $null = $Element.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlns))
+            $p = $Element.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlns))
+            ## Only apply section break to the last table
+            if (($tableNumber -eq ($formattedTables.Count -1)) -and ($Table.IsSectionBreakEnd))
+            #if ($Table.IsSectionBreakEnd)
+            {
+                $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlns));
+                $spacing = $pPr.AppendChild($XmlDocument.CreateElement('w', 'spacing', $xmlns))
+                [ref] $null = $spacing.SetAttribute('before', $xmlns, 0)
+                [ref] $null = $spacing.SetAttribute('after', $xmlns, 0)
+
+                $paragraphPrParams = @{
+                    PageHeight       = $Document.Options['PageHeight']
+                    PageWidth        = $Document.Options['PageWidth']
+                    PageMarginTop    = $Document.Options['MarginTop']
+                    PageMarginBottom = $Document.Options['MarginBottom']
+                    PageMarginLeft   = $Document.Options['MarginLeft']
+                    PageMarginRight  = $Document.Options['MarginRight']
+                    Orientation      = $Table.Orientation
+                }
+                $sectPr = Get-WordSectionPr @paragraphPrParams -XmlDocument $xmlDocument
+                [ref] $null = $pPr.AppendChild($sectPr)
+            }
         }
     }
 }
