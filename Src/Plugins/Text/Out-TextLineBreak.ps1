@@ -21,7 +21,6 @@ function Out-TextLineBreak
             InputObject = ''.PadRight($options.SeparatorWidth, $options.LineBreakSeparator)
             Width       = $options.TextWidth
         }
-
         return (ConvertTo-AlignedString @convertToAlignedStringParams)
     }
 }

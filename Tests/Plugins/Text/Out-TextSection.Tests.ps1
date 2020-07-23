@@ -8,8 +8,8 @@ InModuleScope 'PScribo' {
 
     Describe 'Plugins\Text\Out-TextSection' {
 
-        $Document = Document -Name 'TestDocument' -ScriptBlock { };
-        $pscriboDocument = $Document;
+        $Document = Document -Name 'TestDocument' -ScriptBlock { }
+        $pscriboDocument = $Document
 
         It 'outputs indented section (#73)' {
             $result = Section -Name TestSection -ScriptBlock { } -Tabs 2 | Out-TextSection
@@ -22,7 +22,7 @@ InModuleScope 'PScribo' {
 
             Section -Name TestSection -ScriptBlock { Paragraph 'TestParagraph' } | Out-TextSection
 
-            Assert-MockCalled -CommandName Out-TextParagraph -Exactly 1;
+            Assert-MockCalled -CommandName Out-TextParagraph -Exactly 1
         }
 
         It 'calls Out-TextParagraph twice' {
@@ -73,7 +73,7 @@ InModuleScope 'PScribo' {
             Assert-MockCalled Out-TextTOC -Exactly 0
         }
 
-        It 'calls nested Out-XmlSection' {
+        It 'calls nested Out-TextSection' {
             ## Note this must be called last in the Describe script block as the Out-XmlSection gets mocked!
             Mock -CommandName Out-TextSection
 
