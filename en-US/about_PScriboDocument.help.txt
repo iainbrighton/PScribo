@@ -1,0 +1,92 @@
+TOPIC
+    PScribo Document
+
+SYNOPSIS
+    PScribo is a documentation domain-specific language (DSL) for Powershell. The 'Document' keyword is used to
+    instantiate a new PScribo document object.
+
+DESCRIPTION
+    PScribo provides a set of functions that make it easy to create a document-like structure within Powershell,
+    without having to handle multiple output formats. A document's layout and contents only need to defined once
+    regardless of target output format(s).
+
+    After report creation, the document can be exported to one or more formats using the 'Export-Document' cmdlet.
+
+CREATING A DOCUMENT
+    After importing the PScribo module, you can start creating a PScribo document by using the 'Document' keyword
+    together with a document name and a script-block. This can reside within a standard .ps1 file.
+
+        Import-Module -Name PScribo
+
+        Document 'Example Report' {
+            Paragraph 'PScribo demonstration document'
+            Section 'Heading' {
+                Paragraph 'Local services'
+                Get-Service | Table 'Services Table'
+            }
+        }
+
+    In the example above a table is created from the output of the Get-Service cmdlet. The 'Document' scriptblock can
+    contain any standard Powershell code in addition to PScribo document-specific keywords such as:
+
+        BlankLine       - inserts a blank line.
+        DocumentOption  - sets global or plugin-specific options
+        Footer          - defines the document footer displayed on the firest and/or all pages.
+        Header          - defines the document header displayed on the first and/or all pages.
+        Image           - inserts an image.
+        LineBreak       - inserts a line break.
+        PageBreak       - inserts a page break.
+        Paragraph       - creates a block of text.
+        Section         - creates a new section or heading. Sections create a hierarchy within the document. Numbering
+                          can be applied to sections.
+        Style           - defines a custom formatting style that can be applied to sections, paragraphs and within
+                          table styles.
+        Table           - creates a table from a collection of objects or an array of hashtables.
+        TableStyle      - defines a custom formatting style for tables that is comprised of a heading, row and
+                          alternate row styles.
+
+SETTING DOCUMENT OPTIONS
+    The DocumentOption cmdlet is used to set global document options, including page size and page margins. Supported
+    parameters include:
+
+        Orientation             - the document's default page orientation.
+        SpaceSeparator          - the character used when spaces are encountered and need to be replaced.
+        ForceUppercaseHeader    - forces headings to uppercase.
+        ForceUppercaseSection   - forces section names to uppercase.
+        EnableSectionNumbering  - enables numbering on document sections. This numbering is automatic - you do not need
+                                  to specify individual numbers.
+        Margin                  - sets the all document margins to the points (pt) specified.
+        MarginTopAndBottom      - set the top and bottom page margins to the points (pt) specified (defaults to 72 pt
+                                  or 1 inch).
+        MarginLeftAndRight      - set the left and right page margins to the points (pt) specified (defaults to 54 pt
+                                  or 3/4 inch).
+        PageSize                - sets the page size. Available options include A4, Letter and Legal (defaults to A4).
+
+EXPORTING A DOCUMENT
+    When the 'Document' cmdlet is run, PScribo will return a [PSCustomObject] containing the nested document hierarchy
+    and associated document options. Ths custom object can be stored in a variable for later use and/or piped into the
+    Export-Document cmdlet.
+
+    The Export-Document cmdlet generates a document from the [PSCustomObject] in the specified formats. The following 2
+    examples will generate a 'Document1.txt' text document with a single paragraph in the current working directory.
+
+        $MyDocument = Document 'Document1' {
+            Paragraph 'Stored in a variable'
+        }
+        Export-Document -Document $MyDocument -Format Text
+
+        ----
+
+        Document 'Document1' {
+            Paragraph 'Exported straight into a text document'
+        } | Export-Document -Format Text
+
+    PScribo suports multiple output formats including text, HTML, XML and Microsoft Word. Each output format is
+    provided by a separate plugin. For more details see about_PScriboPlugins.
+
+SEE ALSO
+    about_PScriboPlugins
+    about_PScriboStyles
+    about_HtmlPlugin
+    about_TextPlugin
+    about_WordPlugin

@@ -1,0 +1,30 @@
+TOPIC
+    Html Plugin
+
+SYNOPSIS
+    PScribo supports outputting hypertext markup language (.html) documents.
+
+DESCRIPTION
+    PScribo can output HTML documents for rendering in a web broswer.
+
+KNOWN LIMITATIONS
+    There are some restrictions emposed by Html documents which means that some PScribo functionality cannot
+    either be partially or fully implemented:
+
+    - Html output attempts to create a document-like experience. Paper sizes, page breaks and headers/footers are
+      rendered, but page numbers cannot be faithfully recreated.
+
+PLUGIN OPTIONS
+    The Html plugin accepts the following output customisation options:
+
+        NoPageLayoutStyle [bool]    : Removes the page layout style and renders the content the full width of the
+                                      browser window. If not specified, defaults to '$true'.
+
+    Output customisations are passed to the Export-Document cmdlet as a hashtable, e.g.
+
+    PS> $document | Export-Document -Format Html -Options @{ NoPageLayoutStyle = $true }
+
+SEE ALSO
+    about_PscriboPlugins
+    about_TextPlugin
+    about_WordPlugin

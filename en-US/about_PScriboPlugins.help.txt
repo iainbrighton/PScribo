@@ -1,0 +1,14 @@
+TOPIC
+    PScribo Plugins
+
+SYNOPSIS
+    PScribo supports outputting to multiple document formats.
+
+DESCRIPTION
+    PScribo can output plain text, Html (web) and Microsoft Word documents via plugins. Each format may or may not
+    support various PScribo document options. Refer to each specific plugin help topic for more information.
+
+SEE ALSO
+    about_HtmlPlugin
+    about_TextPlugin
+    about_WordPlugin
