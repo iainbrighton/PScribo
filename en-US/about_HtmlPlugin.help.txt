@@ -26,5 +26,6 @@ PLUGIN OPTIONS
 
 SEE ALSO
     about_PscriboPlugins
+    about_MarkdownPlugin
     about_TextPlugin
     about_WordPlugin

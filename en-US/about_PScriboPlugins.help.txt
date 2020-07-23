@@ -10,5 +10,6 @@ DESCRIPTION
 
 SEE ALSO
     about_HtmlPlugin
+    about_MarkdownPlugin
     about_TextPlugin
     about_WordPlugin

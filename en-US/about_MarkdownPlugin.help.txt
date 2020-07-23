@@ -1,5 +1,5 @@
 TOPIC
-    Markdown
+    Markdown Plugin
 
 SYNOPSIS
     PScribo supports outputting GitHub Flavored Markdown format (.md) documents.
@@ -43,3 +43,9 @@ PLUGIN OPTIONS
     Output customisations are passed to the Export-Document cmdlet, e.g.
 
     PS> $document | Export-Document -Format Markdown -Options @{ EmbedImage = $true }
+
+SEE ALSO
+    about_PscriboPlugins
+    about_HtmlPlugin
+    about_TextPlugin
+    about_WordPlugin
