@@ -8,6 +8,7 @@
 * Adds inline paragraph styling runs - see Example38.ps1 (#75, #97)
   * __BREAKING CHANGE__ - XML paragraph output formatting changed
 * Adds example index file `\Examples\Index.md` (#103)
+* Adds dynamic `-Format` parameter to `Export-Document`
 
 ### 0.9.1 ###
 
