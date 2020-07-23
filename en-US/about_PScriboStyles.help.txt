@@ -1,28 +1,32 @@
 TOPIC
-    Styles
+    PScribo Styles
 
 SYNOPSIS
     PScribo uses styles to apply specific formatting to document objects, e.g. sections, paragraphs and tables.
 
 DESCRIPTION
-    Styles need to be defined before any formatting can be applied within a document (with exception of Paragraphs).
-    Each style permits the setting of the font to use, the font size and color etc. Paragraphs permit styling without
-    defining an explicit style. For example, you can specify specify the -Bold switch on a paragraph without having to
-    define a separate style.
+    Styles need to be defined before any formatting can be applied within a document (with the exception of
+    Paragraphs). Each style permits the setting of the font to use, the font size and color etc.. Paragraphs permit
+    styling without defining an explicit style. For example, you can specify specify the -Bold switch on a paragraph
+    without having to first define a separate style.
 
 DEFAULT STYLES
     PScribo uses a standard set of styles for a document and creates these styles automatically for you. The following
     styles are automatically defined:
 
-        Normal              - 11pt text style (DEFAULT).
-        Title               - Large 28pt title text style.
-        TOC                 - Style used for the Table of Contents heading.
-        Heading1            - 16pt heading level 1 text style.
-        Heading2            - 14pt heading level 2 text style.
-        Heading3            - 12pt heading level 3 text style.
-        TableDefaultHeading - Table heading row style.
-        TableDefaultRow     - Table row style.
-        TableDefaultAltRow  - Table alternating row style.
+        Normal              - 11pt text style (DEFAULT)
+        Title               - 28pt (large) title text style
+        TOC                 - 16pt heading Table of Contents text style
+        Heading1            - 16pt heading level 1 text style
+        Heading2            - 14pt heading level 2 text style
+        Heading3            - 12pt heading level 3 text style
+        Heading4            - 11pt heading level 4 italic text style
+        Heading5            - 11pt heading level 5 text style
+        Heading6            - 11pt heading level 6 text style
+        TableDefaultHeading - Table heading row style
+        TableDefaultRow     - Table row style
+        TableDefaultAltRow  - Table alternating row style
+        Caption             - Table caption style
 
     You are able to alter these styles to suit your requirements with the 'Style' cmdlet. You can override the default
     "Normal" style with a 12pt Arial font like so:
@@ -63,9 +67,9 @@ NOTES
 
 TABLE STYLES
     Table styles are a combination of individual styles with some additional formatting options specific to tables,
-    i.e. borders and padding. A table style can specify a style for the heading row, a default row style and an optional
-    alternating row style. The individual styles used by within a table style must first be defined with the 'Style'
-    cmdlet before they can be used within 'TableStyle'.
+    i.e. borders and padding. A table style can specify a style for the heading row, a default row style and an
+    optional alternating row style. The individual styles used by within a table style must first be defined with the
+    'Style' cmdlet before they can be used within 'TableStyle'.
 
     Just like individual document styles, you are able to create your own table styles, override the built-in style and
     set a different table style as the "default". PScribo creates a default table style that is applied to all tables
@@ -75,4 +79,10 @@ TABLE STYLES
                        styles.
 
 NOTES
-    If you define multiple styles with the same name, the last style definition is applied to references to that style.
+    If you define multiple styles with the same name, the last style definition is applied to all references to that
+    style.
+
+SEE ALSO
+    about_PScriboDocument
+    about_PScriboPlugins
+    about_PScriboExamples

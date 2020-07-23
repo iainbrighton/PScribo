@@ -2,7 +2,7 @@ TOPIC
     PScribo
 
 SYNOPSIS
-    PScribo is a documentation framework for PowerShell.
+    PScribo is a documentation framework for Windows PowerShell and PowerShell (Core).
 
 DESCRIPTION
     PScribo is an open source project that implements a documentation domain-specific-language (DSL) for Windows
@@ -10,15 +10,14 @@ DESCRIPTION
 
     PScribo provides a set of functions that make it easy to create a document-like structure within Powershell without
     having to handle individual output formatting. A document's layout and contents only need to defined once. After
-    report creation, the document can be exported to one or more formats simultaneously. For more detailed infomation
-    on the documentation DSL, see about_Document.
+    creation, the document can be exported to one or more formats simultaneously. For more detailed infomation on the
+    documentation DSL, see about_PScriboDocument.
 
-    Pscribo can export documentation in a variety of formats and currently supports creation of text, xml and html
+    Pscribo can export documentation in a variety of formats and currently supports creation of text, Html and Word
     formats. Additional "plugins" can be created to support future formats if required. For more detailed information
-    on creating a "plugin" see about_Plugins.
+    on plugins, see about_PScriboPlugins.
 
-    PScribo is available as a Powershell module or a bundle. The bundle permits dot-sourcing the PScribo bundle file or
-    can be placed in its entirety at the beginning of an existing .ps1 file.
+    PScribo is available as a Powershell module and supported on both Windows PowerShell and PowerShell (Core).
 
 CREATING A PSCRIBO DOCUMENT
     To start using PScribo, you need to either install the PScribo module in your Powershell module path or download
@@ -26,22 +25,10 @@ CREATING A PSCRIBO DOCUMENT
 
 OTHER EXAMPLES
     Included in the PScribo module (not the bundle) are some heavily documented example scripts in the .\Examples
-    directory.
+    directory. For an index of the examples, see about_PScriboExamples.
 
 SEE ALSO
-    about_Document
-    about_Styles
-    about_Tables
-    about_Plugins
-    Document
-    DocumentOption
-    *Header (not yet implemented)
-    *Footer (not yet implemented)
-    Style
-    TableStyle
-    Section
-    Paragraph
-    Table
-    PageBreak
-    LineBreak
-    Image
+    about_PScriboDocument
+    about_PScriboStyles
+    about_PScriboPlugins
+    about_PScriboExamples

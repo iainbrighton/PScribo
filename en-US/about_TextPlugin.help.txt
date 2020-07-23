@@ -1,0 +1,41 @@
+TOPIC
+    Text Plugin
+
+SYNOPSIS
+    PScribo supports outputting plain text (.txt) documents.
+
+DESCRIPTION
+    PScribo can output plain text formatted documents with multiple file encodings.
+
+KNOWN LIMITATIONS
+    There are some restrictions emposed by plain text documents which means that some PScribo functionality cannot
+    either be partially or fully implemented:
+
+    - Table output that cannot fit within the defined text output width with is truncated. This is a restriction of
+      the 'Format-Table' cmdlet used to generate table output.
+    - Only image links are included in the text output.
+    - Headers and footers are not rendered in the output.
+
+PLUGIN OPTIONS
+    The Text plugin accepts the following output customisation options:
+
+        TextWidth [int]             : Sets the default line length used for rendering output. If not specified,
+                                      defaults to 120 characters per line. Note: table output is not wrapped.
+        HeaderSeparator [char]      : Specifies the character used for header breaks. If not specified, defaults to '='.
+        SectionSeparator [char]     : Specifies the character used for section breaks. If not specified, defaults
+                                      to '-'.
+        LineBreakSeparator [char]   : Specifies the character used for line and page breaks. If not specified,
+                                      defaults to '_'.
+        SeparatorWidth [int]        : Specifies the width of rendered line, page, header and section breaks. If not
+                                      specified, defaults to the [TextWidth] value.
+        Encoding [string]           : Specifies the file encoding to use. Supported values are 'ASCII', 'Unicode',
+                                      'UTF7' and 'UTF8'. If not specified, defaults to 'ASCII'.
+
+    Output customisations are passed to the Export-Document cmdlet as a hashtable, e.g.
+
+    PS> $document | Export-Document -Format Text -Options @{ TextWidth = 80 }
+
+SEE ALSO
+    about_PscriboPlugins
+    about_HtmlPlugin
+    about_WordPlugin

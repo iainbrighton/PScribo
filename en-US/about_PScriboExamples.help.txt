@@ -1,0 +1,50 @@
+TOPIC
+    PScribo Examples
+
+SYNOPSIS
+    Many examples are included in the module's \Examples folder with inline help and comments.
+
+EXAMPLE INDEX
+    Example01.ps1 - 'Document' and document backup
+    Example02.ps1 - 'Export-Document' and output formats
+    Example03.ps1 - 'DocumentOption' and page size with margins
+    Example04.ps1 - 'Paragraph'
+    Example05.ps1 - 'Style' custom styles
+    Example06.ps1 - 'Section' document structure
+    Example07.ps1 - 'DocumentOption' and section numbering
+    Example08.ps1 - 'TOC' and section headings
+    Example09.ps1 - 'PageBreak', 'LineBreak' and 'Blankline' breaks
+    Example10.ps1 - 'Table' and objects
+    Example11.ps1 - 'Table' and 'Select-Object'
+    Example12.ps1 - 'Table' columns
+    Example13.ps1 - 'Table' headers
+    Example14.ps1 - 'Table' width
+    Example15.ps1 - 'Table' column widths
+    Example16.ps1 - 'Table' and hashtables
+    Example17.ps1 - 'Table' and multiple hashtables
+    Example18.ps1 - 'Table' and list tables
+    Example19.ps1 - 'Table' and list tables with column widths
+    Example20.ps1 - 'Table' and hashtable list tables
+    Example21.ps1 - 'TableStyle' and basic table styling
+    Example22.ps1 - 'TableStyle' borders
+    Example23.ps1 - 'TableStyle' padding
+    Example24.ps1 - 'TableStyle' custom styling and alternate row styling
+    Example25.ps1 - 'TableStyle' custom styling and no alternate row styling
+    Example26.ps1 - 'Set-Style' table row styling
+    Example27.ps1 - 'Set-Style' hashtable table row styling
+    Example28.ps1 - 'Set-Style' table cell styling
+    Example29.ps1 - 'Set-Style' hashtable table cell styling
+    Example30.ps1 - 'Export-Document' custom Html export options
+    Example31.ps1 - 'Image' insertion
+    Example32.ps1 - 'Section' and default page orientation
+    Example33.ps1 - 'Table' and keyed list tables
+    Example34.ps1 - 'Table' and table captions
+    Example35.ps1 - 'Header' and 'Footer' first page and defaults
+    Example36.ps1 - 'Header' and 'Footer' paragraph styling
+    Example37.ps1 - 'Header' and 'Footer' tables
+    Example38.ps1 - 'Paragraph' text run styling
+
+SEE ALSO
+    about_PScribo
+    about_PScriboDocument
+    about_PScriboStyles
