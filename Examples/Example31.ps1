@@ -39,7 +39,7 @@ $example31 = Document -Name 'PScribo Example 31' {
             Images are displayed at their native resolution. If you want to resize an image, specify the required height
             and width parameters. Remember to make sure you maintain the image's aspect ratio!
         #>
-        Image -Path "$PSScriptRoot\Example31.jpg" -Height 160 -Width 160
+        Image -Text 'Local file' -Path "$PSScriptRoot\Example31.jpg" -Height 160 -Width 160
         Paragraph 'Image Attribution: https://cdn.pixabay.com/photo/2014/08/26/19/20/document-428334_640.jpg' -Size 8 -Italic
     }
 
@@ -53,7 +53,7 @@ $example31 = Document -Name 'PScribo Example 31' {
             aspect ratio), you would specify '-Percent 75'. If you wanted to increase the image's size by 25% (whilst
             mainaining the aspect ration), you would specify '-Percent 125'.
         #>
-        Image -Uri 'https://cdn.pixabay.com/photo/2014/08/26/19/20/document-428334_640.jpg' -Percent 50 -Align Center
+        Image -Text 'From web' -Uri 'https://cdn.pixabay.com/photo/2014/08/26/19/20/document-428334_640.jpg' -Percent 50 -Align Center
         Paragraph 'Image Attribution: https://cdn.pixabay.com/photo/2014/08/26/19/20/document-428334_640.jpg' -Size 8 -Italic
     }
 

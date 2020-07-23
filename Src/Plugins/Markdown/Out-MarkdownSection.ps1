@@ -5,6 +5,7 @@ function Out-MarkdownSection
         Output formatted markdown section.
 #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments','Options')]
     param
     (
         ## Section to output
@@ -35,6 +36,12 @@ function Out-MarkdownSection
         else
         {
             [string] $sectionName = '{0} {1}' -f $sectionLeader, $Section.Name
+        }
+
+        if ($script:currentPScriboObject -eq 'PScribo.Paragraph')
+        {
+            [ref] $null = $sectionBuilder.AppendLine()
+            $script:currentPScriboObject = 'PScribo.Section'
         }
         [ref] $null = $sectionBuilder.AppendLine($sectionName).AppendLine()
 

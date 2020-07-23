@@ -29,7 +29,7 @@ function Out-MarkdownTOC
             foreach ($tocEntry in $Document.TOC)
             {
                 $tocLink = $tocEntry.Name.Replace(' ','-').ToLower()
-                [ref] $null = $tocBuilder.AppendFormat('[{0} {1}](#{0}-{2}) <br />', $tocEntry.Number, $tocEntry.Name, $tocLink).AppendLine()
+                [ref] $null = $tocBuilder.AppendFormat('[{0} {1}](#{0}-{2})  ', $tocEntry.Number, $tocEntry.Name, $tocLink).AppendLine()
             }
         }
         else
@@ -37,11 +37,11 @@ function Out-MarkdownTOC
             foreach ($tocEntry in $Document.TOC)
             {
                 $tocLink = $tocEntry.Name.Replace(' ','-').ToLower()
-                [ref] $null = $tocBuilder.AppendFormat('[{0}](#{1}) <br />', $tocEntry.Name, $tocLink).AppendLine()
+                [ref] $null = $tocBuilder.AppendFormat('[{0}](#{1})  ', $tocEntry.Name, $tocLink).AppendLine()
             }
         }
         [ref] $null = $tocBuilder.AppendLine()
-
+        $script:currentPScriboObject = 'PScribo.TOC'
         return $tocBuilder.ToString()
     }
 }

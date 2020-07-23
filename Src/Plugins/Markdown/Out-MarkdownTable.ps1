@@ -18,7 +18,19 @@ function Out-MarkdownTable
     }
     process
     {
+        $tableStyle = Get-PScriboDocumentStyle -TableStyle $Table.Style
         $tableBuilder = New-Object -TypeName System.Text.StringBuilder
+        if ($script:currentPScriboObject -eq 'PScribo.Paragraph')
+        {
+            [ref] $null = $tableBuilder.AppendLine()
+        }
+
+        if ($Table.HasCaption -and ($tableStyle.CaptionLocation -eq 'Above'))
+        {
+            $tableCaption = Get-MarkdownTableCaption -Table $Table
+            [ref] $null = $tableBuilder.AppendLine($tableCaption)
+        }
+
         foreach ($formattedTable in $formattedTables)
         {
             ## Table headers
@@ -27,7 +39,14 @@ function Out-MarkdownTable
             {
                 $cellContent = $cell.Content
                 [ref] $null = $tableBuilder.AppendFormat('| {0} ', $cellContent)
-                $headerMarker = ''.PadRight($cellContent.Length, '-')
+
+                ## Markdown table headers require at least one hyphen, i.e. :-
+                $cellContentLength = $cellContent.Length
+                if ($cellContentLength -le 1)
+                {
+                    $cellContentLength = 2
+                }
+                $headerMarker = ':'.PadRight($cellContentLength, '-')
                 [ref] $null = $headerBuilder.AppendFormat('| {0} ', $headerMarker)
             }
             [ref] $null = $tableBuilder.AppendLine().AppendLine($headerBuilder.ToString())
@@ -63,6 +82,14 @@ function Out-MarkdownTable
             ## Add a space between each table to mirror Word output rendering
             [ref] $null = $tableBuilder.AppendLine()
         }
+
+        if ($Table.HasCaption -and ($tableStyle.CaptionLocation -eq 'Below'))
+        {
+            $tableCaption = Get-MarkdownTableCaption -Table $Table
+            [ref] $null = $tableBuilder.AppendLine($tableCaption)
+        }
+
+        $script:currentPScriboObject = 'PScribo.Table'
         return $tableBuilder.ToString()
     }
 }

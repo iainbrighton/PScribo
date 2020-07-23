@@ -19,17 +19,16 @@ function Out-MarkdownPageBreak
     {
         $pagebreakBuilder = New-Object -TypeName System.Text.StringBuilder
 
-        #$isFirstPage = $currentPageNumber -eq 1
-        #$pageFooter = Out-TextHeaderFooter -Footer -FirstPage:$isFirstPage
-        # [ref] $null = $pageBreakBuilder.Append($pageFooter)
-
         $script:currentPageNumber++
-        $pageBreak = ''.PadRight($options.PageBreakSeparatorWidth, $options.PageBreakSeparator)
+        $pageBreakSeparatorWidth = $options.PageBreakSeparatorWidth
+        if ($options.PageBreakSeparatorWidth -gt $options.TextWidth)
+        {
+            $pageBreakSeparatorWidth = $options.TextWidth
+        }
+        $pageBreak = ''.PadRight($pageBreakSeparatorWidth, $options.PageBreakSeparator)
         [ref] $null = $pagebreakBuilder.Append($pageBreak).AppendLine().AppendLine()
 
-        # $pageHeader = Out-TextHeaderFooter -Header
-        # [ref] $null = $pageBreakBuilder.Append($pageHeader)
-
+        $script:currentPScriboObject = 'PScribo.PageBreak'
         return $pageBreakBuilder.ToString()
     }
 }

@@ -10,19 +10,17 @@ Import-Module PScribo -Force -Verbose:$false
 $example34 = Document -Name 'PScribo Example 34' {
 
     <#
-        Captions can be added to all tables. Note: List tables with a single
-        row support table captions (as they output a separate table per row
-        and the table numbering is then broken!).
+        Captions can be added to all tables. Note: Only list tables with a single row support table
+        captions - multiple rows would otherwise be rendered as individual tables with the same table number!
 
-        The default position is below the table, but this can be overridden
-        by defining a custom table style using -CaptionLocation 'Above'.
+        The default position is below the table, but this can be overridden by defining a custom table style
+        using -CaptionLocation 'Above'.
 
-        Table captions are prefixed with the word 'Table'. The prefix can be
-        changed by defining a custom table style using the -CaptionPrefix
-        parameter.
+        Table captions are prefixed with the word 'Table'. The prefix can be changed by defining a custom table
+        style using the -CaptionPrefix parameter.
 
-        Captions can be styled by defining the required style and assigning
-        it to the table style's -CaptionStyle parameter.
+        Captions can be styled by defining the required style and assigning it to the table style's
+        -CaptionStyle parameter.
     #>
 
     $servers = @(

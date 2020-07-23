@@ -1,5 +1,9 @@
 function Get-MarkdownInlineStyle
 {
+<#
+    .SYNOPSIS
+        Generates Markdown style markup.
+#>
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -23,17 +27,6 @@ function Get-MarkdownInlineStyle
             $isItalic = $pscriboStyle.Italic
         }
 
-        if ($isBold -and $isItalic)
-        {
-            return '***'
-        }
-        elseif ($isBold)
-        {
-            return '**'
-        }
-        elseif ($isItalic)
-        {
-            return '_'
-        }
+        return (Get-MarkdownStyle -Bold:$isBold -Italic:$isItalic)
     }
 }

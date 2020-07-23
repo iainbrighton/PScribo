@@ -25,6 +25,14 @@ function Out-MarkdownDocument
         [AllowNull()]
         [System.Collections.Hashtable] $Options
     )
+    begin
+    {
+        ## Fix Set-StrictMode
+        if (-not (Test-Path -Path Variable:\Options))
+        {
+            $Options = New-PScriboMarkdownOption
+        }
+    }
     process
     {
         $pluginName = 'Markdown'
@@ -38,88 +46,17 @@ function Out-MarkdownDocument
             PluginOptions = $Options
         }
         $Options = Merge-PScriboPluginOption @mergePScriboPluginOptionParams
+
         $script:currentPageNumber = 1
-
-        [System.Text.StringBuilder] $textBuilder = New-Object -Type 'System.Text.StringBuilder'
-
-        # $firstPageHeader = Out-TextHeaderFooter -Header -FirstPage
-        # [ref] $null = $textBuilder.Append($firstPageHeader)
-
-        foreach ($subSection in $Document.Sections.GetEnumerator())
-        {
-            $currentIndentationLevel = 1
-            if ($null -ne $subSection.PSObject.Properties['Level'])
-            {
-                $currentIndentationLevel = $subSection.Level +1
-            }
-            Write-PScriboProcessSectionId -SectionId $subSection.Id -SectionType $subSection.Type -Indent $currentIndentationLevel
-
-            switch ($subSection.Type)
-            {
-                'PScribo.Section'
-                {
-                    $markdownSection = Out-MarkdownSection -Section $subSection
-                    [ref] $null = $textBuilder.Append($markdownSection)
-                }
-                'PScribo.Paragraph'
-                {
-                    $markdownParagraph = Out-MarkdownParagraph -Paragraph $subSection
-                    [ref] $null = $textBuilder.Append($markdownParagraph)
-                }
-                'PScribo.PageBreak'
-                {
-                    $markdownPageBreak = Out-MarkdownPageBreak
-                    [ref] $null = $textBuilder.Append($markdownPageBreak)
-                }
-                'PScribo.LineBreak'
-                {
-                    $markdownLineBreak = Out-MarkdownLineBreak
-                    [ref] $null = $textBuilder.Append($markdownLineBreak)
-                }
-                'PScribo.Table'
-                {
-                    $markdownTables = Out-MarkdownTable -Table $subSection
-                    [ref] $null = $textBuilder.Append($markdownTables)
-                }
-                'PScribo.TOC'
-                {
-                    $markdownTOC = Out-MarkdownTOC -TOC $subSection
-                    [ref] $null = $textBuilder.Append($markdownTOC)
-                }
-                'PScribo.BlankLine'
-                {
-                    $blankline = Out-MarkdownBlankLine -BlankLine $subSection
-                    [ref] $null = $textBuilder.Append($blankline)
-                }
-                'PScribo.Image'
-                {
-                    $markdownImage = Out-MarkdownImage -Image $subSection
-                    [ref] $null = $textBuilder.Append($markdownImage)
-                }
-                Default
-                {
-                    Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
-                }
-            }
-        }
-
-        ## Write binary image data to the bottom of the document
-        foreach ($image in (Get-PSCriboImage -Section $Document.Sections))
-        {
-            $imageBase64 = [System.Convert]::ToBase64String($image.Bytes)
-            [ref] $null = $textBuilder.AppendFormat('[image_ref_{0}]: data:{1};base64,{2}', $image.Name.ToLower(), $image.MIMEType, $imageBase64).AppendLine()
-            # [image_ref_a32ff4ads]: data:image/png;base64,iVBORw0KGgoAAAANSUhEke02C1MyA29UWKgPA...RS12D==
-        }
-
-        # $pageFooter =Out-TextHeaderFooter -Footer
-        # [ref] $null = $textBuilder.Append($pageFooter)
+        $script:currentPScriboObject = 'PScribo.Document'
+        $markdownDocument = Get-MarkdownDocument -Document $Document -Options $Options
 
         $stopwatch.Stop()
         Write-PScriboMessage -Message ($localized.DocumentProcessingCompleted -f $Document.Name)
+
         $destinationPath = Join-Path -Path $Path ('{0}.md' -f $Document.Name)
         Write-PScriboMessage -Message ($localized.SavingFile -f $destinationPath)
-        Set-Content -Value ($textBuilder.ToString()) -Path $destinationPath -Encoding $Options.Encoding
-        [ref] $null = $textBuilder
+        Set-Content -Value $markdownDocument -Path $destinationPath -Encoding $Options.Encoding
 
         if ($stopwatch.Elapsed.TotalSeconds -gt 90)
         {

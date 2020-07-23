@@ -1,36 +1,22 @@
 function Get-MarkdownParagraphRunInlineStyle
 {
+<#
+    .SYNOPSIS
+        Generates Markdown paragraph run styling markup.
+#>
     [CmdletBinding()]
     [OutputType([System.String])]
     param
     (
         [Parameter(Mandatory, ValueFromPipeline)]
-        [System.Management.Automation.PSObject] $ParagraphRun,
-
-        [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [AllowEmptyString()]
-        [System.String] $Style
+        [System.Management.Automation.PSObject] $ParagraphRun
     )
     process
     {
         $isBold = $false
         $isItalic = $false
 
-        ## Evaluate the paragraph style
-        if (-not [System.String]::IsNullOrEmpty($Style))
-        {
-            $paragraphStyle = Get-PScriboDocumentStyle -Style $Style
-            if ($null -ne $paragraphStyle.Bold)
-            {
-                $isBold = $paragraphStyle.Bold
-            }
-            if ($null -ne $paragraphStyle.Italic)
-            {
-                $isItalic = $paragraphStyle.Italic
-            }
-        }
-
-        ## Override with the paragraph run style
+        ## Evaluate the paragraph run style
         if ($ParagraphRun.HasStyle)
         {
             $paragraphRunStyle = Get-PScriboDocumentStyle -Style $ParagraphRun.Style
@@ -57,17 +43,6 @@ function Get-MarkdownParagraphRunInlineStyle
             }
         }
 
-        if ($isBold -and $isItalic)
-        {
-            return '***'
-        }
-        elseif ($isBold)
-        {
-            return '**'
-        }
-        elseif ($isItalic)
-        {
-            return '_'
-        }
+        return (Get-MarkdownStyle -Bold:$isBold -Italic:$isItalic)
     }
 }

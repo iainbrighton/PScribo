@@ -17,9 +17,17 @@ function Out-MarkdownLineBreak
     }
     process
     {
+        $lineBreakSeparatorWidth = $options.LineBreakSeparatorWidth
+
+        if ($options.LineBreakSeparatorWidth -gt $options.TextWidth)
+        {
+            $lineBreakSeparatorWidth = $options.TextWidth
+        }
         $linebreakBuilder = New-Object -TypeName System.Text.StringBuilder
-        $lineBreak = ''.PadRight($options.LineBreakSeparatorWidth, $options.LineBreakSeparator)
+        $lineBreak = ''.PadRight($lineBreakSeparatorWidth, $options.LineBreakSeparator)
         [ref] $null = $linebreakBuilder.Append($lineBreak).AppendLine().AppendLine()
+
+        $script:currentPScriboObject = 'PScribo.LineBreak'
         return $linebreakBuilder.ToString()
     }
 }
