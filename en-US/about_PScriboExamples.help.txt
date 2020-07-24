@@ -43,6 +43,7 @@ EXAMPLE INDEX
     Example36.ps1 - 'Header' and 'Footer' paragraph styling
     Example37.ps1 - 'Header' and 'Footer' tables
     Example38.ps1 - 'Paragraph' text run styling
+    Example39.ps1 - 'List' and 'Item' bullet/numbered lists
 
 SEE ALSO
     about_PScribo
