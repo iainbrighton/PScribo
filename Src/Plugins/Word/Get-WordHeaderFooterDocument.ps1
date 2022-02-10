@@ -40,15 +40,19 @@ function Get-WordHeaderFooterDocument
             {
                 'PScribo.Paragraph'
                 {
-                    [ref] $null = $element.AppendChild((Out-WordParagraph -Paragraph $subSection -XmlDocument $headerFooterDocument))
+                    [ref] $null = $element.AppendChild((Out-WordParagraph -Paragraph $subSection -XmlDocument $headerFooterDocument -ParseToken))
                 }
                 'PScribo.Table'
                 {
-                    Out-WordTable -Table $subSection -XmlDocument $headerFooterDocument -Element $element
+                    Out-WordTable -Table $subSection -XmlDocument $headerFooterDocument -Element $element -ParseToken
                 }
                 'PScribo.BlankLine'
                 {
                     Out-WordBlankLine -BlankLine $subSection -XmlDocument $headerFooterDocument -Element $element
+                }
+                'PScribo.LineBreak'
+                {
+                    [ref] $null = $element.AppendChild((Out-WordLineBreak -LineBreak $subSection -XmlDocument $headerFooterDocument))
                 }
             }
         }
