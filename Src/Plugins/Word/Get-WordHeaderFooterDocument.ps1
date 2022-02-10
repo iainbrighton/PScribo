@@ -40,11 +40,11 @@ function Get-WordHeaderFooterDocument
             {
                 'PScribo.Paragraph'
                 {
-                    [ref] $null = $element.AppendChild((Out-WordParagraph -Paragraph $subSection -XmlDocument $headerFooterDocument -ParseToken))
+                    [ref] $null = $element.AppendChild((Out-WordParagraph -Paragraph $subSection -XmlDocument $headerFooterDocument))
                 }
                 'PScribo.Table'
                 {
-                    Out-WordTable -Table $subSection -XmlDocument $headerFooterDocument -Element $element -ParseToken
+                    Out-WordTable -Table $subSection -XmlDocument $headerFooterDocument -Element $element
                 }
                 'PScribo.BlankLine'
                 {
