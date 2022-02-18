@@ -39,6 +39,10 @@ function Out-HtmlHeaderFooter
                     {
                         [ref] $null = $hfBuilder.Append((Out-HtmlBlankLine -BlankLine $subSection))
                     }
+                    'PScribo.LineBreak'
+                    {
+                        [ref] $null = $hfBuilder.Append((Out-HtmlLineBreak))
+                    }
                 }
             }
 
