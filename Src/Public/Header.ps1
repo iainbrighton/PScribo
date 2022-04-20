@@ -45,7 +45,7 @@ function Header
             {
                 if (('Id' -in $result.PSObject.Properties.Name) -and
                     ('Type' -in $result.PSObject.Properties.Name) -and
-                    ($result.Type -in 'PScribo.Paragraph','PScribo.Table'))
+                    ($result.Type -in 'PScribo.Paragraph','PScribo.Table','PScribo.LineBreak'))
                 {
                     [ref] $null = $pscriboHeader.Sections.Add($result)
                 }

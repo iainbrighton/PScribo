@@ -50,6 +50,10 @@ function Get-WordHeaderFooterDocument
                 {
                     Out-WordBlankLine -BlankLine $subSection -XmlDocument $headerFooterDocument -Element $element
                 }
+                'PScribo.LineBreak'
+                {
+                    [ref] $null = $element.AppendChild((Out-WordLineBreak -LineBreak $subSection -XmlDocument $headerFooterDocument))
+                }
             }
         }
 
