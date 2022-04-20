@@ -8,13 +8,14 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example25 = Document -Name 'PScribo Example 25' {
+
     <#
         The following example combines the creation of multiple custom styles with the
         definition of a custom table style. The custom "BlueZebra" table style is then
         applied to a -List view table of the 11th to last service.
 
         NOTE: List view tables do apply the -AlternateRowStyle styling, but this style
-        defaults to the -RowStyle parameter (unless explicitly defined).
+              does not include an alternate row style.
     #>
     Style -Name 'BlueZebraHeading' -Bold -Color 039 -Font 'Segoe UI' -BackgroundColor E8EDFF
     Style -Name 'BlueZebraRow' -Color 669 -Font 'Lucida Sans Unicode'

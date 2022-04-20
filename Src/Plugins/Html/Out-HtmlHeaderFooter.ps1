@@ -27,9 +27,18 @@ function Out-HtmlHeaderFooter
             {
                 switch ($subSection.Type)
                 {
-                    'PScribo.Paragraph' { [ref] $null = $hfBuilder.Append((Out-HtmlParagraph -Paragraph $subSection -ParseToken)) }
-                    'PScribo.Table' { [ref] $null = $hfBuilder.Append((Out-HtmlTable -Table $subSection -ParseToken)) }
-                    'PScribo.BlankLine' { [ref] $null = $hfBuilder.Append((Out-HtmlBlankLine -BlankLine $subSection)) }
+                    'PScribo.Paragraph'
+                    {
+                        [ref] $null = $hfBuilder.Append((Out-HtmlParagraph -Paragraph $subSection))
+                    }
+                    'PScribo.Table'
+                    {
+                        [ref] $null = $hfBuilder.Append((Out-HtmlTable -Table $subSection))
+                    }
+                    'PScribo.BlankLine'
+                    {
+                        [ref] $null = $hfBuilder.Append((Out-HtmlBlankLine -BlankLine $subSection))
+                    }
                 }
             }
 

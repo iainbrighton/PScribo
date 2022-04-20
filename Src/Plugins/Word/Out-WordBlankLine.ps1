@@ -2,7 +2,7 @@ function Out-WordBlankLine
 {
 <#
     .SYNOPSIS
-        Output formatted Word xml blank line (paragraph).
+        Output formatted Word xml blank line (empty paragraph).
 #>
     [CmdletBinding()]
     param

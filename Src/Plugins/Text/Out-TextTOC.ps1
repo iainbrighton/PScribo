@@ -44,6 +44,7 @@ function Out-TextTOC
                 [ref] $null = $tocBuilder.AppendFormat('{0}{1}', $sectionNumberIndent, $tocEntry.Name).AppendLine()
             }
         }
+
         return $tocBuilder.ToString()
     }
 }

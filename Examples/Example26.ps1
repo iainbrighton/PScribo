@@ -8,10 +8,11 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example26 = Document -Name 'PScribo Example 26' {
+
     <#
         There may be occassions when you need to highlight rows within a table. Before
-        styling can be applied to a row (other than the table row and alternate row styles),
-        it must first be defined.
+        styling can be applied to a row (other than the table's default row and alternate
+        row styles), it must first be defined.
 
         The following defines a custom style that we will apply to particular table rows
         later.
@@ -30,10 +31,11 @@ $example26 = Document -Name 'PScribo Example 26' {
         easily add the property to one or more objects.
 
         The following retrieves all local services and then enumerates if the service is
-        stopped and sets the style for those objects to the 'StoppedService' style.
+        stopped and sets the style (of the entire row) for those objects to the custom
+        'StoppedService' style.
 
         NOTE: We need to retrieve all the services into a collection and then enumerate
-        them - otherwise we would only have stopped services to display!
+              them - otherwise we would only have stopped services to display!
     #>
     $services = Get-Service
     $services | Where-Object { $_.Status -ne 'Running' } | Set-Style -Style 'StoppedService'

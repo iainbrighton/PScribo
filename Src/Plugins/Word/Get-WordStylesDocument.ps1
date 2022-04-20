@@ -44,6 +44,15 @@ function Get-WordStylesDocument
         [ref] $null = $documentStyleName.SetAttribute('val', $xmlns, $defaultStyle.Id)
         [ref] $null = $documentStyle.AppendChild($xmlDocument.CreateElement('w', 'qFormat', $xmlns))
 
+        ## Create default character style (will inherit from the document default style)
+        $documentCharacterStyleId = '{0}Char' -f $defaultStyle.Id
+        $documentCharacterStyle = $documentStyles.AppendChild($xmlDocument.CreateElement('w', 'style', $xmlns))
+        [ref] $null = $documentCharacterStyle.SetAttribute('type', $xmlns, 'character')
+        [ref] $null = $documentCharacterStyle.SetAttribute('default', $xmlns, '1')
+        [ref] $null = $documentCharacterStyle.SetAttribute('styleId', $xmlns, 'name')
+        $documentCharacterStyleName = $documentCharacterStyle.AppendChild($xmlDocument.CreateElement('w', 'name', $xmlns))
+        [ref] $null = $documentCharacterStyleName.SetAttribute('val', $xmlns, $documentCharacterStyleId)
+
         $nonDefaultStyles = $Styles.Values | Where-Object { $_.Id -ne $defaultStyle.Id }
         foreach ($Style in $nonDefaultStyles)
         {

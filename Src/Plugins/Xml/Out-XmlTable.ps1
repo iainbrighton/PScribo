@@ -17,6 +17,7 @@ function Out-XmlTable
         $tableId = ($Table.Id -replace '[^a-z0-9-_\.]','').ToLower()
         $tableElement = $element.AppendChild($xmlDocument.CreateElement($tableId))
         [ref] $null = $tableElement.SetAttribute('name', $Table.Name)
+
         foreach ($row in $Table.Rows)
         {
             $groupElement = $tableElement.AppendChild($xmlDocument.CreateElement('group'))
@@ -35,6 +36,7 @@ function Out-XmlTable
                 }
             }
         }
+
         return $tableElement
     }
 }

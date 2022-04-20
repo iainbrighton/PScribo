@@ -55,7 +55,6 @@ function Out-WordSection
             [ref] $null = $pPr.AppendChild((Get-WordSectionPr @sectionPrParams -XmlDocument $xmlDocument))
         }
 
-
         $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
         $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
 

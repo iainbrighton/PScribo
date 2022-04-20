@@ -8,6 +8,7 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example19 = Document -Name 'PScribo Example 19' {
+
     <#
         Column widths can also be specified on -List tables. The total of the
         column widths must still total 100 (%), but only 2 widths are supported.

@@ -8,9 +8,10 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 Document -Name 'PScribo Example 3' {
+
     <#
         By default, a PScribo document will default to an A4 page size. The default top and bottom
-        pages margins are configured at 25.4mm (or 1 inch). The default  left and right page margins
+        pages margins are configured at 25.4mm (or 1 inch). The default left and right page margins
         are set at 19.05mm (or 3/4 inch).
 
         You can override the defaults with the 'DocumentOption' cmdlet/keyword. The following sets the

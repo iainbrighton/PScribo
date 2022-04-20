@@ -8,6 +8,7 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example7 = Document -Name 'PScribo Example 7' {
+
     <#
        Sections support automatic numbering, i.e. PScribo will automatically generate the section
        numbers/levels based on the nesting. To turn this on, use the 'DocumentOption' cmdlet.

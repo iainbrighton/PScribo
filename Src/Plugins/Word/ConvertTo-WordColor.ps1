@@ -17,6 +17,7 @@ function ConvertTo-WordColor
         {
             $Color = '{0}{0}{1}{1}{2}{2}' -f $Color[0], $Color[1], $Color[2]
         }
+
         return $Color.ToUpper()
     }
 }

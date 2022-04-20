@@ -95,7 +95,7 @@ function Get-WordStyle
 
         if ($Style.BackgroundColor)
         {
-            $backgroundColor = ConvertTo-WordColor -Color $Style.BackgroundColor
+            $backgroundColor = ConvertTo-WordColor -Color (Resolve-PScriboStyleColor -Color $Style.BackgroundColor)
             $shd = $pPr.AppendChild($XmlDocument.CreateElement('w', 'shd', $xmlns))
             [ref] $null = $shd.SetAttribute('val', $xmlns, 'clear')
             [ref] $null = $shd.SetAttribute('color', $xmlns, 'auto')

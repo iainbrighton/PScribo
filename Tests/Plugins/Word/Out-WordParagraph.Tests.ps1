@@ -163,7 +163,7 @@ InModuleScope 'PScribo' {
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
         }
 
-        It 'outputs run text "[..]<w:r>[..]<w:t [..]>{0}</w:t>[..]" using "Name" property' {
+        It 'outputs run text "[..]<w:r>[..]<w:t>{0}</w:t>[..]" using "Name" property' {
             $testParagraphText = 'Test paragraph'
             $document = Document -Name 'TestDocument' {
                 Paragraph $testParagraphText -Font Ariel
@@ -171,11 +171,11 @@ InModuleScope 'PScribo' {
 
             $testDocument = Get-WordDocument -Document $document
 
-            $expected = GetMatch ('[..]<w:r>[..]<w:t [..]>{0}</w:t>[..]' -f $testParagraphText);
+            $expected = GetMatch ('[..]<w:r>[..]<w:t>{0}</w:t>[..]' -f $testParagraphText);
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
         }
 
-        It 'outputs run text "[..]<w:r>[..]<w:t [..]>{0}</w:t>[..]" using "Text" property' {
+        It 'outputs run text "[..]<w:r>[..]<w:t>{0}</w:t>[..]" using "Text" property' {
             ## Ignore the space preservation namespace
             $testParagraphText = 'Test paragraph'
             $document = Document -Name 'TestDocument' {
@@ -184,11 +184,11 @@ InModuleScope 'PScribo' {
 
             $testDocument = Get-WordDocument -Document $document
 
-            $expected = GetMatch ('[..]<w:r>[..]<w:t [..]>{0}</w:t>[..]' -f $testParagraphText);
+            $expected = GetMatch ('[..]<w:r>[..]<w:t>{0}</w:t>[..]' -f $testParagraphText);
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
         }
 
-        It 'outputs run text "[..]<w:r>[..]<w:t [..]></w:t><w:br /></w:t [..]</w:r>[..]" with embedded new line' {
+        It 'outputs run text "[..]<w:r>[..]<w:t></w:t><w:br /></w:t>[..]</w:r>[..]" with embedded new line' {
             ## Ignore the space preservation namespace
             $document = Document -Name 'TestDocument' {
                 Paragraph -Name 'Test' -Text ('Test{0}Paragraph' -f [System.Environment]::NewLine)
@@ -196,7 +196,37 @@ InModuleScope 'PScribo' {
 
             $testDocument = Get-WordDocument -Document $document
 
-            $expected = GetMatch ('<w:t [..]>Test</w:t><w:br /><w:t [..]>Paragraph</w:t></w:r>');
+            $expected = GetMatch ('<w:t>Test</w:t><w:br /><w:t>Paragraph</w:t></w:r>');
+            $testDocument.DocumentElement.OuterXml  | Should Match $expected;
+        }
+
+        It 'outputs space between runs "<w:t [..]>abc </w:t>[..]<w:t>def</w:t>" (by default)' {
+            ## Ignore the space preservation namespace
+            $document = Document -Name 'TestDocument' {
+                Paragraph {
+                    Text 'Test'
+                    Text 'paragraph'
+                }
+            }
+
+            $testDocument = Get-WordDocument -Document $document
+
+            $expected = GetMatch ('<w:t [..]>Test </w:t>[..]<w:t>paragraph</w:t>');
+            $testDocument.DocumentElement.OuterXml  | Should Match $expected;
+        }
+
+        It 'does not output space between runs "<w:t>abc</w:t>[..]<w:t>def</w:t>" (when specified)' {
+            ## Ignore the space preservation namespace
+            $document = Document -Name 'TestDocument' {
+                Paragraph {
+                    Text 'Test' -NoSpace
+                    Text 'paragraph'
+                }
+            }
+
+            $testDocument = Get-WordDocument -Document $document
+
+            $expected = GetMatch ('<w:t>Test</w:t>[..]<w:t>paragraph</w:t>');
             $testDocument.DocumentElement.OuterXml  | Should Match $expected;
         }
 

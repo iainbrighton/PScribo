@@ -8,6 +8,7 @@ param (
 Import-Module PScribo -Force -Verbose:$false
 
 $example28 = Document -Name 'PScribo Example 28' {
+
     <#
         Custom styling can also be applied to individual cells within a table. To
         flag an individual object property to apply a different style, an additional
@@ -18,7 +19,7 @@ $example28 = Document -Name 'PScribo Example 28' {
         additional property called 'Name__Style' with the style to apply.
 
         NOTE: Individual cell styling will override any row style applied via the
-        '__Style' property.
+              '__Style' property.
 
         How the properties are added does not matter. However, the Set-Style cmdlet
         can also apply a specified style to one or more object properties with

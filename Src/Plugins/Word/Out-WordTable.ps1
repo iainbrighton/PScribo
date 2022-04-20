@@ -20,10 +20,7 @@ function Out-WordTable
         [System.Xml.XmlElement] $Element,
 
         [Parameter(Mandatory)]
-        [System.Xml.XmlDocument] $XmlDocument,
-
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $ParseToken
+        [System.Xml.XmlDocument] $XmlDocument
     )
     begin
     {
@@ -57,7 +54,7 @@ function Out-WordTable
             $tblGrid = $tbl.AppendChild($XmlDocument.CreateElement('w', 'tblGrid', $xmlns))
 
             $tableColumnCount = $Table.Columns.Count
-            if ($Table.IsList)
+            if ($Table.IsList -and (-not $Table.IsKeyedList))
             {
                 $tableColumnCount = 2
             }
@@ -111,7 +108,7 @@ function Out-WordTable
                         $shd = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'shd', $xmlns))
                         [ref] $null = $shd.SetAttribute('val', $xmlns, 'clear')
                         [ref] $null = $shd.SetAttribute('color', $xmlns, 'auto')
-                        $backgroundColor = ConvertTo-WordColor -Color $cellStyle.BackgroundColor
+                        $backgroundColor = ConvertTo-WordColor -Color (Resolve-PScriboStyleColor -Color $cellStyle.BackgroundColor)
                         [ref] $null = $shd.SetAttribute('fill', $xmlns, $backgroundColor)
                     }
                     elseif ((-not $isRowStyleInherited) -and (-not [System.String]::IsNullOrEmpty($rowStyle.BackgroundColor)))
@@ -119,7 +116,7 @@ function Out-WordTable
                         $shd = $tcPr.AppendChild($XmlDocument.CreateElement('w', 'shd', $xmlns))
                         [ref] $null = $shd.SetAttribute('val', $xmlns, 'clear')
                         [ref] $null = $shd.SetAttribute('color', $xmlns, 'auto')
-                        $backgroundColor = ConvertTo-WordColor -Color $rowStyle.BackgroundColor
+                        $backgroundColor = ConvertTo-WordColor -Color (Resolve-PScriboStyleColor -Color $rowStyle.BackgroundColor)
                         [ref] $null = $shd.SetAttribute('fill', $xmlns, $backgroundColor)
                     }
 
@@ -141,38 +138,32 @@ function Out-WordTable
                         [ref] $null = $tcW.SetAttribute('type', $xmlns, 'auto')
                     }
 
-                    $p = $tc.AppendChild($XmlDocument.CreateElement('w', 'p', $xmlns))
-                    $pPr = $p.AppendChild($XmlDocument.CreateElement('w', 'pPr', $xmlns))
-
+                    ## Scaffold paragraph and paragraph run for cell content
+                    $newPScriboParagraphParams = @{
+                        NoIncrementCounter = $true
+                    }
                     if (-not $isCellStyleInherited)
                     {
-                        $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlns))
-                        [ref] $null = $pStyle.SetAttribute('val', $xmlns, $cellStyle.Id)
+                        $newPScriboParagraphParams['Style'] = $cellStyle.Id
                     }
                     elseif (-not $isRowStyleInherited)
                     {
-                        $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlns))
-                        [ref] $null = $pStyle.SetAttribute('val', $xmlns, $rowStyle.Id)
+                        $newPScriboParagraphParams['Style'] = $rowStyle.Id
                     }
+                    $paragraph = New-PScriboParagraph @newPScriboParagraphParams
 
-                    if ($ParseToken)
+                    if (-not [System.String]::IsNullOrEmpty($cell.Content))
                     {
-                        Get-PSCriboParagraphRun -Text $cell.Content -XmlDocument $XmlDocument -XmlElement $p
+                        $paragraphRun = New-PScriboParagraphRun -Text $cell.Content
                     }
                     else
                     {
-                        $rn = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
-                        $t = $rn.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
-                        if (-not [System.String]::IsNullOrEmpty($cell.Content))
-                        {
-                            $cellContent = $cell.Content.ToString()
-                            if ($cellContent.StartsWith(' ') -or $cellContent.EndsWith(' '))
-                            {
-                                [ref] $null = $t.SetAttribute('space', 'http://www.w3.org/XML/1998/namespace', 'preserve')
-                            }
-                            [ref] $null = $t.AppendChild($XmlDocument.CreateTextNode($cellContent))
-                        }
+                        $paragraphRun = New-PScriboParagraphRun -Text ''
                     }
+                    $paragraphRun.IsParagraphRunEnd = $true
+                    [ref] $null = $paragraph.Sections.Add($paragraphRun)
+                    $p = Out-WordParagraph -Paragraph $paragraph -XmlDocument $XmlDocument
+                    [ref] $null = $tc.AppendChild($p)
                 }
             }
 

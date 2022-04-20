@@ -30,11 +30,13 @@ function Get-HtmlTableDiv
         {
             $styleElements += 'width:{0}%;' -f $Table.Width
         }
+
         if ($Table.ColumnWidths)
         {
             $styleElements += 'table-layout: fixed;'
             #$styleElements += 'word-break: break-word;' # 'word-wrap: break-word;' or 'overflow-wrap: break-word;'?
         }
+
         if ($styleElements.Count -gt 0)
         {
             [ref] $null = $divBuilder.AppendFormat(' style="{0}">', [System.String]::Join(' ', $styleElements))
@@ -43,6 +45,7 @@ function Get-HtmlTableDiv
         {
             [ref] $null = $divBuilder.Append('>')
         }
+
         return $divBuilder.ToString()
     }
 }

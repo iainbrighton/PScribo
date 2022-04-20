@@ -28,8 +28,6 @@ function Table
 
     .PARAMETER Caption
 
-    .PARAMETER CaptionTop
-
     .EXAMPLE
         Table -Name 'Table 1' -InputObject $(Get-Service) -Columns 'Name','DisplayName','Status' -ColumnWidths 40,20,40
 #>
