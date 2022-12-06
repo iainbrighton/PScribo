@@ -31,7 +31,7 @@ function Out-JsonParagraph
             }
         }
 
-        
+
         return $paragraphBuilder.ToString()
     }
 }

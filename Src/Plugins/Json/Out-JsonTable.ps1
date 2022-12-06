@@ -24,7 +24,7 @@ function Out-JsonTable
         }
 
         [ref] $null = $tableBuilder.Add(($Table.Rows | Select-Object -Property * -ExcludeProperty '*__Style'))
-        
+
         return $tableBuilder
     }
 }

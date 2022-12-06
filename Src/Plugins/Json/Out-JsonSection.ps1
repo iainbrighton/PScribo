@@ -25,7 +25,7 @@ function Out-JsonSection
     process
     {
         $sectionBuilder.Add("name", $Section.Name)
-        
+
         foreach ($subSection in $Section.Sections.GetEnumerator())
         {
             # Write-Host "Section Type: $($subSection.Type)"

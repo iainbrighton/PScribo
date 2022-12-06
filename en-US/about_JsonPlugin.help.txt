@@ -9,7 +9,7 @@ DESCRIPTION
 
 KNOWN LIMITATIONS
     There are some restrictions which means that some PScribo functionality cannot either be partially or fully implemented:
-    
+
     - PScribo style elements are ignored
       - This includes section numbering as it better ensures each section is unique which facilitates easier parsing.
     - The following PScribo types are not supported as there is no provision for them in JSON:
