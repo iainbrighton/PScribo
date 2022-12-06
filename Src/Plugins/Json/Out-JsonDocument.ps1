@@ -85,7 +85,7 @@ function Out-JsonDocument
                 }
                 'PScribo.TOC'
                 {
-                    [ref] $null = $jsonBuilder.Add("toc", (Out-JsonTOC -TOC $subSection))
+                    [ref] $null = $jsonBuilder.Add("toc", (Out-JsonTOC))
                 }
                 Default
                 {

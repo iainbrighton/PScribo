@@ -22,7 +22,7 @@ InModuleScope 'PScribo' {
             }
             $expected = '{{.*"{0}".*"{1}"}}' -f $heading1, $heading2
 
-            $result = Out-JsonTOC -TOC $Document.Sections[0] | ConvertTo-Json -Depth 100 -Compress
+            $result = Out-JsonTOC | ConvertTo-Json -Depth 100 -Compress
 
             $result | Should MatchExactly $expected
         }

@@ -3,12 +3,6 @@ function Out-JsonTOC {
     .SYNOPSIS
         Output formatted Table of Contents
 #>
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory, ValueFromPipeline)]
-        [System.Management.Automation.PSObject] $TOC
-    )
     begin {
         ## Initializing TOC object
         $tocBuilder = [ordered]@{}
