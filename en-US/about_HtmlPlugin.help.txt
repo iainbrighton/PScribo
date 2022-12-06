@@ -27,4 +27,5 @@ PLUGIN OPTIONS
 SEE ALSO
     about_PscriboPlugins
     about_TextPlugin
+    about_JsonPlugin
     about_WordPlugin
