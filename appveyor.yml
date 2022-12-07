@@ -14,7 +14,8 @@ environment:
 install:
     - ps: Write-Verbose -Message "PowerShell version $($PSVersionTable.PSVersion)" -Verbose
     - ps: Install-Module -Name Pester -MaximumVersion 4.99 -Scope CurrentUser -Force -AllowClobber -Verbose
-    - ps: Install-Module -Name PSSCriptAnalyzer, PSake, VirtualEngine.Build -Scope CurrentUser -Force -AllowClobber -Verbose
+    - ps: Install-Module -Name PSScriptAnalyzer -MaximumVersion 1.20.0 -Scope CurrentUser -Force -AllowClobber -Verbose
+    - ps: Install-Module -Name PSake, VirtualEngine.Build -Scope CurrentUser -Force -AllowClobber -Verbose
     - ps: $null = Invoke-Expression ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
 
 build: false
