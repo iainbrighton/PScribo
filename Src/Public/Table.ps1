@@ -147,6 +147,11 @@ function Table
                 Write-PScriboMessage -Message $localized.TableColumnWidthMismatchWarning -IsWarning
                 $ColumnWidths = $null
             }
+            elseif (($PSCmdlet.ParameterSetName -eq 'HashtableListKey') -and (($Hashtable.Count + 1) -ne $ColumnWidths.Count))
+            {
+                Write-PScriboMessage -Message $localized.TableColumnWidthMismatchWarning -IsWarning
+                $ColumnWidths = $null
+            }
             elseif (($PSCmdlet.ParameterSetName -eq 'InputObject') -and (-not $List))
             {
                 ## Columns might not have been passed and there is no object in the pipeline here, so check $Columns is an array.
