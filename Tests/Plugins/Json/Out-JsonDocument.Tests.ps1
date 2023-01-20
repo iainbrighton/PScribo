@@ -6,12 +6,6 @@ Import-Module "$moduleRoot\PScribo.psm1" -Force;
 
 InModuleScope 'PScribo' {
 
-    $isNix = $false
-    if (($PSVersionTable['PSEdition'] -eq 'Core') -and (-not $IsWindows))
-    {
-        $isNix = $true
-    }
-
     Describe 'Plugins\Json\Out-JsonDocument' {
 
         $path = (Get-PSDrive -Name TestDrive).Root;

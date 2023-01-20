@@ -8,8 +8,6 @@ InModuleScope 'PScribo' {
 
     Describe 'Plugins\Json\Out-JsonTable' {
 
-        $isNix = (($PSVersionTable['PSEdition'] -eq 'Core') -and (-not $IsWindows))
-
         ## Scaffold document options
         $Document = Document -Name 'TestDocument' -ScriptBlock {}
         $script:currentPageNumber = 1
