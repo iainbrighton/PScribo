@@ -113,28 +113,46 @@ function Out-WordDocument
         [ref] $null = $documentPart.CreateRelationship($stylesUri, [System.IO.Packaging.TargetMode]::Internal, $stylesDocumentUri, 'rId1')
         [ref] $null = $documentPart.CreateRelationship($settingsUri, [System.IO.Packaging.TargetMode]::Internal, $settingsDocumentUri, 'rId2')
 
+        ## Create numbering.xml part
+        if ($Document.Lists.Count -gt 0)
+        {
+            $numberingUri = New-Object -TypeName System.Uri -ArgumentList ('/word/numbering.xml', [System.UriKind]::Relative)
+            Write-PScriboMessage -Message ($localized.ProcessingDocumentPart -f $numberingUri)
+            $numberingPart = $package.CreatePart($numberingUri, 'application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml')
+            $streamWriter = New-Object -TypeName System.IO.StreamWriter -ArgumentList ($numberingPart.GetStream([System.IO.FileMode]::Create, [System.IO.FileAccess]::ReadWrite))
+            $xmlWriter = [System.Xml.XmlWriter]::Create($streamWriter)
+            Write-PScriboMessage -Message ($localized.WritingDocumentPart -f $numberingUri)
+            $numberingXml = Get-WordNumberingDocument -Lists $Document.Lists
+            $numberingXml.Save($xmlWriter)
+            $xmlWriter.Dispose()
+            $streamWriter.Close()
+
+            $numberingDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering'
+            [ref] $null = $documentPart.CreateRelationship($numberingUri, [System.IO.Packaging.TargetMode]::Internal, $numberingDocumentUri, 'rId3')
+        }
+
         $headerDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/header'
         if ($Document.Header.HasFirstPageHeader)
         {
             $firstPageHeaderUri = New-Object -TypeName System.Uri -ArgumentList ('/word/firstPageHeader.xml', [System.UriKind]::Relative)
-            [ref] $null = $documentPart.CreateRelationship($firstPageHeaderUri, [System.IO.Packaging.TargetMode]::Internal, $headerDocumentUri, 'rId3')
+            [ref] $null = $documentPart.CreateRelationship($firstPageHeaderUri, [System.IO.Packaging.TargetMode]::Internal, $headerDocumentUri, 'rId4')
         }
         if ($Document.Header.HasDefaultHeader)
         {
             $defaultHeaderUri = New-Object -TypeName System.Uri -ArgumentList ('/word/defaultHeader.xml', [System.UriKind]::Relative)
-            [ref] $null = $documentPart.CreateRelationship($defaultHeaderUri, [System.IO.Packaging.TargetMode]::Internal, $headerDocumentUri, 'rId4')
+            [ref] $null = $documentPart.CreateRelationship($defaultHeaderUri, [System.IO.Packaging.TargetMode]::Internal, $headerDocumentUri, 'rId5')
         }
 
         $footerDocumentUri = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer'
         if ($Document.Footer.HasFirstPageFooter)
         {
             $firstPageFooterUri = New-Object -TypeName System.Uri -ArgumentList ('/word/firstPageFooter.xml', [System.UriKind]::Relative)
-            [ref] $null = $documentPart.CreateRelationship($firstPageFooterUri, [System.IO.Packaging.TargetMode]::Internal, $footerDocumentUri, 'rId5')
+            [ref] $null = $documentPart.CreateRelationship($firstPageFooterUri, [System.IO.Packaging.TargetMode]::Internal, $footerDocumentUri, 'rId6')
         }
         if ($Document.Footer.HasDefaultFooter)
         {
             $defaultFooterUri = New-Object -TypeName System.Uri -ArgumentList ('/word/defaultFooter.xml', [System.UriKind]::Relative)
-            [ref] $null = $documentPart.CreateRelationship($defaultFooterUri, [System.IO.Packaging.TargetMode]::Internal, $footerDocumentUri, 'rId6')
+            [ref] $null = $documentPart.CreateRelationship($defaultFooterUri, [System.IO.Packaging.TargetMode]::Internal, $footerDocumentUri, 'rId7')
         }
 
         ## Process images (assuming we have a section, e.g. example03.ps1)

@@ -35,29 +35,32 @@ function New-PScriboDocument
         Write-PScriboMessage -Message ($localized.DocumentProcessingStarted -f $Name)
         $typeName = 'PScribo.Document'
         $pscriboDocument = [PSCustomObject] @{
-            Id                = $Id.ToUpper()
-            Type              = $typeName
-            Name              = $Name
-            Sections          = New-Object -TypeName System.Collections.ArrayList
-            Options           = New-Object -TypeName System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
-            Properties        = New-Object -TypeName System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
-            Styles            = New-Object -TypeName System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
-            TableStyles       = New-Object -TypeName System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
-            DefaultStyle      = $null
-            DefaultTableStyle = $null
-            Header            = [PSCustomObject] @{
-                                    HasFirstPageHeader = $false
-                                    HasDefaultHeader   = $false
-                                    FirstPageHeader    = $null
-                                    DefaultHeader      = $null
-                                }
-            Footer            = [PSCustomObject] @{
-                                    HasFirstPageFooter = $false
-                                    HasDefaultFooter   = $false
-                                    FirstPageFooter    = $null
-                                    DefaultFooter      = $null
-                                }
-            TOC               = New-Object -TypeName System.Collections.ArrayList
+            Id                 = $Id.ToUpper()
+            Type               = $typeName
+            Name               = $Name
+            Sections           = New-Object -TypeName System.Collections.ArrayList
+            Options            = New-Object -TypeName System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
+            Properties         = New-Object -TypeName System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
+            Styles             = New-Object -TypeName System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
+            TableStyles        = New-Object -TypeName System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
+            NumberStyles       = New-Object -TypeName System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
+            Lists              = New-Object -TypeName System.Collections.ArrayList # Store all list references for Word numbering.xml generation
+            DefaultStyle       = $null
+            DefaultTableStyle  = $null
+            DefaultNumberStyle = $null
+            Header             = [PSCustomObject] @{
+                                     HasFirstPageHeader = $false
+                                     HasDefaultHeader   = $false
+                                     FirstPageHeader    = $null
+                                     DefaultHeader      = $null
+                                 }
+            Footer             = [PSCustomObject] @{
+                                     HasFirstPageFooter = $false
+                                     HasDefaultFooter   = $false
+                                     FirstPageFooter    = $null
+                                     DefaultFooter      = $null
+                                 }
+            TOC                = New-Object -TypeName System.Collections.ArrayList
         }
         $defaultDocumentOptionParams = @{
             MarginTopAndBottom = 72
@@ -92,6 +95,9 @@ function New-PScriboDocument
             CaptionStyle      = 'Caption'
         }
         TableStyle @tableDefaultStyleParams -Default -Verbose:$false
+        NumberStyle -Id 'Number' -Format Number -Default -Verbose:$false
+        NumberStyle -Id 'Letter' -Format Letter -Verbose:$false
+        NumberStyle -Id 'Roman' -Format Roman -Verbose:$false
         return $pscriboDocument
     }
 }

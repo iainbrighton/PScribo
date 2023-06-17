@@ -22,7 +22,19 @@ function New-PScriboList
 
         ## Numbered list.
         [Parameter(ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $Numbered
+        [System.Management.Automation.SwitchParameter] $Numbered,
+
+        ## Numbered list style.
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.String] $NumberStyle = $pscriboDocument.DefaultNumberStyle,
+
+        ## Bullet list style.
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateSet('Circle', 'Dash', 'Disc', 'Square')]
+        [System.String] $BulletStyle = 'Disc',
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.Int32] $Level = 1
     )
     process
     {
@@ -30,13 +42,20 @@ function New-PScriboList
             Id                = [System.Guid]::NewGuid().ToString()
             Name              = $Name
             Type              = 'PScribo.List'
-            Style             = $Style
             Items             = (New-Object -TypeName System.Collections.ArrayList)
+            Number            = 0
+            Level             = $Level
             IsNumbered        = $Numbered.ToBool()
+            Style             = $Style
+            BulletStyle       = $BulletStyle
+            NumberStyle       = $NumberStyle
+            IsMultiLevel      = $false
             IsSectionBreak    = $false
             IsSectionBreakEnd = $false
             IsStyleInherited  = -not $PSBoundParameters.ContainsKey('Style')
             HasStyle          = $PSBoundParameters.ContainsKey('Style')
+            HasBulletStyle    = -not $Numbered.ToBool()
+            HasNumberStyle    = $PSBoundParameters.ContainsKey('NumberStyle')
         }
         return $pscriboList
     }

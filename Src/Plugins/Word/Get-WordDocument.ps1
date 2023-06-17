@@ -21,6 +21,8 @@ function Get-WordDocument
         $xmlnsrelationships = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
         $xmlnsofficeword14 = 'http://schemas.microsoft.com/office/drawing/2010/main'
         $xmlnsmath = 'http://schemas.openxmlformats.org/officeDocument/2006/math'
+        $xmlnsmc = 'http://schemas.openxmlformats.org/markup-compatibility/2006' # required for custom number lists
+        $xmlnsw14 = 'http://schemas.microsoft.com/office/word/2010/wordml' # required for custom number lists
         $xmlDocument = New-Object -TypeName 'System.Xml.XmlDocument'
         [ref] $null = $xmlDocument.AppendChild($xmlDocument.CreateXmlDeclaration('1.0', 'utf-8', 'yes'))
         $documentXml = $xmlDocument.AppendChild($xmlDocument.CreateElement('w', 'document', $xmlns))
@@ -31,6 +33,8 @@ function Get-WordDocument
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:r', $xmlnsrelationships)
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:m', $xmlnsmath)
         [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:a14', $xmlnsofficeword14)
+        [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:mc', $xmlnsmc)
+        [ref] $null = $xmlDocument.DocumentElement.SetAttribute('xmlns:w14', $xmlnsw14)
         $body = $documentXml.AppendChild($xmlDocument.CreateElement('w', 'body', $xmlns))
         $script:pscriboIsFirstSection = $false
 
@@ -77,6 +81,10 @@ function Get-WordDocument
                 'PScribo.BlankLine'
                 {
                     Out-WordBlankLine -BlankLine $subSection -XmlDocument $xmlDocument -Element $body
+                }
+                'PScribo.ListReference'
+                {
+                    Out-WordList -List $Document.Lists[$subSection.Number -1] -Element $body -XmlDocument $xmlDocument -NumberId $subSection.Number
                 }
                 Default
                 {

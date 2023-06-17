@@ -13,6 +13,10 @@ KNOWN LIMITATIONS
 
     - Html output attempts to create a document-like experience. Paper sizes, page breaks and headers/footers are
       rendered, but page numbers cannot be faithfully recreated.
+    - Html output does not support the 'Dash' bullet style. Dashes will be rendered using the the web broswer's
+      defaults.
+    - Html numbered lists only support the default '.' number style terminator/suffix. The use of custom number
+      style terminators/suffixes i.e. ')', is not supported.
 
 PLUGIN OPTIONS
     The Html plugin accepts the following output customisation options:

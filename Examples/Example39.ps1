@@ -7,25 +7,19 @@ param (
 
 Import-Module PScribo -Force -Verbose:$false
 
+# 'List' single-level bullet lists
 $example39 = Document -Name 'PScribo Example 39' {
 
     <#
-        Bulleted and numbered lists are supported. A list is defined by the 'List'
-        keyword and can contain one or more items.
+        A bulleted list is defined by the 'List' keyword and can contain one or more items.
 
-        A simple single-level list can be defined with the '-Item' parameter and
-        passing an array of [string[]].
+        A simple single-level list can be defined with the '-Item' parameter and passing an
+        array of strings ([string[]]).
     #>
     List -Item 'Apples','Oranges','Bananas'
 
     <#
-        Lists default to a bulleted list, but a numbered list can be created wtih
-        the '-Numbered' parameter.
-    #>
-    List -Item 'Apples','Oranges','Bananas' -Numbered
-
-    <#
-        A list can also be created using a script block and nesting one or 'Item'
+        A list can also be created using a script block and nesting one or 'Item' keywords
         within it.
     #>
     List {
@@ -35,45 +29,40 @@ $example39 = Document -Name 'PScribo Example 39' {
     }
 
     <#
-        Multi-level lists can be created by nesting the 'List' within a script
-        block.
-
-        NOTE: nested 'List' objects can only be nested after the inclusion of
-              an 'Item'.
+        Bullet styles can be applied to a list, e.g. 'Dash', 'Circle', 'Disc' and 'Square'. If
+        not specified, the bullet list defaults to the 'Disc' style.
     #>
-    List {
+    List -BulletStyle Square {
         Item 'Apples'
-        List {
-            Item 'Jazz'
-            Item 'Granny smith'
-            Item 'Pink lady'
-        }
         Item 'Bananas'
         Item 'Oranges'
-        List {
-            Item 'Jaffa'
-            Item 'Tangerine'
-            Item 'Clementine'
-        }
     }
 
     <#
-        Multi-level numbered lists can also be created with the '-Numbered' parameter.
+        Formatting styles can be applied to all items in a list.
     #>
-    List -Numbered {
+    List -Style Caption {
         Item 'Apples'
-        List {
-            Item 'Jazz'
-            Item 'Granny smith'
-            Item 'Pink lady'
-        }
         Item 'Bananas'
         Item 'Oranges'
-        List {
-            Item 'Jaffa'
-            Item 'Tangerine'
-            Item 'Clementine'
-        }
+    }
+
+    <#
+        Styles can be applied to indiviual items in a list.
+    #>
+    List {
+        Item 'Apples'
+        Item 'Bananas' -Style Caption
+        Item 'Oranges'
+    }
+
+    <#
+        Inline styles can also be applied to indiviual items in a list.
+    #>
+    List {
+        Item 'Apples' -Bold
+        Item 'Bananas' -Italic
+        Item 'Oranges' -Color Firebrick
     }
 
 }

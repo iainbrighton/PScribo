@@ -4,17 +4,19 @@ function List
     .SYNOPSIS
         Initializes a new PScribo bulleted or numbered List object.
 #>
-    [CmdletBinding(DefaultParameterSetName = 'Item')]
+    [CmdletBinding(DefaultParameterSetName = 'BulletItem')]
     [OutputType([System.Management.Automation.PSCustomObject])]
     param
     (
         ## List item(s).
-        [Parameter(Mandatory, Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, ParameterSetName = 'Item')]
+        [Parameter(Mandatory, Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, ParameterSetName = 'ItemBullet')]
+        [Parameter(Mandatory, Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, ParameterSetName = 'ItemNumbered')]
         [ValidateNotNull()]
         [System.String[]] $Item,
 
         ## PScribo nested list/items.
-        [Parameter(Mandatory, Position = 0, ValueFromPipelineByPropertyName, ParameterSetName = 'List')]
+        [Parameter(Mandatory, Position = 0, ValueFromPipelineByPropertyName, ParameterSetName = 'ListBullet')]
+        [Parameter(Mandatory, Position = 0, ValueFromPipelineByPropertyName, ParameterSetName = 'ListNumbered')]
         [ValidateNotNull()]
         [System.Management.Automation.ScriptBlock] $ScriptBlock,
 
@@ -27,14 +29,27 @@ function List
         [System.String] $Style,
 
         ## Numbered list.
-        [Parameter(Position = 2, ValueFromPipelineByPropertyName)]
-        [System.Management.Automation.SwitchParameter] $Numbered
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'ItemNumbered')]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'ListNumbered')]
+        [System.Management.Automation.SwitchParameter] $Numbered,
+
+        ## Numbered list style.
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'ItemNumbered')]
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'ListNumbered')]
+        [System.String] $NumberStyle,
+
+        ## Bullet list style.
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'ItemBullet')]
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'ListBullet')]
+        [ValidateSet('Circle', 'Dash', 'Disc', 'Square')]
+        [System.String] $BulletStyle = 'Disc'
     )
     begin
     {
         $psCallStack = Get-PSCallStack | Where-Object { $_.FunctionName -ne '<ScriptBlock>' }
         if ($psCallStack[1].FunctionName -notin 'List<Process>','Document<Process>','Section<Process>')
         {
+            Write-Warning $psCallStack[1].FunctionName
             throw $localized.ListRootError
         }
     }
@@ -42,9 +57,10 @@ function List
     {
         $null = $PSBoundParameters.Remove('ScriptBlock')
         $null = $PSBoundParameters.Remove('Item')
+
         $pscriboList = New-PScriboList @PSBoundParameters
 
-        if ($PSCmdlet.ParameterSetName -eq 'Item')
+        if ($PSCmdlet.ParameterSetName -in 'ItemBullet','ItemNumbered')
         {
             foreach ($listItem in $Item)
             {
@@ -52,7 +68,7 @@ function List
                 [ref] $null = $pscriboList.Items.Add($pscriboListItem)
             }
         }
-        elseif ($PSCmdlet.ParameterSetName -eq 'List')
+        elseif ($PSCmdlet.ParameterSetName -in 'ListBullet','ListNumbered')
         {
             foreach ($result in & $ScriptBlock)
             {
@@ -99,6 +115,7 @@ function List
                 {
                     if ($hasItem)
                     {
+                        $pscriboList.IsMultiLevel = $true
                         Invoke-PScriboListLevel -List $listItem -Number $itemNumber.ToString()
                     }
                     else
@@ -107,8 +124,19 @@ function List
                     }
                 }
             }
-        }
 
-        return $pscriboList
+            ## Store lists for Word numbering.xml
+            $pscriboDocument.Properties['Lists']++
+            $pscriboList.Number = $pscriboDocument.Properties['Lists']
+            [ref] $null = $pscriboDocument.Lists.Add($pscriboList)
+
+            ## Return list reference
+            $pscriboListReference = New-PScriboListReference -Name $pscriboList.Name -Number $pscriboList.Number
+            return $pscriboListReference
+        }
+        else
+        {
+            return $pscriboList
+        }
     }
 }

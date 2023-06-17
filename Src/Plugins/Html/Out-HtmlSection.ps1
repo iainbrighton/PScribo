@@ -95,9 +95,14 @@ function Out-HtmlSection
                 {
                     [ref] $null = $sectionBuilder.Append((Out-HtmlImage -Image $subSection))
                 }
+                'PScribo.ListReference'
+                {
+                    $htmlList = Out-HtmlList -List $Document.Lists[$subSection.Number -1]
+                    [ref] $null = $sectionBuilder.Append($htmlList).AppendLine()
+                }
                 Default
                 {
-                     Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
+                    Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
                 }
             }
         }
