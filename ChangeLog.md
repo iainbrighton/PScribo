@@ -8,6 +8,7 @@
 * Adds custom list number formats (Word and Text plugins only)
   * Adds `NumberStyle` keyword
 * Fixes bug in Text table output breaking Word and Html output (#126)
+* Fixes bug in call stack enumeration with nested functions containing `Section -Orientation` definitions (#121)
 
 ### 0.10.0 ###
 
