@@ -20,6 +20,8 @@ KNOWN LIMITATIONS
       implemented:
       - Table of Contents are not rendered as the 'updateFields' flag is not implemented/supported
       - Table cell font colors are not rendered correctly
+    - Word does not support a mixture of formats at the same level within a bullet/numbered list. Therefore, only the
+      first list type will be rendered.
 
 PLUGIN OPTIONS
     The Word plugin does not accept any output customisation options.
