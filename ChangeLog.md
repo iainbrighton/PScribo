@@ -7,6 +7,7 @@
 * Adds bulleted/numbered list support - Example39.ps1 to Example44.ps1 (#105)
 * Adds custom list number formats (Word and Text plugins only)
   * Adds `NumberStyle` keyword
+* Fixes bug in Text table output breaking Word and Html output (#126)
 
 ### 0.10.0 ###
 
