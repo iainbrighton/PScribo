@@ -43,6 +43,12 @@ EXAMPLE INDEX
     Example36.ps1 - 'Header' and 'Footer' paragraph styling
     Example37.ps1 - 'Header' and 'Footer' tables
     Example38.ps1 - 'Paragraph' text run styling
+    Example39.ps1 - 'List' single-level bullet lists
+    Example40.ps1 - 'List' single-level numbered lists
+    Example41.ps1 - 'List' and 'Item' multi-level bullet lists
+    Example42.ps1 - 'List' and 'Item' multi-level numbered lists
+    Example43.ps1 - 'NumberStyle' numbered list number formatting
+    Example44.ps1 - 'NumberStyle' and custom number formatting styles
 
 SEE ALSO
     about_PScribo

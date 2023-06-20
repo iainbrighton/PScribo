@@ -76,6 +76,11 @@ function Out-TextSection
                 {
                     [ref] $null = $sectionBuilder.Append((Out-TextImage -Image $subSection))
                 }
+                'PScribo.ListReference'
+                {
+                    $textList = Out-TextList -List $Document.Lists[$subSection.Number -1]
+                    [ref] $null = $sectionBuilder.Append($textList)
+                }
                 Default
                 {
                     Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning

@@ -15,7 +15,10 @@
                             'Footer',
                             'Header',
                             'Image',
+                            'Item',
                             'LineBreak',
+                            'List',
+                            'NumberStyle',
                             'PageBreak',
                             'Paragraph',
                             'Section',
@@ -25,7 +28,8 @@
                             'TableStyle',
                             'Text',
                             'TOC',
-                            'Write-PScriboMessage'
+                            'Write-PScriboMessage',
+                            'Get-WordListLevel'
                         )
     AliasesToExport   = @(
                             'GlobalOption'
