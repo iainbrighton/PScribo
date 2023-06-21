@@ -9,6 +9,7 @@
   * Adds `NumberStyle` keyword
 * Fixes bug in Text table output breaking Word and Html output (#126)
 * Fixes bug in call stack enumeration with nested functions containing `Section -Orientation` definitions (#121)
+* Adds Json plugin output (thanks @carceneaux)
 
 ### 0.10.0 ###
 
