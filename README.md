@@ -91,6 +91,12 @@ PScribo can export documentation in a variety of formats and currently supports 
 
 [Example text Document Download](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/PScriboExample.txt)
 
+### Example Json Output ###
+
+![](./ExampleJsonOutput.png)
+
+[Example Json Document Download](https://raw.githubusercontent.com/iainbrighton/PScribo/dev/PScriboExample.json)
+
 If you find it useful, unearth any bugs or have any suggestions for improvements,
 feel free to add an [issue](https://github.com/iainbrighton/PScribo/issues) or
 place a comment at the project home page.

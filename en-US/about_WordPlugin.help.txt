@@ -30,3 +30,4 @@ SEE ALSO
     about_PscriboPlugins
     about_HtmlPlugin
     about_TextPlugin
+    about_JsonPlugin
