@@ -96,4 +96,7 @@ EmptyColumnsFound               = Found {0} empty columns in table '{1}': {2}.
 NoEmptyColumnsFound             = No empty columns found in table '{0}'.
 ColumnWidthsCalculated          = Column widths calculated for table '{0}': {1}.
 EnhancedTableCompleted          = Enhanced table '{0}' processing completed.
+
+NoInputProvided                 = No input objects provided for table '{0}'.
+NoPropertiesFound               = No properties found in input objects for table '{0}'.
 '@;

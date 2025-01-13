@@ -8,11 +8,13 @@ InModuleScope 'PScribo' {
     BeforeAll {
         $script:hasCalledTable = $false
         Mock Table { $script:hasCalledTable = $true }
+        $script:pscriboDocument = Document 'ScaffoldDocument' { }
     }
 
     Describe 'Write-EnhancedTable' {
         BeforeEach {
             $script:hasCalledTable = $false
+            $script:pscriboDocument = Document 'ScaffoldDocument' { }
             $testObject = [PSCustomObject]@{
                 Name = "Test"
                 Value = "Value"

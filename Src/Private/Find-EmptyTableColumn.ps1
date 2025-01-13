@@ -27,16 +27,22 @@ function Find-EmptyTableColumn {
     foreach ($obj in $InputObject) {
         # Skip null objects
         if ($null -eq $obj) { continue }
-        
-        # Handle non-PSObject inputs
-        if ($obj -isnot [PSObject] -and $obj -isnot [PSCustomObject]) {
-            throw "Input must be an array of PSObjects."
-        }
 
-        # Get properties from this object
-        $objProps = @($obj | Get-Member -MemberType Properties | Select-Object -ExpandProperty Name)
-        foreach ($prop in $objProps) {
-            $properties.Add($prop) | Out-Null
+        # Convert non-PSObject inputs to PSObject if possible
+        try {
+            if ($obj -isnot [PSObject] -and $obj -isnot [PSCustomObject]) {
+                $obj = [PSObject]::new($obj)
+            }
+
+            # Get properties from this object
+            $objProps = @($obj.PSObject.Properties | Select-Object -ExpandProperty Name)
+            foreach ($prop in $objProps) {
+                $properties.Add($prop) | Out-Null
+            }
+        }
+        catch {
+            # Skip objects that can't be converted or accessed
+            continue
         }
     }
 
@@ -55,11 +61,16 @@ function Find-EmptyTableColumn {
         foreach ($obj in $InputObject) {
             # Skip null objects
             if ($null -eq $obj) { continue }
-            
-            # Skip objects that don't have this property
-            if (-not ($obj | Get-Member -Name $prop -MemberType Properties)) { continue }
-            
+
             try {
+                # Convert non-PSObject inputs to PSObject if possible
+                if ($obj -isnot [PSObject] -and $obj -isnot [PSCustomObject]) {
+                    $obj = [PSObject]::new($obj)
+                }
+
+                # Skip objects that don't have this property
+                if (-not ($obj.PSObject.Properties.Name -contains $prop)) { continue }
+
                 $value = $obj.$prop
                 if (![string]::IsNullOrWhiteSpace($value)) {
                     $isBlank = $false
@@ -67,7 +78,7 @@ function Find-EmptyTableColumn {
                 }
             }
             catch {
-                # Property can't be accessed
+                # Skip objects that can't be converted or accessed
                 continue
             }
         }
@@ -85,4 +96,4 @@ function Find-EmptyTableColumn {
 
     # Always return as array type, even for single items
     return [string[]]($emptyColumns.ToArray())
-} 
+}

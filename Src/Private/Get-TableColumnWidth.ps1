@@ -29,7 +29,7 @@ function Get-TableColumnWidth {
     }
 
     # Get first object if array
-    if ($InputObject -is [System.Collections.IEnumerable] -and 
+    if ($InputObject -is [System.Collections.IEnumerable] -and
         $InputObject -isnot [string]) {
         $InputObject = $InputObject[0]
     }
@@ -50,7 +50,7 @@ function Get-TableColumnWidth {
     $customWidthsSum = ($CustomWidths.Values | Measure-Object -Sum).Sum
     Write-PScriboMessage -Message "Sum of custom widths: $customWidthsSum"
     if ($customWidthsSum -gt $totalWidth) {
-        throw "The sum of custom widths ($customWidthsSum) exceeds the total available width of $totalWidth."
+        throw "The sum of custom widths exceeds the total available width."
     }
 
     # Validate custom widths reference existing properties
@@ -74,16 +74,10 @@ function Get-TableColumnWidth {
 
     # Initialize widths as ordered dictionary
     $widths = [ordered]@{}
-    
+
     # Get all column names
-    $columnNames = $InputObject[0].PSObject.Properties.Name
-    
-    # If only one column, return 100%
-    if ($columnNames.Count -eq 1) {
-        Write-PScriboMessage -Message ($localized.ColumnWidthsCalculated -f 'Input', '100')
-        return @(100)
-    }
-    
+    $columnNames = @($properties.Name)
+
     # Apply custom widths first
     $remainingWidth = 100
     foreach ($column in $CustomWidths.Keys) {
@@ -92,33 +86,43 @@ function Get-TableColumnWidth {
             $remainingWidth -= $CustomWidths[$column]
         }
     }
-    
-    # If all columns have custom widths but total is less than 100%, reset widths to distribute evenly
-    if ($widths.Count -eq $columnNames.Count -and $remainingWidth -gt 0) {
-        Write-PScriboMessage -Message ($localized.ProcessingColumnWidths -f 'Input')
-        $widths.Clear()
-        $remainingWidth = 100
-    }
-    
-    # Calculate even distribution for remaining columns
-    $remainingColumns = $columnNames | Where-Object { $_ -notin $widths.Keys }
-    if ($remainingColumns.Count -gt 0) {
-        $evenWidth = [math]::Floor($remainingWidth / $remainingColumns.Count)
-        $leftover = $remainingWidth - ($evenWidth * $remainingColumns.Count)
-        
-        foreach ($column in $remainingColumns) {
-            $widths[$column] = $evenWidth
+
+    # If all columns have custom widths but total is less than 100%, distribute remaining width evenly
+    if ($CustomWidths.Count -eq $columnCount -and $remainingWidth -gt 0) {
+        $extraPerColumn = [math]::Floor($remainingWidth / $columnCount)
+        $leftover = $remainingWidth - ($extraPerColumn * $columnCount)
+
+        foreach ($column in $columnNames) {
+            $widths[$column] += $extraPerColumn
         }
-        
-        # Add leftover to first column
+
+        # Add any remaining width to the last column
         if ($leftover -gt 0) {
-            $firstColumn = $remainingColumns[0]
-            $widths[$firstColumn] += $leftover
+            $lastColumn = $columnNames[-1]
+            $widths[$lastColumn] += $leftover
         }
     }
-    
+    # Otherwise calculate even distribution for remaining columns
+    else {
+        $remainingColumns = @($columnNames | Where-Object { $_ -notin $widths.Keys })
+        if ($remainingColumns.Count -gt 0) {
+            $evenWidth = [math]::Floor($remainingWidth / $remainingColumns.Count)
+            $leftover = $remainingWidth - ($evenWidth * $remainingColumns.Count)
+
+            foreach ($column in $remainingColumns) {
+                $widths[$column] = $evenWidth
+            }
+
+            # Add leftover to last column
+            if ($leftover -gt 0) {
+                $lastColumn = $remainingColumns[-1]
+                $widths[$lastColumn] += $leftover
+            }
+        }
+    }
+
     Write-PScriboMessage -Message ($localized.ColumnWidthsCalculated -f 'Input', ($widths.Values -join ', '))
-    
+
     # Return array of widths in column order
     return @($columnNames | ForEach-Object { $widths[$_] })
-} 
+}

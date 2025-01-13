@@ -65,4 +65,4 @@ NOTES
 SEE ALSO
     about_PScribo
     about_PScriboDocument
-    about_PScriboStyles 
+    about_PScriboStyles

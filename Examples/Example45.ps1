@@ -70,7 +70,7 @@ Document 'Example45' {
     Paragraph -Style Heading1 'Combined Features'
     Section 'System Information' {
         # Get some system information that might have empty columns
-        $sysInfo = Get-WmiObject Win32_ComputerSystem | 
+        $sysInfo = Get-WmiObject Win32_ComputerSystem |
             Select-Object Name, Manufacturer, Model, Description, PrimaryOwnerName |
             Select-Object -First 1
 
@@ -92,4 +92,4 @@ Document 'Example45' {
             Paragraph -Style 'Normal' "Note: Some columns were automatically removed as they contained no data: $($result.RemovedColumns -join ', ')"
         }
     }
-} | Export-Document -Path $PSScriptRoot -Format Word,Html 
+} | Export-Document -Path $PSScriptRoot -Format Word,Html
