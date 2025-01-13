@@ -1,0 +1,68 @@
+TOPIC
+    PScribo Enhanced Tables
+
+SYNOPSIS
+    PScribo provides enhanced table functionality for automatic column width calculation and empty column handling.
+
+DESCRIPTION
+    The enhanced table functionality in PScribo extends the core table features with automatic column width
+    calculations and empty column removal. This is implemented through the Write-EnhancedTable function and its
+    supporting functions.
+
+FEATURES
+    1. Automatic Column Width Calculation
+       - Intelligently distributes column widths based on available space
+       - Supports custom width specifications for specific columns
+       - Handles leftover width distribution automatically
+
+    2. Empty Column Handling
+       - Automatically identifies and optionally removes empty columns
+       - Empty columns are those containing only null, empty string, or whitespace values
+       - Provides metadata about removed columns when requested
+
+    3. Metadata Support
+       - Can return information about table processing via -PassThru parameter
+       - Includes details about removed columns and final table parameters
+
+FUNCTIONS
+    Write-EnhancedTable
+        The main function for creating enhanced tables. Accepts pipeline input and provides all enhanced
+        table functionality.
+
+        Parameters:
+        - InputObject: The data to display (required)
+        - TableParameters: Standard table parameters passed to the core Table function
+        - RemoveEmptyColumns: Switch to enable empty column removal
+        - CustomColumnWidths: Hashtable of column name/width pairs
+        - PassThru: Switch to return metadata about the operation
+
+    Get-TableEmptyColumn
+        Public function to identify empty columns in a table. Useful for analysis before creating tables.
+
+        Parameters:
+        - InputObject: The data to analyze (required)
+
+EXAMPLES
+    Basic Usage:
+        $data | Write-EnhancedTable -TableParameters @{ Name = 'MyTable'; Style = 'Basic' }
+
+    Remove Empty Columns:
+        $data | Write-EnhancedTable -RemoveEmptyColumns -PassThru
+
+    Custom Column Widths:
+        $data | Write-EnhancedTable -CustomColumnWidths @{
+            'Name' = 30
+            'Description' = 50
+        }
+
+    Analyze Empty Columns:
+        $data | Get-TableEmptyColumn
+
+NOTES
+    The enhanced table functionality maintains compatibility with all PScribo output formats while
+    providing additional features for better table presentation.
+
+SEE ALSO
+    about_PScribo
+    about_PScriboDocument
+    about_PScriboStyles 

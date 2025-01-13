@@ -13,6 +13,7 @@
                             'DocumentOption',
                             'Export-Document',
                             'Footer',
+                            'Get-TableEmptyColumn',
                             'Header',
                             'Image',
                             'Item',
@@ -28,6 +29,7 @@
                             'TableStyle',
                             'Text',
                             'TOC',
+                            'Write-EnhancedTable',
                             'Write-PScriboMessage',
                             'Get-WordListLevel'
                         )

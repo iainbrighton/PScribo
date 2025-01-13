@@ -87,4 +87,13 @@ ProcessingParagraphRunsCompleted = Processing paragraph run(s) completed.
 ProcessingParagraphRun           = Processing paragraph run '{0}'.
 ProcessingList                   = Processing list '{0}'.
 ProcessingNumberStyle            = Setting number style '{0}'.
+
+# Enhanced Table Messages
+ProcessingEnhancedTable         = Processing enhanced table '{0}'.
+ProcessingEmptyColumns          = Checking for empty columns in table '{0}'.
+ProcessingColumnWidths          = Calculating column widths for table '{0}'.
+EmptyColumnsFound               = Found {0} empty columns in table '{1}': {2}.
+NoEmptyColumnsFound             = No empty columns found in table '{0}'.
+ColumnWidthsCalculated          = Column widths calculated for table '{0}': {1}.
+EnhancedTableCompleted          = Enhanced table '{0}' processing completed.
 '@;
