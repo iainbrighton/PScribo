@@ -36,7 +36,7 @@ function Get-TableEmptyColumn {
         if ($InputObject -is [string]) {
             throw "Input must be an array of PSObjects"
         }
-        
+
         if ($InputObject -is [System.Collections.IEnumerable] -and $InputObject -isnot [string]) {
             foreach ($item in $InputObject) {
                 if ($null -ne $item) {

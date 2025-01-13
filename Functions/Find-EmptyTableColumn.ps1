@@ -14,4 +14,4 @@ function Find-EmptyTableColumn {
             throw 'InputObject must be an object or array of objects'
         }
     }
-} 
+}

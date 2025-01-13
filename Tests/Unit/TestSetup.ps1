@@ -28,4 +28,4 @@ $script:services = @{
     }
 }
 
-Export-ModuleMember -Variable pscriboDocument, processes, services 
+Export-ModuleMember -Variable pscriboDocument, processes, services

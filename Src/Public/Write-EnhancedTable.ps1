@@ -105,7 +105,7 @@ function Write-EnhancedTable {
         }
 
         # Get all unique properties from all objects
-        $allProperties = @($processedObjects | ForEach-Object { 
+        $allProperties = @($processedObjects | ForEach-Object {
             $obj = $_
             if (($obj.PSObject.Properties | Measure-Object).Count -eq 0) {
                 # For objects with no properties, create a default property
@@ -115,7 +115,7 @@ function Write-EnhancedTable {
                 $obj.PSObject.Properties.Name
             }
         } | Select-Object -Unique)
-        
+
         if (($allProperties | Measure-Object).Count -eq 0) {
             Write-PScriboMessage -Message ($localized.NoPropertiesFound -f $tableName)
             return

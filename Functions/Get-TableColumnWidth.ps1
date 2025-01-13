@@ -4,7 +4,7 @@ function Get-TableColumnWidth {
         [Parameter(Mandatory, ValueFromPipeline)]
         [PSObject]
         $InputObject,
-        
+
         [Parameter()]
         [System.Collections.Hashtable]
         $CustomWidths
@@ -17,4 +17,4 @@ function Get-TableColumnWidth {
             }
         }
     }
-} 
+}
