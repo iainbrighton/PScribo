@@ -20,6 +20,11 @@ function Find-EmptyTableColumn {
         throw "Input array cannot be null."
     }
 
+    # Validate input type
+    if ($InputObject -is [string] -or $InputObject[0] -is [string]) {
+        throw "Input must be an object or array of objects."
+    }
+
     Write-PScriboMessage -Message ($localized.ProcessingEmptyColumns -f 'Input')
 
     # Get all unique properties from all objects
