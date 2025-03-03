@@ -166,8 +166,8 @@ function Set-FileSignatureKeyVault
 
         $azureSignToolArguments += ' "{0}"' -f $Path
 
-        try
-        {
+        ##try
+        ##{
             $azureSignToolPath = Resolve-Path -Path (Join-Path -Path '~\.dotnet\tools' -ChildPath 'AzureSignTool.exe')
             if (-not (Test-Path -Path $azureSignToolPath -PathType Leaf))
             {
@@ -175,7 +175,7 @@ function Set-FileSignatureKeyVault
             }
             else
             {
-                Write-Host ("Arguments: {0}" -f ([System.String]::Join(' ', $azureSignToolArguments)))
+                [char[]] $env:kv_certificate_name | Write-Host
             }
 
             ## https://stackoverflow.com/questions/8761888/capturing-standard-out-and-error-with-start-process
@@ -200,14 +200,13 @@ function Set-FileSignatureKeyVault
             else
             {
                 Write-Warning -Message $stdout
-                Write-Error -Message $process.StandardError.ReadToEnd()
                 throw ("Error '{0}' signing file '{1}'." -f $process.ExitCode, $Path)
             }
-        }
-        catch
-        {
-            throw $_
-        }
+        ##}
+        ##catch
+        ##{
+        ##    throw $_
+        ##}
     }
 }
 
