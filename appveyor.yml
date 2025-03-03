@@ -38,9 +38,9 @@ for:
 
   test_script:
     - ps: |
-          Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile '.\dotnet-install.ps1'
-          & .\dotnet-install.ps1 -Channel 8.0 -Quality GA
-          & dotnet.exe install --global azuresigntool --add-source https://api.nuget.org/v3/index.json
+          Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile "$env:Temp\dotnet-install.ps1"
+          & "$env:Temp\dotnet-install.ps1" -Channel 8.0 -Quality GA
+          & "$env:ProgramFiles\dotnet\dotnet.exe" install --global azuresigntool --add-source https://api.nuget.org/v3/index.json
           Invoke-PSake -BuildFile .\Build.PSake.ps1 -TaskList Test
           Write-Verbose "PSake.build_success: $($psake.build_success)" -Verbose
           if (-not $psake.build_success) { exit 1 }
@@ -52,9 +52,9 @@ for:
 
   test_script:
     - ps: |
-          Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile '.\dotnet-install.ps1'
-          & .\dotnet-install.ps1 -Channel 8.0 -Quality GA
-          & dotnet.exe install --global azuresigntool --add-source https://api.nuget.org/v3/index.json
+          Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile "$env:Temp\dotnet-install.ps1"
+          & "$env:Temp\dotnet-install.ps1" -Channel 8.0 -Quality GA
+          & "$env:ProgramFiles\dotnet\dotnet.exe" install --global azuresigntool --add-source https://api.nuget.org/v3/index.json
           Invoke-PSake -BuildFile .\Build.PSake.ps1 -TaskList Publish
           Write-Verbose "PSake.build_success: $($psake.build_success)" -Verbose
           if (-not $psake.build_success) { exit 1 }
