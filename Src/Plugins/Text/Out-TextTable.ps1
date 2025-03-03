@@ -27,7 +27,7 @@ function Out-TextTable
 
         ## We need to rewrite arrays for text formatting and we don't want to
         ## alter the source documnent (#126)
-        $cloneTable = Copy-Object -InputObject $Table
+        $cloneTable = $Table | ConvertTo-Json -Depth 100 -Compress | ConvertFrom-Json
 
         ## We need to flatten arrays and replace page numbers before outputting the table
         foreach ($row in $cloneTable.Rows)

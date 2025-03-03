@@ -38,7 +38,7 @@ function Out-JsonHeaderFooter
             foreach ($subSection in $headerFooter.Sections.GetEnumerator())
             {
                 ## When replacing tokens (by reference), the tokens are removed
-                $cloneSubSection = Copy-Object -InputObject $subSection
+                $cloneSubSection = $subSection | ConvertTo-Json -Depth 100 -Compress | ConvertFrom-Json
                 switch ($cloneSubSection.Type)
                 {
                     'PScribo.Paragraph'
