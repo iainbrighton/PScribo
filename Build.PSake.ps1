@@ -200,7 +200,8 @@ function Set-FileSignatureKeyVault
             else
             {
                 Write-Warning -Message $stdout
-                throw ("Error signing file '{0}'." -f $Path)
+                Write-Error -Message $process.StandardError.ReadToEnd()
+                throw ("Error '{0}' signing file '{1}'." -f $process.ExitCode, $Path)
             }
         }
         catch
