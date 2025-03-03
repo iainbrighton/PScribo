@@ -169,6 +169,14 @@ function Set-FileSignatureKeyVault
         try
         {
             $azureSignToolPath = Resolve-Path -Path (Join-Path -Path '~\.dotnet\tools' -ChildPath 'AzureSignTool.exe')
+            if (-not (Test-Path -Path $azureSignToolPath -PathType Leaf))
+            {
+                throw ("Cannot find file '{0}'." -f $azureSignToolPath)
+            }
+            else
+            {
+                Write-Host ("Arguments: {0}" -f ([System.String]::Join(' ', $azureSignToolArguments)))
+            }
 
             ## https://stackoverflow.com/questions/8761888/capturing-standard-out-and-error-with-start-process
             $processStartInfo = New-Object -TypeName System.Diagnostics.ProcessStartInfo
@@ -280,7 +288,7 @@ Task Sign -Depends Stage {
 
         if (-not $isExcluded)
         {
-            Write-Host (' Signing file "{0}":' -f $PSItem.FullName) -ForegroundColor Yellow
+            Write-Host (' Signing file "{0}"' -f $PSItem.FullName) -ForegroundColor Yellow
             Set-FileSignatureKeyVault -Path $PSItem.FullName
         }
     }
