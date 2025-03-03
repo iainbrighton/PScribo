@@ -4,13 +4,22 @@
 $psake.use_exit_on_error = $true;
 
 Properties {
-    $moduleName = (Get-Item $PSScriptRoot\*.psd1)[0].BaseName;
-    $basePath = $psake.build_script_dir;
-    $buildDir = 'Release';
-    $buildPath = (Join-Path -Path $basePath -ChildPath $buildDir);
-    $releasePath = (Join-Path -Path $buildPath -ChildPath $moduleName);
-    $thumbprint = '6F72C7A1BD6979DD8F08DC066ABC12FB80A453E9';
-    $timeStampServer = 'http://timestamp.digicert.com';
+    $moduleName = (Get-Item $PSScriptRoot\*.psd1)[0].BaseName
+    $basePath = $psake.build_script_dir
+    $buildDir = 'Release'
+    $buildPath = (Join-Path -Path $basePath -ChildPath $buildDir)
+    $releasePath = (Join-Path -Path $buildPath -ChildPath $moduleName)
+    $thumbprint = '6F72C7A1BD6979DD8F08DC066ABC12FB80A453E9'
+    $timeStampServer = 'http://timestamp.digicert.com'
+    $combine = @(
+        'Src\Private',
+        'Src\Public',
+        '\Src\Plugins\Html',
+        '\Src\Plugins\Json',
+        '\Src\Plugins\Text',
+        '\Src\Plugins\Word',
+        '\Src\Plugins\Xml'
+    )
     $exclude = @(
         '.git*',
         '.vscode',
@@ -26,9 +35,10 @@ Properties {
         'PScribo Test Doc.*',
         'PScriboExample.*',
         'TestResults.xml',
-        'System.IO.Packaging.dll'
-    );
-    $signExclude = @('Examples','en-US');
+        'System.IO.Packaging.dll',
+        'Src' # Files are combined and then signed
+    )
+    $signExclude = @('Examples','en-US')
 }
 
 #region functions
@@ -123,6 +133,75 @@ function Join-PscriboBundleFile {
     }
 }
 
+function Set-FileSignatureKeyVault
+{
+    [CmdletBinding()]
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','')]
+    param
+    (
+        ## File to sign
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [System.String] $Path,
+
+        ## Code-signing timestamp server
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.String] $TimestampServer = 'http://timestamp.digicert.com',
+
+        ## Code-signing certificate thumbprint
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [System.String] $HashAlgorithm = 'SHA256'
+    )
+    process
+    {
+        $azureSignToolArguments = 'sign -kvu "{0}" -kvc "{1}"' -f $env:kv_uri, $env:kv_certificate_name
+        $azureSignToolArguments += ' -kvi "{0}"' -f $env:kv_client_id
+        $azureSignToolArguments += ' -kvs "{0}"' -f $env:kv_client_secret
+        $azureSignToolArguments += ' -kvt "{0}"' -f $env:kv_tenant_id
+        $azureSignToolArguments += ' -tr "{0}"' -f $TimestampServer
+
+        if ($PSBoundParameters.ContainsKey('HashAlgorithm'))
+        {
+            $azureSignToolArguments += ' -fd {0}' -f $HashAlgorithm
+        }
+
+        $azureSignToolArguments += ' "{0}"' -f $Path
+
+        try
+        {
+            $azureSignToolPath = Resolve-Path -Path (Join-Path -Path '~\.dotnet\tools' -ChildPath 'AzureSignTool.exe')
+
+            ## https://stackoverflow.com/questions/8761888/capturing-standard-out-and-error-with-start-process
+            $processStartInfo = New-Object -TypeName System.Diagnostics.ProcessStartInfo
+            $processStartInfo.FileName = $azureSignToolPath
+            $processStartInfo.RedirectStandardOutput = $true
+            $processStartInfo.UseShellExecute = $false
+            $processStartInfo.Arguments = $azureSignToolArguments
+
+            Write-Host ("Signing package file '{0}' with timestamp server '{1}'." -f $Path, $TimestampServer)
+
+            $process = New-Object -TypeName System.Diagnostics.Process
+            $process.StartInfo = $processStartInfo
+            $process.Start() | Out-Null
+            $process.WaitForExit()
+            $stdout = $process.StandardOutput.ReadToEnd()
+
+            if ($process.ExitCode -eq 0)
+            {
+                Write-Debug -Message $stdout
+            }
+            else
+            {
+                Write-Warning -Message $stdout
+                throw ("Error signing file '{0}'." -f $Path)
+            }
+        }
+        catch
+        {
+            throw $_
+        }
+    }
+}
+
 #endregion functions
 
 # Synopsis: Initialises build variables
@@ -164,42 +243,50 @@ Task Test -Depends Init {
 }
 
 # Synopsis: Copies release files to the release directory
-Task Deploy -Depends Clean {
+Task Stage -Depends Clean {
 
     Get-ChildItem -Path $basePath -Exclude $exclude | ForEach-Object {
         Write-Host (' Copying {0}' -f $PSItem.FullName) -ForegroundColor Yellow;
         Copy-Item -Path $PSItem -Destination $releasePath -Recurse;
     }
+
+    foreach ($combinePath in $combine)
+    {
+        $combinePathItem = Get-Item -Path (Join-Path -Path $basePath -ChildPath $combinePath)
+        $targetCombinedFilePath = Join-Path -Path $releasePath -ChildPath $combinePath
+        $null = New-Item -Path (Split-Path -Path $targetCombinedFilePath -Parent) -Name (Split-Path -Path $targetCombinedFilePath -Leaf) -ItemType Directory -Force
+        $combinedFilePath = Join-Path -Path $targetCombinedFilePath -ChildPath ('{0}.ps1' -f (Split-Path -Path $targetCombinedFilePath -Leaf))
+        Get-ChildItem -Path $combinePathItem |
+            ForEach-Object {
+                Write-Host (' Combining {0}' -f $PSItem.FullName) -ForegroundColor Yellow;
+                (Get-Content -Path $PSItem.FullName -Raw) | Add-Content -Path $combinedFilePath
+                Start-Sleep -Milliseconds 30
+            }
+    }
 } #end
 
 # Synopsis: Signs files in release directory
-Task Sign -Depends Deploy {
+Task Sign -Depends Stage {
 
-    if (-not (Get-ChildItem -Path Cert:\CurrentUser\My | Where-Object Thumbprint -eq $thumbprint)) {
-        ## Decrypt and import code signing cert
-        .\appveyor-tools\secure-file.exe -decrypt .\VE_Certificate_2023.pfx.enc -secret "$env:certificate_secret" -salt "$env:certificate_salt"
-        $certificatePassword = ConvertTo-SecureString -String $env:certificate_secret -AsPlainText -Force
-        Import-PfxCertificate -FilePath .\VE_Certificate_2023.pfx -CertStoreLocation 'Cert:\CurrentUser\My' -Password $certificatePassword
-    }
-
-    Get-ChildItem -Path $releasePath -Exclude $signExclude | ForEach-Object {
-        if ($PSItem -is [System.IO.DirectoryInfo]) {
-            Get-ChildItem -Path $PSItem.FullName -Include *.ps* -Recurse | ForEach-Object {
-                Write-Host (' Signing {0}' -f $PSItem.FullName) -ForegroundColor Yellow -NoNewline;
-                $signResult = Set-ScriptSignature -Path $PSItem.FullName -Thumbprint $thumbprint -TimeStampServer $timeStampServer -ErrorAction Stop;
-                Write-Host (' {0}.' -f $signResult.Status) -ForegroundColor Green;
+    Get-ChildItem -Path $releasePath -Include *.ps* -Recurse | ForEach-Object {
+        $isExcluded = $false
+        foreach ($excludedPath in $SignExclude)
+        {
+            if ($PSItem.FullName -match $excludedPath)
+            {
+                $isExcluded = $true
             }
-
         }
-        elseif ($PSItem.Name -like '*.ps*') {
-            Write-Host (' Signing {0}' -f $PSItem.FullName) -ForegroundColor Yellow -NoNewline;
-            $signResult = Set-ScriptSignature -Path $PSItem.FullName -Thumbprint $thumbprint -TimeStampServer $timeStampServer -ErrorAction Stop;
-            Write-Host (' {0}.' -f $signResult.Status) -ForegroundColor Green;
+
+        if (-not $isExcluded)
+        {
+            Write-Host (' Signing file "{0}":' -f $PSItem.FullName) -ForegroundColor Yellow
+            Set-FileSignatureKeyVault -Path $PSItem.FullName
         }
     }
 }
 
-Task Version -Depends Deploy {
+Task Version -Depends Stage {
 
     $nuSpecPath = Join-Path -Path $releasePath -ChildPath "$ModuleName.nuspec"
     $nuspec = [System.Xml.XmlDocument] (Get-Content -Path $nuSpecPath -Raw)
@@ -240,6 +327,6 @@ Task AppVeyor {
 }
 
 Task Default -Depends Init, Clean, Test
-Task Build -Depends Default, Deploy, Version, Sign;
+Task Build -Depends Default, Stage, Version, Sign
 Task Publish -Depends Build, Package, Publish_PSGallery
 Task Local -Depends Build, Package, Publish_Dropbox
