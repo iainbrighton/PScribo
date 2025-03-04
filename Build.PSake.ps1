@@ -293,9 +293,9 @@ Task Sign -Depends Stage {
             Write-Host (' Signing file "{0}"' -f $PSItem.FullName) -ForegroundColor Yellow
             Set-FileSignatureKeyVault -Path $PSItem.FullName
         }
-
-        throw "Catch!"
     }
+
+    throw "Catch! To stop a successful release with build debugging enabled."
 }
 
 Task Version -Depends Stage {
