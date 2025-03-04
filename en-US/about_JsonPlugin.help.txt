@@ -1,0 +1,37 @@
+TOPIC
+    Json Plugin
+
+SYNOPSIS
+    PScribo supports outputting JSON-formatted text (.json) documents.
+
+DESCRIPTION
+    PScribo can output JSON-formatted text documents with multiple file encodings. The benefit of JSON is it can be consumed by 3rd party tools after the fact to ingest the information contained in the report.
+
+KNOWN LIMITATIONS
+    There are some restrictions which means that some PScribo functionality cannot either be partially or fully implemented:
+
+    - PScribo style elements are ignored
+      - This includes section numbering as it better ensures each section is unique which facilitates easier parsing.
+    - The following PScribo types are not supported as there is no provision for them in JSON:
+      - Image
+      - PageBreak
+      - LineBreak
+      - BlankLine
+    - Headers and footers are only shown once at the beginning/end of the generated document
+    - Sections at the same hierarchical level using the NOTOC* header cannot have the same name. This is a PowerShell Dictionary limitation.
+
+PLUGIN OPTIONS
+    The Text plugin accepts the following output customisation options:
+
+        Encoding [string]           : Specifies the file encoding to use. Supported values are 'ASCII', 'Unicode',
+                                      'UTF7' and 'UTF8'. If not specified, defaults to 'ASCII'.
+
+    Output customisations are passed to the Export-Document cmdlet as a hashtable, e.g.
+
+    PS> $document | Export-Document -Format Text -Options @{ Encoding = 'ASCII' }
+
+SEE ALSO
+    about_PscriboPlugins
+    about_HtmlPlugin
+    about_WordPlugin
+    about_TextPlugin

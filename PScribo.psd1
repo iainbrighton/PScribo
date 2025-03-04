@@ -1,10 +1,10 @@
 @{
     RootModule = 'PScribo.psm1'
-    ModuleVersion = '0.10.0'
+    ModuleVersion = '0.11.0'
     GUID = '058eab05-b7bc-4f8b-a2d1-737cc664b12b'
     Author = 'Iain Brighton'
     CompanyName = 'Virtual Engine'
-    Copyright = '(c) 2022 Iain Brighton. All rights reserved.'
+    Copyright = '(c) 2025 Iain Brighton. All rights reserved.'
     Description = 'PScribo documentation Powershell module/framework.'
     PowerShellVersion = '3.0'
     FunctionsToExport = @(
@@ -15,7 +15,10 @@
                             'Footer',
                             'Header',
                             'Image',
+                            'Item',
                             'LineBreak',
+                            'List',
+                            'NumberStyle',
                             'PageBreak',
                             'Paragraph',
                             'Section',
@@ -25,7 +28,8 @@
                             'TableStyle',
                             'Text',
                             'TOC',
-                            'Write-PScriboMessage'
+                            'Write-PScriboMessage',
+                            'Get-WordListLevel'
                         )
     AliasesToExport   = @(
                             'GlobalOption'

@@ -38,8 +38,9 @@ function New-PScriboSection
     )
     begin
     {
-        $psCallStack = Get-PSCallStack | Where-Object { $_.FunctionName -ne '<ScriptBlock>' }
-        if ($PSBoundParameters.ContainsKey('Orientation') -and ($psCallStack[2].FunctionName -ne 'Document<Process>'))
+        ## Ensure we only have one 'Section' in the call stack (#121)
+        $psCallStack = @(Get-PSCallStack | Where-Object { $_.FunctionName -eq 'Section<Process>' })
+        if ($PSBoundParameters.ContainsKey('Orientation') -and ($psCallStack.Count -gt 1))
         {
             Write-PScriboMessage -Message $localized.CannotSetOrientationWarning -IsWarning;
             $null = $PSBoundParameters.Remove('Orientation')

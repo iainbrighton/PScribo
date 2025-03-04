@@ -250,6 +250,14 @@ InModuleScope 'PScribo' {
                 $table.ColumnWidths | Should BeNullOrEmpty
             }
 
+            It 'warns with mismatching columns and column widths' {             
+                $columnWidths = @(20,40,40)
+
+                $table = Table -Hashtable $services -List -Key 'Name' -ColumnWidths $columnWidths -WarningAction SilentlyContinue
+
+                $table.ColumnWidths | Should BeNullOrEmpty
+            }
+
             It 'creates a table with specified column widths' {
                 [System.Collections.Specialized.OrderedDictionary[]] $services = @(
                     [ordered] @{ Name = 'TestService1'; ServiceName = 'Test 1'; DisplayName = 'Test Service 1'; }

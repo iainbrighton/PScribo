@@ -2,6 +2,17 @@
 
 ## Versions ##
 
+### 0.11.0 ###
+
+* Adds bulleted/numbered list support - Example39.ps1 to Example44.ps1 (#105)
+* Adds custom list number formats (Word and Text plugins only)
+  * Adds `NumberStyle` keyword
+* Fixes bug in Text table output breaking Word and Html output (#126)
+* Fixes bug in call stack enumeration with nested functions containing `Section -Orientation` definitions (#121)
+* Adds Json plugin output (thanks @carceneaux)
+* Updates build pipeline with DotNet Core Azure Sign Tool (and removes VE_Certificate_2023.pfx)
+* Fixes bug in `Copy-Object` on PowerShell 7.4
+
 ### 0.10.0 ###
 
 * __BREAKING CHANGE__ - XML output to be deprecated in a future release (#102)

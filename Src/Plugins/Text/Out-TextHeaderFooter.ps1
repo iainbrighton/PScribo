@@ -29,7 +29,7 @@ function Out-TextHeaderFooter
             foreach ($subSection in $headerFooter.Sections.GetEnumerator())
             {
                 ## When replacing tokens (by reference), the tokens are removed
-                $cloneSubSection = Copy-Object -InputObject $subSection
+                $cloneSubSection = $subSection | ConvertTo-Json -Depth 100 -Compress | ConvertFrom-Json
                 switch ($cloneSubSection.Type)
                 {
                     'PScribo.Paragraph'
@@ -58,6 +58,10 @@ function Out-TextHeaderFooter
                     {
                         $blankLine = Out-TextBlankLine -BlankLine $subSection
                         [ref] $null = $hfBuilder.Append($blankLine)
+                    }
+                    'PScribo.LineBreak'
+                    {
+                        [ref] $null = $hfBuilder.Append((Out-TextLineBreak))
                     }
                 }
             }

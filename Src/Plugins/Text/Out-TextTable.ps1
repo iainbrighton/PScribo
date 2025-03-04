@@ -25,8 +25,12 @@ function Out-TextTable
         $tableBuilder = New-Object -TypeName System.Text.StringBuilder
         $tableRenderWidth = $options.TextWidth - ($Table.Tabs * 4)
 
-        ## We need to replace page numbers before outputting the table
-        foreach ($row in $Table.Rows)
+        ## We need to rewrite arrays for text formatting and we don't want to
+        ## alter the source documnent (#126)
+        $cloneTable = $Table | ConvertTo-Json -Depth 100 -Compress | ConvertFrom-Json
+
+        ## We need to flatten arrays and replace page numbers before outputting the table
+        foreach ($row in $cloneTable.Rows)
         {
             foreach ($property in $row.PSObject.Properties)
             {
@@ -43,14 +47,14 @@ function Out-TextTable
         if ($Table.IsKeyedList)
         {
             ## Create new objects with headings as properties
-            $tableText = (ConvertTo-PSObjectKeyedListTable -Table $Table |
+            $tableText = (ConvertTo-PSObjectKeyedListTable -Table $cloneTable |
                             Select-Object -Property * -ExcludeProperty '*__Style' |
-                            Format-Table -Wrap -AutoSize |
-                                Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)
+                                Format-Table -Wrap -AutoSize |
+                                    Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)
         }
         elseif ($Table.IsList)
         {
-            $tableText = ($Table.Rows |
+            $tableText = ($cloneTable.Rows |
                 Select-Object -Property * -ExcludeProperty '*__Style' |
                     Format-List | Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)
         }
@@ -58,7 +62,7 @@ function Out-TextTable
         {
             ## Don't trim tabs for table headers
             ## Tables set to AutoSize as otherwise rendering is different between PoSh v4 and v5
-            $tableText = ($Table.Rows |
+            $tableText = ($cloneTable.Rows |
                             Select-Object -Property * -ExcludeProperty '*__Style' |
                                 Format-Table -Wrap -AutoSize |
                                     Out-String -Width $tableRenderWidth).Trim([System.Environment]::NewLine)

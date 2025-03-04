@@ -5,7 +5,6 @@ Describe 'Linting\FileEncoding' {
     $excludedPaths = @(
                         '.git*',
                         '.vscode',
-                        'DSCResources', # We'll take the public DSC resources as-is
                         'Release',
                         '*.png',
                         '*.jpg',
@@ -18,6 +17,7 @@ Describe 'Linting\FileEncoding' {
                         'Docs',
                         'PScriboExample.*',
                         'Lib'
+                        'Get-WordNumberStyle.ps1'
                     );
 
     function Get-FileEncoding {

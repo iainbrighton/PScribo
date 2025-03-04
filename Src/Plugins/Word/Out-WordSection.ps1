@@ -107,6 +107,10 @@ function Out-WordSection
                 {
                     [ref] $null = $Element.AppendChild((Out-WordImage -Image $subSection -XmlDocument $XmlDocument))
                 }
+                'PScribo.ListReference'
+                {
+                    Out-WordList -List $Document.Lists[$subSection.Number -1] -Element $Element -XmlDocument $xmlDocument -NumberId $subSection.Number
+                }
                 Default
                 {
                     Write-PScriboMessage -Message ($localized.PluginUnsupportedSection -f $subSection.Type) -IsWarning
