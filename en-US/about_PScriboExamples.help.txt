@@ -49,6 +49,7 @@ EXAMPLE INDEX
     Example42.ps1 - 'List' and 'Item' multi-level numbered lists
     Example43.ps1 - 'NumberStyle' numbered list number formatting
     Example44.ps1 - 'NumberStyle' and custom number formatting styles
+    Example45.ps1 - 'Write-EnhancedTable' automatic column widths and empty column handling
 
 SEE ALSO
     about_PScribo

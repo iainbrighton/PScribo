@@ -1,8 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-*.ps1 text
-*.psm1 text
-*.psd1 text
+*.ps1 text eol=lf
+*.psm1 text eol=lf
+*.psd1 text eol=lf
 *.txt text
 
 .gitattributes export-ignore
