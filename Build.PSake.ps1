@@ -153,7 +153,7 @@ function Set-FileSignatureKeyVault
     )
     process
     {
-        $azureSignToolArguments = @('sign', '-v', '-kvu', $env:kv_uri, '-kvc', $env:kv_certificate_name)
+        $azureSignToolArguments = @('sign', '-kvu', $env:kv_uri, '-kvc', $env:kv_certificate_name)
         $azureSignToolArguments += @('-kvi', $env:kv_client_id)
         $azureSignToolArguments += @('-kvs', $env:kv_client_secret)
         $azureSignToolArguments += @('-kvt', $env:kv_tenant_id)
@@ -264,8 +264,6 @@ Task Sign -Depends Stage {
             Set-FileSignatureKeyVault -Path $PSItem.FullName
         }
     }
-
-    throw "Catch! To stop a successful release with build debugging enabled."
 }
 
 Task Version -Depends Stage {
