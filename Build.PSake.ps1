@@ -153,7 +153,7 @@ function Set-FileSignatureKeyVault
     )
     process
     {
-        $azureSignToolArguments = 'sign -kvu "{0}" -kvc "{1}"' -f $env:kv_uri, $env:kv_certificate_name
+        $azureSignToolArguments = 'sign -v -kvu "{0}" -kvc "{1}"' -f $env:kv_uri, $env:kv_certificate_name
         $azureSignToolArguments += ' -kvi "{0}"' -f $env:kv_client_id
         $azureSignToolArguments += ' -kvs "{0}"' -f $env:kv_client_secret
         $azureSignToolArguments += ' -kvt "{0}"' -f $env:kv_tenant_id
@@ -276,6 +276,8 @@ Task Stage -Depends Clean {
 # Synopsis: Signs files in release directory
 Task Sign -Depends Stage {
 
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
     Get-ChildItem -Path $releasePath -Include *.ps* -Recurse | ForEach-Object {
         $isExcluded = $false
         foreach ($excludedPath in $SignExclude)
@@ -291,6 +293,8 @@ Task Sign -Depends Stage {
             Write-Host (' Signing file "{0}"' -f $PSItem.FullName) -ForegroundColor Yellow
             Set-FileSignatureKeyVault -Path $PSItem.FullName
         }
+
+        throw "Catch!"
     }
 }
 

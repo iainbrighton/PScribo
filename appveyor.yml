@@ -50,7 +50,7 @@ for:
   test_script:
     - ps: |
           Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile "$env:Temp\dotnet-install.ps1"
-          & "$env:Temp\dotnet-install.ps1" -Channel 8.0 -Quality GA -Architecture x64
+          & "$env:Temp\dotnet-install.ps1" -Channel 8.0 -Quality GA
           $env:DOTNET_ROOT = "$env:LOCALAPPDATA\Microsoft\dotnet\"
           & "$env:DOTNET_ROOT\dotnet.exe" tool install --global azuresigntool --add-source https://api.nuget.org/v3/index.json
           Invoke-PSake -BuildFile .\Build.PSake.ps1 -TaskList Publish
