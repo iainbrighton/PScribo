@@ -153,18 +153,18 @@ function Set-FileSignatureKeyVault
     )
     process
     {
-        $azureSignToolArguments = 'sign -v -kvu "{0}" -kvc "{1}"' -f $env:kv_uri, $env:kv_certificate_name
-        $azureSignToolArguments += ' -kvi "{0}"' -f $env:kv_client_id
-        $azureSignToolArguments += ' -kvs "{0}"' -f $env:kv_client_secret
-        $azureSignToolArguments += ' -kvt "{0}"' -f $env:kv_tenant_id
-        $azureSignToolArguments += ' -tr "{0}"' -f $TimestampServer
+        $azureSignToolArguments = @('sign', '-v', '-kvu', $env:kv_uri, '-kvc', $env:kv_certificate_name)
+        $azureSignToolArguments += @('-kvi', $env:kv_client_id)
+        $azureSignToolArguments += @('-kvs', $env:kv_client_secret)
+        $azureSignToolArguments += @('-kvt', $env:kv_tenant_id)
+        $azureSignToolArguments += @('-tr', $TimestampServer)
 
         if ($PSBoundParameters.ContainsKey('HashAlgorithm'))
         {
-            $azureSignToolArguments += ' -fd {0}' -f $HashAlgorithm
+            $azureSignToolArguments += @('-fd', $HashAlgorithm)
         }
 
-        $azureSignToolArguments += ' "{0}"' -f $Path
+        $azureSignToolArguments += '"{0}"' -f $Path
 
         ##try
         ##{
@@ -173,34 +173,11 @@ function Set-FileSignatureKeyVault
             {
                 throw ("Cannot find file '{0}'." -f $azureSignToolPath)
             }
-            else
+
+            & $azureSignToolPath $azureSignToolArguments | Write-Verbose -Verbose
+            if ($LASTEXITCODE -ne 0)
             {
-                [char[]] $env:kv_certificate_name | Write-Host
-            }
-
-            ## https://stackoverflow.com/questions/8761888/capturing-standard-out-and-error-with-start-process
-            $processStartInfo = New-Object -TypeName System.Diagnostics.ProcessStartInfo
-            $processStartInfo.FileName = $azureSignToolPath
-            $processStartInfo.RedirectStandardOutput = $true
-            $processStartInfo.UseShellExecute = $false
-            $processStartInfo.Arguments = $azureSignToolArguments
-
-            Write-Host ("Signing package file '{0}' with timestamp server '{1}'." -f $Path, $TimestampServer)
-
-            $process = New-Object -TypeName System.Diagnostics.Process
-            $process.StartInfo = $processStartInfo
-            $process.Start() | Out-Null
-            $process.WaitForExit()
-            $stdout = $process.StandardOutput.ReadToEnd()
-
-            if ($process.ExitCode -eq 0)
-            {
-                Write-Debug -Message $stdout
-            }
-            else
-            {
-                Write-Warning -Message $stdout
-                throw ("Error '{0}' signing file '{1}'." -f $process.ExitCode, $Path)
+                throw ("Error '{0}' signing file '{1}'." -f $LASTEXITCODE, $Path)
             }
         ##}
         ##catch
