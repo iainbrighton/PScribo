@@ -10,6 +10,7 @@ function Get-WordNumberingDocument
     (
         ## PScribo document styles
         [Parameter(Mandatory, ValueFromPipeline)]
+        [AllowEmptyCollection()]
         [System.Collections.ArrayList] $Lists
     )
     process

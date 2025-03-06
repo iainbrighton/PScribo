@@ -2,6 +2,10 @@
 
 ## Versions ##
 
+### 0.11.1 ###
+
+* Fixes bug in Word table references where header/footer is defined (#134)
+
 ### 0.11.0 ###
 
 * Adds bulleted/numbered list support - Example39.ps1 to Example44.ps1 (#105)
