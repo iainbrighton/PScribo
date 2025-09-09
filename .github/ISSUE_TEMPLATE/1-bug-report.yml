@@ -1,0 +1,25 @@
+name: Bug Report
+description: File a bug report.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: PScribo Version
+      description: Run `Get-InstalledModule | Out-String | Set-Clipboard` and paste the value here
+      render: PowerShell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: PowerShell Version
+      description: Run `$PSVersionTable | Out-String | Set-Clipboard` and paste the value here
+      render: PowerShell
+    validations:
+      required: true

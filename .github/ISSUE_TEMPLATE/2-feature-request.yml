@@ -1,0 +1,10 @@
+name: Feature Request
+description: File a feature request.
+title: "[Feature Request]: "
+labels: ["feature-request"]
+body:
+  - type: textarea
+    attributes:
+      label: What feature would you like implemented?
+    validations:
+      required: true
