@@ -10,7 +10,11 @@ function Get-WordDocument
     (
         # The PScribo document object to convert to a Word xml document
         [Parameter(Mandatory, ValueFromPipeline)]
-        [System.Management.Automation.PSObject] $Document
+        [System.Management.Automation.PSObject] $Document,
+
+        ## Numbers the section headings with a Word list instead of literal section numbers
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter] $EnableWordSectionNumbering
     )
     process
     {
@@ -51,7 +55,7 @@ function Get-WordDocument
             {
                 'PScribo.Section'
                 {
-                    Out-WordSection -Section $subSection -Element $body -XmlDocument $xmlDocument
+                    Out-WordSection -Section $subSection -Element $body -XmlDocument $xmlDocument -EnableWordSectionNumbering:$EnableWordSectionNumbering
                 }
                 'PScribo.Paragraph'
                 {

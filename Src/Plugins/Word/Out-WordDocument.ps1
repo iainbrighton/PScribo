@@ -9,7 +9,6 @@ function Out-WordDocument
   #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'pluginName')]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter','Options')]
     [OutputType([System.IO.FileInfo])]
     param
     (
@@ -33,8 +32,12 @@ function Out-WordDocument
         $stopwatch = [Diagnostics.Stopwatch]::StartNew()
         Write-PScriboMessage -Message ($localized.DocumentProcessingStarted -f $Document.Name)
 
+        ## Merge the document and plugin options
+        $options = Merge-PScriboPluginOption -DocumentOptions $Document.Options -PluginOptions $Options
+        $enableWordSectionNumbering = $options['EnableWordSectionNumbering'] -eq $true
+
         ## Generate the Word 'document.xml' document part
-        $documentXml = Get-WordDocument -Document $Document
+        $documentXml = Get-WordDocument -Document $Document -EnableWordSectionNumbering:$enableWordSectionNumbering
 
         ## Generate the Word 'styles.xml' document part
         $stylesXml = Get-WordStylesDocument -Styles $Document.Styles -TableStyles $Document.TableStyles
@@ -144,7 +147,7 @@ function Out-WordDocument
         $streamWriter = New-Object -TypeName System.IO.StreamWriter -ArgumentList ($numberingPart.GetStream([System.IO.FileMode]::Create, [System.IO.FileAccess]::ReadWrite))
         $xmlWriter = [System.Xml.XmlWriter]::Create($streamWriter)
         Write-PScriboMessage -Message ($localized.WritingDocumentPart -f $numberingUri)
-        $numberingXml = Get-WordNumberingDocument -Lists $Document.Lists
+        $numberingXml = Get-WordNumberingDocument -Lists $Document.Lists -EnableWordSectionNumbering:$enableWordSectionNumbering
         $numberingXml.Save($xmlWriter)
         $xmlWriter.Dispose()
         $streamWriter.Close()

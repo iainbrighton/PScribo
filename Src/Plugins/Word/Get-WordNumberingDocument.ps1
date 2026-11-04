@@ -11,7 +11,11 @@ function Get-WordNumberingDocument
         ## PScribo document styles
         [Parameter(Mandatory, ValueFromPipeline)]
         [AllowEmptyCollection()]
-        [System.Collections.ArrayList] $Lists
+        [System.Collections.ArrayList] $Lists,
+
+        ## Adds the multilevel list that numbers the section headings
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter] $EnableWordSectionNumbering
     )
     process
     {
@@ -29,12 +33,28 @@ function Get-WordNumberingDocument
             [ref] $null = $numbering.AppendChild($abstractNum)
         }
 
+        $sectionNumberId = Get-WordSectionNumberId -Lists $Lists
+        ## All w:abstractNum elements have to precede the w:num elements
+        if ($EnableWordSectionNumbering)
+        {
+            $abstractNum = Get-WordSectionNumberStyle -AbstractNumberId ($sectionNumberId -1) -XmlDocument $xmlDocument
+            [ref] $null = $numbering.AppendChild($abstractNum)
+        }
+
         foreach ($list in $Lists.GetEnumerator())
         {
             $num = $numbering.AppendChild($xmlDocument.CreateElement('w', 'num', $xmlns))
             [ref] $null = $num.SetAttribute('numId', $xmlns, $list.Number)
             $abstractNumId = $num.AppendChild($xmlDocument.CreateElement('w', 'abstractNumId', $xmlns))
             [ref] $null = $abstractNumId.SetAttribute('val', $xmlns, $list.Number -1)
+        }
+
+        if ($EnableWordSectionNumbering)
+        {
+            $num = $numbering.AppendChild($xmlDocument.CreateElement('w', 'num', $xmlns))
+            [ref] $null = $num.SetAttribute('numId', $xmlns, $sectionNumberId)
+            $abstractNumId = $num.AppendChild($xmlDocument.CreateElement('w', 'abstractNumId', $xmlns))
+            [ref] $null = $abstractNumId.SetAttribute('val', $xmlns, $sectionNumberId -1)
         }
 
         return $xmlDocument
