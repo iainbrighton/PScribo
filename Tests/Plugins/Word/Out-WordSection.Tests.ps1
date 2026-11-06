@@ -114,5 +114,42 @@ InModuleScope 'PScribo' {
             $expected = GetMatch '[..]<w:r><w:t>2 Numbered Section</w:t></w:r></w:p>';
             $testDocument.DocumentElement.OuterXml | Should Match $expected;
         }
+
+        It 'adds Word list numbering "[..]<w:numPr><w:ilvl w:val="1" /><w:numId w:val="1" /></w:numPr>[..]" when enabled' {
+            $document = Document -Name 'TestDocument' {
+                Section -Name SectionLevel0 {
+                    Section -Name SectionLevel1 { }
+                }
+            }
+
+            $testDocument = Get-WordDocument -Document $document -EnableWordSectionNumbering
+
+            $expected = GetMatch '[..]<w:numPr><w:ilvl w:val="1" /><w:numId w:val="1" /></w:numPr>[..]';
+            $testDocument.DocumentElement.OuterXml | Should Match $expected;
+        }
+
+        It 'does not add Word list numbering to sections excluded from the TOC and their sub-sections' {
+            $document = Document -Name 'TestDocument' {
+                Section -Name 'Excluded Section' -ExcludeFromTOC {
+                    Section -Name 'Sub Section' { }
+                }
+            }
+
+            $testDocument = Get-WordDocument -Document $document -EnableWordSectionNumbering
+
+            $testDocument.DocumentElement.OuterXml | Should Not Match 'w:numPr';
+        }
+
+        It 'does not add literal section numbers when Word list numbering is enabled' {
+            $document = Document -Name 'TestDocument' {
+                DocumentOption -EnableSectionNumbering
+                Section -Name 'Numbered Section' { }
+            }
+
+            $testDocument = Get-WordDocument -Document $document -EnableWordSectionNumbering
+
+            $expected = GetMatch '[..]<w:r><w:t>Numbered Section</w:t></w:r></w:p>';
+            $testDocument.DocumentElement.OuterXml | Should Match $expected;
+        }
     }
 }

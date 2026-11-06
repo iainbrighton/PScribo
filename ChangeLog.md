@@ -2,6 +2,10 @@
 
 ## Versions ##
 
+### Unreleased ###
+
+* Adds `EnableWordSectionNumbering` Word plugin option to number section headings with a Word list (#143)
+
 ### 0.11.1 ###
 
 * Fixes bug in Word table references where header/footer is defined (#134)

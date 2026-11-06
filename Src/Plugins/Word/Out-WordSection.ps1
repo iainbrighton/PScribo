@@ -14,7 +14,10 @@ function Out-WordSection
         [System.Xml.XmlElement] $Element,
 
         [Parameter(Mandatory)]
-        [System.Xml.XmlDocument] $XmlDocument
+        [System.Xml.XmlDocument] $XmlDocument,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter] $EnableWordSectionNumbering
     )
     process
     {
@@ -27,6 +30,16 @@ function Out-WordSection
         {
             $pStyle = $pPr.AppendChild($XmlDocument.CreateElement('w', 'pStyle', $xmlns))
             [ref] $null = $pStyle.SetAttribute('val', $xmlns, $Section.Style)
+        }
+
+        ## Sections excluded from the TOC, including their sub-sections, have no number
+        if ($EnableWordSectionNumbering -and -not [System.String]::IsNullOrEmpty($Section.Number))
+        {
+            $numPr = $pPr.AppendChild($XmlDocument.CreateElement('w', 'numPr', $xmlns))
+            $ilvl = $numPr.AppendChild($XmlDocument.CreateElement('w', 'ilvl', $xmlns))
+            [ref] $null = $ilvl.SetAttribute('val', $xmlns, $Section.Level)
+            $numId = $numPr.AppendChild($XmlDocument.CreateElement('w', 'numId', $xmlns))
+            [ref] $null = $numId.SetAttribute('val', $xmlns, (Get-WordSectionNumberId -Lists $Document.Lists))
         }
 
         if ($Section.Tabs -gt 0)
@@ -58,7 +71,7 @@ function Out-WordSection
         $r = $p.AppendChild($XmlDocument.CreateElement('w', 'r', $xmlns))
         $t = $r.AppendChild($XmlDocument.CreateElement('w', 't', $xmlns))
 
-        if ($Document.Options['EnableSectionNumbering'])
+        if ($Document.Options['EnableSectionNumbering'] -and -not $EnableWordSectionNumbering)
         {
             [System.String] $sectionName = '{0} {1}' -f $Section.Number, $Section.Name
         }
@@ -81,7 +94,7 @@ function Out-WordSection
             {
                 'PScribo.Section'
                 {
-                    Out-WordSection -Section $subSection -Element $Element -XmlDocument $XmlDocument
+                    Out-WordSection -Section $subSection -Element $Element -XmlDocument $XmlDocument -EnableWordSectionNumbering:$EnableWordSectionNumbering
                 }
                 'PScribo.Paragraph'
                 {

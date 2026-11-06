@@ -24,7 +24,16 @@ KNOWN LIMITATIONS
       first list type will be rendered.
 
 PLUGIN OPTIONS
-    The Word plugin does not accept any output customisation options.
+    The Word plugin accepts the following output customisation options:
+
+        EnableWordSectionNumbering [bool] : Numbers section headings with a Word multilevel list instead of literal
+                                            text. Word then renumbers the headings when sections are added, moved
+                                            or removed. Takes precedence over the 'EnableSectionNumbering' document
+                                            option. If not specified, defaults to '$false'.
+
+    Output customisations are passed to the Export-Document cmdlet as a hashtable, e.g.
+
+    PS> $document | Export-Document -Format Word -Options @{ EnableWordSectionNumbering = $true }
 
 SEE ALSO
     about_PscriboPlugins
